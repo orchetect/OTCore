@@ -18,7 +18,7 @@ import Foundation
 
 extension XMLNode {
 	
-	/// CUSTOM SHARED:
+	/// OTCore:
 	/// Returns `self` typed as? `XMLElement`
 	public var asElement: XMLElement? {
 		return self as? XMLElement
@@ -31,21 +31,21 @@ extension XMLNode {
 
 extension Collection where Element : XMLNode {
 	
-	/// CUSTOM SHARED:
+	/// OTCore:
 	/// Filters by the given XML element name
 	public func filter(elementName: String) -> [XMLNode] {
 		return self
 			.filter { $0.name == elementName }
 	}
 	
-	/// CUSTOM SHARED:
+	/// OTCore:
 	/// Filters by the given `attribute` with matching `value`
 	public func filter(attribute: String, value: String) -> [XMLNode] {
 		return self
 			.filter { $0.asElement?.attribute(forName: attribute)?.stringValue == value }
 	}
 	
-	/// CUSTOM SHARED:
+	/// OTCore:
 	/// Filters by the given `attribute` with values that satisfy the given predicate
 	public func filter(attribute: String, _ isIncluded: (String) throws -> Bool) rethrows -> [XMLNode] {
 		return try self
@@ -63,19 +63,19 @@ extension XMLNode {
 	
 	// MARK: - Attributes
 	
-	/// CUSTOM SHARED:
+	/// OTCore:
 	/// Gets an attribute value. If attribute name does not exist or does not have a value, nil will be returned.
 	public func attributeStringValue(forName: String) -> String? {
 		return self.asElement?.attribute(forName: forName)?.stringValue
 	}
 	
-	/// CUSTOM SHARED:
+	/// OTCore:
 	/// Gets an attribute value. If attribute name does not exist or does not have a value, nil will be returned.
 	public func attributeObjectValue(forName: String) -> Any? {
 		return self.asElement?.attribute(forName: forName)?.objectValue
 	}
 	
-	/// CUSTOM SHARED:
+	/// OTCore:
 	/// Adds an attribute. Replaces existing value if attribute name already exists.
 	public func addAttribute(withName: String, value: String?) {
 		let attr = XMLNode(kind: .attribute)
@@ -94,7 +94,7 @@ extension XMLNode {
 
 extension XMLElement {
 	
-	/// CUSTOM SHARED:
+	/// OTCore:
 	/// Convenience to initialize and populate with attributes.
 	/// Attributes are accepted as an array of tuples instead of a dictionary in order to maintain order.
 	public convenience init(name: String, attributes: [(name: String, value: String)]) {
@@ -103,7 +103,7 @@ extension XMLElement {
 		self.addAttributes(attributes)
 	}
 	
-	/// CUSTOM SHARED:
+	/// OTCore:
 	/// Convenience to populate with attributes.
 	/// Attributes are accepted as an array of tuples instead of a dictionary in order to maintain order.
 	public func addAttributes(_ attributes: [(name: String, value: String)]) {
