@@ -6,7 +6,11 @@
 //  Copyright © 2020 Steffan Andrews. All rights reserved.
 //
 
+#if os(macOS)
 import Cocoa
+#else
+import UIKit
+#endif
 
 extension NSAttributedString {
 	

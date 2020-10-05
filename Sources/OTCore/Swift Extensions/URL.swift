@@ -199,7 +199,7 @@ extension FileManager {
 	/// Backwards compatible method for retrieving a temporary folder from the system.
 	public static var temporaryDirectoryCompat: URL {
 		
-		if #available(OSX 10.12, *) {
+		if #available(OSX 10.12, iOS 10.0, *) {
 			return FileManager.default.temporaryDirectory
 		} else {
 			return URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true)

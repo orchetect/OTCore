@@ -76,6 +76,8 @@ class Extensions_FloatingPoint_Tests: XCTestCase {
 		
 		// Float80
 		
+		#if !arch(arm64) // Float80 is removed for ARM64
+		
 		let float80 = Float80(123.456)
 		
 		_ = float80.int
@@ -102,6 +104,8 @@ class Extensions_FloatingPoint_Tests: XCTestCase {
 		_ = float80.int64Exactly
 		_ = float80.uint64
 		_ = float80.uint64Exactly
+		
+		#endif
 		
 		// CGFloat
 		
@@ -153,7 +157,11 @@ class Extensions_FloatingPoint_Tests: XCTestCase {
 		var b: Bool = false
 		b = 0.0.boolValue
 		b = Float(1).boolValue
+		
+		#if !arch(arm64) // Float80 is removed for ARM64
 		b = Float80(1).boolValue
+		#endif
+		
 		b = CGFloat(1).boolValue
 		b = Decimal(1).boolValue
 		_ = b // silences 'variable was written to, but never read' warning
@@ -169,7 +177,9 @@ class Extensions_FloatingPoint_Tests: XCTestCase {
 		
 		XCTAssertEqual(         2.0.power(3)	, 8.0) // Double
 		XCTAssertEqual(  Float(2.0).power(3)	, 8.0)
-		//XCTAssertEqual(Float80(2.0).power(3)	, 8.0)
+		#if !arch(arm64) // Float80 is removed for ARM64
+		XCTAssertEqual(Float80(2.0).power(3)	, 8.0)
+		#endif
 		XCTAssertEqual(CGFloat(2.0).power(3)	, 8.0)
 		XCTAssertEqual(Decimal(2.0).power(3)	, 8.0)
 		
@@ -296,13 +306,21 @@ class Extensions_FloatingPoint_Tests: XCTestCase {
 		var str: String = ""
 		str = 0.0.string
 		str = Float(1).string
+		
+		#if !arch(arm64) // Float80 is removed for ARM64
 		str = Float80(1).string
+		#endif
+		
 		str = CGFloat(1).string
 		str = Decimal(1).string
 		_ = str // silences 'variable was written to, but never read' warning
 		
 		XCTAssertEqual(  Float(1).string,	"1.0")
+		
+		#if !arch(arm64) // Float80 is removed for ARM64
 		XCTAssertEqual(Float80(1).string,	"1.0")
+		#endif
+		
 		XCTAssertEqual(CGFloat(1).string,	"1.0")
 		XCTAssertEqual(Decimal(1).string,	"1")
 		
@@ -312,7 +330,11 @@ class Extensions_FloatingPoint_Tests: XCTestCase {
 		
 		XCTAssertEqual("1.0".double,	1.0)
 		XCTAssertEqual("1.0".float,		1.0)
-		//XCTAssertEqual("1.0".float80,	1.0)
+		
+		#if !arch(arm64) // Float80 is removed for ARM64
+		XCTAssertEqual("1.0".float80,	1.0)
+		#endif
+		
 		XCTAssertEqual("1.0".decimal,	1.0)
 		
 	}

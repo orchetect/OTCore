@@ -32,7 +32,9 @@ class Extensions_Integers_Tests: XCTestCase {
 		_ = 1.double
 		_ = 1.float
 		_ = 1.float32
-		//_ = 1.float80
+		#if !arch(arm64) // Float80 is removed for ARM64
+		_ = 1.float80
+		#endif
 		_ = 1.cgFloat
 		_ = 1.decimal
 		
@@ -52,7 +54,9 @@ class Extensions_Integers_Tests: XCTestCase {
 		_ = UInt(1).double
 		_ = UInt(1).float
 		_ = UInt(1).float32
-		//_ = UInt(1).float80
+		#if !arch(arm64) // Float80 is removed for ARM64
+		_ = UInt(1).float80
+		#endif
 		_ = UInt(1).cgFloat
 		_ = UInt(1).decimal
 		
@@ -72,7 +76,9 @@ class Extensions_Integers_Tests: XCTestCase {
 		_ = Int8(1).double
 		_ = Int8(1).float
 		_ = Int8(1).float32
-		//_ = Int8(1).float80
+		#if !arch(arm64) // Float80 is removed for ARM64
+		_ = Int8(1).float80
+		#endif
 		_ = Int8(1).cgFloat
 		_ = Int8(1).decimal
 		
@@ -92,7 +98,9 @@ class Extensions_Integers_Tests: XCTestCase {
 		_ = UInt8(1).double
 		_ = UInt8(1).float
 		_ = UInt8(1).float32
-		//_ = UInt8(1).float80
+		#if !arch(arm64) // Float80 is removed for ARM64
+		_ = UInt8(1).float80
+		#endif
 		_ = UInt8(1).cgFloat
 		_ = UInt8(1).decimal
 		
@@ -112,7 +120,9 @@ class Extensions_Integers_Tests: XCTestCase {
 		_ = Int16(1).double
 		_ = Int16(1).float
 		_ = Int16(1).float32
-		//_ = Int16(1).float80
+		#if !arch(arm64) // Float80 is removed for ARM64
+		_ = Int16(1).float80
+		#endif
 		_ = Int16(1).cgFloat
 		_ = Int16(1).decimal
 		
@@ -132,7 +142,9 @@ class Extensions_Integers_Tests: XCTestCase {
 		_ = UInt16(1).double
 		_ = UInt16(1).float
 		_ = UInt16(1).float32
-		//_ = UInt16(1).float80
+		#if !arch(arm64) // Float80 is removed for ARM64
+		_ = UInt16(1).float80
+		#endif
 		_ = UInt16(1).cgFloat
 		_ = UInt16(1).decimal
 		
@@ -152,7 +164,9 @@ class Extensions_Integers_Tests: XCTestCase {
 		_ = Int32(1).double
 		_ = Int32(1).float
 		_ = Int32(1).float32
-		//_ = Int32(1).float80
+		#if !arch(arm64) // Float80 is removed for ARM64
+		_ = Int32(1).float80
+		#endif
 		_ = Int32(1).cgFloat
 		_ = Int32(1).decimal
 		
@@ -172,7 +186,9 @@ class Extensions_Integers_Tests: XCTestCase {
 		_ = UInt32(1).double
 		_ = UInt32(1).float
 		_ = UInt32(1).float32
-		//_ = UInt32(1).float80
+		#if !arch(arm64) // Float80 is removed for ARM64
+		_ = UInt32(1).float80
+		#endif
 		_ = UInt32(1).cgFloat
 		_ = UInt32(1).decimal
 		
@@ -192,7 +208,9 @@ class Extensions_Integers_Tests: XCTestCase {
 		_ = Int64(1).double
 		_ = Int64(1).float
 		_ = Int64(1).float32
-		//_ = Int64(1).float80
+		#if !arch(arm64) // Float80 is removed for ARM64
+		_ = Int64(1).float80
+		#endif
 		_ = Int64(1).cgFloat
 		_ = Int64(1).decimal
 		
@@ -212,7 +230,9 @@ class Extensions_Integers_Tests: XCTestCase {
 		_ = UInt64(1).double
 		_ = UInt64(1).float
 		_ = UInt64(1).float32
-		//_ = UInt64(1).float80
+		#if !arch(arm64) // Float80 is removed for ARM64
+		_ = UInt64(1).float80
+		#endif
 		_ = UInt64(1).cgFloat
 		_ = UInt64(1).decimal
 		

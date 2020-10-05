@@ -149,15 +149,15 @@ extension Float: FloatingPointPower {
 	}
 }
 
-// Float80 seems to be deprecated as of the introduction of ARM64
-
-//extension Float80: FloatingPointPower {
-//	/// OTCore:
-//	/// Convenience method for pow()
-//	public func power(_ exponent: Float80) -> Float80 {
-//		powl(self, exponent)
-//	}
-//}
+#if !arch(arm64) // Float80 is removed for ARM64
+extension Float80: FloatingPointPower {
+	/// OTCore:
+	/// Convenience method for pow()
+	public func power(_ exponent: Float80) -> Float80 {
+		powl(self, exponent)
+	}
+}
+#endif
 
 extension CGFloat: FloatingPointPower {
 	/// OTCore:
@@ -325,9 +325,10 @@ extension StringProtocol {
 	/// OTCore: Convenience method to return a Float
 	public var float: Float? { Float(self) }
 	
-	// Float80 is removed for ARM64
-	// /// OTCore: Convenience method to return a Float80
-	// public var float80: Float80? { Float80(self) }
+	#if !arch(arm64) // Float80 is removed for ARM64
+	/// OTCore: Convenience method to return a Float80
+	public var float80: Float80? { Float80(self) }
+	#endif
 	
 	/// OTCore: Convenience method to return a Decimal
 	public var decimal: Decimal? { Decimal(string: String(self)) }
