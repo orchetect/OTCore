@@ -21,7 +21,7 @@ class Extensions_Operators_Tests: XCTestCase {
 		XCTAssertEqual(        43.0  % 10.0, 3.0)
 		XCTAssertEqual(  Float(43.0) % 10.0, 3.0)
 		
-		#if !arch(arm64)
+		#if !(arch(arm64) || arch(arm)) // Float80 is now removed for ARM
 		XCTAssertEqual(Float80(43.0) % 10.0, 3.0)
 		#endif
 		

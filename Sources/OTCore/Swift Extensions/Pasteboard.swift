@@ -16,7 +16,7 @@ extension NSPasteboard.PasteboardType {
 	/// Can use in place of `.fileURL` when building for platforms earlier than macOS 10.13.
 	public static var fileURLBackCompat: Self {
 		
-		if #available(OSX 10.13, *) {
+		if #available(macOS 10.13, *) {
 			return .fileURL
 			
 		} else {

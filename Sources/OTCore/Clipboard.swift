@@ -28,7 +28,6 @@ public func SetClipboard(toString: String) -> Bool {
 		return true
 	#else
 		fatalError("setClipboard: Not implemented on this platform yet.")
-		return false
 	#endif
 }
 
@@ -41,7 +40,6 @@ public func GetClipboardString() -> String? {
 		return UIPasteboard.general.string
 	#else
 		fatalError("getClipboardString: Not implemented on this platform yet.")
-		return false
 	#endif
 }
 

@@ -76,7 +76,7 @@ class Extensions_FloatingPoint_Tests: XCTestCase {
 		
 		// Float80
 		
-		#if !arch(arm64) // Float80 is removed for ARM64
+		#if !(arch(arm64) || arch(arm)) // Float80 is now removed for ARM
 		
 		let float80 = Float80(123.456)
 		
@@ -158,7 +158,7 @@ class Extensions_FloatingPoint_Tests: XCTestCase {
 		b = 0.0.boolValue
 		b = Float(1).boolValue
 		
-		#if !arch(arm64) // Float80 is removed for ARM64
+		#if !(arch(arm64) || arch(arm)) // Float80 is now removed for ARM
 		b = Float80(1).boolValue
 		#endif
 		
@@ -177,7 +177,7 @@ class Extensions_FloatingPoint_Tests: XCTestCase {
 		
 		XCTAssertEqual(         2.0.power(3)	, 8.0) // Double
 		XCTAssertEqual(  Float(2.0).power(3)	, 8.0)
-		#if !arch(arm64) // Float80 is removed for ARM64
+		#if !(arch(arm64) || arch(arm)) // Float80 is now removed for ARM
 		XCTAssertEqual(Float80(2.0).power(3)	, 8.0)
 		#endif
 		XCTAssertEqual(CGFloat(2.0).power(3)	, 8.0)
@@ -307,7 +307,7 @@ class Extensions_FloatingPoint_Tests: XCTestCase {
 		str = 0.0.string
 		str = Float(1).string
 		
-		#if !arch(arm64) // Float80 is removed for ARM64
+		#if !(arch(arm64) || arch(arm)) // Float80 is now removed for ARM
 		str = Float80(1).string
 		#endif
 		
@@ -317,7 +317,7 @@ class Extensions_FloatingPoint_Tests: XCTestCase {
 		
 		XCTAssertEqual(  Float(1).string,	"1.0")
 		
-		#if !arch(arm64) // Float80 is removed for ARM64
+		#if !(arch(arm64) || arch(arm)) // Float80 is now removed for ARM
 		XCTAssertEqual(Float80(1).string,	"1.0")
 		#endif
 		
@@ -331,7 +331,7 @@ class Extensions_FloatingPoint_Tests: XCTestCase {
 		XCTAssertEqual("1.0".double,	1.0)
 		XCTAssertEqual("1.0".float,		1.0)
 		
-		#if !arch(arm64) // Float80 is removed for ARM64
+		#if !(arch(arm64) || arch(arm)) // Float80 is now removed for ARM
 		XCTAssertEqual("1.0".float80,	1.0)
 		#endif
 		

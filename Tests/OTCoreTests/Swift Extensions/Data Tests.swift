@@ -20,6 +20,8 @@ class Extensions_Data_Tests: XCTestCase {
 		
 		// Int is 32-bit on 32-bit systems, 64-bit on 64-bit systems
 		
+		#if !(arch(arm) || arch(i386))
+		
 		// .toData
 		
 		XCTAssertEqual(0b1.int.toData(.littleEndian)	, Data([0b1,0,0,0,0,0,0,0]))
@@ -37,10 +39,12 @@ class Extensions_Data_Tests: XCTestCase {
 		XCTAssertEqual(Data([1,2,3,4,5,6,7])	.toInt(), nil) // underflow
 		XCTAssertEqual(Data([1,2,3,4,5,6,7,8,9]).toInt(), nil) // overflow
 		
+		
 		XCTAssertEqual(Data([1,2,3,4,5,6,7,8])	.toInt(from: .littleEndian),
 					   0b00001000_00000111_00000110_00000101_00000100_00000011_00000010_00000001)
 		XCTAssertEqual(Data([1,2,3,4,5,6,7,8])	.toInt(from: .bigEndian),
 					   0b00000001_00000010_00000011_00000100_00000101_00000110_00000111_00001000)
+		
 		
 		// both ways
 		XCTAssertEqual(Data([1,2,3,4,5,6,7,8])  .toInt()?                   .toData()				, Data([1,2,3,4,5,6,7,8]))
@@ -50,6 +54,43 @@ class Extensions_Data_Tests: XCTestCase {
 		
 		XCTAssertEqual(Data([1,2,3,4,5,6,7,8])  .toInt(from: .littleEndian)?.toData(.bigEndian)		, Data([8,7,6,5,4,3,2,1]))
 		XCTAssertEqual(Data([1,2,3,4,5,6,7,8])  .toInt(from: .bigEndian)?   .toData(.littleEndian)	, Data([8,7,6,5,4,3,2,1]))
+		
+		#elseif (arch(arm) || arch(i386))
+		
+		// .toData
+		
+		XCTAssertEqual(0b1.int.toData(.littleEndian)	, Data([0b1,0,0,0]))
+		XCTAssertEqual(0b1.int.toData(.bigEndian)		, Data([0,0,0,0b1]))
+		
+		// .toInt64
+		
+		XCTAssertEqual(Data([])			.toInt(), nil) // underflow
+		XCTAssertEqual(Data([1])		.toInt(), nil) // underflow
+		XCTAssertEqual(Data([1,2])		.toInt(), nil) // underflow
+		XCTAssertEqual(Data([1,2,3])	.toInt(), nil) // underflow
+		XCTAssertEqual(Data([1,2,3,4,5]).toInt(), nil) // overflow
+		
+		
+		XCTAssertEqual(Data([1,2,3,4])			.toInt(from: .littleEndian),
+					   0b00000100_00000011_00000010_00000001)
+		XCTAssertEqual(Data([1,2,3,4])			.toInt(from: .bigEndian),
+					   0b00000001_00000010_00000011_00000100)
+		
+		
+		// both ways
+		XCTAssertEqual(Data([1,2,3,4])	.toInt()?                   .toData()				, Data([1,2,3,4]))
+		
+		XCTAssertEqual(Data([1,2,3,4])	.toInt(from: .littleEndian)?.toData(.littleEndian)	, Data([1,2,3,4]))
+		XCTAssertEqual(Data([1,2,3,4])	.toInt(from: .bigEndian)?   .toData(.bigEndian)		, Data([1,2,3,4]))
+		
+		XCTAssertEqual(Data([1,2,3,4])	.toInt(from: .littleEndian)?.toData(.bigEndian)		, Data([4,3,2,1]))
+		XCTAssertEqual(Data([1,2,3,4])	.toInt(from: .bigEndian)?   .toData(.littleEndian)	, Data([4,3,2,1]))
+		
+		#else
+		
+		XCTFail("Platform not supported yet.")
+		
+		#endif
 		
 	}
 	
@@ -174,6 +215,10 @@ class Extensions_Data_Tests: XCTestCase {
 	
 	func testUInt() {
 		
+		// UInt is 32-bit on 32-bit systems, 64-bit on 64-bit systems
+		
+		#if !(arch(arm) || arch(i386))
+		
 		// .toData
 		
 		XCTAssertEqual(0b1.uint.toData(.littleEndian)	, Data([0b1,0,0,0,0,0,0,0]))
@@ -191,10 +236,12 @@ class Extensions_Data_Tests: XCTestCase {
 		XCTAssertEqual(Data([1,2,3,4,5,6,7])	.toUInt(), nil) // underflow
 		XCTAssertEqual(Data([1,2,3,4,5,6,7,8,9]).toUInt(), nil) // overflow
 		
+		
 		XCTAssertEqual(Data([1,2,3,4,5,6,7,8])	.toUInt(from: .littleEndian),
 					   0b00001000_00000111_00000110_00000101_00000100_00000011_00000010_00000001)
 		XCTAssertEqual(Data([1,2,3,4,5,6,7,8])	.toUInt(from: .bigEndian),
 					   0b00000001_00000010_00000011_00000100_00000101_00000110_00000111_00001000)
+		
 		
 		// both ways
 		XCTAssertEqual(Data([1,2,3,4,5,6,7,8])  .toUInt()?                   .toData()				, Data([1,2,3,4,5,6,7,8]))
@@ -204,6 +251,43 @@ class Extensions_Data_Tests: XCTestCase {
 		
 		XCTAssertEqual(Data([1,2,3,4,5,6,7,8])  .toUInt(from: .littleEndian)?.toData(.bigEndian)	, Data([8,7,6,5,4,3,2,1]))
 		XCTAssertEqual(Data([1,2,3,4,5,6,7,8])  .toUInt(from: .bigEndian)?   .toData(.littleEndian)	, Data([8,7,6,5,4,3,2,1]))
+		
+		#elseif (arch(arm) || arch(i386))
+		
+		// .toData
+		
+		XCTAssertEqual(0b1.uint.toData(.littleEndian)	, Data([0b1,0,0,0]))
+		XCTAssertEqual(0b1.uint.toData(.bigEndian)		, Data([0,0,0,0b1]))
+		
+		// .toUInt
+		
+		XCTAssertEqual(Data([])			.toUInt(), nil) // underflow
+		XCTAssertEqual(Data([1])		.toUInt(), nil) // underflow
+		XCTAssertEqual(Data([1,2])		.toUInt(), nil) // underflow
+		XCTAssertEqual(Data([1,2,3])	.toUInt(), nil) // underflow
+		XCTAssertEqual(Data([1,2,3,4,5]).toUInt(), nil) // overflow
+		
+		
+		XCTAssertEqual(Data([1,2,3,4])			.toUInt(from: .littleEndian),
+					   0b00000100_00000011_00000010_00000001)
+		XCTAssertEqual(Data([1,2,3,4])			.toUInt(from: .bigEndian),
+					   0b00000001_00000010_00000011_00000100)
+		
+		
+		// both ways
+		XCTAssertEqual(Data([1,2,3,4])  .toUInt()?                   .toData()				, Data([1,2,3,4]))
+		
+		XCTAssertEqual(Data([1,2,3,4])  .toUInt(from: .littleEndian)?.toData(.littleEndian)	, Data([1,2,3,4]))
+		XCTAssertEqual(Data([1,2,3,4])  .toUInt(from: .bigEndian)?   .toData(.bigEndian)	, Data([1,2,3,4]))
+		
+		XCTAssertEqual(Data([1,2,3,4])  .toUInt(from: .littleEndian)?.toData(.bigEndian)	, Data([4,3,2,1]))
+		XCTAssertEqual(Data([1,2,3,4])  .toUInt(from: .bigEndian)?   .toData(.littleEndian)	, Data([4,3,2,1]))
+		
+		#else
+		
+		XCTFail("Platform not supported yet.")
+		
+		#endif
 		
 	}
 	

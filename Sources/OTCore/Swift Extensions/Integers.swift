@@ -56,7 +56,7 @@ extension BinaryInteger {
 	/// OTCore: Convenience method to return a Float32
 	public var float32: Float32 { return Float32(self) }
 	
-	#if !arch(arm64) // Float80 is removed for ARM64
+	#if !(arch(arm64) || arch(arm)) // Float80 is now removed for ARM
 	/// OTCore: Convenience method to return a Float80
 	public var float80: Float80 { return Float80(self) }
 	#endif

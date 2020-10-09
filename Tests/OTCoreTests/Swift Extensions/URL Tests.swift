@@ -91,27 +91,13 @@ class Extensions_URL_URL_Tests: XCTestCase {
 		
 		// clean up
 		
-		if #available(iOS 11.0, *) { // .trashItem only available on iOS 11.0
-			
-			print("Cleaning up source directory...")
-			
-			
-			if (try? FileManager.default.trashItem(at: url1, resultingItemURL: nil)) == nil {
-				#if os(macOS) // .trashItem has permissions issues on iOS; ignore
-				XCTFail("Cleanup: Failed to move folder \"\(url1)\" to the trash. Cleanup will continue.")
-				#endif
-			}
-			
-			
-			print("Cleaning up destination alias...")
-			
-			if (try? FileManager.default.trashItem(at: url2, resultingItemURL: nil)) == nil {
-				#if os(macOS) // .trashItem has permissions issues on iOS; ignore
-				XCTFail("Cleanup: Failed to move folder \"\(url2)\" to the trash. Cleanup will continue.")
-				#endif
-			}
-			
-		}
+		// .trashItem not available on all platforms
+		
+		print("Cleaning up source directory...")
+		XCTAssertTrue(trashOrDelete(url: url1))
+		
+		print("Cleaning up destination alias...")
+		XCTAssertTrue(trashOrDelete(url: url2))
 		
 	}
 	
@@ -194,29 +180,16 @@ class Extensions_URL_URL_Tests: XCTestCase {
 		
 		// clean up
 		
-		if #available(iOS 11.0, *) { // .trashItem only available on iOS 11.0
-			
-			print("Cleaning up source directory...")
-			
-			if (try? FileManager.default.trashItem(at: url1, resultingItemURL: nil)) == nil {
-				#if os(macOS) // .trashItem has permissions issues on iOS; ignore
-				XCTFail("Cleanup: Failed to move folder \"\(url1)\" to the trash. Cleanup will continue.")
-				#endif
-			}
-			
-			print("Cleaning up destination symlink...")
-			
-			if (try? FileManager.default.trashItem(at: url2, resultingItemURL: nil)) == nil {
-				#if os(macOS) // .trashItem has permissions issues on iOS; ignore
-				XCTFail("Cleanup: Failed to move folder \"\(url2)\" to the trash. Cleanup will continue.")
-				#endif
-			}
-			
-		}
+		print("Cleaning up source directory...")
+		XCTAssertTrue(trashOrDelete(url: url1))
+		
+		print("Cleaning up destination symlink...")
+		XCTAssertTrue(trashOrDelete(url: url2))
 		
 	}
 
 	func testFolders() {
+		
 		#if os(macOS)
 		
 		// FileManager
@@ -225,6 +198,55 @@ class Extensions_URL_URL_Tests: XCTestCase {
 		_ = FileManager.temporaryDirectoryCompat
 		
 		#endif
+		
 	}
+	
+}
+
+
+// MARK: - Helpers
+
+/// Attemptes to move a file to the Trash if possible, otherwise attemptes to delete the file.
+@discardableResult
+fileprivate func trashOrDelete(url: URL) -> Bool {
+	
+	// funcs
+	
+	func __delFile(url: URL) -> Bool {
+		(try? FileManager.default.removeItem(at: url)) != nil
+	}
+		
+	// logic
+	
+	#if os(tvOS)
+	
+	return __delFile(url: url)
+	
+	#else
+	
+	if #available(macOS 10.8, iOS 11.0, *) {
+		
+		func __trashFile(url: URL) -> Bool {
+			if (try? FileManager.default.trashItem(at: url, resultingItemURL: nil)) == nil {
+				#if os(macOS) // .trashItem has permissions issues on iOS; ignore
+				return false
+				#endif
+			}
+			return true
+		}
+		
+		// move file to trash
+		
+		return __trashFile(url: url)
+		
+	} else {
+		
+		// delete file
+		
+		return __delFile(url: url)
+		
+	}
+	
+	#endif
 	
 }

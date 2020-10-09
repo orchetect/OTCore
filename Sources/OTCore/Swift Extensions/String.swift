@@ -544,10 +544,13 @@ extension String {
 	
 	/// OTCore:
 	/// Returns a representation of the string in title case style, ie: "What to Capitalize in a Title" (English only)
-	@available(OSX 10.11, *)
+	@available(macOS 10.11, *)
 	public var titleCased: String {
 		
-		var words = self.localizedCapitalized.split(separator: " ").map({ String($0) })
+		var words =
+			self.localizedCapitalized
+			.split(separator: " ")
+			.map({ String($0) })
 		
 		// only process if there are more than 2 words
 		if words.count > 2 {
