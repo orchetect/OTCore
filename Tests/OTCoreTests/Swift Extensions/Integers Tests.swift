@@ -6,6 +6,8 @@
 //  Copyright © 2019 Steffan Andrews. All rights reserved.
 //
 
+#if !os(watchOS)
+
 import XCTest
 @testable import OTCore
 
@@ -32,7 +34,7 @@ class Extensions_Integers_Tests: XCTestCase {
 		_ = 1.double
 		_ = 1.float
 		_ = 1.float32
-		#if !(arch(arm64) || arch(arm)) // Float80 is now removed for ARM
+		#if !(arch(arm64) || arch(arm) || os(watchOS)) // Float80 is now removed for ARM
 		_ = 1.float80
 		#endif
 		_ = 1.cgFloat
@@ -54,7 +56,7 @@ class Extensions_Integers_Tests: XCTestCase {
 		_ = UInt(1).double
 		_ = UInt(1).float
 		_ = UInt(1).float32
-		#if !(arch(arm64) || arch(arm)) // Float80 is now removed for ARM
+		#if !(arch(arm64) || arch(arm) || os(watchOS)) // Float80 is now removed for ARM
 		_ = UInt(1).float80
 		#endif
 		_ = UInt(1).cgFloat
@@ -76,7 +78,7 @@ class Extensions_Integers_Tests: XCTestCase {
 		_ = Int8(1).double
 		_ = Int8(1).float
 		_ = Int8(1).float32
-		#if !(arch(arm64) || arch(arm)) // Float80 is now removed for ARM
+		#if !(arch(arm64) || arch(arm) || os(watchOS)) // Float80 is now removed for ARM
 		_ = Int8(1).float80
 		#endif
 		_ = Int8(1).cgFloat
@@ -98,7 +100,7 @@ class Extensions_Integers_Tests: XCTestCase {
 		_ = UInt8(1).double
 		_ = UInt8(1).float
 		_ = UInt8(1).float32
-		#if !(arch(arm64) || arch(arm)) // Float80 is now removed for ARM
+		#if !(arch(arm64) || arch(arm) || os(watchOS)) // Float80 is now removed for ARM
 		_ = UInt8(1).float80
 		#endif
 		_ = UInt8(1).cgFloat
@@ -120,7 +122,7 @@ class Extensions_Integers_Tests: XCTestCase {
 		_ = Int16(1).double
 		_ = Int16(1).float
 		_ = Int16(1).float32
-		#if !(arch(arm64) || arch(arm)) // Float80 is now removed for ARM
+		#if !(arch(arm64) || arch(arm) || os(watchOS)) // Float80 is now removed for ARM
 		_ = Int16(1).float80
 		#endif
 		_ = Int16(1).cgFloat
@@ -142,7 +144,7 @@ class Extensions_Integers_Tests: XCTestCase {
 		_ = UInt16(1).double
 		_ = UInt16(1).float
 		_ = UInt16(1).float32
-		#if !(arch(arm64) || arch(arm)) // Float80 is now removed for ARM
+		#if !(arch(arm64) || arch(arm) || os(watchOS)) // Float80 is now removed for ARM
 		_ = UInt16(1).float80
 		#endif
 		_ = UInt16(1).cgFloat
@@ -164,7 +166,7 @@ class Extensions_Integers_Tests: XCTestCase {
 		_ = Int32(1).double
 		_ = Int32(1).float
 		_ = Int32(1).float32
-		#if !(arch(arm64) || arch(arm)) // Float80 is now removed for ARM
+		#if !(arch(arm64) || arch(arm) || os(watchOS)) // Float80 is now removed for ARM
 		_ = Int32(1).float80
 		#endif
 		_ = Int32(1).cgFloat
@@ -186,7 +188,7 @@ class Extensions_Integers_Tests: XCTestCase {
 		_ = UInt32(1).double
 		_ = UInt32(1).float
 		_ = UInt32(1).float32
-		#if !(arch(arm64) || arch(arm)) // Float80 is now removed for ARM
+		#if !(arch(arm64) || arch(arm) || os(watchOS)) // Float80 is now removed for ARM
 		_ = UInt32(1).float80
 		#endif
 		_ = UInt32(1).cgFloat
@@ -208,7 +210,7 @@ class Extensions_Integers_Tests: XCTestCase {
 		_ = Int64(1).double
 		_ = Int64(1).float
 		_ = Int64(1).float32
-		#if !(arch(arm64) || arch(arm)) // Float80 is now removed for ARM
+		#if !(arch(arm64) || arch(arm) || os(watchOS)) // Float80 is now removed for ARM
 		_ = Int64(1).float80
 		#endif
 		_ = Int64(1).cgFloat
@@ -230,7 +232,7 @@ class Extensions_Integers_Tests: XCTestCase {
 		_ = UInt64(1).double
 		_ = UInt64(1).float
 		_ = UInt64(1).float32
-		#if !(arch(arm64) || arch(arm)) // Float80 is now removed for ARM
+		#if !(arch(arm64) || arch(arm) || os(watchOS)) // Float80 is now removed for ARM
 		_ = UInt64(1).float80
 		#endif
 		_ = UInt64(1).cgFloat
@@ -494,3 +496,5 @@ class Extensions_Integers_Tests: XCTestCase {
 	}
 	
 }
+
+#endif

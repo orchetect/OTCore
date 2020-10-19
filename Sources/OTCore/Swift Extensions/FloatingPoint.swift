@@ -149,7 +149,7 @@ extension Float: FloatingPointPower {
 	}
 }
 
-#if !(arch(arm64) || arch(arm)) // Float80 is now removed for ARM
+#if !(arch(arm64) || arch(arm) || os(watchOS)) // Float80 is now removed for ARM
 extension Float80: FloatingPointPower {
 	/// OTCore:
 	/// Convenience method for pow()
@@ -325,7 +325,7 @@ extension StringProtocol {
 	/// OTCore: Convenience method to return a Float
 	public var float: Float? { Float(self) }
 	
-	#if !(arch(arm64) || arch(arm)) // Float80 is now removed for ARM
+	#if !(arch(arm64) || arch(arm) || os(watchOS)) // Float80 is now removed for ARM
 	/// OTCore: Convenience method to return a Float80
 	public var float80: Float80? { Float80(self) }
 	#endif
