@@ -36,48 +36,63 @@ class Timespec_Tests: XCTestCase {
 		
 		XCTAssertEqual(timespec(tv_sec: 10, tv_nsec: 500) +
 						timespec(tv_sec: 50, tv_nsec: 1000),
-					   
 					   timespec(tv_sec: 60, tv_nsec: 1500))
 		
 		// + rollover
 		
 		XCTAssertEqual(timespec(tv_sec: 10, tv_nsec: 900_000_000) +
 						timespec(tv_sec: 50, tv_nsec: 200_000_000),
-					   
 					   timespec(tv_sec: 61, tv_nsec: 100_000_000))
 		
 		// + edge case
 		
 		XCTAssertEqual(timespec(tv_sec: 10, tv_nsec: 900_000_000) +
 						timespec(tv_sec: 50, tv_nsec: 1_200_000_000),
-					   
 					   timespec(tv_sec: 62, tv_nsec: 100_000_000))
 		
 		// - basic
 		
 		XCTAssertEqual(timespec(tv_sec: 50, tv_nsec: 1000) -
 					   timespec(tv_sec: 10, tv_nsec: 500),
-					   
 					   timespec(tv_sec: 40, tv_nsec: 500))
 		
 		// - rollover
 		
 		XCTAssertEqual(timespec(tv_sec: 50, tv_nsec: 100_000_000) -
 						timespec(tv_sec: 10, tv_nsec: 600_000_000),
-					   
 					   timespec(tv_sec: 39, tv_nsec: 500_000_000))
 		
 		// - edge cases
 		
 		XCTAssertEqual(timespec(tv_sec: 50, tv_nsec: 1_000_001_000) -
 					   timespec(tv_sec: 10, tv_nsec: 500),
-					   
 					   timespec(tv_sec: 41, tv_nsec: 500))
 		
 		XCTAssertEqual(timespec(tv_sec: 50, tv_nsec: 100_000_000) -
 						timespec(tv_sec: 10, tv_nsec: 1_600_000_000),
-					   
 					   timespec(tv_sec: 38, tv_nsec: 500_000_000))
+		
+	}
+	
+	func testTimespecOperatorsBoundaries() {
+		
+		// - boundaries
+		
+		for x in Array(0...10) + Array(999_999_990...999_999_999) {
+			
+			XCTAssertEqual(timespec(tv_sec: 0, tv_nsec: x) -
+							timespec(tv_sec: 0, tv_nsec: 0),
+						   timespec(tv_sec: 0, tv_nsec: x))
+			
+		}
+		
+		for x in Array(1...10) + Array(999_999_990...999_999_999) {
+			
+			XCTAssertEqual(timespec(tv_sec: 1, tv_nsec: 0) -
+							timespec(tv_sec: 0, tv_nsec: x),
+						   timespec(tv_sec: 0, tv_nsec: 1_000_000_000 - x))
+			
+		}
 		
 	}
 	

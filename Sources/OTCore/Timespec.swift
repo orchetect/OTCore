@@ -62,7 +62,7 @@ public func - (lhs: timespec, rhs: timespec) -> timespec {
 	} else {
 		// rollunder
 		
-		let ns = -nsRaw % 1_000_000_000
+		let ns = 1_000_000_000 - (-nsRaw % 1_000_000_000)
 
 		let s = lhs.tv_sec - rhs.tv_sec - 1 - (-nsRaw / 1_000_000_000)
 		
