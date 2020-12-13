@@ -22,7 +22,7 @@ import Foundation
 /// - returns: `timespec(tv_sec: Int, tv_nsec: Int)` where `tv_sec` is seconds and `tc_nsec` is nanoseconds
 @available(OSX 10.12, iOS 10.0, tvOS 10.0, watchOS 3.0, *)
 public func clock_gettime_monotonic_raw() -> timespec {
-
+	
 	var uptime = timespec()
 	
 	if 0 != clock_gettime(CLOCK_MONOTONIC_RAW, &uptime) {
@@ -53,6 +53,7 @@ public func - (lhs: timespec, rhs: timespec) -> timespec {
 	let nsRaw = lhs.tv_nsec - rhs.tv_nsec
 	
 	if nsRaw >= 0 {
+		
 		let ns = nsRaw % 1_000_000_000
 		
 		let s = lhs.tv_sec - rhs.tv_sec + (nsRaw / 1_000_000_000)
@@ -60,7 +61,8 @@ public func - (lhs: timespec, rhs: timespec) -> timespec {
 		return timespec(tv_sec: s, tv_nsec: ns)
 		
 	} else {
-		// rollunder
+		
+		// roll under
 		
 		let ns = 1_000_000_000 - (-nsRaw % 1_000_000_000)
 
@@ -86,6 +88,7 @@ extension timespec: Equatable {
 extension timespec: Comparable {
 
 	public static func < (lhs: timespec, rhs: timespec) -> Bool {
+		
 		if lhs.tv_sec < rhs.tv_sec { return true }
 		if lhs.tv_sec > rhs.tv_sec { return false }
 		
