@@ -14,7 +14,34 @@ extension DateComponents {
 	
 	/// OTCore:
 	/// Parse a date string heuristically in a variety of formats.
+	///
 	/// Only produces day, month and year components.
+	///
+	/// Acceptable formats include:
+	///
+	/// ```
+	/// 10-21-20 (or 10/21/20)
+	/// 21-10-20 (or 21/10/20)
+	///
+	/// 2020-10-21 (or 2020/10/21)
+	/// 2020-21-10 (or 2020/21/10)
+	/// 10-21-2020 (or 10/21/2020)
+	/// 21-10-2020 (or 21/10/2020)
+	///
+	/// 2020-Oct-21 (or 2020/Oct/21)
+	/// 2020-21-Oct (or 2020/21/Oct)
+	///
+	/// Oct 21 2020
+	/// October 21 2020
+	/// Oct 21, 2020
+	/// October 21, 2020
+	/// 21 Oct 2020
+	/// 21 October 2020
+	///
+	/// 21Oct2020
+	/// 2020Oct21
+	///
+	/// ```
 	public init?(string: String) {
 		
 		self.init()

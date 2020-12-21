@@ -232,7 +232,7 @@ extension FloatingPoint {
 	
 	/// OTCore:
 	/// Returns both integral part and fractional part.
-	/// This methos is more computationally efficient than calling `.integral` and .`fraction` properties separately unless you only require one or the other.
+	/// This method is more computationally efficient than calling `.integral` and .`fraction` properties separately unless you only require one or the other.
 	///
 	/// Note: this can result in a non-trivial loss of precision for the fractional part.
 	public var integralAndFraction: (integral: Self, fraction: Self) {
