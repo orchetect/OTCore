@@ -28,6 +28,36 @@ class Timespec_Tests: XCTestCase {
 		
 	}
 	
+	func testTimespec_inits() {
+		
+		// (seconds:)
+		
+		var ts = timespec(seconds: 1.234_567_891)
+		
+		XCTAssertEqual(ts.tv_sec, 1)
+		XCTAssertEqual(ts.tv_nsec, 234_567_891)
+		
+		// (_ interval:)
+		
+		ts = timespec(TimeInterval(2.987_654_321))
+		
+		XCTAssertEqual(ts.tv_sec, 2)
+		XCTAssertEqual(ts.tv_nsec, 987_654_321)
+		
+	}
+	
+	func testTimespec_doubleValue() {
+		
+		var ts = timespec(tv_sec: 1, tv_nsec: 234_567_891)
+		
+		XCTAssertEqual(ts.doubleValue, 1.234_567_891)
+		
+		ts = timespec(tv_sec: 2, tv_nsec: 987_654_321)
+		
+		XCTAssertEqual(ts.doubleValue, 2.987_654_321)
+		
+	}
+	
 	func testTimespecOperators() {
 		
 		// assuming all tv_sec and tv_nsec values are positive integers when forming original timespec()'s

@@ -43,6 +43,49 @@ public func clock_gettime_monotonic_raw() -> timespec {
 }
 
 
+// MARK: - Timespec constructors
+
+extension timespec {
+	
+	/// OTCore:
+	/// Convenience constructor from floating point seconds value
+	public init<T: BinaryFloatingPoint>(seconds floatingPoint: T) {
+		
+		self.init()
+		
+		let intVal = Int(floatingPoint * 1_000_000_000)
+		
+		tv_nsec = intVal % 1_000_000_000
+		
+		tv_sec = intVal / 1_000_000_000
+		
+	}
+	
+	/// OTCore:
+	/// Convenience constructor from `TimeInterval`
+	public init(_ interval: TimeInterval) {
+		
+		self.init(seconds: interval)
+		
+	}
+	
+}
+
+
+// MARK: - Timespec properties
+
+extension timespec {
+	
+	/// OTCore:
+	/// Return a `TimeInterval`
+	public var doubleValue: TimeInterval {
+		
+		Double(tv_sec) + (Double(tv_nsec) / 1_000_000_000)
+		
+	}
+	
+}
+
 // MARK: - Timespec operators and comparison
 
 /// OTCore
