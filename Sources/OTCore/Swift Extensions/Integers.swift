@@ -3,7 +3,7 @@
 //  OTCore
 //
 //  Created by Steffan Andrews on 2016-06-16.
-//  Copyright © 2016 orchsoft. All rights reserved.
+//  Copyright © 2016 Steffan Andrews. All rights reserved.
 //
 
 import Foundation
