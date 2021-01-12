@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  Log Tests.swift
 //  OTCore
 //
 //  Created by Steffan Andrews on 2021-01-12.
@@ -17,6 +17,7 @@ class Logging_Log_Tests: XCTestCase {
 	override func setUp() { super.setUp() }
 	override func tearDown() { super.tearDown() }
 	
+	@available(macOS 10.12, iOS 10.0, watchOS 3.0, tvOS 10.0, *)
 	func testLog() {
 		
 		// this test does not assert anything, it's just for diagnostic
@@ -64,9 +65,12 @@ class Logging_Log_Tests: XCTestCase {
 	
 }
 
+@available(macOS 10.12, iOS 10.0, watchOS 3.0, tvOS 10.0, *)
 fileprivate extension OSLog {
+	
 	static let custom = OSLog(subsystem: "com.orchetect.otcore.logtest",
 							  category: "General")
+	
 }
 
 #endif
