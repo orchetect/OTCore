@@ -3,6 +3,7 @@
 //  OTCore
 //
 //  Created by Steffan Andrews on 2021-01-11.
+//  Copyright © 2021 Steffan Andrews. All rights reserved.
 //
 
 import Foundation

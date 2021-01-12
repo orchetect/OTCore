@@ -9,7 +9,6 @@
 import Foundation
 import CoreGraphics
 
-
 // MARK: - Convenience type conversion methods
 
 extension BinaryFloatingPoint {

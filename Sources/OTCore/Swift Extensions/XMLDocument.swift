@@ -6,7 +6,6 @@
 //  Copyright © 2020 Steffan Andrews. All rights reserved.
 //
 
-
 // This is Mac-only because XMLDocument is not available on iOS
 
 #if os(macOS)
