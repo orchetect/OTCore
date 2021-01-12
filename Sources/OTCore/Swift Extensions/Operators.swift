@@ -26,7 +26,7 @@ public func % <T: FloatingPoint>(lhs: T, rhs: T) -> T {
 // _ = (43.0 as CGFloat) % 10.0
 
 
-// MARK: -Modulo  Decimal
+// MARK: - Modulo Decimal
 		
 // .truncatingRemainder(dividingBy:) and fmod() are not usable with Decimal
 
