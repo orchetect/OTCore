@@ -140,7 +140,7 @@ class Extensions_Swift_Collections_Tests: XCTestCase {
 	
 	func testNSMutableArray_SafeIndexSubscript() {
 		
-		// safe: get
+		// get
 		
 		let nsArr = [1,2,3] as NSMutableArray
 		
@@ -164,17 +164,31 @@ class Extensions_Swift_Collections_Tests: XCTestCase {
 		XCTAssertEqual(nsArr3[safe:  0] as? Int, 1)
 		XCTAssertEqual(nsArr3[safe:  1] as? Int, nil)
 		
-		// safeMutable: set
+	}
+	
+	func testNSMutableArray_SafeMutableIndexSubscript() {
 		
-		let nsArr4 = [1,2,3] as NSMutableArray
+		// get
 		
-		nsArr4[safeMutable: -1] = 4 // fails silently, no value stored
-		nsArr4[safeMutable: 0] = 5
-		nsArr4[safeMutable: 1] = 6
-		nsArr4[safeMutable: 2] = 7
-		nsArr4[safeMutable: 3] = 8 // fails silently, no value stored
+		let nsArr = [1,2,3] as NSMutableArray
 		
-		XCTAssertEqual(nsArr4, [5,6,7])
+		XCTAssertEqual(nsArr[safeMutable: -1] as? Int, nil)
+		XCTAssertEqual(nsArr[safeMutable:  0] as? Int, 1)
+		XCTAssertEqual(nsArr[safeMutable:  1] as? Int, 2)
+		XCTAssertEqual(nsArr[safeMutable:  2] as? Int, 3)
+		XCTAssertEqual(nsArr[safeMutable:  3] as? Int, nil)
+		
+		// set
+		
+		let nsArr2 = [1,2,3] as NSMutableArray
+		
+		nsArr2[safeMutable: -1] = 4 // fails silently, no value stored
+		nsArr2[safeMutable: 0] = 5
+		nsArr2[safeMutable: 1] = 6
+		nsArr2[safeMutable: 2] = 7
+		nsArr2[safeMutable: 3] = 8 // fails silently, no value stored
+		
+		XCTAssertEqual(nsArr2, [5,6,7])
 		
 	}
 	
