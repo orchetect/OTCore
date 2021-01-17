@@ -13,7 +13,7 @@ extension Collection where Self: RangeReplaceableCollection,
 	
 	/// **OTCore:**
 	/// Syntactic sugar: Append an element to an array.
-	@inlinable static public func += (lhs: inout Self, rhs: Self.Element) {
+	@inlinable static public func += (lhs: inout Self, rhs: Element) {
 		
 		lhs.append(rhs)
 		
