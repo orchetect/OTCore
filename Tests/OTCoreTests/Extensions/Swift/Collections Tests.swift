@@ -197,6 +197,9 @@ class Extensions_Swift_Collections_Tests: XCTestCase {
 		let x = ["0", "1", "2", "3", "4"]
 		
 		XCTAssertEqual(x[wrapping:  0], "0")
+		XCTAssertEqual(x[wrapping:  1], "1")
+		XCTAssertEqual(x[wrapping:  2], "2")
+		XCTAssertEqual(x[wrapping:  3], "3")
 		XCTAssertEqual(x[wrapping:  4], "4")
 		XCTAssertEqual(x[wrapping:  5], "0")
 		XCTAssertEqual(x[wrapping:  6], "1")
@@ -225,25 +228,29 @@ class Extensions_Swift_Collections_Tests: XCTestCase {
 		
 		XCTAssertEqual(arr, [2,3])
 		
+		XCTAssertEqual(arr.remove(safeAt: 0), 2)	// succeeds
+		
+		XCTAssertEqual(arr, [3])
+		
 		// ArraySlice
 		
-		var arrslice = ArraySlice(repeating: 1, count: 4)
+		var arrSlice = ArraySlice(repeating: 1, count: 4)
 		
-		XCTAssertEqual(arrslice.remove(safeAt: 0), 1)	// succeeds
+		XCTAssertEqual(arrSlice.remove(safeAt: 0), 1)	// succeeds
 		
-		XCTAssertEqual(arrslice, [1,1,1])
+		XCTAssertEqual(arrSlice, [1,1,1])
 		
-		XCTAssertEqual(arrslice.remove(safeAt: 3), nil)	// silently fails
+		XCTAssertEqual(arrSlice.remove(safeAt: 3), nil)	// silently fails
 		
 		// ContiguousArray
 		
-		var arrcont = ContiguousArray(repeating: 1, count: 4)
+		var arrCont = ContiguousArray(repeating: 1, count: 4)
 		
-		XCTAssertEqual(arrcont.remove(safeAt: 0), 1)	// succeeds
+		XCTAssertEqual(arrCont.remove(safeAt: 0), 1)	// succeeds
 		
-		XCTAssertEqual(arrcont, [1,1,1])
+		XCTAssertEqual(arrCont, [1,1,1])
 		
-		XCTAssertEqual(arrcont.remove(safeAt: 3), nil)	// silently fails
+		XCTAssertEqual(arrCont.remove(safeAt: 3), nil)	// silently fails
 	}
 	
 	func testCountOf() {
@@ -365,19 +372,23 @@ class Extensions_Swift_Collections_Tests: XCTestCase {
 	
 	/// Test harness enum
 	enum fooEnum: Hashable, CustomStringConvertible {
-		case foo(Int)									// each Int creates a different hash
-		case fooB(Int)									// identical hash regardless of Int
+		case foo(Int)							// each Int has a different hash
+		case fooB(Int)							// identical hash regardless of Int
 		case one
 		case two
 		case three
 		
 		func hash(into hasher: inout Hasher) {
+			hasher.combine(internalHash)
+		}
+		
+		var internalHash: Int {
 			switch self {
-			case .foo(let val): hasher.combine(100+val)	// each Int creates a different hash
-			case .fooB(_):		hasher.combine(10)		// identical hash regardless of Int
-			case .one:	 		hasher.combine(20)
-			case .two:	 		hasher.combine(30)
-			case .three: 		hasher.combine(40)
+			case .foo(let val): return val << 5	// each Int has different hash
+			case .fooB(_):		return 0b01000	// identical hash regardless of Int
+			case .one:	 		return 0b00010
+			case .two:	 		return 0b00100
+			case .three: 		return 0b01000
 			}
 		}
 		
@@ -392,7 +403,7 @@ class Extensions_Swift_Collections_Tests: XCTestCase {
 		}
 		
 		static func ==(lhs: Self, rhs: Self) -> Bool {
-			return lhs.hashValue == rhs.hashValue
+			lhs.internalHash == rhs.internalHash
 		}
 	}
 			
@@ -519,8 +530,9 @@ class Extensions_Swift_Collections_Tests: XCTestCase {
 		
 		// .union / .formUnion
 		
-		var arr1: [fooEnum] = [.foo(1), .one]
+		var arr1: [fooEnum] = []
 		
+		arr1 = [.foo(1), .one]
 		var arr2 = arr1.union([.foo(2), .one, .two, .three])
 		XCTAssertEqual(arr2, [.foo(1), .one, .foo(2), .two, .three])
 		
