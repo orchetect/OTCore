@@ -17,7 +17,7 @@ extension NSArray {
 	///
 	/// Example:
 	///
-	///     let arr = [1, 2, 3]
+	///     let arr = [1, 2, 3] as NSArray
 	///     arr[safe: 0] // Optional(1)
 	///     arr[safe: 9] // nil
 	///
@@ -40,7 +40,7 @@ extension NSMutableArray {
 	///
 	/// Example:
 	///
-	///     let arr = [1, 2, 3]
+	///     let arr = [1, 2, 3] as NSMutableArray
 	///     arr[safeMutable: 0] // Optional(1)
 	///     arr[safeMutable: 9] // nil
 	///
