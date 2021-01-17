@@ -16,7 +16,7 @@ extension CharacterSet {
 	/// Returns true if the `CharacterSet` contains the given `Character`.
 	public func contains(_ character: Character) -> Bool {
 		
-		return character
+		character
 			.unicodeScalars
 			.allSatisfy(contains(_:))
 		

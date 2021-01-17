@@ -23,8 +23,6 @@
 
 import Foundation
 
-
-
 // MARK: - Int
 
 extension Data {
