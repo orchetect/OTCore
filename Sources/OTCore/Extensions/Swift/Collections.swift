@@ -43,6 +43,7 @@ extension MutableCollection where Index : Comparable {
 	///     arr[safe: 9] // nil
 	///
 	@inlinable public subscript(safe index: Index) -> Element? {
+		
 		get {
 			indices.contains(index) ? self[index] : nil
 		}
@@ -51,6 +52,7 @@ extension MutableCollection where Index : Comparable {
 
 			self[index] = newValue!
 		}
+		
 	}
 	
 }
@@ -75,14 +77,18 @@ extension Collection {
 	///     arr[safe: 9] // nil
 	///
 	@inlinable public subscript(safe index: Index) -> Element? {
+		
 		indices.contains(index) ? self[index] : nil
+		
 	}
 	
 	/// **OTCore:**
 	/// Access collection indexes safely.
 	/// If index does not exist (out-of-bounds), `defaultValue` is returned.
 	@inlinable public subscript(safe index: Index, default defaultValue: @autoclosure () -> Element) -> Element {
+		
 		indices.contains(index) ? self[index] : defaultValue()
+		
 	}
 	
 }
@@ -103,20 +109,24 @@ extension Collection where Index == Int {
 	///     arr[safe: 9] // nil
 	///
 	@inlinable public subscript(safe index: Int) -> Element? {
+		
 		guard count > 0 else { return nil }
 		guard index >= 0 else { return nil }
 		let idx = indices.index(startIndex, offsetBy: index)
 		return index < indices.count ? self[idx] : nil
+		
 	}
 	
 	/// **OTCore:**
 	/// Access collection indexes safely.
 	/// If index does not exist (out-of-bounds), `defaultValue` is returned.
 	@inlinable public subscript(safe index: Int, default defaultValue: @autoclosure () -> Element) -> Element {
+		
 		guard count > 0 else { return defaultValue() }
 		guard index >= 0 else { return defaultValue() }
 		let idx = indices.index(startIndex, offsetBy: index)
 		return index < indices.count ? self[idx] : defaultValue()
+		
 	}
 	
 }
@@ -161,6 +171,7 @@ extension Array {
 	///     x[wrapping: -6] // "4"
 	///
 	@inlinable public subscript(wrapping index: Index) -> Iterator.Element {
+		
 		let max = self.count
 		var newIndex: Int
 		
@@ -172,6 +183,7 @@ extension Array {
 		}
 		
 		return self[newIndex]
+		
 	}
 	
 }
@@ -185,7 +197,9 @@ extension Collection where Element : Hashable {
 	/// Counts number of occurrences of the given element
 	/// - complexity: O(*n*)
 	@inlinable public func count(of element: Element) -> Int {
+		
 		self.filter{$0 == element}.count
+		
 	}
 	
 }
