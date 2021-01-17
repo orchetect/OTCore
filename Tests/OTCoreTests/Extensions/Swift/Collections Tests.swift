@@ -110,6 +110,74 @@ class Extensions_Swift_Collections_Tests: XCTestCase {
 		
 	}
 	
+	func testNSArray_SafeIndexSubscript() {
+		
+		// get
+		
+		let nsArr = [1,2,3] as NSArray
+		
+		XCTAssertEqual(nsArr[safe: -1] as? Int, nil)
+		XCTAssertEqual(nsArr[safe:  0] as? Int, 1)
+		XCTAssertEqual(nsArr[safe:  1] as? Int, 2)
+		XCTAssertEqual(nsArr[safe:  2] as? Int, 3)
+		XCTAssertEqual(nsArr[safe:  3] as? Int, nil)
+		
+		// edge cases
+		
+		// empty array
+		let nsArr2 = [] as NSArray
+		XCTAssertEqual(nsArr2[safe: -1] as? Int, nil)
+		XCTAssertEqual(nsArr2[safe:  0] as? Int, nil)
+		XCTAssertEqual(nsArr2[safe:  1] as? Int, nil)
+		
+		// single element array
+		let nsArr3 = [1] as NSArray
+		XCTAssertEqual(nsArr3[safe: -1] as? Int, nil)
+		XCTAssertEqual(nsArr3[safe:  0] as? Int, 1)
+		XCTAssertEqual(nsArr3[safe:  1] as? Int, nil)
+		
+	}
+	
+	func testNSMutableArray_SafeIndexSubscript() {
+		
+		// safe: get
+		
+		let nsArr = [1,2,3] as NSMutableArray
+		
+		XCTAssertEqual(nsArr[safe: -1] as? Int, nil)
+		XCTAssertEqual(nsArr[safe:  0] as? Int, 1)
+		XCTAssertEqual(nsArr[safe:  1] as? Int, 2)
+		XCTAssertEqual(nsArr[safe:  2] as? Int, 3)
+		XCTAssertEqual(nsArr[safe:  3] as? Int, nil)
+		
+		// edge cases
+		
+		// empty array
+		let nsArr2 = [] as NSMutableArray
+		XCTAssertEqual(nsArr2[safe: -1] as? Int, nil)
+		XCTAssertEqual(nsArr2[safe:  0] as? Int, nil)
+		XCTAssertEqual(nsArr2[safe:  1] as? Int, nil)
+		
+		// single element array
+		let nsArr3 = [1] as NSMutableArray
+		XCTAssertEqual(nsArr3[safe: -1] as? Int, nil)
+		XCTAssertEqual(nsArr3[safe:  0] as? Int, 1)
+		XCTAssertEqual(nsArr3[safe:  1] as? Int, nil)
+		
+		// safeMutable: set
+		
+		let nsArr4 = [1,2,3] as NSMutableArray
+		
+		nsArr4[safeMutable: -1] = 4 // fails silently, no value stored
+		nsArr4[safeMutable: 0] = 5
+		nsArr4[safeMutable: 1] = 6
+		nsArr4[safeMutable: 2] = 7
+		nsArr4[safeMutable: 3] = 8 // fails silently, no value stored
+		
+		XCTAssertEqual(nsArr4, [5,6,7])
+		
+	}
+	
 	func testWrappingIndexSubscript() {
 		
 		let x = ["0", "1", "2", "3", "4"]
