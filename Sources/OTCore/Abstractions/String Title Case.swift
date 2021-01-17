@@ -11,16 +11,27 @@
 extension String {
 	
 	/// **OTCore:**
-	/// Used by `titleCased`. Private array of title case particles to leave as lowercase
-	static private let titleCasedParticles = [
-		"a", "an", "the",				// articles
-		"and", "but", "for",			// coordinating conjunctions
-		"at", "by", "of", "in", "on",	// prepositions
-		"to", "with",
-		"is"]
+	/// Used by `titleCased`.
+	/// Private array of title case particles to leave as lowercase
+	static private let titleCasedParticles =
+		[
+			"a", "an", "the",				// articles
+			"and", "but", "for",			// coordinating conjunctions
+			"at", "by", "of", "in", "on",	// prepositions
+			"to", "with",
+			"is"
+		]
 	
 	/// **OTCore:**
-	/// Returns a representation of the string in title case style, ie: "What to Capitalize in a Title" (English only)
+	/// Returns a representation of the string in title case capitalization style.
+	///
+	/// Example:
+	///
+	///     "what to capitalize in a title".titleCased ==
+	///     "What to Capitalize in a Title"
+	///
+	/// (English localization only at this time.)
+	///
 	@available(macOS 10.11, *)
 	public var titleCased: String {
 		
