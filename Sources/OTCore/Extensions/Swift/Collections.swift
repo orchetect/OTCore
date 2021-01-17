@@ -8,12 +8,18 @@
 
 // MARK: - Operators
 
-/// **OTCore:**
-/// Syntactic sugar: Append an element to an array.
-@inlinable public func += <T>(lhs: inout [T], rhs: T) {
-	lhs.append(rhs)
+extension Collection where Self: RangeReplaceableCollection,
+						   Self: MutableCollection {
+	
+	/// **OTCore:**
+	/// Syntactic sugar: Append an element to an array.
+	@inlinable static public func += (lhs: inout Self, rhs: Self.Element) {
+		
+		lhs.append(rhs)
+		
+	}
+	
 }
-
 
 // MARK: - Collection & array indexes
 
