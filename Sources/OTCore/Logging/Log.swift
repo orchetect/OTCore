@@ -44,7 +44,7 @@ import os.log
 // MARK: - Internal property storage
 
 @available(macOS 10.12, iOS 10.0, watchOS 3.0, tvOS 10.0, *)
-fileprivate var LogEnabled = false
+fileprivate var LogEnabled = true
 
 @available(macOS 10.12, iOS 10.0, watchOS 3.0, tvOS 10.0, *)
 fileprivate var DefaultLog = OSLog.default
