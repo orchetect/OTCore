@@ -84,7 +84,7 @@ class Extensions_Swift_String_Tests: XCTestCase {
 	
 		// .range(backwardsCaseInsensitive:)
 		
-		var str = "This is an example string of an example."
+		let str = "This is an example string of an example."
 		
 		let rangeBackwards = str.range(backwardsCaseInsensitive: "eXaMpLe")!
 		
