@@ -107,9 +107,11 @@ public enum Log {
 	// MARK: - Enums
 	
 	public enum EmojiType {
+		
 		case disabled
 		case all
 		case errorsOnly
+		
 	}
 	
 	

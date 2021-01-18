@@ -1,9 +1,9 @@
 //
-//  DateComponents Tests.swift
+//  DateComponents from String Tests.swift
 //  OTCore
 //
-//  Created by Steffan Andrews on 2020-02-24.
-//  Copyright © 2020 Steffan Andrews. All rights reserved.
+//  Created by Steffan Andrews on 2021-01-17.
+//  Copyright © 2021 Steffan Andrews. All rights reserved.
 //
 
 #if !os(watchOS)
@@ -11,12 +11,10 @@
 import XCTest
 @testable import OTCore
 
-class Extensions_Foundation_Date_Tests: XCTestCase {
+class Abstractions_DateComponentsFromString_Tests: XCTestCase {
 	
 	override func setUp() { super.setUp() }
 	override func tearDown() { super.tearDown() }
-	
-	// MARK: - testdateComponents
 	
 	func testDateComponents_Init_String() {
 		

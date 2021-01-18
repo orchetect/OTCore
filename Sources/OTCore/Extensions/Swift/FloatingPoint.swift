@@ -148,7 +148,7 @@ extension FloatingPoint where Self : FloatingPointPowerComputable {
 	/// **OTCore:**
 	/// Replaces this value by rounding it to `decimalPlaces` number of decimal places using rounding `rule`.
 	///
-	/// If `decimalPlaces` <= 0, trunc(self) is used.
+	/// If `decimalPlaces` <= 0, `trunc(self)` is used.
 	public mutating func round(_ rule: FloatingPointRoundingRule = .toNearestOrAwayFromZero,
 							   decimalPlaces: Int) {
 		
@@ -169,7 +169,9 @@ extension FloatingPoint {
 	/// Returns a string representation of a floating-point number.
 	/// (Functional convenience method)
 	public var string: String {
+		
 		String(describing: self)
+		
 	}
 	
 }
@@ -182,7 +184,9 @@ extension FloatingPoint where Self : CustomStringConvertible {
 	/// Returns a string representation of a floating-point number.
 	/// (Functional convenience method)
 	@inlinable public var string: String {
+		
 		String(describing: self)
+		
 	}
 	
 }

@@ -16,7 +16,7 @@ class Extensions_Swift_Bool_Tests: XCTestCase {
 	override func setUp() { super.setUp() }
 	override func tearDown() { super.tearDown() }
 	
-	func testBool() {
+	func testToInt() {
 		
 		// Bool
 		
@@ -42,6 +42,19 @@ class Extensions_Swift_Bool_Tests: XCTestCase {
 		XCTAssertEqual(false.uint32Value, 0)
 		XCTAssertEqual(false.uint64Value, 0)
 		
+	}
+	
+	func testToggled() {
+		
+		// toggled()
+		
+		XCTAssertEqual(true.toggled(), false)
+		XCTAssertEqual(false.toggled(), true)
+		
+	}
+	
+	func testExpressibleByIntegerLiteral() {
+		
 		XCTAssertEqual(Bool(-1)					, false)
 		XCTAssertEqual(Bool(integerLiteral: 0)	, false)	// same as b: Bool = 0
 		XCTAssertEqual(Bool(0)					, false)
@@ -50,7 +63,7 @@ class Extensions_Swift_Bool_Tests: XCTestCase {
 		XCTAssertEqual(Bool(integerLiteral: 123), true)		// same as b: Bool = 123
 		XCTAssertEqual(Bool(123)				, true)
 		
-		//   ExpressibleByIntegerLiteral - these should all be possible
+		// ExpressibleByIntegerLiteral - these should all be possible
 		
 		var b: Bool = false
 		b = -1
@@ -62,6 +75,10 @@ class Extensions_Swift_Bool_Tests: XCTestCase {
 		b = 0.boolValue
 		b = UInt8(1).boolValue
 		_ = b // silences 'variable was written to, but never read' warning
+		
+	}
+	
+	func testBinaryIntegerBoolValue() {
 		
 		XCTAssertEqual((-1).boolValue	, false)
 		XCTAssertEqual(0.boolValue		, false)

@@ -110,6 +110,7 @@ extension Globals {
 		#endif
 		
 	}
+	
 }
 
 extension Bundle {
@@ -117,13 +118,17 @@ extension Bundle {
 	/// **OTCore:**
 	/// Convenience function to get bundle data
 	public class func mainInfoDictionary(key: String) -> String? {
+		
 		self.main.infoDictionary?[key] as? String
+		
 	}
 	
 	/// **OTCore:**
 	/// Convenience function to get bundle data
 	public class func mainInfoDictionary(key: CFString) -> String? {
+		
 		self.main.infoDictionary?[key as String] as? String
+		
 	}
 	
 }

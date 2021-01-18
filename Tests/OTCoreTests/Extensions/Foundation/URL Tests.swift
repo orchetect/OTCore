@@ -25,7 +25,16 @@ class Extensions_Foundation_URL_Tests: XCTestCase {
 		
 	}
 	
-	func testIsAlias() {
+	func testIsFolder() {
+		
+		// guaranteed to exist
+		let folder = URL(fileURLWithPath: NSHomeDirectory())
+		
+		XCTAssertTrue(folder.isFolder!)
+		
+	}
+	
+	func testIsFinderAlias() {
 		
 		// boilerplate
 		

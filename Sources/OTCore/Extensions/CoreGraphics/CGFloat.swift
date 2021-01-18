@@ -10,6 +10,11 @@
 
 import CoreGraphics
 
+// MARK: - FloatingPointHighPrecisionStringConvertible
+
+extension CGFloat: FloatingPointHighPrecisionStringConvertible { }
+
+
 // MARK: - Convenience type conversion methods
 
 extension BinaryInteger {
@@ -32,7 +37,25 @@ extension CGFloat: FloatingPointPowerComputable {
 	/// Same as `pow()`
 	/// (Functional convenience method)
 	public func power(_ exponent: CGFloat) -> CGFloat {
+		
 		pow(self, exponent)
+		
+	}
+	
+}
+
+// MARK: - From String
+
+extension StringProtocol {
+	
+	/// **OTCore:**
+	/// Constructs `CGFloat` from a `String` by converting to `Double` as intermediary.
+	/// (Functional convenience method)
+	public var cgFloat: CGFloat? {
+		
+		guard let doubleValue = Double(self) else { return nil }
+		return CGFloat(doubleValue)
+		
 	}
 	
 }

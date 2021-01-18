@@ -57,7 +57,9 @@ extension Bool {
 	/// **OTCore:**
 	/// Returns a new boolean inverted from self.
 	@inlinable public func toggled() -> Self {
+		
 		return !self
+		
 	}
 	
 }
@@ -67,13 +69,17 @@ extension Bool : ExpressibleByIntegerLiteral {
 	/// **OTCore:**
 	/// Value > 0 produces true
 	@inlinable public init(integerLiteral value: IntegerLiteralType) {
+		
 		self = value > 0
+		
 	}
 	
 	/// **OTCore:**
 	/// Value > 0 produces true
 	@inlinable public init<T: BinaryInteger>(_ value: T) {
+		
 		self = value > 0
+		
 	}
 	
 }
@@ -83,7 +89,9 @@ extension BinaryInteger {
 	/// **OTCore:**
 	/// Value > 0 produces true
 	@inlinable public var boolValue: Bool {
-		return self > 0
+		
+		self > 0
+		
 	}
 	
 }

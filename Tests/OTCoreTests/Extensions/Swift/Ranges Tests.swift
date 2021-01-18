@@ -16,7 +16,7 @@ class Extensions_Swift_Ranges_Tests: XCTestCase {
 	override func setUp() { super.setUp() }
 	override func tearDown() { super.tearDown() }
 	
-	func testClampedRanges() {
+	func testNumberClampedToRanges() {
 		
 		// .clamped(ClosedRange)
 		
@@ -444,7 +444,7 @@ class Extensions_Swift_Ranges_Tests: XCTestCase {
 		
 	}
 	
-	func testRepeatEach() {
+	func testBinaryIntegerRepeatEach() {
 		
 		// basic functionality
 		
@@ -452,31 +452,43 @@ class Extensions_Swift_Ranges_Tests: XCTestCase {
 		5.repeatEach { count += 1 }
 		XCTAssertEqual(count, 5)
 		
-		count = 0
-		(1...5).repeatEach { count += 1 }
-		XCTAssertEqual(count, 5)
-		
-		count = 0
-		(1..<5).repeatEach { count += 1 }
-		XCTAssertEqual(count, 4)
-		
 		// edge cases
 		
 		count = 0
 		(-1).repeatEach { count += 1 }
 		XCTAssertEqual(count, 0)				// only iterates on values > 0
 		
+	}
+	
+	func testClosedRangeRepeatEach() {
+	
+		var count = 0
+		(1...5).repeatEach { count += 1 }
+		XCTAssertEqual(count, 5)
+		
+		// edge cases
+		
 		count = 0
 		(1...1).repeatEach { count += 1 }		// single member range
 		XCTAssertEqual(count, 1)
 		
 		count = 0
-		(1..<1).repeatEach { count += 1 }		// no-member range
-		XCTAssertEqual(count, 0)
-		
-		count = 0
 		((-5)...(-1)).repeatEach { count += 1 }	// doesn't matter if bounds are negative
 		XCTAssertEqual(count, 5)
+		
+	}
+	
+	func testRangeRepeatEach() {
+		
+		var count = 0
+		(1..<5).repeatEach { count += 1 }
+		XCTAssertEqual(count, 4)
+		
+		// edge cases
+		
+		count = 0
+		(1..<1).repeatEach { count += 1 }		// no-member range
+		XCTAssertEqual(count, 0)
 		
 		count = 0
 		((-5)..<(-1)).repeatEach { count += 1 }	// doesn't matter if bounds are negative

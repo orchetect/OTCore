@@ -15,12 +15,15 @@ import Foundation
 extension URL {
 	
 	/// **OTCore:**
-	/// Convenience proxy for Foundation fileExists method. Returns whether the file/folder exists.
+	/// Returns whether the file/folder exists.
+	/// Convenience proxy for Foundation fileExists method.
 	///
 	/// - Will return `false` if used on a symlink and the symlink's original file does not exist.
 	/// - Will still return `true` if used on an alias and the alias' original file does not exist.
 	public var fileExists: Bool {
+		
 		FileManager.default.fileExists(atPath: self.path)
+		
 	}
 	
 	/// **OTCore:**
@@ -28,8 +31,10 @@ extension URL {
 	///
 	/// - Will return `nil` if the URL is not a properly formatted file URL, or there was a problem querying the URL's file system attributes.
 	public var isFolder: Bool? {
+		
 		try? self.resourceValues(forKeys: Set([URLResourceKey.isDirectoryKey]))
 			.isDirectory
+		
 	}
 	
 }
@@ -43,7 +48,7 @@ extension URL {
 	/// Convenience method to test if a file URL is a Finder alias.
 	public var isFinderAlias: Bool {
 		
-		guard self.isFileURL else { return false } // fail if it's not a file URL
+		guard self.isFileURL else { return false }
 		
 		return (try? URL.bookmarkData(withContentsOf: self)) != nil
 		
@@ -52,23 +57,28 @@ extension URL {
 	/// **OTCore:**
 	/// Creates an alias of the base URL file or folder `at` the supplied target location. Will override existing path if it exists.
 	public func createFinderAlias(at url: URL) throws {
-		let data = try self.bookmarkData(
-			options: .suitableForBookmarkFile,
-			includingResourceValuesForKeys: nil,
-			relativeTo: nil)
+		
+		let data = try
+			self.bookmarkData(
+				options: .suitableForBookmarkFile,
+				includingResourceValuesForKeys: nil,
+				relativeTo: nil
+			)
 		
 		try URL.writeBookmarkData(data, to: url)
+		
 	}
 	
 	/// **OTCore:**
-	/// If self is a Finder alias, its resolved URL is returned whether it exists or not.
-	/// nil will be returned if self:
-	///   A) is not a Finder alias or does not exist, or
-	///   B) is a symbolic link or a hard link and not a Finder alias, or
-	///   C) does not exist.
+	/// If self is a Finder alias, its resolved URL is returned regardless whether it exists or not.
+	///
+	/// `nil` will be returned if any of the following is true for `self`:
+	/// - is not a Finder alias or does not exist, or
+	/// - is a symbolic link or a hard link and not a Finder alias, or
+	/// - does not exist.
 	public var resolvedFinderAlias: URL? {
 		
-		guard self.isFileURL else { return nil } // fail if it's not a file URL
+		guard self.isFileURL else { return nil }
 		
 		guard let data = try? URL.bookmarkData(withContentsOf: self)
 		else { return nil }
@@ -149,8 +159,10 @@ extension URL {
 	/// Returns `true` if new symlink gets created.
 	/// Returns `false` if destination already exists or if the symlink already exists.
 	public func createSymLink(at url: URL) throws {
+		
 		try FileManager.default
 			.createSymbolicLink(at: url, withDestinationURL: self)
+		
 	}
 	
 }

@@ -17,12 +17,20 @@ extension FloatingPoint {
 	/// **OTCore:**
 	/// Same as `ceil()`
 	/// (Functional convenience method)
-	public var ceiling: Self { Darwin.ceil(self) }
+	public var ceiling: Self {
+		
+		Darwin.ceil(self)
+		
+	}
 	
 	/// **OTCore:**
 	/// Same as `floor()`
 	/// (Functional convenience method)
-	public var floor: Self { Darwin.floor(self) }
+	public var floor: Self {
+		
+		Darwin.floor(self)
+		
+	}
 	
 }
 
@@ -32,31 +40,43 @@ extension FloatingPoint {
 // MARK: - .power()
 
 extension Double: FloatingPointPowerComputable {
+	
 	/// **OTCore:**
 	/// Same as `pow()`
 	/// (Functional convenience method)
 	public func power(_ exponent: Double) -> Double {
+		
 		pow(self, exponent)
+		
 	}
+	
 }
 
 extension Float: FloatingPointPowerComputable {
+	
 	/// **OTCore:**
 	/// Same as `powf()`
 	/// (Functional convenience method)
 	public func power(_ exponent: Float) -> Float {
+		
 		powf(self, exponent)
+		
 	}
+	
 }
 
 #if !(arch(arm64) || arch(arm) || os(watchOS)) // Float80 is now removed for ARM
 extension Float80: FloatingPointPowerComputable {
+	
 	/// **OTCore:**
 	/// Same as `powl()`
 	/// (Functional convenience method)
 	public func power(_ exponent: Float80) -> Float80 {
+		
 		powl(self, exponent)
+		
 	}
+	
 }
 #endif
 
@@ -70,7 +90,9 @@ extension FloatingPoint where Self : FloatingPointPowerComputable {
 	///
 	/// If `decimalPlaces` <= 0, then `trunc(self)` is returned.
 	public mutating func formTruncated(decimalPlaces: Int) {
+		
 		self = self.truncated(decimalPlaces: decimalPlaces)
+		
 	}
 	
 	/// **OTCore:**
@@ -78,12 +100,14 @@ extension FloatingPoint where Self : FloatingPointPowerComputable {
 	///
 	/// If `decimalPlaces` <= 0, then trunc(self) is returned.
 	public func truncated(decimalPlaces: Int) -> Self {
+		
 		if decimalPlaces < 1 {
 			return trunc(self)
 		}
 		
 		let offset = Self(10).power(Self(decimalPlaces))
 		return trunc(self * offset) / offset
+		
 	}
 	
 }
@@ -95,10 +119,12 @@ extension FloatingPoint {
 	///
 	/// - Note: Internally, employs `trunc()` and `.truncatingRemainder(dividingBy:)`.
 	public func quotientAndRemainder(dividingBy: Self) -> (quotient: Self, remainder: Self) {
+		
 		let calculation = (self / dividingBy)
 		let integral = trunc(calculation)
 		let fraction = self.truncatingRemainder(dividingBy: dividingBy)
 		return (quotient: integral, remainder: fraction)
+		
 	}
 	
 	/// **OTCore:**
@@ -107,15 +133,19 @@ extension FloatingPoint {
 	///
 	/// Note: this can result in a non-trivial loss of precision for the fractional part.
 	public var integralAndFraction: (integral: Self, fraction: Self) {
+		
 		let integral = trunc(self)
 		let fraction = self - integral
 		return (integral: integral, fraction: fraction)
+		
 	}
 	
 	/// **OTCore:**
 	/// Returns the integral part (digits before the decimal point)
 	public var integral: Self {
+		
 		integralAndFraction.integral
+		
 	}
 	
 	/// **OTCore:**
@@ -123,7 +153,9 @@ extension FloatingPoint {
 	///
 	/// Note: this can result in a non-trivial loss of precision for the fractional part.
 	public var fraction: Self {
+		
 		integralAndFraction.fraction
+		
 	}
 	
 }

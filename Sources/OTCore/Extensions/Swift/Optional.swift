@@ -27,7 +27,9 @@ extension Optional: OptionalType {
 	/// Semantic workaround to make `.optional` available on all Optionals.
 	/// Used to enable extensions on types such as `Type<T>?`.
 	@inlinable public var optional: Wrapped? {
+		
 		self
+		
 	}
 	
 }
@@ -41,7 +43,9 @@ extension Optional {
 	/// Same as `self ?? defaultValue`
 	/// (Functional convenience method)
 	@inlinable public func ifNil(_ defaultValue: Wrapped) -> Wrapped {
+		
 		self ?? defaultValue
+		
 	}
 	
 }

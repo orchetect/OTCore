@@ -16,7 +16,7 @@ class Extensions_Swift_Integers_Tests: XCTestCase {
 	override func setUp() { super.setUp() }
 	override func tearDown() { super.tearDown() }
 	
-	func testTypeConversions_IntsToInts() {
+	func testTypeConversions_IntsToIntsAndFloats() {
 		
 		// Int
 		
@@ -37,8 +37,6 @@ class Extensions_Swift_Integers_Tests: XCTestCase {
 		#if !(arch(arm64) || arch(arm) || os(watchOS)) // Float80 is now removed for ARM
 		_ = 1.float80
 		#endif
-		_ = 1.cgFloat
-		_ = 1.decimal
 		
 		// UInt
 		
@@ -59,8 +57,6 @@ class Extensions_Swift_Integers_Tests: XCTestCase {
 		#if !(arch(arm64) || arch(arm) || os(watchOS)) // Float80 is now removed for ARM
 		_ = UInt(1).float80
 		#endif
-		_ = UInt(1).cgFloat
-		_ = UInt(1).decimal
 		
 		// Int8
 		
@@ -81,8 +77,6 @@ class Extensions_Swift_Integers_Tests: XCTestCase {
 		#if !(arch(arm64) || arch(arm) || os(watchOS)) // Float80 is now removed for ARM
 		_ = Int8(1).float80
 		#endif
-		_ = Int8(1).cgFloat
-		_ = Int8(1).decimal
 		
 		// UInt8
 		
@@ -103,8 +97,6 @@ class Extensions_Swift_Integers_Tests: XCTestCase {
 		#if !(arch(arm64) || arch(arm) || os(watchOS)) // Float80 is now removed for ARM
 		_ = UInt8(1).float80
 		#endif
-		_ = UInt8(1).cgFloat
-		_ = UInt8(1).decimal
 		
 		// Int16
 		
@@ -125,8 +117,6 @@ class Extensions_Swift_Integers_Tests: XCTestCase {
 		#if !(arch(arm64) || arch(arm) || os(watchOS)) // Float80 is now removed for ARM
 		_ = Int16(1).float80
 		#endif
-		_ = Int16(1).cgFloat
-		_ = Int16(1).decimal
 		
 		// UInt16
 		
@@ -147,8 +137,6 @@ class Extensions_Swift_Integers_Tests: XCTestCase {
 		#if !(arch(arm64) || arch(arm) || os(watchOS)) // Float80 is now removed for ARM
 		_ = UInt16(1).float80
 		#endif
-		_ = UInt16(1).cgFloat
-		_ = UInt16(1).decimal
 		
 		// Int32
 		
@@ -169,8 +157,6 @@ class Extensions_Swift_Integers_Tests: XCTestCase {
 		#if !(arch(arm64) || arch(arm) || os(watchOS)) // Float80 is now removed for ARM
 		_ = Int32(1).float80
 		#endif
-		_ = Int32(1).cgFloat
-		_ = Int32(1).decimal
 		
 		// UInt32
 		
@@ -191,8 +177,6 @@ class Extensions_Swift_Integers_Tests: XCTestCase {
 		#if !(arch(arm64) || arch(arm) || os(watchOS)) // Float80 is now removed for ARM
 		_ = UInt32(1).float80
 		#endif
-		_ = UInt32(1).cgFloat
-		_ = UInt32(1).decimal
 		
 		// Int64
 		
@@ -213,8 +197,6 @@ class Extensions_Swift_Integers_Tests: XCTestCase {
 		#if !(arch(arm64) || arch(arm) || os(watchOS)) // Float80 is now removed for ARM
 		_ = Int64(1).float80
 		#endif
-		_ = Int64(1).cgFloat
-		_ = Int64(1).decimal
 		
 		// UInt64
 		
@@ -235,8 +217,6 @@ class Extensions_Swift_Integers_Tests: XCTestCase {
 		#if !(arch(arm64) || arch(arm) || os(watchOS)) // Float80 is now removed for ARM
 		_ = UInt64(1).float80
 		#endif
-		_ = UInt64(1).cgFloat
-		_ = UInt64(1).decimal
 		
 	}
 	
@@ -321,17 +301,21 @@ class Extensions_Swift_Integers_Tests: XCTestCase {
 		
 	}
 	
-	func testBitwise() {
+	func testBit() {
 		
 		XCTAssertEqual(0b100.uint8.bit(0),	0)
 		XCTAssertEqual(0b100.uint8.bit(1),	0)
 		XCTAssertEqual(0b100.uint8.bit(2),	1)
 		
+	}
+	
+	func testInt8twosComplement() {
+		
 		XCTAssertEqual(Int8(-0b0100_0000).twosComplement, 0b1100_0000)
 		
 	}
 	
-	func testRandomNumbers() {
+	func testCollectionRandomNumbers() {
 		
 		// typical types
 		
@@ -359,6 +343,7 @@ class Extensions_Swift_Integers_Tests: XCTestCase {
 		arr.forEach {
 			XCTAssert(range.contains($0))
 		}
+		
 	}
 	
 	func testWrappingNumbers() {
@@ -479,7 +464,7 @@ class Extensions_Swift_Integers_Tests: XCTestCase {
 		
 	}
 	
-	func testNumberofDigits() {
+	func testNumberOfDigits() {
 		
 		XCTAssertEqual(     0.numberOfDigits,	1)
 		XCTAssertEqual(     1.numberOfDigits,	1)

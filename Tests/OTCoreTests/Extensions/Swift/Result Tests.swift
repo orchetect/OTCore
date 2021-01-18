@@ -16,19 +16,42 @@ class Extensions_Swift_Result_Tests: XCTestCase {
 	override func setUp() { super.setUp() }
 	override func tearDown() { super.tearDown() }
 	
-	func testResult() {
+	/// Enum for test
+	fileprivate enum PasswordError: Error, Equatable {
 		
-		enum PasswordError: Error {
-			case short
-			case obvious
-			case simple
-		}
+		case short
+		case obvious
+		case simple
 		
-		func doStuff(_ trigger: Bool) -> Result<String, PasswordError> {
-			return trigger ? .success("we succeeded") : .failure(.short)
-		}
+	}
+	
+	/// Func for test
+	fileprivate func doStuff(_ trigger: Bool) -> Result<String, PasswordError> {
+		
+		trigger
+			? .success("we succeeded")
+			: .failure(.short)
+		
+	}
+	
+	func testResultSuccessValue() {
 		
 		XCTAssertEqual(doStuff(true).successValue, "we succeeded")
+		XCTAssertNotEqual(doStuff(true).successValue, "blah blah")
+		
+	}
+	
+	func testResultFailureValue() {
+		
+		XCTAssertEqual(doStuff(false).failureValue, .short)
+		XCTAssertNotEqual(doStuff(false).failureValue, .simple)
+		
+	}
+	
+	func testResultIsSuccess() {
+		
+		XCTAssertEqual(doStuff(true).isSuccess, true)
+		XCTAssertEqual(doStuff(false).isSuccess, false)
 		
 	}
 	

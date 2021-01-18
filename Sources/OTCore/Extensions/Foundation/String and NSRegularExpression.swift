@@ -19,12 +19,16 @@ extension String {
 	public func regexMatches(pattern: String) -> [String] {
 		
 		do {
+			
 			let regex = try NSRegularExpression(pattern: pattern)
 			let nsString = self as NSString
 			let results = regex.matches(in: self, range: NSMakeRange(0, nsString.length))
 			return results.map { nsString.substring(with: $0.range)}
+			
 		} catch {
+			
 			return []
+			
 		}
 		
 	}
@@ -34,19 +38,26 @@ extension String {
 	public func regexMatches(pattern: String, replacementTemplate: String) -> String? {
 		
 		do {
+			
 			let regex = try NSRegularExpression(pattern: pattern)
+			
 			let nsString = self as NSString
+			
 			regex.numberOfMatches(in: self,
 								  options: .withTransparentBounds,
 								  range: NSMakeRange(0, nsString.length))
+			
 			let replaced = regex.stringByReplacingMatches(in: self,
 														  options: .withTransparentBounds,
 														  range: NSMakeRange(0, nsString.length),
 														  withTemplate: replacementTemplate)
 			
 			return replaced
+			
 		} catch {
+			
 			return nil
+			
 		}
 		
 	}
@@ -56,8 +67,11 @@ extension String {
 	public func regexMatches(captureGroupsFromPattern: String) -> [String?] {
 		
 		do {
+			
 			let regex = try NSRegularExpression(pattern: captureGroupsFromPattern, options: [])
+			
 			let nsString = self as NSString
+			
 			let results = regex.matches(in: self,
 										options: .withTransparentBounds,
 										range: NSMakeRange(0, nsString.length))
@@ -76,8 +90,11 @@ extension String {
 			}
 			
 			return matches
+			
 		} catch {
+			
 			return []
+			
 		}
 		
 	}

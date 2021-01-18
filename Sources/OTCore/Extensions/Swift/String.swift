@@ -6,7 +6,7 @@
 //  Copyright © 2018 Steffan Andrews. All rights reserved.
 //
 
-// MARK: - Convenience Variables
+// MARK: - String Convenience Constants
 
 extension String {
 	
@@ -31,6 +31,36 @@ extension String {
 	@inlinable public static var null: Self { "\0" } // { Self(UnicodeScalar(0)) }
 	
 }
+
+
+// MARK: - Character Convenience Constants
+
+extension Character {
+	
+	/// **OTCore:**
+	/// Convenience constant.
+	@inlinable public static var quote: Self { "\"" }
+	
+	/// **OTCore:**
+	/// Convenience constant.
+	@inlinable public static var tab: Self { "\t" }
+	
+	/// **OTCore:**
+	/// Convenience constant.
+	@inlinable public static var space: Self { " " }
+	
+	/// **OTCore:**
+	/// Convenience constant.
+	@inlinable public static var newLine: Self { "\n" }
+	
+	/// **OTCore:**
+	/// Convenience constant.
+	@inlinable public static var null: Self { "\0" } // { Self(UnicodeScalar(0)) }
+	
+}
+
+
+// MARK: - String functional append constants
 
 extension String {
 	
@@ -57,33 +87,6 @@ extension String {
 	public mutating func tab() {
 		self += Self.tab
 	}
-	
-}
-
-
-// MARK: - Character Convenience Variables
-
-extension Character {
-	
-	/// **OTCore:**
-	/// Convenience constant.
-	@inlinable public static var quote: Self { "\"" }
-	
-	/// **OTCore:**
-	/// Convenience constant.
-	@inlinable public static var tab: Self { "\t" }
-	
-	/// **OTCore:**
-	/// Convenience constant.
-	@inlinable public static var space: Self { " " }
-	
-	/// **OTCore:**
-	/// Convenience constant.
-	@inlinable public static var newLine: Self { "\n" }
-	
-	/// **OTCore:**
-	/// Convenience constant.
-	@inlinable public static var null: Self { "\0" } // { Self(UnicodeScalar(0)) }
 	
 }
 
@@ -229,39 +232,47 @@ extension StringProtocol {
 extension String {
 	
 	/// **OTCore:**
-	/// Removes the suffix of a String if it exists and returns a new String.
-	public func removingSuffix(_ suffix: String) -> String {
-		if self.hasSuffix(suffix) {
-			return String(self.dropLast(suffix.count))
-		}
-		
-		return self
-	}
-	
-	/// **OTCore:**
-	/// Removes the suffix of a String if it exists.
-	public mutating func removeSuffix(_ suffix: String) {
-		if self.hasSuffix(suffix) {
-			self.removeLast(suffix.count)
-		}
-	}
-	
-	/// **OTCore:**
 	/// Removes the prefix of a String if it exists and returns a new String.
 	public func removingPrefix(_ prefix: String) -> String {
+		
 		if self.hasPrefix(prefix) {
 			return String(self.dropFirst(prefix.count))
 		}
 		
 		return self
+		
 	}
 	
 	/// **OTCore:**
 	/// Removes the prefix of a String if it exists.
 	public mutating func removePrefix(_ prefix: String) {
+		
 		if self.hasPrefix(prefix) {
 			self.removeFirst(prefix.count)
 		}
+		
+	}
+	
+	/// **OTCore:**
+	/// Removes the suffix of a String if it exists and returns a new String.
+	public func removingSuffix(_ suffix: String) -> String {
+		
+		if self.hasSuffix(suffix) {
+			return String(self.dropLast(suffix.count))
+		}
+		
+		return self
+		
+	}
+	
+	/// **OTCore:**
+	/// Removes the suffix of a String if it exists.
+	public mutating func removeSuffix(_ suffix: String) {
+		
+		if self.hasSuffix(suffix) {
+			self.removeLast(suffix.count)
+		}
+		
 	}
 	
 }
@@ -276,7 +287,7 @@ extension String {
 ///
 ///     "\(object, ifNil: "Object is nil.")"
 ///
-public func optionalString(describing object: Any?, ifNil: String) -> String {
+@inlinable public func optionalString(describing object: Any?, ifNil: String) -> String {
 	
 	object != nil
 		? String(describing: object!)
@@ -291,8 +302,10 @@ extension DefaultStringInterpolation {
 	
 	/// **OTCore:**
 	/// Convenience: Returns unwrapped String representation of a Swift Optional, otherwise returns contents of `ifNil` string.
-	public mutating func appendInterpolation(_ object: Any?, ifNil: String) {
+	@inlinable public mutating func appendInterpolation(_ object: Any?, ifNil: String) {
+		
 		appendLiteral(optionalString(describing: object, ifNil: ifNil))
+		
 	}
 	
 }
@@ -301,7 +314,8 @@ extension DefaultStringInterpolation {
 	
 	/// **OTCore:**
 	/// Convenience interpolator for converting a value to a given radix.
-	public mutating func appendInterpolation(_ value: String, radix: Int) {
+	@inlinable public mutating func appendInterpolation(_ value: String, radix: Int) {
+		
 		guard let result = Int(value, radix: radix) else {
 			appendLiteral("nil")
 			return
@@ -319,7 +333,9 @@ extension Substring {
 	/// **OTCore:**
 	/// Return a new `String`.
 	@inlinable public var string: String {
+		
 		String(self)
+		
 	}
 	
 }
@@ -330,7 +346,9 @@ extension Character {
 	/// Same as `String()`
 	/// (Functional convenience method)
 	@inlinable public var string: String {
+		
 		String(self)
+		
 	}
 	
 }

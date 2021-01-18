@@ -14,7 +14,6 @@ import Foundation
 
 extension Double:	FloatingPointHighPrecisionStringConvertible { }
 extension Float:	FloatingPointHighPrecisionStringConvertible { }
-extension CGFloat:	FloatingPointHighPrecisionStringConvertible { }
 
 /// Internal - cached
 fileprivate let ZeroCharacterSet = CharacterSet(charactersIn: "0")
@@ -25,6 +24,7 @@ extension CVarArg where Self : FloatingPointHighPrecisionStringConvertible {
 	/// **OTCore:**
 	/// Returns a string representation of a floating-point number, with maximum 100 decimal places of precision.
 	public var stringValueHighPrecision: String {
+		
 		var formatted = String(format: "%.100f", self)
 			.trimmingCharacters(in: ZeroCharacterSet)
 		
@@ -33,6 +33,7 @@ extension CVarArg where Self : FloatingPointHighPrecisionStringConvertible {
 		formatted.removeSuffix(".")
 		
 		return formatted
+		
 	}
 	
 }

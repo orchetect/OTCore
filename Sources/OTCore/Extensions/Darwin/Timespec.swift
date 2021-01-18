@@ -114,7 +114,7 @@ extension timespec: Equatable {
 	/// OTCore
 	@inlinable static public func == (lhs: Self, rhs: Self) -> Bool {
 		
-		return lhs.tv_sec == rhs.tv_sec &&
+		lhs.tv_sec == rhs.tv_sec &&
 			lhs.tv_nsec == rhs.tv_nsec
 		
 	}

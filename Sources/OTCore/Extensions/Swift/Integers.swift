@@ -155,6 +155,7 @@ extension BinaryInteger {
 	/// **OTCore:**
 	/// Convenience method to return a String, padded to `paddedTo` number of leading zeros
 	@inlinable public func string(paddedTo: Int) -> String {
+		
 		if let cVarArg = self as? CVarArg {
 			return String(format: "%0\(paddedTo)d", cVarArg)
 		} else {
@@ -174,19 +175,36 @@ extension BinaryInteger {
 extension BinaryInteger {
 	
 	/// **OTCore:**
-	/// Rounds an integer away from zero to the nearest multiple of `toMultiplesOf`. Works on negative integers too, away from 0.
+	/// Rounds an integer away from zero to the nearest multiple of `toMultiplesOf`.
+	///
+	/// Example:
+	///
+	///        1.roundedAwayFromZero(toMultiplesOf: 2) // 2
+	///        5.roundedAwayFromZero(toMultiplesOf: 4) // 8
+	///     (-1).roundedAwayFromZero(toMultiplesOf: 2) // -2
+	///
 	@inlinable public func roundedAwayFromZero(toMultiplesOf: Self) -> Self {
+		
 		let source: Self = self >= 0 ? self : 0 - self
 		let isNegative: Bool = self < 0
 		
 		let rem = source % toMultiplesOf
 		let divisions = rem == 0 ? source : source + toMultiplesOf - rem
 		return isNegative ? 0 - divisions : divisions
+		
 	}
 	
 	/// **OTCore:**
-	/// Rounds an integer up to the nearest multiple of `toMultiplesOf`. Works on negative integers too, trending positive.
+	/// Rounds an integer up to the nearest multiple of `toMultiplesOf`.
+	///
+	/// Example:
+	///
+	///        1.roundedUp(toMultiplesOf: 2) // 2
+	///        5.roundedUp(toMultiplesOf: 4) // 8
+	///     (-3).roundedUp(toMultiplesOf: 2) // -2
+	///
 	@inlinable public func roundedUp(toMultiplesOf: Self) -> Self {
+		
 		if toMultiplesOf < 1 { return self }
 		
 		let source: Self = self >= 0 ? self : 0 - self
@@ -195,17 +213,28 @@ extension BinaryInteger {
 		let rem = source % toMultiplesOf
 		let divisions = rem == 0 ? self : self + (isNegative ? rem : toMultiplesOf - rem )
 		return divisions
+		
 	}
 	
 	/// **OTCore:**
-	/// Rounds an integer down to the nearest multiple of `toMultiplesOf`. Works on negative integers too, trending negative.
+	/// Rounds an integer down to the nearest multiple of `toMultiplesOf`.
+	///
+	/// Example:
+	///
+	///        1.roundedDown(toMultiplesOf: 2) // 0
+	///        3.roundedDown(toMultiplesOf: 4) // 0
+	///        5.roundedDown(toMultiplesOf: 4) // 4
+	///     (-1).roundedDown(toMultiplesOf: 4) // -4
+	///
 	@inlinable public func roundedDown(toMultiplesOf: Self) -> Self {
+		
 		let source: Self = self >= 0 ? self : 0 - self
 		let isNegative: Bool = self < 0
 		
 		let rem = source % toMultiplesOf
 		let divisions = rem == 0 ? self : self - (isNegative ? toMultiplesOf - rem : rem)
 		return divisions
+		
 	}
 	
 }
@@ -216,9 +245,11 @@ extension BinaryInteger {
 extension UnsignedInteger {
 	
 	/// **OTCore:**
-	/// Access bits, zero-based from right-to-left
+	/// Access binary bits, zero-based from right-to-left
 	@inlinable public func bit(_ position: Int) -> Int {
+		
 		Int((self & (0b1 << position)) >> position)
+		
 	}
 	
 }
@@ -226,19 +257,22 @@ extension UnsignedInteger {
 extension Int8 {
 	
 	/// **OTCore:**
-	/// Returns a two's complement bit format of an Int8 so it can be stored as a byte (UInt8)
+	/// Returns a two's complement bit format of an `Int8` so it can be stored as a byte (`UInt8`)
 	@inlinable public var twosComplement: UInt8 {
+		
 		UInt8(bitPattern: self)
+		
 	}
 	
 }
 
 // MARK: - Random numbers
 
-extension Array where Element : FixedWidthInteger {
+extension RangeReplaceableCollection where Element : FixedWidthInteger {
 	
 	/// **OTCore:**
-	/// Returns an array of random numbers. Values will be beween the range given, with an array size of `count`.
+	/// Returns a collection of random numbers.
+	/// Values will be between the range given, with a collection size of `count`.
 	///
 	/// Example:
 	///

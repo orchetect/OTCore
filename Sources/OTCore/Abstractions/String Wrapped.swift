@@ -56,24 +56,30 @@ extension String {
 	}
 	
 	/// **OTCore:**
-	/// Syntactic sugar. Returns the string wrapped with double quote marks (").
+	/// Syntactic sugar. Returns the string wrapped with parentheses: `( )`.
 	/// Same as `self.wrapped(with: .parentheses)`
 	@inlinable public var parens: Self {
+		
 		self.wrapped(with: .parentheses)
+		
 	}
 	
 	/// **OTCore:**
-	/// Syntactic sugar. Returns the string wrapped with double quote marks (').
+	/// Syntactic sugar. Returns the string wrapped with single quote marks: `' '`.
 	/// Same as `self.wrapped(with: .singleQuotes)`
 	@inlinable public var singleQuoted: Self {
+		
 		self.wrapped(with: .singleQuotes)
+		
 	}
 	
 	/// **OTCore:**
-	/// Syntactic sugar. Returns the string wrapped with double quote marks (").
+	/// Syntactic sugar. Returns the string wrapped with double quote marks: `" "`.
 	/// Same as `self.wrapped(with: .quotes)`
 	@inlinable public var quoted: Self {
+		
 		self.wrapped(with: .quotes)
+		
 	}
 	
 }

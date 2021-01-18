@@ -34,8 +34,8 @@ class Extensions_Swift_Operators_Tests: XCTestCase {
 		
 		// Decimal
 		
-//		_ = (43.0 as Decimal) % (10.0 as Decimal)					// doesn't work
-//		_ = (43.0 as NSDecimalNumber) % (10.0 as NSDecimalNumber)	// doesn't work
+		//_ = (43.0 as Decimal) % (10.0 as Decimal)					// doesn't work
+		//_ = (43.0 as NSDecimalNumber) % (10.0 as NSDecimalNumber)	// doesn't work
 		
 		// .truncatingRemainder(dividingBy:) and fmod() are not usable with Decimal
 		

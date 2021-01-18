@@ -19,9 +19,13 @@ class Global_Globals_Tests: XCTestCase {
 	func testBundle() {
 		
 		XCTAssertEqual(Globals.bundle.name, "xctest")
+		
 		XCTAssertEqual(Globals.bundle.bundleID, "com.apple.dt.xctest.tool")
+		
 		_ = Globals.bundle.versionShort // XCTest doesn't return a value
+		
 		XCTAssertEqual(Globals.bundle.versionMajor, 0) // XCTest doesn't return a value
+		
 		XCTAssertTrue(Globals.bundle.versionBuildNumber != "")
 		
 	}
@@ -34,6 +38,7 @@ class Global_Globals_Tests: XCTestCase {
 		
 		#if os(macOS)
 		XCTAssertNotNil(Globals.system.serialNumber)
+		
 		XCTAssertNotNil(Globals.system.hardwareUUID)
 		#endif
 		

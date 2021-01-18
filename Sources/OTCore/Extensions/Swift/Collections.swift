@@ -112,7 +112,9 @@ extension Collection where Index == Int {
 		
 		guard count > 0 else { return nil }
 		guard index >= 0 else { return nil }
+		
 		let idx = indices.index(startIndex, offsetBy: index)
+		
 		return index < indices.count ? self[idx] : nil
 		
 	}
@@ -124,7 +126,9 @@ extension Collection where Index == Int {
 		
 		guard count > 0 else { return defaultValue() }
 		guard index >= 0 else { return defaultValue() }
+		
 		let idx = indices.index(startIndex, offsetBy: index)
+		
 		return index < indices.count ? self[idx] : defaultValue()
 		
 	}
@@ -140,11 +144,13 @@ extension RangeReplaceableCollection {
 	/// Same as `.remove(at:)` but returns an optional instead of throwing an exception if the index does not exist
 	@discardableResult
 	@inlinable public mutating func remove(safeAt index: Index) -> Element? {
+		
 		if indices.contains(index) {
 			return self.remove(at: index)
 		}
 		
 		return nil
+		
 	}
 	
 }
@@ -189,7 +195,7 @@ extension Array {
 }
 
 
-// MARK: - Convenience methods
+// MARK: - count(of:)
 
 extension Collection where Element : Hashable {
 	
@@ -204,7 +210,10 @@ extension Collection where Element : Hashable {
 	
 }
 
-extension Array where Element: BinaryInteger {
+
+// MARK: - stringValueArrayLiteral
+
+extension Collection where Element: BinaryInteger {
 	
 	/// **OTCore:**
 	/// Returns a string of integer literals, useful for generating Swift array declarations when debugging.
@@ -251,13 +260,16 @@ extension Collection where Element: Strideable,
 		guard self.count > 0 else { return nil }
 		
 		for idx in self.startIndex..<self.endIndex {
+			
 			if idx >= self.endIndex.advanced(by: -1) { continue }
+			
 			if self[idx.advanced(by: 1)] > (self[idx].advanced(by: 1)) {
 				// found a gap
 				let gapValue = self[idx].advanced(by: 1)
 				if after == nil { return gapValue }
 				if gapValue > after! { return gapValue }
 			}
+			
 		}
 		
 		return nil
@@ -276,7 +288,11 @@ extension Set {
 	@inlinable public func union<S>(updating other: S) -> Set<Set<Element>.Element> where Element == S.Element, S : Sequence {
 		
 		var newSet = self
-		other.forEach { newSet.update(with: $0) }
+		
+		other.forEach {
+			newSet.update(with: $0)
+		}
+		
 		return newSet
 		
 	}

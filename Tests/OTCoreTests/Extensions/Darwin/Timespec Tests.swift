@@ -83,7 +83,7 @@ class Extensions_Darwin_Timespec_Tests: XCTestCase {
 		
 	}
 	
-	func testTimespecOperatorsBoundaries() {
+	func testTimespecOperators_Boundaries() {
 		
 		// - boundaries
 		

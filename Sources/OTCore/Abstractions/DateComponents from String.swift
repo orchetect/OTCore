@@ -209,7 +209,9 @@ extension String {
 	/// **OTCore:**
 	/// Attempts to parse Year, Month and Day components from an unformatted date string using simple heuristics.
 	public var dateComponents: DateComponents? {
+		
 		DateComponents(string: self)
+		
 	}
 	
 }
@@ -223,7 +225,9 @@ extension DateComponents {
 	/// Date string mask.
 	/// (Currently only supports `YYYYMMDD` but will support more basic formats in the future.)
 	public enum StringMask {
+		
 		case YYYYMMDD
+		
 	}
 	
 	/// **OTCore:**

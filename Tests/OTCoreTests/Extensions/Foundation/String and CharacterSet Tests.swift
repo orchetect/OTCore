@@ -109,36 +109,55 @@ class Extensions_Foundation_StringAndCharacterSet_Tests: XCTestCase {
 		
 	}
 	
-	func testFilters() {
+	func testOnlyCharacterSet() {
 		
 		// .only
 		
-		let str = "abcdefg 12345678 abcdefg 12345678"
-		
-		XCTAssertEqual(str.only(CharacterSet(charactersIn: "def456")),
-					   "def456def456")
-		XCTAssertEqual(str.only(characters: "def456"),
+		XCTAssertEqual("abcdefg 12345678 abcdefg 12345678"
+						.only(CharacterSet(charactersIn: "def456")),
 					   "def456def456")
 		
-		XCTAssertEqual("💚test_123,456. 789".only(.alphanumerics),
+		XCTAssertEqual("abcdefg 12345678 abcdefg 12345678"
+						.only(characters: "def456"),
+					   "def456def456")
+		
+		XCTAssertEqual("💚test_123,456. 789"
+						.only(.alphanumerics),
 					   "test123456789")
-		XCTAssertEqual("💚test_123,456. 789".onlyAlphanumerics,
-					   "💚test_123,456. 789".only(.alphanumerics))
-		XCTAssertEqual("💚test_123,456. 789".only(CharacterSet(charactersIn: "abcdefghijklmnopqrstuvwxyz1234567890")),
+		
+		XCTAssertEqual("💚test_123,456. 789"
+						.onlyAlphanumerics,
+					   "💚test_123,456. 789"
+						.only(.alphanumerics))
+		
+		XCTAssertEqual("💚test_123,456. 789"
+						.only(CharacterSet(charactersIn: "abcdefghijklmnopqrstuvwxyz1234567890")),
 					   "test123456789")
-		XCTAssertEqual("💚test_123,456. 789".only(characters: "abcdefghijklmnopqrstuvwxyz1234567890"),
+		
+		XCTAssertEqual("💚test_123,456. 789"
+						.only(characters: "abcdefghijklmnopqrstuvwxyz1234567890"),
 					   "test123456789")
+		
+	}
+	
+	func testRemovingCharacters() {
 		
 		// .removing
 		
-		XCTAssertEqual("abcdefg 12345678 abcdefg 12345678".removing(.alphanumerics),
+		XCTAssertEqual("abcdefg 12345678 abcdefg 12345678"
+						.removing(.alphanumerics),
 					   "   ")
-		XCTAssertEqual("abcdefg 12345678 abcdefg 12345678".removing(.letters),
+		XCTAssertEqual("abcdefg 12345678 abcdefg 12345678"
+						.removing(.letters),
 					   " 12345678  12345678")
-		XCTAssertEqual("abcdefg 12345678 abcdefg 12345678".removing(CharacterSet(charactersIn: "bdf")),
+		
+		XCTAssertEqual("abcdefg 12345678 abcdefg 12345678"
+						.removing(CharacterSet(charactersIn: "bdf")),
 					   "aceg 12345678 aceg 12345678")
-		XCTAssertEqual("abcdefg 12345678 abcdefg 12345678".removing(characters: "bdf"),
-		"aceg 12345678 aceg 12345678")
+		
+		XCTAssertEqual("abcdefg 12345678 abcdefg 12345678"
+						.removing(characters: "bdf"),
+					   "aceg 12345678 aceg 12345678")
 		
 	}
 	

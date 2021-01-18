@@ -16,46 +16,107 @@ class Extensions_Swift_String_Tests: XCTestCase {
 	override func setUp() { super.setUp() }
 	override func tearDown() { super.tearDown() }
 	
-	func testRanges() {
+	func testStringConstants() {
+		
+		_ = String.quote
+		_ = String.tab
+		_ = String.space
+		_ = String.newLine
+		_ = String.null
+		
+	}
+	
+	func testCharacterConstants() {
+		
+		_ = Character.quote
+		_ = Character.tab
+		_ = Character.space
+		_ = Character.newLine
+		_ = Character.null
+		
+	}
+	
+	func testStringFunctionalAppendConstants() {
+		
+		// .newLined
+		
+		XCTAssertEqual("test".newLined, "test\n")
+		
+		// .tabbed
+		
+		XCTAssertEqual("test".tabbed, "test\t")
+		
+		// .newLine()
+		
+		var strNL = "test"
+		strNL.newLine()
+		XCTAssertEqual(strNL, "test\n")
+		
+		// .tab()
+		
+		var strTab = "test"
+		strTab.tab()
+		XCTAssertEqual(strTab, "test\t")
+		
+	}
+	
+	func testRangeBackwards() {
 		
 		// .range(backwards:)
 		
-		var str = "This is an example string of an example."
+		let str = "This is an example string of an example."
 		
-		var rangeBackwards = str.range(backwards: "example")!
-		XCTAssertEqual(str.distance(from: str.startIndex, to: rangeBackwards.lowerBound), 32)
-		XCTAssertEqual(str.distance(from: str.startIndex, to: rangeBackwards.upperBound), 39)
+		let rangeBackwards = str.range(backwards: "example")!
+		
+		XCTAssertEqual(str.distance(from: str.startIndex,
+									to: rangeBackwards.lowerBound), 32)
+		
+		XCTAssertEqual(str.distance(from: str.startIndex,
+									to: rangeBackwards.upperBound), 39)
 		
 		XCTAssertNil(str.range(backwards: "EXAMPLE"))	// nil, case sensitive
 		
 		XCTAssertNil(str.range(backwards: "zzz"))		// nil, not in the string
 		
-		
+	}
+	
+	func testRangeBackwardsCaseInsensitive() {
+	
 		// .range(backwardsCaseInsensitive:)
 		
-		str = "This is an example string of an example."
+		var str = "This is an example string of an example."
 		
-		rangeBackwards = str.range(backwardsCaseInsensitive: "eXaMpLe")!
-		XCTAssertEqual(str.distance(from: str.startIndex, to: rangeBackwards.lowerBound), 32)
-		XCTAssertEqual(str.distance(from: str.startIndex, to: rangeBackwards.upperBound), 39)
+		let rangeBackwards = str.range(backwardsCaseInsensitive: "eXaMpLe")!
+		
+		XCTAssertEqual(str.distance(from: str.startIndex,
+									to: rangeBackwards.lowerBound), 32)
+		
+		XCTAssertEqual(str.distance(from: str.startIndex,
+									to: rangeBackwards.upperBound), 39)
 		
 		XCTAssertNotNil(str.range(backwardsCaseInsensitive: "EXAMPLE"))	// case insensitive
 		
 		XCTAssertNil(str.range(backwardsCaseInsensitive: "zzz"))		// nil, not in the string
 		
+	}
+	
+	func testRangeContainsCaseInsensitive() {
 		
 		// .contains(caseInsensitive:)
 		
-		str = "This is an example string."
+		let str = "This is an example string."
 		
 		XCTAssertTrue( str.contains(caseInsensitive: "example"))
 		XCTAssertTrue( str.contains(caseInsensitive: "EXAMPLE"))
 		XCTAssertFalse(str.contains(caseInsensitive: "zzz"))
 		
+	}
+	
+	func testRangeStartsWithCaseInsensitive() {
 		
 		// .starts(withCaseInsensitive:)
 		
-		str = "This is an example string."
+		let str = "This is an example string."
 		
 		XCTAssertTrue( str.starts(withCaseInsensitive: "this"))
 		XCTAssertTrue( str.starts(withCaseInsensitive: "THIS"))
@@ -75,26 +136,16 @@ class Extensions_Swift_String_Tests: XCTestCase {
 		
 		XCTAssertEqual("    string    ".trimmed, "string")
 		
+	}
+	
+	func testTrim() {
+		
 		// .trim()
 		
 		var str = "    string    "
 		str.trim()
 		
 		XCTAssertEqual(str, "string")
-		
-	}
-	
-	func testWrapped() {
-		
-		// .wrapped
-		
-		XCTAssertEqual("string".wrapped(with: "-"),				"-string-")
-		
-		XCTAssertEqual("string".wrapped(with: .parentheses),	"(string)")
-		XCTAssertEqual("string".wrapped(with: .brackets),		"[string]")
-		XCTAssertEqual("string".wrapped(with: .braces),			"{string}")
-		XCTAssertEqual("string".wrapped(with: .angleBrackets),	"<string>")
-		
 		
 	}
 	
@@ -110,57 +161,87 @@ class Extensions_Swift_String_Tests: XCTestCase {
 		
 	}
 	
-	func testPrefixAndSuffixExtensions() {
+	func testRemovePrefix() {
 		
-		// Suffix
+		var strrr = "///Users/user"
 		
-		var strrr = "file:///Users/user///"
-		XCTAssertEqual(strrr.removingSuffix("/"),  "file:///Users/user//")	; XCTAssertEqual(strrr, "file:///Users/user///")
-		XCTAssertEqual(strrr.removingSuffix("/"),  "file:///Users/user//")	; XCTAssertEqual(strrr, "file:///Users/user///")
-		XCTAssertEqual(strrr.removingSuffix("zz"), "file:///Users/user///")	; XCTAssertEqual(strrr, "file:///Users/user///")
-		strrr.removeSuffix("/")												; XCTAssertEqual(strrr, "file:///Users/user//")
-		strrr.removeSuffix("/")												; XCTAssertEqual(strrr, "file:///Users/user/")
-		strrr.removeSuffix("/")												; XCTAssertEqual(strrr, "file:///Users/user")
-		strrr.removeSuffix("/")												; XCTAssertEqual(strrr, "file:///Users/user")
+		// .removingPrefix
 		
-		// Prefix
+		XCTAssertEqual(strrr.removingPrefix("/"), "//Users/user")
+		XCTAssertEqual(strrr, "///Users/user")
 		
-		strrr = "///Users/user"
-		XCTAssertEqual(strrr.removingPrefix("/"),   "//Users/user")			; XCTAssertEqual(strrr, "///Users/user")
-		XCTAssertEqual(strrr.removingPrefix("/"),   "//Users/user")			; XCTAssertEqual(strrr, "///Users/user")
-		XCTAssertEqual(strrr.removingPrefix("zz"), "///Users/user")			; XCTAssertEqual(strrr, "///Users/user")
-		strrr.removePrefix("/")												; XCTAssertEqual(strrr, "//Users/user")
-		strrr.removePrefix("/")												; XCTAssertEqual(strrr, "/Users/user")
-		strrr.removePrefix("/")												; XCTAssertEqual(strrr, "Users/user")
-		strrr.removePrefix("/")												; XCTAssertEqual(strrr, "Users/user")
+		XCTAssertEqual(strrr.removingPrefix("/"), "//Users/user")
+		XCTAssertEqual(strrr, "///Users/user")
+		
+		XCTAssertEqual(strrr.removingPrefix("zz"), "///Users/user")
+		XCTAssertEqual(strrr, "///Users/user")
+		
+		// .removePrefix
+		
+		strrr.removePrefix("/")
+		XCTAssertEqual(strrr, "//Users/user")
+		
+		strrr.removePrefix("/")
+		XCTAssertEqual(strrr, "/Users/user")
+		
+		strrr.removePrefix("/")
+		XCTAssertEqual(strrr, "Users/user")
+		
+		strrr.removePrefix("/")
+		XCTAssertEqual(strrr, "Users/user")
+		
 	}
 	
-	func testTitleCased() {
+	func testRemoveSuffix() {
 		
-		XCTAssertEqual("this".titleCased,
-					   "This")
+		var strrr = "file:///Users/user///"
 		
-		XCTAssertEqual("this thing".titleCased,
-					   "This Thing")
+		// .removingSuffix
 		
-		XCTAssertEqual("this is a test".titleCased,
-					   "This is a Test")
+		XCTAssertEqual(strrr.removingSuffix("/"), "file:///Users/user//")
+		XCTAssertEqual(strrr, "file:///Users/user///")
+		
+		XCTAssertEqual(strrr.removingSuffix("/"), "file:///Users/user//")
+		XCTAssertEqual(strrr, "file:///Users/user///")
+		
+		XCTAssertEqual(strrr.removingSuffix("zz"), "file:///Users/user///")
+		XCTAssertEqual(strrr, "file:///Users/user///")
+		
+		// .removeSuffix
+		
+		strrr.removeSuffix("/")
+		XCTAssertEqual(strrr, "file:///Users/user//")
+		
+		strrr.removeSuffix("/")
+		XCTAssertEqual(strrr, "file:///Users/user/")
+		
+		strrr.removeSuffix("/")
+		XCTAssertEqual(strrr, "file:///Users/user")
+		
+		strrr.removeSuffix("/")
+		XCTAssertEqual(strrr, "file:///Users/user")
 		
 	}
 	
 	func testOptionalString() {
 		
-		// method
+		XCTAssertEqual(optionalString(describing: Int(exactly: 123),
+									  ifNil: "0"),
+					   "123")
 		
-		XCTAssertEqual(optionalString(describing: Int(exactly: 123), ifNil: "0"), "123")
+		XCTAssertEqual(optionalString(describing: Int(exactly: 123.4),
+									  ifNil: "0"),
+					   "0")
 		
-		XCTAssertEqual(optionalString(describing: Int(exactly: 123.4), ifNil: "0"), "0")
+	}
+	
+	func testStringInterpolationIfNil() {
 		
-		// string interpolation
+		XCTAssertEqual("\(Int(exactly: 123), ifNil: "0")",
+					   "123")
 		
-		XCTAssertEqual("\(Int(exactly: 123), ifNil: "0")", "123")
-		
-		XCTAssertEqual("\(Int(exactly: 123.4), ifNil: "0")", "0")
+		XCTAssertEqual("\(Int(exactly: 123.4), ifNil: "0")",
+					   "0")
 		
 	}
 	
@@ -168,6 +249,37 @@ class Extensions_Swift_String_Tests: XCTestCase {
 		
 		XCTAssertEqual("\("7F", radix: 16)", "127")
 		XCTAssertEqual("\("7F", radix: 2)", "nil")
+	}
+	
+	func testSubstringToString() {
+		
+		let str = "123"
+		
+		// form Substring
+		
+		let subStr = str.prefix(3)
+		XCTAssertEqual(String(describing: type(of: subStr)), "Substring")
+		
+		// .string
+		
+		let toStr = subStr.string
+		
+		XCTAssertEqual(toStr, String("123"))
+		XCTAssertEqual(String(describing: type(of: toStr)), "String")
+		
+	}
+	
+	func testCharacterToString() {
+		
+		let char = Character("1")
+		
+		// .string
+		
+		let toStr = char.string
+		
+		XCTAssertEqual(toStr, String("1"))
+		XCTAssertEqual(String(describing: type(of: toStr)), "String")
+		
 	}
 	
 }

@@ -140,33 +140,19 @@ class Extensions_Swift_FloatingPoint_Tests: XCTestCase {
 		
 	}
 	
-	func testCeiling() {
-		
-		XCTAssertEqual(123.45.ceiling, 124.0)
-		
-	}
-	
-	func testFloor() {
-		
-		XCTAssertEqual(123.45.floor, 123.0)
-		
-	}
-	
 	func testBoolValue() {
 		
 		// .boolValue
 		
-		var b: Bool = false
-		b = 0.0.boolValue
-		b = Float(1).boolValue
+		_ = 0.0.boolValue
+		
+		_ = Float(1).boolValue
 		
 		#if !(arch(arm64) || arch(arm) || os(watchOS)) // Float80 is now removed for ARM
-		b = Float80(1).boolValue
+		_ = Float80(1).boolValue
 		#endif
 		
-		b = CGFloat(1).boolValue
-		b = Decimal(1).boolValue
-		_ = b // silences 'variable was written to, but never read' warning
+		_ = CGFloat(1).boolValue
 		
 		XCTAssertEqual((-1.0).boolValue	, false)
 		XCTAssertEqual(0.0.boolValue	, false)
@@ -175,58 +161,9 @@ class Extensions_Swift_FloatingPoint_Tests: XCTestCase {
 		
 	}
 	
-	func testPower() {
-		
-		XCTAssertEqual(         2.0.power(3)	, 8.0) // Double
-		XCTAssertEqual(  Float(2.0).power(3)	, 8.0)
-		#if !(arch(arm64) || arch(arm) || os(watchOS)) // Float80 is now removed for ARM
-		XCTAssertEqual(Float80(2.0).power(3)	, 8.0)
-		#endif
-		XCTAssertEqual(CGFloat(2.0).power(3)	, 8.0)
-		XCTAssertEqual(Decimal(2.0).power(3)	, 8.0)
-		
-	}
-	
-	func testTruncated() {
-		
-		// Double .truncated()
-		
-		XCTAssertEqual(1.1234.truncated(decimalPlaces: -1), 1.0)
-		XCTAssertEqual(1.1234.truncated(decimalPlaces: 0),  1.0)
-		XCTAssertEqual(1.1234.truncated(decimalPlaces: 2),  1.12)
-		XCTAssertEqual(1.1234.truncated(decimalPlaces: 3),  1.123)
-		XCTAssertEqual(1.1234.truncated(decimalPlaces: 4),  1.1234)
-		XCTAssertEqual(1.1234.truncated(decimalPlaces: 5),  1.1234)
-		
-		XCTAssertEqual(0.123456789.truncated(decimalPlaces: 8), 0.12345678)
-		
-		var dbl = 0.1264
-		dbl.formTruncated(decimalPlaces: 2)
-		XCTAssertEqual(dbl, 0.12)
-		
-		// Float .truncated()
-		
-		var flt: Float = 1.1234
-		
-		XCTAssertEqual(flt.truncated(decimalPlaces: -1), 1.0)
-		XCTAssertEqual(flt.truncated(decimalPlaces: 0),  1.0)
-		XCTAssertEqual(flt.truncated(decimalPlaces: 2),  1.12)
-		XCTAssertEqual(flt.truncated(decimalPlaces: 3),  1.123)
-		XCTAssertEqual(flt.truncated(decimalPlaces: 4),  1.1234)
-		XCTAssertEqual(flt.truncated(decimalPlaces: 5),  1.1234)
-		
-		flt = 0.123456789
-		//		XCTAssertEqual(flt.truncated(decimalPlaces: 8), 0.12345678) // fails -- precision issue??
-		
-		flt = 0.1264
-		flt.formTruncated(decimalPlaces: 2)
-		XCTAssertEqual(flt, 0.12)
-		
-	}
-	
 	func testRounded() {
 		
-		// Double .rounded()
+		// Double .rounded(decimalPlaces:)
 		
 		XCTAssertEqual(1.62456.rounded(decimalPlaces: -1), 2.0)
 		XCTAssertEqual(1.62456.rounded(decimalPlaces: 0),  2.0)
@@ -244,6 +181,8 @@ class Extensions_Swift_FloatingPoint_Tests: XCTestCase {
 		XCTAssertEqual(1.62456.rounded(.up, decimalPlaces: 5),  1.62456)
 		XCTAssertEqual(1.62456.rounded(.up, decimalPlaces: 6),  1.62456)
 		
+		// Double .round(decimalPlaces:)
+		
 		var dbl = 0.1264
 		dbl.round(decimalPlaces: 2)
 		XCTAssertEqual(dbl, 0.13)
@@ -254,90 +193,49 @@ class Extensions_Swift_FloatingPoint_Tests: XCTestCase {
 		
 	}
 	
-	func testQuotientAndRemainder() {
-		
-		let qr = 17.5.quotientAndRemainder(dividingBy: 5.0)
-		
-		XCTAssertEqual(qr.quotient, 3)
-		XCTAssertEqual(qr.remainder, 2.5)
-		
-	}
-	
-	func testIntegralAndFraction() {
-		
-		let iaf = 17.5.integralAndFraction
-		
-		XCTAssertEqual(iaf.integral, 17)
-		XCTAssertEqual(iaf.fraction, 0.5)
-		
-		XCTAssertEqual(17.5.integral, 17)
-		
-		XCTAssertEqual(17.5.fraction, 0.5)
-		
-	}
-	
-	func testStringValueHighPrecision() {
-		
-		// Double
-		
-		XCTAssertEqual((0.0).stringValueHighPrecision, "0")
-		XCTAssertEqual((0.1).stringValueHighPrecision, "0.1000000000000000055511151231257827021181583404541015625")
-		XCTAssertEqual((1.0).stringValueHighPrecision, "1")
-		
-		let double: Double = 3603.59999999999990905052982270717620849609375
-		XCTAssertEqual(double.stringValueHighPrecision, "3603.59999999999990905052982270717620849609375")
-		
-		// Float
-		
-		let float: Float = 3603.59999999999990905052982270717620849609375
-		XCTAssertEqual(float.stringValueHighPrecision, "3603.60009765625")
-		
-		// Float80
-		
-		// doesn't work yet - not interoperable with CVarArg
-		
-		// CGFloat
-		
-		let cgfloat = CGFloat(exactly: 3603.59999999999990905052982270717620849609375)!
-		XCTAssertEqual(cgfloat.stringValueHighPrecision, "3603.59999999999990905052982270717620849609375")
-		
-	}
-	
 	func testTypeConversions_FloatsToString() {
 		
-		var str: String = ""
-		str = 0.0.string
-		str = Float(1).string
+		XCTAssertEqual((1.0).string, "1.0")
+		
+		XCTAssertEqual(Float(1).string, "1.0")
 		
 		#if !(arch(arm64) || arch(arm) || os(watchOS)) // Float80 is now removed for ARM
-		str = Float80(1).string
+		XCTAssertEqual(Float80(1).string, "1.0")
 		#endif
 		
-		str = CGFloat(1).string
-		str = Decimal(1).string
-		_ = str // silences 'variable was written to, but never read' warning
-		
-		XCTAssertEqual(  Float(1).string,	"1.0")
-		
-		#if !(arch(arm64) || arch(arm) || os(watchOS)) // Float80 is now removed for ARM
-		XCTAssertEqual(Float80(1).string,	"1.0")
-		#endif
-		
-		XCTAssertEqual(CGFloat(1).string,	"1.0")
-		XCTAssertEqual(Decimal(1).string,	"1")
+		XCTAssertEqual(CGFloat(1).string, "1.0")
 		
 	}
 	
 	func testTypeConversions_StringToFloats() {
 		
-		XCTAssertEqual("1.0".double,	1.0)
-		XCTAssertEqual("1.0".float,		1.0)
+		// String
+		
+		let str = "1.0"
+		
+		XCTAssertEqual(str.double,		1.0)
+		
+		XCTAssertEqual(str.float,		1.0)
 		
 		#if !(arch(arm64) || arch(arm) || os(watchOS)) // Float80 is now removed for ARM
-		XCTAssertEqual("1.0".float80,	1.0)
+		XCTAssertEqual(str.float80,		1.0)
 		#endif
 		
-		XCTAssertEqual("1.0".decimal,	1.0)
+		XCTAssertEqual(str.cgFloat,		1.0)
+		
+		// Substring
+		
+		let subStr = str.prefix(3)
+		
+		XCTAssertEqual(subStr.double,	1.0)
+		
+		XCTAssertEqual(subStr.float,	1.0)
+		
+		#if !(arch(arm64) || arch(arm) || os(watchOS)) // Float80 is now removed for ARM
+		XCTAssertEqual(subStr.float80,	1.0)
+		#endif
+		
+		XCTAssertEqual(subStr.cgFloat,	1.0)
 		
 	}
 }

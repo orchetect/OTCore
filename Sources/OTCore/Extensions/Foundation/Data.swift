@@ -31,7 +31,9 @@ extension Data {
 	/// Returns an Int64 value from Data
 	/// Returns nil if Data is not the correct length.
 	public func toInt(from endianness: NumberEndianness = .platformDefault) -> Int? {
+		
 		toNumber(from: endianness, toType: Int.self)
+		
 	}
 	
 }
@@ -45,6 +47,7 @@ extension Data {
 	/// Returns a Int8 value from Data (stored as two's complement).
 	/// Returns nil if Data is not the correct length.
 	public func toInt8() -> Int8? {
+		
 		if self.count != 1 { return nil }
 		
 		var int = UInt8()
@@ -52,6 +55,7 @@ extension Data {
 			self.copyBytes(to: $0, count: 1)
         }
 		return Int8(bitPattern: int)
+		
 	}
 	
 }
@@ -65,7 +69,9 @@ extension Data {
 	/// Returns an Int16 value from Data
 	/// Returns nil if Data is not the correct length.
 	public func toInt16(from endianness: NumberEndianness = .platformDefault) -> Int16? {
+		
 		toNumber(from: endianness, toType: Int16.self)
+		
 	}
 	
 }
@@ -79,7 +85,9 @@ extension Data {
 	/// Returns an Int32 value from Data
 	/// Returns nil if Data is not the correct length.
 	public func toInt32(from endianness: NumberEndianness = .platformDefault) -> Int32? {
+		
 		toNumber(from: endianness, toType: Int32.self)
+		
 	}
 	
 }
@@ -93,7 +101,9 @@ extension Data {
 	/// Returns an Int64 value from Data
 	/// Returns nil if Data is not the correct length.
 	public func toInt64(from endianness: NumberEndianness = .platformDefault) -> Int64? {
+		
 		toNumber(from: endianness, toType: Int64.self)
+		
 	}
 	
 }
@@ -107,7 +117,9 @@ extension Data {
 	/// Returns a UInt value from Data.
 	/// Returns nil if Data is not the correct length.
 	public func toUInt(from endianness: NumberEndianness = .platformDefault) -> UInt? {
+		
 		toNumber(from: endianness, toType: UInt.self)
+		
 	}
 	
 }
@@ -121,8 +133,10 @@ extension Data {
 	/// Returns a UInt8 value from Data.
 	/// Returns nil if Data is not the correct length.
 	public func toUInt8() -> UInt8? {
+		
 		if self.count != 1 { return nil }
 		return self.first
+		
 	}
 	
 }
@@ -136,7 +150,9 @@ extension Data {
 	/// Returns a UInt16 value from Data.
 	/// Returns nil if Data is not the correct length.
 	public func toUInt16(from endianness: NumberEndianness = .platformDefault) -> UInt16? {
+		
 		toNumber(from: endianness, toType: UInt16.self)
+		
 	}
 	
 }
@@ -150,7 +166,9 @@ extension Data {
 	/// Returns a UInt32 value from Data.
 	/// Returns nil if Data is not the correct length.
 	public func toUInt32(from endianness: NumberEndianness = .platformDefault) -> UInt32? {
+		
 		toNumber(from: endianness, toType: UInt32.self)
+		
 	}
 	
 }
@@ -164,7 +182,9 @@ extension Data {
 	/// Returns a UInt64 value from Data.
 	/// Returns nil if Data is not the correct length.
 	public func toUInt64(from endianness: NumberEndianness = .platformDefault) -> UInt64? {
+		
 		toNumber(from: endianness, toType: UInt64.self)
+		
 	}
 	
 }
@@ -451,7 +471,9 @@ extension String {
 	/// **OTCore:**
 	/// Returns a Data representation of a String, defaulting to utf8 encoding.
 	public func toData(using encoding: String.Encoding = .utf8) -> Data? {
+		
 		self.data(using: encoding)
+		
 	}
 	
 }
@@ -461,7 +483,9 @@ extension Data {
 	/// **OTCore:**
 	/// Returns a String converted from Data. Optionally pass an encoding type.
 	public func toString(using encoding: String.Encoding = .utf8) -> String? {
+		
 		String(data: self, encoding: encoding)
+		
 	}
 	
 }
@@ -475,7 +499,9 @@ extension Collection where Element == UInt8 {
 	/// Same as `Data(self)`
 	/// Returns a Data object using the array as bytes.
 	public var data: Data {
+		
 		Data(self)
+		
 	}
 }
 
@@ -485,7 +511,9 @@ extension Data {
 	/// Returns an array of bytes.
 	/// Same as `[UInt8](self)`
 	public var bytes: [UInt8] {
+		
 		[UInt8](self)
+		
 	}
 	
 }

@@ -15,7 +15,7 @@ class Extensions_Foundation_TimespecAndTimeInterval_Tests: XCTestCase {
 
 	func testTimespec_inits() {
 		
-		// (_ interval:)
+		// timespec(_ interval:)
 		
 		let ts = timespec(TimeInterval(2.987_654_321))
 		
@@ -25,6 +25,8 @@ class Extensions_Foundation_TimespecAndTimeInterval_Tests: XCTestCase {
 	}
 
 	func testTimespec_doubleValue() {
+		
+		// timespec.doubleValue
 		
 		var ts = timespec(tv_sec: 1, tv_nsec: 234_567_891)
 		

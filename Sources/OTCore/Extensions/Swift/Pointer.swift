@@ -63,7 +63,9 @@ extension UnsafeRawBufferPointer {
 	/// The behavior of accessing memory as a type unrelated to its bound type is undefined.
 	/// (from the Swift inline documentation for `.bindMemory(to:)`)
 	@inlinable public var unsafeBufferPointer: UnsafeBufferPointer<UInt8> {
+		
 		self.bindMemory(to: UInt8.self)
+		
 	}
 	
 }

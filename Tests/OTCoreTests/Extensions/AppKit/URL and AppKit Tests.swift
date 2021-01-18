@@ -6,7 +6,7 @@
 //  Copyright © 2019 Steffan Andrews. All rights reserved.
 //
 
-#if !os(watchOS)
+#if os(macOS)
 
 import XCTest
 @testable import OTCore
@@ -18,6 +18,8 @@ class Extensions_AppKit_URLAndAppKit_Tests: XCTestCase {
 	override func tearDown() { super.tearDown() }
 	
 	func testURLIcon() {
+		
+		// on most, if not all, systems this should produce a value
 		
 		let url = URL(fileURLWithPath: "/")
 		let fileIcon = url.icon
