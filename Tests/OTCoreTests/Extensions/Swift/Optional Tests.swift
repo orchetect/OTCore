@@ -15,7 +15,8 @@ import XCTest
 
 fileprivate protocol testStructProtocol { }
 
-fileprivate extension Collection where Element: OptionalType, Element.Wrapped: testStructProtocol {
+fileprivate extension Collection where Element: OptionalType,
+									   Element.Wrapped: testStructProtocol {
 	
 	var foo: Int { return 2 }
 	

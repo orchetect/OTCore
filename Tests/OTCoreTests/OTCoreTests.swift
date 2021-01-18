@@ -17,10 +17,13 @@ enum fooEnum: Hashable, CustomStringConvertible {
 	case three
 	
 	func hash(into hasher: inout Hasher) {
+		
 		hasher.combine(internalHash)
+		
 	}
 	
 	var internalHash: Int {
+		
 		switch self {
 		case .foo(let val): return val << 5	// each Int has different hash
 		case .fooB(_):		return 0b01000	// identical hash regardless of Int
@@ -28,9 +31,11 @@ enum fooEnum: Hashable, CustomStringConvertible {
 		case .two:	 		return 0b00100
 		case .three: 		return 0b01000
 		}
+		
 	}
 	
 	var description: String {
+		
 		switch self {
 		case .foo(let val): return ".foo(\(val))"
 		case .fooB(let val): return ".fooB(\(val))"
@@ -38,10 +43,13 @@ enum fooEnum: Hashable, CustomStringConvertible {
 		case .two:	  return ".two"
 		case .three:  return ".three"
 		}
+		
 	}
 	
 	static func ==(lhs: Self, rhs: Self) -> Bool {
+		
 		lhs.internalHash == rhs.internalHash
+		
 	}
 	
 }
