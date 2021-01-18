@@ -3,9 +3,12 @@
 //  OTCore
 //
 //  Created by Steffan Andrews on 2021-01-17.
+//  Copyright © 2021 Steffan Andrews. All rights reserved.
 //
 
 // MARK: - Shared constants and objects for tests
+
+#if !os(watchOS)
 
 /// Test enum for use in unit tests
 enum fooEnum: Hashable, CustomStringConvertible {
@@ -53,3 +56,5 @@ enum fooEnum: Hashable, CustomStringConvertible {
 	}
 	
 }
+
+#endif
