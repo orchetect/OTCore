@@ -34,7 +34,15 @@ class Global_Globals_Tests: XCTestCase {
 		
 		// values cannot be tested explicitly since they vary by system
 		
-		XCTAssertTrue(Globals.system.name != "")
+		#if os(macOS)
+		_ = Globals.system.userName
+		
+		_ = Globals.system.fullUserName
+		#endif
+		
+		XCTAssert(Globals.system.osVersion != "")
+		
+		XCTAssert(Globals.system.name != "")
 		
 		#if os(macOS)
 		XCTAssertNotNil(Globals.system.serialNumber)

@@ -56,6 +56,28 @@ extension Globals {
 		
 		#if os(macOS)
 		/// **OTCore:**
+		/// Returns the username of the current system account.
+		@available(OSX 10.12, *)
+		public static var userName: String {
+			ProcessInfo.processInfo.fullUserName
+		}
+		
+		/// **OTCore:**
+		/// Returns the full username of the current system account.
+		@available(OSX 10.12, *)
+		public static var fullUserName: String {
+			ProcessInfo.processInfo.userName
+		}
+		#endif
+		
+		/// **OTCore:**
+		/// Returns the operating system version on the system.
+		public static var osVersion: String {
+			ProcessInfo.processInfo.operatingSystemVersionString
+		}
+		
+		#if os(macOS)
+		/// **OTCore:**
 		/// Local Mac computer name
 		public static var name: String {
 			Host.current().localizedName ?? ""
