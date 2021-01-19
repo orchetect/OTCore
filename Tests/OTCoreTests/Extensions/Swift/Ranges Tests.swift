@@ -208,8 +208,10 @@ class Extensions_Swift_Ranges_Tests: XCTestCase {
 		XCTAssertEqual((1...10_000).first(excluding: ..<1)					, 1)
 		XCTAssertEqual((1...10_000).first(excluding: ..<2)					, 2)
 		
+		#if !arch(arm) // 34 bit integer, will overflow Int
 		// very large ranges
 		XCTAssertEqual((1...10_000_000_000).first(excluding: [1])			, 2)
+		#endif
 		
 		// zero element ranges
 		XCTAssertEqual((0...0).first(excluding: 0...5)						, nil)
@@ -358,8 +360,10 @@ class Extensions_Swift_Ranges_Tests: XCTestCase {
 		XCTAssertEqual((1..<10_000).first(excluding: ..<1)					, 1)
 		XCTAssertEqual((1..<10_000).first(excluding: ..<2)					, 2)
 		
+		#if !arch(arm) // 34 bit integer, will overflow Int
 		// very large ranges
 		XCTAssertEqual((1..<10_000_000_000).first(excluding: [1])			, 2)
+		#endif
 		
 		// zero element ranges
 		XCTAssertEqual((0..<0).first(excluding: 0...5)						, nil)
