@@ -65,28 +65,28 @@ public enum Log {
 	
 	/// **OTCore:**
 	/// Set to false to suppress logging
-	public var enabled: Bool {
+	public static var enabled: Bool {
 		get { LogEnabled }
 		set { LogEnabled = newValue }
 	}
 	
 	/// **OTCore:**
 	/// Sets the default OSLog to use
-	public var defaultLog: OSLog {
+	public static var defaultLog: OSLog {
 		get { DefaultLog }
 		set { DefaultLog = newValue }
 	}
 	
 	/// **OTCore:**
 	/// Sets the default OSLog subsystem to use
-	public var defaultSubsystem: String? {
+	public static var defaultSubsystem: String? {
 		get { DefaultSubsystem }
 		set { DefaultSubsystem = newValue }
 	}
 	
 	/// **OTCore:**
 	/// Enables prefixing log messages with emoji icons (ie: ⚠️ for .error)
-	public var useEmoji: EmojiType {
+	public static var useEmoji: EmojiType {
 		get { UseEmoji }
 		set { UseEmoji = newValue }
 	}
