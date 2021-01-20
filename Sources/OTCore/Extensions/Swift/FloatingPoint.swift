@@ -36,7 +36,7 @@ extension BinaryFloatingPoint {
 	@inlinable public var int8: Int8 { Int8(self) }
 	
 	/// **OTCore:**
-	/// Same as `Int8(exaclty:)`
+	/// Same as `Int8(exactly:)`
 	/// (Functional convenience method)
 	@inlinable public var int8Exactly: Int8? { Int8(exactly: self) }
 	
@@ -56,7 +56,7 @@ extension BinaryFloatingPoint {
 	@inlinable public var int16: Int16 { Int16(self) }
 	
 	/// **OTCore:**
-	/// Same as `Int16(exaclty:)`
+	/// Same as `Int16(exactly:)`
 	/// (Functional convenience method)
 	@inlinable public var int16Exactly: Int16? { Int16(exactly: self) }
 	
@@ -76,7 +76,7 @@ extension BinaryFloatingPoint {
 	@inlinable public var int32: Int32 { Int32(self) }
 	
 	/// **OTCore:**
-	/// Same as `Int32(exaclty:)`
+	/// Same as `Int32(exactly:)`
 	/// (Functional convenience method)
 	@inlinable public var int32Exactly: Int32? { Int32(exactly: self) }
 	
@@ -96,7 +96,7 @@ extension BinaryFloatingPoint {
 	@inlinable public var int64: Int64 { Int64(self) }
 	
 	/// **OTCore:**
-	/// Same as `Int64(exaclty:)`
+	/// Same as `Int64(exactly:)`
 	/// (Functional convenience method)
 	@inlinable public var int64Exactly: Int64? { Int64(exactly: self) }
 	
