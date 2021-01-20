@@ -17,36 +17,36 @@ extension Comparable {
 	/// **OTCore:**
 	/// Same as `range.contains(self)`
 	/// (Functional convenience method)
-	@inlinable public func isContained(in range: ClosedRange<Self>) -> Bool {
+	@inlinable public
+	func isContained<T: RangeExpression>(in range: T) -> Bool
+	where Self == T.Bound {
+		
 		range.contains(self)
+		
 	}
 	
 	/// **OTCore:**
-	/// Same as `range.contains(self)`
+	/// If `self` is in range, output the new `value`, otherwise pass `self` through.
 	/// (Functional convenience method)
-	@inlinable public func isContained(in range: Range<Self>) -> Bool {
-		range.contains(self)
+	@inlinable public
+	func ifContained<T: RangeExpression>(in range: T,
+										 then value: T.Bound) -> T.Bound?
+	where Self == T.Bound {
+		
+		range.contains(self) ? value : self
+		
 	}
 	
 	/// **OTCore:**
-	/// Same as `range.contains(self)`
+	/// If `self` is not in range, output the new `value`, otherwise pass `self` through.
 	/// (Functional convenience method)
-	@inlinable public func isContained(in range: PartialRangeFrom<Self>) -> Bool {
-		range.contains(self)
-	}
-	
-	/// **OTCore:**
-	/// Same as `range.contains(self)`
-	/// (Functional convenience method)
-	@inlinable public func isContained(in range: PartialRangeThrough<Self>) -> Bool {
-		range.contains(self)
-	}
-	
-	/// **OTCore:**
-	/// Same as `range.contains(self)`
-	/// (Functional convenience method)
-	@inlinable public func isContained(in range: PartialRangeUpTo<Self>) -> Bool {
-		range.contains(self)
+	@inlinable public
+	func ifNotContained<T: RangeExpression>(in range: T,
+											then value: T.Bound) -> T.Bound?
+	where Self == T.Bound {
+		
+		range.contains(self) ? self : value
+		
 	}
 	
 }

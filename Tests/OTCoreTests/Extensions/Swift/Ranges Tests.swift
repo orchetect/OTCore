@@ -81,6 +81,138 @@ class Extensions_Swift_Ranges_Tests: XCTestCase {
 		
 	}
 	
+	func testIfContainedInRangeThen() {
+		
+		// int
+		
+		XCTAssertEqual(0.ifContained(in: 1...4, then: 100), 0)
+		XCTAssertEqual(1.ifContained(in: 1...4, then: 100), 100)
+		XCTAssertEqual(2.ifContained(in: 1...4, then: 100), 100)
+		XCTAssertEqual(4.ifContained(in: 1...4, then: 100), 100)
+		XCTAssertEqual(5.ifContained(in: 1...4, then: 100), 5)
+		
+		XCTAssertEqual(0.ifContained(in: 1..<4, then: 100), 0)
+		XCTAssertEqual(1.ifContained(in: 1..<4, then: 100), 100)
+		XCTAssertEqual(2.ifContained(in: 1..<4, then: 100), 100)
+		XCTAssertEqual(4.ifContained(in: 1..<4, then: 100), 4)
+		XCTAssertEqual(5.ifContained(in: 1..<4, then: 100), 5)
+		
+		XCTAssertEqual(0.ifContained(in: 1..., then: 100), 0)
+		XCTAssertEqual(1.ifContained(in: 1..., then: 100), 100)
+		XCTAssertEqual(2.ifContained(in: 1..., then: 100), 100)
+		
+		XCTAssertEqual(0.ifContained(in: ...2, then: 100), 100)
+		XCTAssertEqual(1.ifContained(in: ...2, then: 100), 100)
+		XCTAssertEqual(2.ifContained(in: ...2, then: 100), 100)
+		XCTAssertEqual(3.ifContained(in: ...2, then: 100), 3)
+		
+		XCTAssertEqual(0.ifContained(in: ..<2, then: 100), 100)
+		XCTAssertEqual(1.ifContained(in: ..<2, then: 100), 100)
+		XCTAssertEqual(2.ifContained(in: ..<2, then: 100), 2)
+		XCTAssertEqual(3.ifContained(in: ..<2, then: 100), 3)
+		
+		// floating point
+		
+		XCTAssertEqual(0.0.ifContained(in: 1.0...4.0, then: 100.0), 0.0)
+		XCTAssertEqual(1.0.ifContained(in: 1.0...4.0, then: 100.0), 100.0)
+		XCTAssertEqual(2.0.ifContained(in: 1.0...4.0, then: 100.0), 100.0)
+		XCTAssertEqual(4.0.ifContained(in: 1.0...4.0, then: 100.0), 100.0)
+		XCTAssertEqual(5.0.ifContained(in: 1.0...4.0, then: 100.0), 5.0)
+		
+		XCTAssertEqual(0.0.ifContained(in: 1.0..<4.0, then: 100.0), 0.0)
+		XCTAssertEqual(1.0.ifContained(in: 1.0..<4.0, then: 100.0), 100.0)
+		XCTAssertEqual(2.0.ifContained(in: 1.0..<4.0, then: 100.0), 100.0)
+		XCTAssertEqual(4.0.ifContained(in: 1.0..<4.0, then: 100.0), 4.0)
+		XCTAssertEqual(5.0.ifContained(in: 1.0..<4.0, then: 100.0), 5.0)
+		
+		XCTAssertEqual(0.0.ifContained(in: 1.0..., then: 100.0), 0.0)
+		XCTAssertEqual(1.0.ifContained(in: 1.0..., then: 100.0), 100.0)
+		XCTAssertEqual(2.0.ifContained(in: 1.0..., then: 100.0), 100.0)
+		
+		XCTAssertEqual(0.0.ifContained(in: ...2.0, then: 100.0), 100.0)
+		XCTAssertEqual(1.0.ifContained(in: ...2.0, then: 100.0), 100.0)
+		XCTAssertEqual(2.0.ifContained(in: ...2.0, then: 100.0), 100.0)
+		XCTAssertEqual(3.0.ifContained(in: ...2.0, then: 100.0), 3.0)
+		
+		XCTAssertEqual(0.0.ifContained(in: ..<2.0, then: 100.0), 100.0)
+		XCTAssertEqual(1.0.ifContained(in: ..<2.0, then: 100.0), 100.0)
+		XCTAssertEqual(2.0.ifContained(in: ..<2.0, then: 100.0), 2.0)
+		XCTAssertEqual(3.0.ifContained(in: ..<2.0, then: 100.0), 3.0)
+		
+		// other Comparable, such as String:
+		
+		XCTAssertEqual("c".ifContained(in: "a"..."d", then: "z"), "z")
+		XCTAssertEqual("e".ifContained(in: "a"..."d", then: "z"), "e")
+		
+	}
+	
+	func testIfNotContainedInRangeThen() {
+		
+		// int
+		
+		XCTAssertEqual(0.ifNotContained(in: 1...4, then: 100), 100)
+		XCTAssertEqual(1.ifNotContained(in: 1...4, then: 100), 1)
+		XCTAssertEqual(2.ifNotContained(in: 1...4, then: 100), 2)
+		XCTAssertEqual(4.ifNotContained(in: 1...4, then: 100), 4)
+		XCTAssertEqual(5.ifNotContained(in: 1...4, then: 100), 100)
+		
+		XCTAssertEqual(0.ifNotContained(in: 1..<4, then: 100), 100)
+		XCTAssertEqual(1.ifNotContained(in: 1..<4, then: 100), 1)
+		XCTAssertEqual(2.ifNotContained(in: 1..<4, then: 100), 2)
+		XCTAssertEqual(4.ifNotContained(in: 1..<4, then: 100), 100)
+		XCTAssertEqual(5.ifNotContained(in: 1..<4, then: 100), 100)
+		
+		XCTAssertEqual(0.ifNotContained(in: 1..., then: 100), 100)
+		XCTAssertEqual(1.ifNotContained(in: 1..., then: 100), 1)
+		XCTAssertEqual(2.ifNotContained(in: 1..., then: 100), 2)
+		
+		XCTAssertEqual(0.ifNotContained(in: ...2, then: 100), 0)
+		XCTAssertEqual(1.ifNotContained(in: ...2, then: 100), 1)
+		XCTAssertEqual(2.ifNotContained(in: ...2, then: 100), 2)
+		XCTAssertEqual(4.ifNotContained(in: ...2, then: 100), 100)
+		XCTAssertEqual(5.ifNotContained(in: ...2, then: 100), 100)
+		
+		XCTAssertEqual(0.ifNotContained(in: ..<2, then: 100), 0)
+		XCTAssertEqual(1.ifNotContained(in: ..<2, then: 100), 1)
+		XCTAssertEqual(2.ifNotContained(in: ..<2, then: 100), 100)
+		XCTAssertEqual(4.ifNotContained(in: ..<2, then: 100), 100)
+		
+		// floating point
+		
+		XCTAssertEqual(0.0.ifNotContained(in: 1.0...4.0, then: 100.0), 100.0)
+		XCTAssertEqual(1.0.ifNotContained(in: 1.0...4.0, then: 100.0), 1.0)
+		XCTAssertEqual(2.0.ifNotContained(in: 1.0...4.0, then: 100.0), 2.0)
+		XCTAssertEqual(4.0.ifNotContained(in: 1.0...4.0, then: 100.0), 4.0)
+		XCTAssertEqual(5.0.ifNotContained(in: 1.0...4.0, then: 100.0), 100.0)
+		
+		XCTAssertEqual(0.0.ifNotContained(in: 1.0..<4.0, then: 100.0), 100.0)
+		XCTAssertEqual(1.0.ifNotContained(in: 1.0..<4.0, then: 100.0), 1.0)
+		XCTAssertEqual(2.0.ifNotContained(in: 1.0..<4.0, then: 100.0), 2.0)
+		XCTAssertEqual(4.0.ifNotContained(in: 1.0..<4.0, then: 100.0), 100.0)
+		XCTAssertEqual(5.0.ifNotContained(in: 1.0..<4.0, then: 100.0), 100.0)
+		
+		XCTAssertEqual(0.0.ifNotContained(in: 1.0..., then: 100.0), 100.0)
+		XCTAssertEqual(1.0.ifNotContained(in: 1.0..., then: 100.0), 1.0)
+		XCTAssertEqual(2.0.ifNotContained(in: 1.0..., then: 100.0), 2.0)
+		
+		XCTAssertEqual(0.0.ifNotContained(in: ...2.0, then: 100.0), 0.0)
+		XCTAssertEqual(1.0.ifNotContained(in: ...2.0, then: 100.0), 1.0)
+		XCTAssertEqual(2.0.ifNotContained(in: ...2.0, then: 100.0), 2.0)
+		XCTAssertEqual(4.0.ifNotContained(in: ...2.0, then: 100.0), 100.0)
+		XCTAssertEqual(5.0.ifNotContained(in: ...2.0, then: 100.0), 100.0)
+		
+		XCTAssertEqual(0.0.ifNotContained(in: ..<2.0, then: 100.0), 0.0)
+		XCTAssertEqual(1.0.ifNotContained(in: ..<2.0, then: 100.0), 1.0)
+		XCTAssertEqual(2.0.ifNotContained(in: ..<2.0, then: 100.0), 100.0)
+		XCTAssertEqual(4.0.ifNotContained(in: ..<2.0, then: 100.0), 100.0)
+		
+		// other Comparable, such as String:
+		
+		XCTAssertEqual("c".ifNotContained(in: "a"..."d", then: "z"), "c")
+		XCTAssertEqual("e".ifNotContained(in: "a"..."d", then: "z"), "z")
+		
+	}
+	
 	func testNumberClampedToRanges() {
 		
 		// .clamped(ClosedRange)
