@@ -65,14 +65,78 @@ extension BinaryInteger {
 extension BinaryInteger {
 	
 	/// **OTCore:**
+	/// Same as `Int(exactly:)`
+	/// (Functional convenience method)
+	@inlinable public var intExactly: Int? { Int(exactly: self) }
+	
+	/// **OTCore:**
+	/// Same as `UInt(exactly:)`
+	/// (Functional convenience method)
+	@inlinable public var uintExactly: UInt? { UInt(exactly: self) }
+	
+	/// **OTCore:**
+	/// Same as `Int8(exactly:)`
+	/// (Functional convenience method)
+	@inlinable public var int8Exactly: Int8? { Int8(exactly: self) }
+	
+	/// **OTCore:**
+	/// Same as `UInt8(exactly:)`
+	/// (Functional convenience method)
+	@inlinable public var uint8Exactly: UInt8? { UInt8(exactly: self) }
+	
+	/// **OTCore:**
+	/// Same as `Int16(exactly:)`
+	/// (Functional convenience method)
+	@inlinable public var int16Exactly: Int16? { Int16(exactly: self) }
+	
+	/// **OTCore:**
+	/// Same as `UInt16(exactly:)`
+	/// (Functional convenience method)
+	@inlinable public var uint16Exactly: UInt16? { UInt16(exactly: self) }
+	
+	/// **OTCore:**
+	/// Same as `Int32(exactly:)`
+	/// (Functional convenience method)
+	@inlinable public var int32Exactly: Int32? { Int32(exactly: self) }
+	
+	/// **OTCore:**
+	/// Same as `UInt32(exactly:)`
+	/// (Functional convenience method)
+	@inlinable public var uint32Exactly: UInt32? { UInt32(exactly: self) }
+	
+	/// **OTCore:**
+	/// Same as `Int64(exactly:)`
+	/// (Functional convenience method)
+	@inlinable public var int64Exactly: Int64? { Int64(exactly: self) }
+	
+	/// **OTCore:**
+	/// Same as `UInt64(exactly:)`
+	/// (Functional convenience method)
+	@inlinable public var uint64Exactly: UInt64? { UInt64(exactly: self) }
+	
+}
+
+extension BinaryInteger {
+	
+	/// **OTCore:**
 	/// Same as `Double()`
 	/// (Functional convenience method)
 	@inlinable public var double: Double { Double(self) }
 	
 	/// **OTCore:**
+	/// Same as `Double(exactly:)`
+	/// (Functional convenience method)
+	@inlinable public var doubleExactly: Double? { Double(exactly: self) }
+	
+	/// **OTCore:**
 	/// Same as `Float()`
 	/// (Functional convenience method)
 	@inlinable public var float: Float { Float(self) }
+	
+	/// **OTCore:**
+	/// Same as `Float(exactly:)`
+	/// (Functional convenience method)
+	@inlinable public var floatExactly: Float? { Float(exactly: self) }
 	
 	/// **OTCore:**
 	/// Same as `Float32()`

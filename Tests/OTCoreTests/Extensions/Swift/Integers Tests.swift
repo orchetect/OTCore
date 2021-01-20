@@ -31,8 +31,23 @@ class Extensions_Swift_Integers_Tests: XCTestCase {
 		_ = 1.int64
 		_ = 1.uint64
 		
+		_ = 1.intExactly?.bitWidth
+		_ = 1.uintExactly?.bitWidth
+		_ = 1.int8Exactly?.bitWidth
+		_ = 1.uint8Exactly?.bitWidth
+		_ = 1.int16Exactly?.bitWidth
+		_ = 1.uint16Exactly?.bitWidth
+		_ = 1.int32Exactly?.bitWidth
+		_ = 1.uint32Exactly?.bitWidth
+		_ = 1.int64Exactly?.bitWidth
+		_ = 1.uint64Exactly?.bitWidth
+		
 		_ = 1.double
+		_ = 1.doubleExactly?.bitPattern
+		
 		_ = 1.float
+		_ = 1.floatExactly?.bitPattern
+		
 		_ = 1.float32
 		#if !(arch(arm64) || arch(arm) || os(watchOS)) // Float80 is now removed for ARM
 		_ = 1.float80
@@ -51,8 +66,23 @@ class Extensions_Swift_Integers_Tests: XCTestCase {
 		_ = UInt(1).int64
 		_ = UInt(1).uint64
 		
+		_ = UInt(1).intExactly?.bitWidth
+		_ = UInt(1).uintExactly?.bitWidth
+		_ = UInt(1).int8Exactly?.bitWidth
+		_ = UInt(1).uint8Exactly?.bitWidth
+		_ = UInt(1).int16Exactly?.bitWidth
+		_ = UInt(1).uint16Exactly?.bitWidth
+		_ = UInt(1).int32Exactly?.bitWidth
+		_ = UInt(1).uint32Exactly?.bitWidth
+		_ = UInt(1).int64Exactly?.bitWidth
+		_ = UInt(1).uint64Exactly?.bitWidth
+		
 		_ = UInt(1).double
+		_ = UInt(1).doubleExactly?.bitPattern
+		
 		_ = UInt(1).float
+		_ = UInt(1).floatExactly?.bitPattern
+		
 		_ = UInt(1).float32
 		#if !(arch(arm64) || arch(arm) || os(watchOS)) // Float80 is now removed for ARM
 		_ = UInt(1).float80
@@ -71,8 +101,23 @@ class Extensions_Swift_Integers_Tests: XCTestCase {
 		_ = Int8(1).int64
 		_ = Int8(1).uint64
 		
+		_ = Int8(1).intExactly?.bitWidth
+		_ = Int8(1).uintExactly?.bitWidth
+		_ = Int8(1).int8Exactly?.bitWidth
+		_ = Int8(1).uint8Exactly?.bitWidth
+		_ = Int8(1).int16Exactly?.bitWidth
+		_ = Int8(1).uint16Exactly?.bitWidth
+		_ = Int8(1).int32Exactly?.bitWidth
+		_ = Int8(1).uint32Exactly?.bitWidth
+		_ = Int8(1).int64Exactly?.bitWidth
+		_ = Int8(1).uint64Exactly?.bitWidth
+		
 		_ = Int8(1).double
+		_ = Int8(1).doubleExactly?.bitPattern
+		
 		_ = Int8(1).float
+		_ = Int8(1).floatExactly?.bitPattern
+		
 		_ = Int8(1).float32
 		#if !(arch(arm64) || arch(arm) || os(watchOS)) // Float80 is now removed for ARM
 		_ = Int8(1).float80
@@ -91,8 +136,23 @@ class Extensions_Swift_Integers_Tests: XCTestCase {
 		_ = UInt8(1).int64
 		_ = UInt8(1).uint64
 		
+		_ = UInt8(1).int.intExactly?.bitWidth
+		_ = UInt8(1).uint.intExactly?.bitWidth
+		_ = UInt8(1).int8.intExactly?.bitWidth
+		_ = UInt8(1).uint8.intExactly?.bitWidth
+		_ = UInt8(1).int16.intExactly?.bitWidth
+		_ = UInt8(1).uint16.intExactly?.bitWidth
+		_ = UInt8(1).int32.intExactly?.bitWidth
+		_ = UInt8(1).uint32.intExactly?.bitWidth
+		_ = UInt8(1).int64.intExactly?.bitWidth
+		_ = UInt8(1).uint64.intExactly?.bitWidth
+		
 		_ = UInt8(1).double
+		_ = UInt8(1).doubleExactly?.bitPattern
+		
 		_ = UInt8(1).float
+		_ = UInt8(1).floatExactly?.bitPattern
+		
 		_ = UInt8(1).float32
 		#if !(arch(arm64) || arch(arm) || os(watchOS)) // Float80 is now removed for ARM
 		_ = UInt8(1).float80
@@ -111,8 +171,23 @@ class Extensions_Swift_Integers_Tests: XCTestCase {
 		_ = Int16(1).int64
 		_ = Int16(1).uint64
 		
+		_ = Int16(1).int.intExactly?.bitWidth
+		_ = Int16(1).uint.intExactly?.bitWidth
+		_ = Int16(1).int8.intExactly?.bitWidth
+		_ = Int16(1).uint8.intExactly?.bitWidth
+		_ = Int16(1).int16.intExactly?.bitWidth
+		_ = Int16(1).uint16.intExactly?.bitWidth
+		_ = Int16(1).int32.intExactly?.bitWidth
+		_ = Int16(1).uint32.intExactly?.bitWidth
+		_ = Int16(1).int64.intExactly?.bitWidth
+		_ = Int16(1).uint64.intExactly?.bitWidth
+		
 		_ = Int16(1).double
+		_ = Int16(1).doubleExactly?.bitPattern
+		
 		_ = Int16(1).float
+		_ = Int16(1).floatExactly?.bitPattern
+		
 		_ = Int16(1).float32
 		#if !(arch(arm64) || arch(arm) || os(watchOS)) // Float80 is now removed for ARM
 		_ = Int16(1).float80
@@ -131,8 +206,23 @@ class Extensions_Swift_Integers_Tests: XCTestCase {
 		_ = UInt16(1).int64
 		_ = UInt16(1).uint64
 		
+		_ = UInt16(1).int.intExactly?.bitWidth
+		_ = UInt16(1).uint.intExactly?.bitWidth
+		_ = UInt16(1).int8.intExactly?.bitWidth
+		_ = UInt16(1).uint8.intExactly?.bitWidth
+		_ = UInt16(1).int16.intExactly?.bitWidth
+		_ = UInt16(1).uint16.intExactly?.bitWidth
+		_ = UInt16(1).int32.intExactly?.bitWidth
+		_ = UInt16(1).uint32.intExactly?.bitWidth
+		_ = UInt16(1).int64.intExactly?.bitWidth
+		_ = UInt16(1).uint64.intExactly?.bitWidth
+		
 		_ = UInt16(1).double
+		_ = UInt16(1).doubleExactly?.bitPattern
+		
 		_ = UInt16(1).float
+		_ = UInt16(1).floatExactly?.bitPattern
+		
 		_ = UInt16(1).float32
 		#if !(arch(arm64) || arch(arm) || os(watchOS)) // Float80 is now removed for ARM
 		_ = UInt16(1).float80
@@ -151,8 +241,23 @@ class Extensions_Swift_Integers_Tests: XCTestCase {
 		_ = Int32(1).int64
 		_ = Int32(1).uint64
 		
+		_ = Int32(1).int.intExactly?.bitWidth
+		_ = Int32(1).uint.intExactly?.bitWidth
+		_ = Int32(1).int8.intExactly?.bitWidth
+		_ = Int32(1).uint8.intExactly?.bitWidth
+		_ = Int32(1).int16.intExactly?.bitWidth
+		_ = Int32(1).uint16.intExactly?.bitWidth
+		_ = Int32(1).int32.intExactly?.bitWidth
+		_ = Int32(1).uint32.intExactly?.bitWidth
+		_ = Int32(1).int64.intExactly?.bitWidth
+		_ = Int32(1).uint64.intExactly?.bitWidth
+		
 		_ = Int32(1).double
+		_ = Int32(1).doubleExactly?.bitPattern
+		
 		_ = Int32(1).float
+		_ = Int32(1).floatExactly?.bitPattern
+		
 		_ = Int32(1).float32
 		#if !(arch(arm64) || arch(arm) || os(watchOS)) // Float80 is now removed for ARM
 		_ = Int32(1).float80
@@ -171,8 +276,23 @@ class Extensions_Swift_Integers_Tests: XCTestCase {
 		_ = UInt32(1).int64
 		_ = UInt32(1).uint64
 		
+		_ = UInt32(1).int.intExactly?.bitWidth
+		_ = UInt32(1).uint.intExactly?.bitWidth
+		_ = UInt32(1).int8.intExactly?.bitWidth
+		_ = UInt32(1).uint8.intExactly?.bitWidth
+		_ = UInt32(1).int16.intExactly?.bitWidth
+		_ = UInt32(1).uint16.intExactly?.bitWidth
+		_ = UInt32(1).int32.intExactly?.bitWidth
+		_ = UInt32(1).uint32.intExactly?.bitWidth
+		_ = UInt32(1).int64.intExactly?.bitWidth
+		_ = UInt32(1).uint64.intExactly?.bitWidth
+		
 		_ = UInt32(1).double
+		_ = UInt32(1).doubleExactly?.bitPattern
+		
 		_ = UInt32(1).float
+		_ = UInt32(1).floatExactly?.bitPattern
+		
 		_ = UInt32(1).float32
 		#if !(arch(arm64) || arch(arm) || os(watchOS)) // Float80 is now removed for ARM
 		_ = UInt32(1).float80
@@ -191,8 +311,23 @@ class Extensions_Swift_Integers_Tests: XCTestCase {
 		_ = Int64(1).int64
 		_ = Int64(1).uint64
 		
+		_ = Int64(1).int.intExactly?.bitWidth
+		_ = Int64(1).uint.intExactly?.bitWidth
+		_ = Int64(1).int8.intExactly?.bitWidth
+		_ = Int64(1).uint8.intExactly?.bitWidth
+		_ = Int64(1).int16.intExactly?.bitWidth
+		_ = Int64(1).uint16.intExactly?.bitWidth
+		_ = Int64(1).int32.intExactly?.bitWidth
+		_ = Int64(1).uint32.intExactly?.bitWidth
+		_ = Int64(1).int64.intExactly?.bitWidth
+		_ = Int64(1).uint64.intExactly?.bitWidth
+		
 		_ = Int64(1).double
+		_ = Int64(1).doubleExactly?.bitPattern
+		
 		_ = Int64(1).float
+		_ = Int64(1).floatExactly?.bitPattern
+		
 		_ = Int64(1).float32
 		#if !(arch(arm64) || arch(arm) || os(watchOS)) // Float80 is now removed for ARM
 		_ = Int64(1).float80
@@ -211,8 +346,23 @@ class Extensions_Swift_Integers_Tests: XCTestCase {
 		_ = UInt64(1).int64
 		_ = UInt64(1).uint64
 		
+		_ = UInt64(1).int.intExactly?.bitWidth
+		_ = UInt64(1).uint.intExactly?.bitWidth
+		_ = UInt64(1).int8.intExactly?.bitWidth
+		_ = UInt64(1).uint8.intExactly?.bitWidth
+		_ = UInt64(1).int16.intExactly?.bitWidth
+		_ = UInt64(1).uint16.intExactly?.bitWidth
+		_ = UInt64(1).int32.intExactly?.bitWidth
+		_ = UInt64(1).uint32.intExactly?.bitWidth
+		_ = UInt64(1).int64.intExactly?.bitWidth
+		_ = UInt64(1).uint64.intExactly?.bitWidth
+		
 		_ = UInt64(1).double
+		_ = UInt64(1).doubleExactly?.bitPattern
+		
 		_ = UInt64(1).float
+		_ = UInt64(1).floatExactly?.bitPattern
+		
 		_ = UInt64(1).float32
 		#if !(arch(arm64) || arch(arm) || os(watchOS)) // Float80 is now removed for ARM
 		_ = UInt64(1).float80
