@@ -16,6 +16,71 @@ class Extensions_Swift_Ranges_Tests: XCTestCase {
 	override func setUp() { super.setUp() }
 	override func tearDown() { super.tearDown() }
 	
+	func testIsContainedInRange() {
+		
+		// int
+		
+		XCTAssertEqual(0.isContained(in: 1...4), false)
+		XCTAssertEqual(1.isContained(in: 1...4), true)
+		XCTAssertEqual(2.isContained(in: 1...4), true)
+		XCTAssertEqual(4.isContained(in: 1...4), true)
+		XCTAssertEqual(5.isContained(in: 1...4), false)
+		
+		XCTAssertEqual(0.isContained(in: 1..<4), false)
+		XCTAssertEqual(1.isContained(in: 1..<4), true)
+		XCTAssertEqual(2.isContained(in: 1..<4), true)
+		XCTAssertEqual(4.isContained(in: 1..<4), false)
+		XCTAssertEqual(5.isContained(in: 1..<4), false)
+		
+		XCTAssertEqual(0.isContained(in: 1...), false)
+		XCTAssertEqual(1.isContained(in: 1...), true)
+		XCTAssertEqual(2.isContained(in: 1...), true)
+		
+		XCTAssertEqual(0.isContained(in: ...2), true)
+		XCTAssertEqual(1.isContained(in: ...2), true)
+		XCTAssertEqual(2.isContained(in: ...2), true)
+		XCTAssertEqual(3.isContained(in: ...2), false)
+		
+		XCTAssertEqual(0.isContained(in: ..<2), true)
+		XCTAssertEqual(1.isContained(in: ..<2), true)
+		XCTAssertEqual(2.isContained(in: ..<2), false)
+		XCTAssertEqual(3.isContained(in: ..<2), false)
+		
+		// floating point
+		
+		XCTAssertEqual(0.0.isContained(in: 1.0...4.0), false)
+		XCTAssertEqual(1.0.isContained(in: 1.0...4.0), true)
+		XCTAssertEqual(2.0.isContained(in: 1.0...4.0), true)
+		XCTAssertEqual(4.0.isContained(in: 1.0...4.0), true)
+		XCTAssertEqual(5.0.isContained(in: 1.0...4.0), false)
+		
+		XCTAssertEqual(0.0.isContained(in: 1.0..<4.0), false)
+		XCTAssertEqual(1.0.isContained(in: 1.0..<4.0), true)
+		XCTAssertEqual(2.0.isContained(in: 1.0..<4.0), true)
+		XCTAssertEqual(4.0.isContained(in: 1.0..<4.0), false)
+		XCTAssertEqual(5.0.isContained(in: 1.0..<4.0), false)
+		
+		XCTAssertEqual(0.0.isContained(in: 1.0...), false)
+		XCTAssertEqual(1.0.isContained(in: 1.0...), true)
+		XCTAssertEqual(2.0.isContained(in: 1.0...), true)
+		
+		XCTAssertEqual(0.0.isContained(in: ...2.0), true)
+		XCTAssertEqual(1.0.isContained(in: ...2.0), true)
+		XCTAssertEqual(2.0.isContained(in: ...2.0), true)
+		XCTAssertEqual(3.0.isContained(in: ...2.0), false)
+		
+		XCTAssertEqual(0.0.isContained(in: ..<2.0), true)
+		XCTAssertEqual(1.0.isContained(in: ..<2.0), true)
+		XCTAssertEqual(2.0.isContained(in: ..<2.0), false)
+		XCTAssertEqual(3.0.isContained(in: ..<2.0), false)
+		
+		// other Comparable, such as String:
+		
+		XCTAssertEqual("c".isContained(in: "a"..."d"), true)
+		XCTAssertEqual("e".isContained(in: "a"..."d"), false)
+		
+	}
+	
 	func testNumberClampedToRanges() {
 		
 		// .clamped(ClosedRange)

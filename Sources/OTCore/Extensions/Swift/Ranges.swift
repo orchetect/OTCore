@@ -6,6 +6,52 @@
 //  Copyright © 2019 Steffan Andrews. All rights reserved.
 //
 
+// MARK: - isContained
+
+extension Comparable {
+	
+	// ie: 5.isContained(in: 1...4)
+	// ie: 5.0.isContained(in: 1.0...4.0)
+	// ie: "c".isContained(in: "a"..."d")
+	
+	/// **OTCore:**
+	/// Same as `range.contains(self)`
+	/// (Functional convenience method)
+	@inlinable public func isContained(in range: ClosedRange<Self>) -> Bool {
+		range.contains(self)
+	}
+	
+	/// **OTCore:**
+	/// Same as `range.contains(self)`
+	/// (Functional convenience method)
+	@inlinable public func isContained(in range: Range<Self>) -> Bool {
+		range.contains(self)
+	}
+	
+	/// **OTCore:**
+	/// Same as `range.contains(self)`
+	/// (Functional convenience method)
+	@inlinable public func isContained(in range: PartialRangeFrom<Self>) -> Bool {
+		range.contains(self)
+	}
+	
+	/// **OTCore:**
+	/// Same as `range.contains(self)`
+	/// (Functional convenience method)
+	@inlinable public func isContained(in range: PartialRangeThrough<Self>) -> Bool {
+		range.contains(self)
+	}
+	
+	/// **OTCore:**
+	/// Same as `range.contains(self)`
+	/// (Functional convenience method)
+	@inlinable public func isContained(in range: PartialRangeUpTo<Self>) -> Bool {
+		range.contains(self)
+	}
+	
+}
+
+
 // MARK: - .clamped(to:)
 
 extension Comparable {
