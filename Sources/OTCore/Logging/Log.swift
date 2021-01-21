@@ -268,4 +268,67 @@ public enum Log {
 	
 }
 
+@available(macOS 10.12, iOS 10.0, watchOS 3.0, tvOS 10.0, *)
+extension OSLogType {
+	
+	/// **OTCore:**
+	/// Log an error using the `self` log message type.
+	///
+	/// - note: Where possible, use the `Log.*` methods instead (ie: `Log.debug()`, `Log.error()`, etc.)
+	@inline(__always)
+	public func log(_ items: Any?...,
+					log: OSLog? = nil,
+					file: String = #file,
+					line: Int = #line,
+					column: Int = #column,
+					function: String = #function) {
+		
+		// we have to flatten the items here,
+		// otherwise it gets internally converted from Any?... to [Any?]
+		// which produces undesirable results when passed into another
+		// function which takes an Any?... parameter
+		
+		let content = items
+			.map { String(describing: $0 ?? "nil") }
+			.joined(separator: " ")
+		
+		switch self {
+		case .debug:
+			Log.debug(content,
+					  log: log,
+					  file: file,
+					  function: function)
+			
+		case .info:
+			Log.info(content,
+					 log: log)
+			
+		case .default:
+			Log.default(content,
+						log: log)
+			
+		case .error:
+			Log.error(content,
+					  log: log,
+					  file: file,
+					  line: line,
+					  column: column,
+					  function: function)
+			
+		case .fault:
+			Log.fault(content,
+					  log: log,
+					  file: file,
+					  line: line,
+					  column: column,
+					  function: function)
+			
+		default:
+			break
+		}
+		
+	}
+	
+}
+
 #endif
