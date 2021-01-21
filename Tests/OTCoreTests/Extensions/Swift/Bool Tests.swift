@@ -46,12 +46,32 @@ class Extensions_Swift_Bool_Tests: XCTestCase {
 	
 	func testToggled() {
 		
-		// toggled()
-		
 		XCTAssertEqual(true.toggled(), false)
 		XCTAssertEqual(false.toggled(), true)
 		
 	}
+	
+	func testIfTrueElse() {
+		
+		XCTAssertEqual(true.ifTrue(1, else: 2), 1)
+		XCTAssertEqual(false.ifTrue(1, else: 2), 2)
+		
+	}
+	
+	func testIfTrue() {
+		
+		XCTAssertEqual(true.ifTrue(1), 1)
+		XCTAssertEqual(false.ifTrue(1), nil)
+		
+	}
+	
+	func testIfFalse() {
+		
+		XCTAssertEqual(true.ifFalse(1), nil)
+		XCTAssertEqual(false.ifFalse(1), 1)
+		
+	}
+	
 	
 	func testExpressibleByIntegerLiteral() {
 		
