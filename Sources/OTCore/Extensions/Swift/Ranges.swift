@@ -6,7 +6,7 @@
 //  Copyright © 2019 Steffan Andrews. All rights reserved.
 //
 
-// MARK: - isContained
+// MARK: - Comparable .isContained
 
 extension Comparable {
 	
@@ -17,6 +17,17 @@ extension Comparable {
 	/// **OTCore:**
 	/// Same as `range.contains(self)`
 	/// (Functional convenience method)
+	///
+	/// Example:
+	///
+	///     5.isContained(in: 1...4)
+	///
+	/// To test if `self` is NOT contained in `range`:
+	///
+	///     !5.isContained(in: 1...4)
+	///     // or
+	///     5.isContained(in: 1...4).toggled()
+	///
 	@inlinable public
 	func isContained<T: RangeExpression>(in range: T) -> Bool
 	where Self == T.Bound {
@@ -25,27 +36,171 @@ extension Comparable {
 		
 	}
 	
+}
+
+
+// MARK: - Comparable .ifContained(in:then:)
+
+extension Comparable {
+	
 	/// **OTCore:**
-	/// If `self` is in range, output the new `value`, otherwise pass `self` through.
+	/// If `self` is in range, output the `newValue`, otherwise pass `self` through.
 	/// (Functional convenience method)
+	///
+	/// Example:
+	///
+	///     123.ifContained(in: 1...500, then: 1000) // 1000
+	///
+	///     700.ifContained(in: 1...500) { 1000 } // 700
+	///
+	///     700.ifContained(in: 1...500) {
+	///         // perform more complex logic to produce a new value
+	///         let p = 500
+	///         return p * 2
+	///     }
+	///
 	@inlinable public
 	func ifContained<T: RangeExpression>(in range: T,
-										 then value: T.Bound) -> T.Bound?
+										 then newValue: @autoclosure () throws -> T.Bound) rethrows -> T.Bound
 	where Self == T.Bound {
 		
-		range.contains(self) ? value : self
+		try range.contains(self) ? newValue() : self
+		
+	}
+	
+	/// **OTCore:**
+	/// If `self` is in range, output the `newValue`, otherwise pass `self` through.
+	/// (Functional convenience method)
+	///
+	/// Example:
+	///
+	///     123.ifContained(in: 1...500, then: { $0 + 5 }) // 128
+	///
+	///     700.ifContained(in: 1...500) { $0 + 5 } // 700
+	///
+	///     700.ifContained(in: 1...500) {
+	///         // perform more complex logic to produce a new value
+	///         let p = 5
+	///         return $0 + p
+	///     } // 700
+	///
+	@inlinable public
+	func ifContained<T: RangeExpression>(in range: T,
+										 then newValue: (Self) throws -> T.Bound) rethrows -> T.Bound
+	where Self == T.Bound {
+		
+		try range.contains(self) ? newValue(self) : self
+		
+	}
+	
+	/// **OTCore:**
+	/// If `self` is in range, output the `newValue`, otherwise returns `nil`.
+	/// (Functional convenience method)
+	///
+	/// Example:
+	///
+	///     123.ifContained(in: 1...500, then: { "\($0) in range" })
+	///     // Optional("123 in range")
+	///
+	///     700.ifContained(in: 1...500) { "\($0) in range" }
+	///     // nil
+	///
+	///     700.ifContained(in: 1...500) { source -> String in
+	///         // perform more complex logic to produce a new value
+	///         let s = "in range"
+	///         return String(source) + " " + s
+	///     } nil
+	///
+	@inlinable public
+	func ifContained<T: RangeExpression, U>(in range: T,
+											then newValue: (Self) throws -> U) rethrows -> U?
+	where Self == T.Bound {
+		
+		try range.contains(self) ? newValue(self) : nil
+		
+	}
+	
+}
+
+
+// MARK: - Comparable .ifNotContained(in:then:)
+
+extension Comparable {
+	
+	/// **OTCore:**
+	/// If `self` is not in range, output the new `value`, otherwise pass `self` through.
+	/// (Functional convenience method)
+	///
+	/// Example:
+	///
+	///     123.ifNotContained(in: 1...500, then: 250) // 123
+	///
+	///     700.ifNotContained(in: 1...500) { 250 } // 250
+	///
+	///     700.ifNotContained(in: 1...500) {
+	///         // perform more complex logic to produce a new value
+	///         let p = 125
+	///         return p * 2
+	///     }
+	///
+	@inlinable public
+	func ifNotContained<T: RangeExpression>(in range: T,
+											then newValue: @autoclosure () throws -> T.Bound) rethrows -> T.Bound
+	where Self == T.Bound {
+		
+		try range.contains(self) ? self : newValue()
 		
 	}
 	
 	/// **OTCore:**
 	/// If `self` is not in range, output the new `value`, otherwise pass `self` through.
 	/// (Functional convenience method)
+	///
+	/// Example:
+	///
+	///     123.ifNotContained(in: 1...500, then: { $0 + 5 }) // 123
+	///
+	///     700.ifNotContained(in: 1...500) { $0 + 5 } // 705
+	///
+	///     700.ifNotContained(in: 1...500) {
+	///         // perform more complex logic to produce a new value
+	///         let p = 5
+	///         return $0 + p
+	///     } // 705
+	///
 	@inlinable public
 	func ifNotContained<T: RangeExpression>(in range: T,
-											then value: T.Bound) -> T.Bound?
+											then newValue: (Self) throws -> T.Bound) rethrows -> T.Bound
 	where Self == T.Bound {
 		
-		range.contains(self) ? self : value
+		try range.contains(self) ? self : newValue(self)
+		
+	}
+	
+	/// **OTCore:**
+	/// If `self` is in range, output the `newValue`, otherwise returns `nil`.
+	/// (Functional convenience method)
+	///
+	/// Example:
+	///
+	///     123.ifNotContained(in: 1...500, then: "\($0) not in range")
+	///     // nil
+	///
+	///     700.ifNotContained(in: 1...500) { "\($0) not in range" }
+	///     // Optional("700 not in range")
+	///
+	///     700.ifNotContained(in: 1...500) { source -> String in
+	///         // perform more complex logic to produce a new value
+	///         let s = "not in range"
+	///         return String(source) + " " + s
+	///     } // Optional("700 not in range")
+	///
+	@inlinable public
+	func ifNotContained<T: RangeExpression, U>(in range: T,
+											   then newValue: (Self) throws -> U) rethrows -> U?
+	where Self == T.Bound {
+		
+		try range.contains(self) ? nil : newValue(self)
 		
 	}
 	

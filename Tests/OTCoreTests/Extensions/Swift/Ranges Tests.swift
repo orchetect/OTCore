@@ -16,7 +16,7 @@ class Extensions_Swift_Ranges_Tests: XCTestCase {
 	override func setUp() { super.setUp() }
 	override func tearDown() { super.tearDown() }
 	
-	func testIsContainedInRange() {
+	func testIsContained_InRange() {
 		
 		// int
 		
@@ -81,7 +81,7 @@ class Extensions_Swift_Ranges_Tests: XCTestCase {
 		
 	}
 	
-	func testIfContainedInRangeThen() {
+	func testIfContained_InRange_ThenAutoclosure() {
 		
 		// int
 		
@@ -146,7 +146,49 @@ class Extensions_Swift_Ranges_Tests: XCTestCase {
 		
 	}
 	
-	func testIfNotContainedInRangeThen() {
+	func testIfContained_InRange_ThenClosureOfSameType() {
+		
+		// emitting same type as self
+		
+		XCTAssertEqual(123.ifContained(in: 1...500, then: { $0 + 5 }),
+					   128)
+		
+		XCTAssertEqual(700.ifContained(in: 1...500) { $0 + 5 },
+					   700)
+		
+		XCTAssertEqual(
+			700.ifContained(in: 1...500) {
+				let p = 5
+				
+				return $0 + p
+			},
+			700
+		)
+		
+	}
+	
+	func testIfContained_InRange_ThenClosureOfDifferentType() {
+		
+		// emitting different type than self
+		
+		XCTAssertEqual(123.ifContained(in: 1...500, then: { "\($0)" }),
+					   "123")
+		
+		XCTAssertEqual(700.ifContained(in: 1...500) { "\($0)" },
+					   nil)
+		
+		XCTAssertEqual(
+			700.ifContained(in: 1...500) { source -> String in
+				let p = " is in range"
+				
+				return String(source) + p
+			},
+			nil
+		)
+		
+	}
+	
+	func testIfNotContained_InRange_ThenAutoclosure() {
 		
 		// int
 		
@@ -210,6 +252,48 @@ class Extensions_Swift_Ranges_Tests: XCTestCase {
 		
 		XCTAssertEqual("c".ifNotContained(in: "a"..."d", then: "z"), "c")
 		XCTAssertEqual("e".ifNotContained(in: "a"..."d", then: "z"), "z")
+		
+	}
+	
+	func testIfNotContained_InRange_ThenClosureOfSameType() {
+		
+		// emitting same type as self
+		
+		XCTAssertEqual(123.ifNotContained(in: 1...500, then: { $0 + 5 }),
+					   123)
+		
+		XCTAssertEqual(700.ifNotContained(in: 1...500) { $0 + 5 },
+					   705)
+		
+		XCTAssertEqual(
+			700.ifNotContained(in: 1...500) {
+				let p = 5
+				
+				return $0 + p
+			},
+			705
+		)
+		
+	}
+	
+	func testIfNotContained_InRange_ThenClosureOfDifferentType() {
+		
+		// emitting different type than self
+		
+		XCTAssertEqual(123.ifNotContained(in: 1...500, then: { "\($0)" }),
+					   nil)
+		
+		XCTAssertEqual(700.ifNotContained(in: 1...500) { "\($0)" },
+					   "700")
+		
+		XCTAssertEqual(
+			700.ifNotContained(in: 1...500) { source -> String in
+				let p = " is not in range"
+				
+				return String(source) + p
+			},
+			"700 is not in range"
+		)
 		
 	}
 	
