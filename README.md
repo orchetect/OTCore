@@ -16,8 +16,9 @@
 <a href="https://github.com/orchetect/OTCore/blob/main/LICENSE">
 <img src="http://img.shields.io/badge/license-MIT-blue.svg?style=flat"
 	 alt="License: MIT" /></a>
-
 Foundational multi-platform shared code module with useful extensions on core Swift types.
+
+The library has no implicit minimum OS version requirements, but where necessary, individual methods and properties have been marked `@available`  with associated individual OS requirements.
 
 ## Summary
 
