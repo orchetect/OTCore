@@ -39,6 +39,24 @@ To add OTCore to your Xcode project:
 1. Select File → Swift Packages → Add Package Dependency
 2. Add package using  `https://github.com/orchetect/OTCore` as the URL.
 
+## Usage
+
+### OTCore
+
+```swift
+import OTCore
+```
+
+OTCore provides all the general production code, including extensions on Swift standard library types, abstractions, algorithms, and useful odds and ends.
+
+### OTCoreTesting
+
+```swift
+import OTCoreTesting
+```
+
+OTCoreTesting provides specific production code and `XCTestCase` extensions that complement each other, useful for added functionality to XCTest unit testing of your code.
+
 ## Documentation
 
 Most methods are implemented as category methods so they are generally discoverable.
