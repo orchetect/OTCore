@@ -10,6 +10,7 @@
 
 import XCTest
 @testable import OTCoreTestingXCTest
+import OTCoreTesting
 
 class Assertions_Tests: XCTestCase {
 	

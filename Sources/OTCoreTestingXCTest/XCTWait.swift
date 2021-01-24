@@ -9,7 +9,6 @@
 #if !os(watchOS) && canImport(XCTest)
 
 import XCTest
-@_exported import OTCoreTesting
 
 public extension XCTestCase {
 	

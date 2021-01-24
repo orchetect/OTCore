@@ -11,18 +11,17 @@ let package = Package(
 		// production modules
         .library(
             name: "OTCore",
+			type: .static,
             targets: ["OTCore"]),
 		
-		// production testing module
 		.library(
 			name: "OTCore-Testing",
-			type: .dynamic,
+			type: .static,
 			targets: ["OTCoreTesting"]),
 		
-		// XCTest module
 		.library(
 			name: "OTCore-Testing-XCTest",
-			type: .dynamic,
+			type: .static,
 			targets: ["OTCoreTestingXCTest"])
     ],
 	
@@ -41,20 +40,32 @@ let package = Package(
 			name: "OTCoreTests",
 			dependencies: ["OTCore", "SegmentedProgress"]),
 		
-		// production testing module
 		.target(
 			name: "OTCoreTesting",
-			dependencies: []),
+			dependencies: [],
+			cSettings: [.define("DISABLE_DIAMOND_PROBLEM_DIAGNOSTIC", to: "YES")],
+			cxxSettings: [.define("DISABLE_DIAMOND_PROBLEM_DIAGNOSTIC", to: "YES")],
+			swiftSettings: [.define("DISABLE_DIAMOND_PROBLEM_DIAGNOSTIC=YES")]
+		),
 		
-		// XCTest module
 		.target(
 			name: "OTCoreTestingXCTest",
-			dependencies: ["OTCoreTesting"]),
+			dependencies: ["OTCoreTesting"],
+			cSettings: [.define("DISABLE_DIAMOND_PROBLEM_DIAGNOSTIC", to: "YES")],
+			cxxSettings: [.define("DISABLE_DIAMOND_PROBLEM_DIAGNOSTIC", to: "YES")],
+			swiftSettings: [.define("DISABLE_DIAMOND_PROBLEM_DIAGNOSTIC=YES")]
+		),
 		
-		// XCTest module tests
+//		cSettings: <#T##[CSetting]?#>, cxxSettings: <#T##[CXXSetting]?#>, swiftSettings: <#T##[SwiftSetting]?#>, linkerSettings: <#T##[LinkerSetting]?#>)
+		
 		.testTarget(
 			name: "OTCoreTestingXCTestTests",
-			dependencies: ["OTCore", "OTCoreTestingXCTest"])
+			dependencies: ["OTCore", "OTCoreTestingXCTest"],
+			cSettings: [.define("DISABLE_DIAMOND_PROBLEM_DIAGNOSTIC", to: "YES")],
+			cxxSettings: [.define("DISABLE_DIAMOND_PROBLEM_DIAGNOSTIC", to: "YES")],
+			swiftSettings: [.define("DISABLE_DIAMOND_PROBLEM_DIAGNOSTIC=YES")]
+		)
+		
 	]
 	
 )
