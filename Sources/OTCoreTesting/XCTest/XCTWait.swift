@@ -6,7 +6,7 @@
 //  Copyright © 2021 Steffan Andrews. All rights reserved.
 //
 
-#if canImport(XCTest)
+#if !os(watchOS) && canImport(XCTest)
 
 import XCTest
 
