@@ -8,13 +8,22 @@ let package = Package(
     name: "OTCore",
 	
     products: [
+		// production modules
         .library(
             name: "OTCore",
             targets: ["OTCore"]),
 		
+		// production testing module
 		.library(
-			name: "OTCoreTesting",
-			targets: ["OTCoreTesting", "OTCoreTestingXCTest"])
+			name: "OTCore-Testing",
+			type: .dynamic,
+			targets: ["OTCoreTesting"]),
+		
+		// XCTest module
+		.library(
+			name: "OTCore-Testing-XCTest",
+			type: .dynamic,
+			targets: ["OTCoreTestingXCTest"])
     ],
 	
     dependencies: [
@@ -22,30 +31,30 @@ let package = Package(
 	],
 	
     targets: [
-		// main
+		// production
 		.target(
 			name: "OTCore",
 			dependencies: []),
 		
-		// main tests
+		// production tests
 		.testTarget(
 			name: "OTCoreTests",
 			dependencies: ["OTCore", "SegmentedProgress"]),
 		
-		// Testing module
+		// production testing module
 		.target(
 			name: "OTCoreTesting",
 			dependencies: []),
 		
-		// Testing XCTest module
+		// XCTest module
 		.target(
 			name: "OTCoreTestingXCTest",
 			dependencies: ["OTCoreTesting"]),
 		
-		// Testing tests
+		// XCTest module tests
 		.testTarget(
 			name: "OTCoreTestingXCTestTests",
-			dependencies: ["OTCore", "OTCoreTesting", "OTCoreTestingXCTest"])
+			dependencies: ["OTCore", "OTCoreTestingXCTest"])
 	]
 	
 )
