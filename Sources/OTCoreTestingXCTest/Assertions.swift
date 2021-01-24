@@ -146,7 +146,7 @@ public extension XCTestCase {
 			line: line,
 			function: { (caller) -> Void in
 				
-				Assertions.preconditionFailureClosure = { message, _, _ in
+				Assertions.preconditionFailureClosure = { (message, _, _) -> Void in
 					caller(message)
 				}
 				
@@ -182,7 +182,7 @@ public extension XCTestCase {
 			line: line,
 			function: { (caller) -> Void in
 				
-				Assertions.fatalErrorClosure = { message, _, _ in
+				Assertions.fatalErrorClosure = { (message, _, _) -> Void in
 					caller(message)
 				}
 				
@@ -213,7 +213,7 @@ public extension XCTestCase {
 		let expect = expectation(description: functionName + "-Expectation")
 		var assertion: (condition: Bool, message: String)? = nil
 		
-		function { (condition, message) -> Void in
+		function { (condition, message) in
 			assertion = (condition, message)
 			expect.fulfill()
 		}

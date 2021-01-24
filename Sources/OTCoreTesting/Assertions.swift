@@ -74,12 +74,18 @@ public enum Assertions {
 		Swift.precondition($0, $1, file: $2, line: $3)
 	}
 	
-	public static let swiftPreconditionFailureClosure = {
-		_ = Swift.preconditionFailure($0, file: $1, line: $2)
+	public static let swiftPreconditionFailureClosure: (String, StaticString, UInt) -> Void = {
+		// some trickery to get this to work without making the compiler complain
+		if 1 == 1 {
+			Swift.preconditionFailure($0, file: $1, line: $2)
+		}
 	}
 	
-	public static let swiftFatalErrorClosure = {
-		_ = Swift.fatalError($0, file: $1, line: $2)
+	public static let swiftFatalErrorClosure: (String, StaticString, UInt) -> Void = {
+		// some trickery to get this to work without making the compiler complain
+		if 1 == 1 {
+			Swift.fatalError($0, file: $1, line: $2)
+		}
 	}
 	
 }
