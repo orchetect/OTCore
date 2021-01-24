@@ -148,7 +148,7 @@ OTCore provides all the general production code, including extensions on Swift s
    
    `@_implementationOnly` prevents the methods and properties in `OTCoreTesting` from being exported to the consumer of your SPM package.
    
-3. In your XCTest case files, where applicable:
+3. In your test target source files using XCTest, where applicable:
 
    ```swift
    import OTCoreTestingXCTest
