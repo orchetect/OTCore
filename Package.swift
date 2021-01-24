@@ -8,17 +8,19 @@ let package = Package(
     name: "OTCore",
 	
     products: [
-		// production modules
+		// OTCore main library
         .library(
             name: "OTCore",
 			type: .static,
             targets: ["OTCore"]),
 		
+		// OTCore-Testing production code import
 		.library(
 			name: "OTCore-Testing",
 			type: .static,
 			targets: ["OTCoreTesting"]),
 		
+		// OTCore-Testing XCTest unit test target import
 		.library(
 			name: "OTCore-Testing-XCTest",
 			type: .static,
@@ -30,40 +32,32 @@ let package = Package(
 	],
 	
     targets: [
-		// production
+		// MODULE: OTCore
 		.target(
 			name: "OTCore",
 			dependencies: []),
 		
-		// production tests
+		// TESTS: OTCore
 		.testTarget(
 			name: "OTCoreTests",
 			dependencies: ["OTCore", "SegmentedProgress"]),
 		
+		// MODULE: OTCoreTesting
 		.target(
 			name: "OTCoreTesting",
-			dependencies: []//,
-//			cSettings: [.define("DISABLE_DIAMOND_PROBLEM_DIAGNOSTIC", to: "YES")],
-//			cxxSettings: [.define("DISABLE_DIAMOND_PROBLEM_DIAGNOSTIC", to: "YES")],
-//			swiftSettings: [.define("DISABLE_DIAMOND_PROBLEM_DIAGNOSTIC=YES")]
+			dependencies: []
 		),
 		
+		// MODULE: OTCoreTestingXCTest
 		.target(
 			name: "OTCoreTestingXCTest",
-			dependencies: ["OTCoreTesting"]//,
-//			cSettings: [.define("DISABLE_DIAMOND_PROBLEM_DIAGNOSTIC", to: "YES")],
-//			cxxSettings: [.define("DISABLE_DIAMOND_PROBLEM_DIAGNOSTIC", to: "YES")],
-//			swiftSettings: [.define("DISABLE_DIAMOND_PROBLEM_DIAGNOSTIC=YES")]
+			dependencies: ["OTCoreTesting"]
 		),
 		
-//		cSettings: <#T##[CSetting]?#>, cxxSettings: <#T##[CXXSetting]?#>, swiftSettings: <#T##[SwiftSetting]?#>, linkerSettings: <#T##[LinkerSetting]?#>)
-		
+		// TESTS: OTCoreTestingXCTest
 		.testTarget(
 			name: "OTCoreTestingXCTestTests",
-			dependencies: ["OTCore", "OTCoreTestingXCTest"]//,
-//			cSettings: [.define("DISABLE_DIAMOND_PROBLEM_DIAGNOSTIC", to: "YES")],
-//			cxxSettings: [.define("DISABLE_DIAMOND_PROBLEM_DIAGNOSTIC", to: "YES")],
-//			swiftSettings: [.define("DISABLE_DIAMOND_PROBLEM_DIAGNOSTIC=YES")]
+			dependencies: ["OTCore", "OTCoreTestingXCTest"]
 		)
 		
 	]
