@@ -5,7 +5,7 @@
 //  Derived from https://izziswift.com/unit-test-fatalerror-in-swift/
 //
 
-#if canImport(XCTest)
+#if !os(watchOS) && canImport(XCTest) 
 
 import XCTest
 

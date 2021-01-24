@@ -6,6 +6,8 @@
 //  Copyright © 2021 Steffan Andrews. All rights reserved.
 //
 
+#if !os(watchOS)
+
 import XCTest
 @testable import OTCoreTesting
 
@@ -55,3 +57,5 @@ class Assertions_Tests: XCTestCase {
 	}
 	
 }
+
+#endif
