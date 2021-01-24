@@ -11,6 +11,10 @@ let package = Package(
         .library(
             name: "OTCore",
             targets: ["OTCore"]),
+		
+		.library(
+			name: "OTCoreTesting",
+			targets: ["OTCoreTesting"])
     ],
 	
     dependencies: [
@@ -26,6 +30,13 @@ let package = Package(
 			name: "OTCoreTests",
 			dependencies: ["OTCore", "SegmentedProgress"]),
 		
+		.target(
+			name: "OTCoreTesting",
+			dependencies: []),
+		
+		.testTarget(
+			name: "OTCoreTestingTests",
+			dependencies: ["OTCoreTesting"])
 	]
 	
 )
