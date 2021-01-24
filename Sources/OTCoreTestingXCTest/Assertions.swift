@@ -8,6 +8,7 @@
 #if !os(watchOS) && canImport(XCTest) 
 
 import XCTest
+@_exported import OTCoreTesting
 
 fileprivate let noReturnFailureWaitTime = 0.1
 

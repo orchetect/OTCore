@@ -43,19 +43,27 @@ To add OTCore to your Xcode project:
 
 ### OTCore
 
+OTCore provides all the general production code, including extensions on Swift standard library types, abstractions, algorithms, and useful odds and ends.
+
 ```swift
 import OTCore
 ```
 
-OTCore provides all the general production code, including extensions on Swift standard library types, abstractions, algorithms, and useful odds and ends.
-
 ### OTCoreTesting
+
+OTCoreTesting provides specific production code and `XCTestCase` extensions that complement each other, useful for added functionality to XCTest unit testing of your code.
+
+In your production target, where applicable:
 
 ```swift
 import OTCoreTesting
 ```
 
-OTCoreTesting provides specific production code and `XCTestCase` extensions that complement each other, useful for added functionality to XCTest unit testing of your code.
+In your XCTest case files, where applicable:
+
+```swift
+import OTCoreTestingXCTest
+```
 
 ## Documentation
 

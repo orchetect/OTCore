@@ -14,7 +14,7 @@ let package = Package(
 		
 		.library(
 			name: "OTCoreTesting",
-			targets: ["OTCoreTesting"])
+			targets: ["OTCoreTesting", "OTCoreTestingXCTest"])
     ],
 	
     dependencies: [
@@ -22,21 +22,30 @@ let package = Package(
 	],
 	
     targets: [
+		// main
 		.target(
 			name: "OTCore",
 			dependencies: []),
 		
+		// main tests
 		.testTarget(
 			name: "OTCoreTests",
 			dependencies: ["OTCore", "SegmentedProgress"]),
 		
+		// Testing module
 		.target(
 			name: "OTCoreTesting",
 			dependencies: []),
 		
+		// Testing XCTest module
+		.target(
+			name: "OTCoreTestingXCTest",
+			dependencies: ["OTCoreTesting"]),
+		
+		// Testing tests
 		.testTarget(
-			name: "OTCoreTestingTests",
-			dependencies: ["OTCore", "OTCoreTesting"])
+			name: "OTCoreTestingXCTestTests",
+			dependencies: ["OTCore", "OTCoreTesting", "OTCoreTestingXCTest"])
 	]
 	
 )

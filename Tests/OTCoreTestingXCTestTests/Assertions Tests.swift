@@ -9,7 +9,7 @@
 #if !os(watchOS)
 
 import XCTest
-@testable import OTCoreTesting
+@testable import OTCoreTestingXCTest
 
 class Assertions_Tests: XCTestCase {
 	
