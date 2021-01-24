@@ -42,28 +42,28 @@ let package = Package(
 		
 		.target(
 			name: "OTCoreTesting",
-			dependencies: [],
-			cSettings: [.define("DISABLE_DIAMOND_PROBLEM_DIAGNOSTIC", to: "YES")],
-			cxxSettings: [.define("DISABLE_DIAMOND_PROBLEM_DIAGNOSTIC", to: "YES")],
-			swiftSettings: [.define("DISABLE_DIAMOND_PROBLEM_DIAGNOSTIC=YES")]
+			dependencies: []//,
+//			cSettings: [.define("DISABLE_DIAMOND_PROBLEM_DIAGNOSTIC", to: "YES")],
+//			cxxSettings: [.define("DISABLE_DIAMOND_PROBLEM_DIAGNOSTIC", to: "YES")],
+//			swiftSettings: [.define("DISABLE_DIAMOND_PROBLEM_DIAGNOSTIC=YES")]
 		),
 		
 		.target(
 			name: "OTCoreTestingXCTest",
-			dependencies: ["OTCoreTesting"],
-			cSettings: [.define("DISABLE_DIAMOND_PROBLEM_DIAGNOSTIC", to: "YES")],
-			cxxSettings: [.define("DISABLE_DIAMOND_PROBLEM_DIAGNOSTIC", to: "YES")],
-			swiftSettings: [.define("DISABLE_DIAMOND_PROBLEM_DIAGNOSTIC=YES")]
+			dependencies: ["OTCoreTesting"]//,
+//			cSettings: [.define("DISABLE_DIAMOND_PROBLEM_DIAGNOSTIC", to: "YES")],
+//			cxxSettings: [.define("DISABLE_DIAMOND_PROBLEM_DIAGNOSTIC", to: "YES")],
+//			swiftSettings: [.define("DISABLE_DIAMOND_PROBLEM_DIAGNOSTIC=YES")]
 		),
 		
 //		cSettings: <#T##[CSetting]?#>, cxxSettings: <#T##[CXXSetting]?#>, swiftSettings: <#T##[SwiftSetting]?#>, linkerSettings: <#T##[LinkerSetting]?#>)
 		
 		.testTarget(
 			name: "OTCoreTestingXCTestTests",
-			dependencies: ["OTCore", "OTCoreTestingXCTest"],
-			cSettings: [.define("DISABLE_DIAMOND_PROBLEM_DIAGNOSTIC", to: "YES")],
-			cxxSettings: [.define("DISABLE_DIAMOND_PROBLEM_DIAGNOSTIC", to: "YES")],
-			swiftSettings: [.define("DISABLE_DIAMOND_PROBLEM_DIAGNOSTIC=YES")]
+			dependencies: ["OTCore", "OTCoreTestingXCTest"]//,
+//			cSettings: [.define("DISABLE_DIAMOND_PROBLEM_DIAGNOSTIC", to: "YES")],
+//			cxxSettings: [.define("DISABLE_DIAMOND_PROBLEM_DIAGNOSTIC", to: "YES")],
+//			swiftSettings: [.define("DISABLE_DIAMOND_PROBLEM_DIAGNOSTIC=YES")]
 		)
 		
 	]
