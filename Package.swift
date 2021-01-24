@@ -36,7 +36,7 @@ let package = Package(
 		
 		.testTarget(
 			name: "OTCoreTestingTests",
-			dependencies: ["OTCoreTesting"])
+			dependencies: ["OTCore", "OTCoreTesting"])
 	]
 	
 )
