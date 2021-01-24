@@ -41,29 +41,118 @@ To add OTCore to your Xcode project:
 
 ## Usage
 
-### OTCore
+### `OTCore`
 
 OTCore provides all the general production code, including extensions on Swift standard library types, abstractions, algorithms, and useful odds and ends.
 
-```swift
-import OTCore
-```
+#### In an Application
 
-### OTCoreTesting
+1. Add the package to your Xcode project using Swift Package Manager
+   - Select File → Swift Packages → Add Package Dependency
+   - Add package using  `https://github.com/orchetect/OTCore` as the URL.
+2. Import the module in your *.swift files where needed.
+   ```swift
+   import OTCore
+   ```
 
-OTCoreTesting provides specific production code and `XCTestCase` extensions that complement each other, useful for added functionality to XCTest unit testing of your code.
+#### In a SPM Package as a Dependency
 
-In your production target, where applicable:
+1. In your Package.swift file:
 
-```swift
-import OTCoreTesting
-```
+   ```swift
+   dependencies: [
+       // ... any other dependencies you may have ...
+       .package(url: "https://github.com/orchetect/OTCore", from: "1.1.2")
+   ],
+   ```
 
-In your XCTest case files, where applicable:
+2. In your production target, where applicable:
 
-```swift
-import OTCoreTestingXCTest
-```
+   ```swift
+   @_implementationOnly import OTCore
+   ```
+   
+   `@_implementationOnly` prevents the methods and properties in `OTCore` from being exported to the consumer of your SPM package.
+
+### `OTCore-Testing` & `OTCore-Testing-XCTest`
+
+`OTCoreTesting` and `OTCoreTestingXCTest` provides specific production code and `XCTestCase` extensions that complement each other, useful for added functionality to XCTest unit testing of your code.
+
+#### In an Application
+
+1. Add the package to your Xcode project using Swift Package Manager
+
+   - Select File → Swift Packages → Add Package Dependency
+   - Add package using  `https://github.com/orchetect/OTCore` as the URL.
+   
+2. In all of your application targets and test targets, it is necessary to add this custom build setting:
+
+   ```
+   DISABLE_DIAMOND_PROBLEM_DIAGNOSTIC = YES
+   ```
+
+   (In Build Settings tab, click the `+` button near the top next to "Combined" / "Levels" and select "Add User-Defined Setting". Then enter `DISABLE_DIAMOND_PROBLEM_DIAGNOSTIC` as the name, and `YES` as its value for each build target.)
+
+   Alternatively, this build setting can be supplied in a custom `.xcconfig` file.
+
+   This is a necessary workaround for the time being. See [this swift.org thread](https://forums.swift.org/t/adding-a-package-to-two-targets-in-one-projects-results-in-an-error/35007) for details.
+
+3. In Xcode → Application project file
+
+   - *Application Target* → General tab → "Frameworks, Libraries and Embedded Content"
+      - Click the `+` button
+      - Add the `OTCore-Testing` library
+   - Repeat for for each testing target:
+      - *Test Target* → Build Phases tab → Link Binary With Libraries disclosure triangle
+      - Add the `OTCore-Testing-XCTest` library
+
+4. In your application, where applicable:
+   ```swift
+   import OTCoreTesting
+   ```
+
+5. In your test target source files using XCTest, where applicable:
+   ```swift
+   import OTCoreTestingXCTest
+   ```
+
+#### In a SPM Package as a Dependency
+
+1. In your Package.swift file:
+
+   Because `OTCore-Testing` and `OTCore-Testing-XCTest` are modules inside `OTCore`, they must be listed as dependencies using the `.product()` argument.
+
+   ```swift
+   dependencies: [
+       // ... any other dependencies you may have ...
+       .package(url: "https://github.com/orchetect/OTCore", from: "1.1.2")
+   ],
+   
+   targets: [
+       .target(
+           name: "YourTarget",
+           dependencies: [.product(name: "OTCore-Testing", package: "OTCore")]),
+       
+       .testTarget(
+           name: "YourTargetTests",
+           dependencies: ["YourTarget",
+                          .product(name: "OTCore-Testing-XCTest", package: "OTCore")])
+   ]
+   ```
+
+2. In your production target, where applicable:
+
+   ```swift
+   @_implementationOnly import OTCoreTesting
+   ```
+   
+   `@_implementationOnly` prevents the methods and properties in `OTCoreTesting` from being exported to the consumer of your SPM package.
+   
+3. In your XCTest case files, where applicable:
+
+   ```swift
+   import OTCoreTestingXCTest
+   ```
 
 ## Documentation
 
