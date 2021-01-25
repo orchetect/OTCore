@@ -34,6 +34,67 @@ class Extensions_Foundation_URL_Tests: XCTestCase {
 		
 	}
 	
+	func testTrashOrDelete() {
+		
+		// boilerplate
+		
+		let temporaryDirectoryURL = FileManager.temporaryDirectoryCompat
+		
+		// determine temporary URLs
+		
+		let randomFolderName = "temp-\(UUID().uuidString)"
+		
+		let url = temporaryDirectoryURL
+			.appendingPathComponent(randomFolderName)
+		
+		// ensure path does not exist
+		guard !url.fileExists else {
+			XCTFail("\(url) exists unexpectedly. Can't continue test.")
+			return
+		}
+		
+		print("Source URL:     ", url)
+		
+		// create source folder
+		
+		print("Creating source directory...")
+		
+		guard (try? FileManager.default.createDirectory(at: url,
+														withIntermediateDirectories: false,
+														attributes: nil)) != nil else {
+			XCTFail("Failed to create source folder \"\(url)\". Can't continue test.")
+			return
+		}
+		
+		// operation
+		
+		var result: URL? = nil
+		
+		do {
+			result = try url.trashOrDelete()
+		} catch {
+			XCTFail("URL.trashOrDelete() threw an exception: \(error)")
+		}
+		
+		// result test
+		
+		#if os(macOS) || targetEnvironment(macCatalyst)
+		XCTAssertNotNil(result)
+		#elseif os(iOS)
+		XCTAssertNil(result)
+		#elseif os(tvOS)
+		XCTAssertNil(result)
+		#elseif os(watchOS)
+		// watchOS can't run XCTest unit tests, but we'll put the expected result here any way:
+		XCTAssertNil(result)
+		#endif
+		
+		// clean up
+		
+		// no clean up necessary, test moves any temp files/folders is creates to the trash or deletes them
+		
+	}
+	
 	func testIsFinderAlias() {
 		
 		// boilerplate
@@ -81,7 +142,9 @@ class Extensions_Foundation_URL_Tests: XCTestCase {
 		
 		print("Creating source directory...")
 		
-		guard (try? FileManager.default.createDirectory(at: url1, withIntermediateDirectories: false, attributes: nil)) != nil else {
+		guard (try? FileManager.default.createDirectory(at: url1,
+														withIntermediateDirectories: false,
+														attributes: nil)) != nil else {
 			XCTFail("Failed to create source folder \"\(url1)\". Can't continue test.")
 			return
 		}
@@ -105,10 +168,10 @@ class Extensions_Foundation_URL_Tests: XCTestCase {
 		// .trashItem not available on all platforms
 		
 		print("Cleaning up source directory...")
-		XCTAssertTrue(trashOrDelete(url: url1))
+		XCTAssertNoThrow(try url1.trashOrDelete())
 		
 		print("Cleaning up destination alias...")
-		XCTAssertTrue(trashOrDelete(url: url2))
+		XCTAssertNoThrow(try url2.trashOrDelete())
 		
 	}
 	
@@ -159,7 +222,9 @@ class Extensions_Foundation_URL_Tests: XCTestCase {
 		
 		print("Creating source directory...")
 		
-		guard (try? FileManager.default.createDirectory(at: url1, withIntermediateDirectories: false, attributes: nil)) != nil else {
+		guard (try? FileManager.default.createDirectory(at: url1,
+														withIntermediateDirectories: false,
+														attributes: nil)) != nil else {
 			XCTFail("Failed to create source folder \"\(url1)\". Can't continue test.")
 			return
 		}
@@ -177,25 +242,39 @@ class Extensions_Foundation_URL_Tests: XCTestCase {
 		
 		if let checkSymlink = url1.isSymLink {
 			XCTAssertFalse(checkSymlink)
-		} else { XCTFail("isSymLink should not be nil here") ; return }
+		} else {
+			XCTFail("isSymLink should not be nil here")
+			return
+		}
+		
 		if let checkSymlink = url2.isSymLink {
 			XCTAssertTrue(checkSymlink)
-		} else { XCTFail("isSymLink should not be nil here") ; return }
+		} else {
+			XCTFail("isSymLink should not be nil here")
+			return
+		}
 		
 		if let checkSymlink = url1.isSymLinkOf(file: url2) {
 			XCTAssertFalse(checkSymlink)
-		} else { XCTFail("isSymLink should not be nil here") ; return }
+		} else {
+			XCTFail("isSymLink should not be nil here")
+			return
+		}
+		
 		if let checkSymlink = url2.isSymLinkOf(file: url1) {
 			XCTAssertTrue(checkSymlink)
-		} else { XCTFail("isSymLink should not be nil here") ; return }
+		} else {
+			XCTFail("isSymLink should not be nil here")
+			return
+		}
 		
 		// clean up
 		
 		print("Cleaning up source directory...")
-		XCTAssertTrue(trashOrDelete(url: url1))
+		XCTAssertNoThrow(try url1.trashOrDelete())
 		
 		print("Cleaning up destination symlink...")
-		XCTAssertTrue(trashOrDelete(url: url2))
+		XCTAssertNoThrow(try url2.trashOrDelete())
 		
 	}
 
@@ -211,54 +290,6 @@ class Extensions_Foundation_URL_Tests: XCTestCase {
 		#endif
 		
 	}
-	
-}
-
-
-// MARK: - Helpers
-
-/// Attemptes to move a file to the Trash if possible, otherwise attemptes to delete the file.
-@discardableResult
-fileprivate func trashOrDelete(url: URL) -> Bool {
-	
-	// funcs
-	
-	func __delFile(url: URL) -> Bool {
-		(try? FileManager.default.removeItem(at: url)) != nil
-	}
-		
-	// logic
-	
-	#if os(tvOS)
-	
-	return __delFile(url: url)
-	
-	#else
-	
-	if #available(macOS 10.8, iOS 11.0, *) {
-		
-		func __trashFile(url: URL) -> Bool {
-			if (try? FileManager.default.trashItem(at: url, resultingItemURL: nil)) == nil {
-				#if os(macOS) // .trashItem has permissions issues on iOS; ignore
-				return false
-				#endif
-			}
-			return true
-		}
-		
-		// move file to trash
-		
-		return __trashFile(url: url)
-		
-	} else {
-		
-		// delete file
-		
-		return __delFile(url: url)
-		
-	}
-	
-	#endif
 	
 }
 

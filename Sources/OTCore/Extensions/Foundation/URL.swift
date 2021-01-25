@@ -40,6 +40,79 @@ extension URL {
 }
 
 
+// MARK: - File operations
+
+extension URL {
+	
+	/// **OTCore:**
+	/// Attempts to first move a file to the Trash if possible, otherwise attempts to delete the file.
+	///
+	/// If the file was moved to the trash, the new resulting `URL` is returned.
+	///
+	/// If the file was deleted, `nil` is returned.
+	///
+	/// If both operations were unsuccessful, an error is thrown.
+	@discardableResult
+	public func trashOrDelete() throws -> URL? {
+		
+		// funcs
+		
+		func __delFile(url: URL) throws {
+			try FileManager.default.removeItem(at: url)
+		}
+			
+		// platform-specific logic
+		
+		#if os(macOS) || targetEnvironment(macCatalyst) || os(iOS)
+		
+		if #available(macOS 10.8, iOS 11.0, *) {
+			
+			// move file to trash
+			
+			var resultingURL: NSURL? = nil
+			
+			do {
+				try FileManager.default.trashItem(at: self, resultingItemURL: &resultingURL)
+			} catch {
+				#if os(macOS)
+				throw error
+				#else
+				// .trashItem has permissions issues on iOS; ignore and return without throwing
+				return nil
+				#endif
+			}
+			
+			return resultingURL?.absoluteURL
+			
+		} else {
+			
+			// OS version requirements not met - delete file by default
+			
+			try __delFile(url: self)
+			return nil
+			
+		}
+		
+		#elseif os(tvOS)
+		
+		// tvOS has no "Trash" - just delete the file
+		
+		try __delFile(url: self)
+		return nil
+		
+		#elseif os(watchOS)
+		
+		// watchOS has no "Trash" - just delete the file
+		
+		try __delFile(url: self)
+		return nil
+		
+		#endif
+		
+	}
+	
+}
+
 // MARK: - Finder Aliases
 
 extension URL {
