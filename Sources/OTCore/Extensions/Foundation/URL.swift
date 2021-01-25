@@ -86,7 +86,7 @@ extension URL {
 			
 		} else {
 			
-			// OS version requirements not met - delete file by default
+			// OS version requirements not met - delete file as a fallback
 			
 			try __delFile(url: self)
 			return nil
@@ -95,14 +95,14 @@ extension URL {
 		
 		#elseif os(tvOS)
 		
-		// tvOS has no "Trash" - just delete the file
+		// tvOS has no Trash - just delete the file
 		
 		try __delFile(url: self)
 		return nil
 		
 		#elseif os(watchOS)
 		
-		// watchOS has no "Trash" - just delete the file
+		// watchOS has no Trash - just delete the file
 		
 		try __delFile(url: self)
 		return nil

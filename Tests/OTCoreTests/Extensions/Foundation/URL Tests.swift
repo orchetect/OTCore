@@ -91,7 +91,8 @@ class Extensions_Foundation_URL_Tests: XCTestCase {
 		
 		// clean up
 		
-		// no clean up necessary, test moves any temp files/folders is creates to the trash or deletes them
+		// no clean up necessary
+		// test moves any temp files/folders it creates to the trash or deletes them
 		
 	}
 	
