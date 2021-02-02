@@ -250,11 +250,27 @@ extension Data {
 		
 		// define conversions
 		
-		let number = { self.withUnsafeBytes { $0.load(as: Float32.self) } }()
+		// this crashes if Data alignment isn't correct
+		//let number = { self.withUnsafeBytes { $0.load(as: Float32.self) } }()
+		
+		// since .load(as:) is not memory alignment safe, memcpy is the current workaround (as of Swift 5.3)
+		// see for more info: https://bugs.swift.org/browse/SR-10273
+		let number: Float32 = { self.withUnsafeBytes {
+			var value = Float32()
+			memcpy(&value, $0.baseAddress!, 4)
+			return value
+		} }()
+		
+		// float twiddling
 		
 		let numberSwapped: Float32 = {
 			var floatsw = CFConvertFloat32HostToSwapped(Float32())
-			floatsw = self.withUnsafeBytes { $0.load(as: CFSwappedFloat32.self) }
+			floatsw = self.withUnsafeBytes {
+				//$0.load(as: CFSwappedFloat32.self)
+				var value = CFSwappedFloat32()
+				memcpy(&value, $0.baseAddress!, 4)
+				return value
+			}
 			return CFConvertFloat32SwappedToHost(floatsw)
 		}()
 		
@@ -350,11 +366,27 @@ extension Data {
 		
 		// define conversions
 		
-		let number: Double = { self.withUnsafeBytes { $0.load(as: Double.self) } }()
+		// this crashes if Data alignment isn't correct
+		//let number: Double = { self.withUnsafeBytes { $0.load(as: Double.self) } }()
+		
+		// since .load(as:) is not memory alignment safe, memcpy is the current workaround (as of Swift 5.3)
+		// see for more info: https://bugs.swift.org/browse/SR-10273
+		let number: Double = { self.withUnsafeBytes {
+			var value = Double()
+			memcpy(&value, $0.baseAddress!, 8)
+			return value
+		} }()
+		
+		// double twiddling
 		
 		let numberSwapped: Double = {
 			var floatsw = CFConvertDoubleHostToSwapped(Double())
-			floatsw = self.withUnsafeBytes { $0.load(as: CFSwappedFloat64.self) }
+			floatsw = self.withUnsafeBytes {
+				//$0.load(as: CFSwappedFloat64.self)
+				var value = CFSwappedFloat64()
+				memcpy(&value, $0.baseAddress!, 8)
+				return value
+			}
 			return CFConvertDoubleSwappedToHost(floatsw)
 		}()
 		
@@ -424,13 +456,22 @@ extension FixedWidthInteger {
 extension Data {
 	
 	/// Internal use.
-	private func toNumber<T: FixedWidthInteger>(from endianness: NumberEndianness = .platformDefault, toType: T.Type) -> T? {
+	internal func toNumber<T: FixedWidthInteger>(from endianness: NumberEndianness = .platformDefault, toType: T.Type) -> T? {
 		
 		guard self.count == MemoryLayout<T>.size else { return nil }
 		
 		// define conversion
 		
-		let int = { self.withUnsafeBytes { $0.load(as: T.self) } }()
+		// this crashes if Data alignment isn't correct
+		//let int: T = { self.withUnsafeBytes { $0.load(as: T.self) } }()
+		
+		// since .load(as:) is not memory alignment safe, memcpy is the current workaround (as of Swift 5.3)
+		// see for more info: https://bugs.swift.org/browse/SR-10273
+		let int: T = { self.withUnsafeBytes {
+			var value = T()
+			memcpy(&value, $0.baseAddress!, MemoryLayout<T>.size)
+			return value
+		} }()
 		
 		// determine which conversion is needed
 		
