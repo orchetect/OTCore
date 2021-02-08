@@ -16,24 +16,6 @@ class Extensions_Swift_Equatable_Tests: XCTestCase {
 	override func setUp() { super.setUp() }
 	override func tearDown() { super.tearDown() }
 	
-	func testTransform() {
-		
-		// emitting same type as self
-		
-		XCTAssertEqual (
-			123.transform { $0 * 2 },
-			246
-		)
-		
-		// emitting different type than self
-		
-		XCTAssertEqual (
-			123.transform { "\($0 * 2)" },
-			"246"
-		)
-		
-	}
-	
 	func testIf_ThenValue() {
 		
 		// emitting same type as self

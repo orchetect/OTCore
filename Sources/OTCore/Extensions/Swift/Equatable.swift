@@ -6,46 +6,6 @@
 //  Copyright © 2021 Steffan Andrews. All rights reserved.
 //
 
-// MARK: - .transform { }
-
-extension Equatable {
-	
-	/// **OTCore:**
-	/// Transforms a value using a closure.
-	/// (Functional convenience method)
-	///
-	/// Example 1 - simple operation:
-	///
-	///     123.transform { $0 * 2 } // 246
-	///
-	/// Example 2 - different resulting type:
-	///
-	///     123.transform { "\($0)" } // "123"
-	///
-	/// Example 3 - complex transform block
-	///
-	///     123.transform { (source) -> Bool in
-	///         let calc = Double(source) * 2 / 14.9
-	///         let rounded = round(calc)
-	///         return rounded > 18
-	///     }
-	///
-	/// Example 4 - chainable:
-	///
-	///     123.transform { $0 * 2 / 12.47 }
-	///         .rounded()
-	///         .transform { "Rounded value: \($0)" }
-	///     // "Rounded value: 20.0"
-	@inlinable public
-	func transform<T>(_ transform: (Self) throws -> T) rethrows -> T {
-		
-		try transform(self)
-		
-	}
-	
-}
-
-
 // MARK: - .if(then:)
 
 extension Equatable {
