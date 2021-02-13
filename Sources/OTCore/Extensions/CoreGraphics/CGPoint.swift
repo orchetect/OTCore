@@ -18,6 +18,15 @@ extension CGPoint {
 		hypot(other.x - self.x, other.y - self.y)
 	}
 	
+	@inlinable public func angle(to other: CGPoint) -> CGFloat {
+		let calc = atan2(other.y - self.y, other.x - self.x).radiansToDegrees
+		
+		if calc < 0 {
+			return calc + 360.0
+		}
+		return calc
+	}
+	
 }
 
 #endif
