@@ -193,6 +193,28 @@ class Extensions_Swift_FloatingPoint_Tests: XCTestCase {
 		
 	}
 	
+	func testDegreesToRadians() {
+		
+		// Double
+		XCTAssertEqual(360.0.degreesToRadians, 6.28318530717958647693)
+		XCTAssertEqual(6.28318530717958647693.radiansToDegrees, 360.0)
+		
+		// Float
+		XCTAssertEqual(Float(360.0).degreesToRadians, 6.283185)
+		XCTAssertEqual(Float(6.283185).radiansToDegrees, 360.0)
+		
+		#if !(arch(arm64) || arch(arm) || os(watchOS)) // Float80 is now removed for ARM
+		// Float80
+		XCTAssertEqual(Float80(360.0).degreesToRadians, 6.28318530717958647693)
+		XCTAssertEqual(Float80(6.28318530717958647693).radiansToDegrees, 360.0)
+		#endif
+		
+		// CGFloat
+		XCTAssertEqual(CGFloat(360.0).degreesToRadians, 6.28318530717958647693)
+		XCTAssertEqual(CGFloat(6.28318530717958647693).radiansToDegrees, 360.0)
+		
+	}
+	
 	func testTypeConversions_FloatsToString() {
 		
 		XCTAssertEqual((1.0).string, "1.0")

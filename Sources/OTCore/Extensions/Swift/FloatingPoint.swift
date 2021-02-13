@@ -159,6 +159,25 @@ extension FloatingPoint where Self : FloatingPointPowerComputable {
 }
 
 
+// MARK: - Radians
+
+extension BinaryFloatingPoint {
+	
+	/// **OTCore:**
+	/// Returns degrees converted to radians
+	@inlinable public var degreesToRadians: Self {
+		self * .pi / 180
+	}
+	
+	/// **OTCore:**
+	/// Returns radians converted to degrees
+	@inlinable public var radiansToDegrees: Self {
+		self * 180 / .pi
+	}
+	
+}
+
+
 // MARK: - To String
 
 extension FloatingPoint {
