@@ -12,6 +12,8 @@ import CoreGraphics
 
 extension CGPoint {
 	
+	/// **OTCore:**
+	/// Returns the distance between two coordinate points.
 	@inlinable public func distance(to other: CGPoint) -> CGFloat {
 		hypot(other.x - self.x, other.y - self.y)
 	}
