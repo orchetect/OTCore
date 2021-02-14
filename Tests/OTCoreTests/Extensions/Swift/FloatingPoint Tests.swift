@@ -47,6 +47,16 @@ class Extensions_Swift_FloatingPoint_Tests: XCTestCase {
 		_ = double.uint64
 		_ = double.uint64Exactly
 		
+		_ = double.double
+		_ = double.doubleExactly
+		_ = double.float
+		_ = double.floatExactly
+		_ = double.float32
+		_ = double.float32Exactly
+		#if !(arch(arm64) || arch(arm) || os(watchOS)) // Float80 is now removed for ARM
+		_ = double.float80
+		#endif
+		
 		// Float
 		
 		let float = Float(123.456)
@@ -107,6 +117,16 @@ class Extensions_Swift_FloatingPoint_Tests: XCTestCase {
 		_ = float80.uint64
 		_ = float80.uint64Exactly
 		
+		_ = float80.double
+		_ = float80.doubleExactly
+		_ = float80.float
+		_ = float80.floatExactly
+		_ = float80.float32
+		_ = float80.float32Exactly
+		#if !(arch(arm64) || arch(arm) || os(watchOS)) // Float80 is now removed for ARM
+		_ = float80.float80
+		#endif
+		
 		#endif
 		
 		// CGFloat
@@ -137,6 +157,16 @@ class Extensions_Swift_FloatingPoint_Tests: XCTestCase {
 		_ = cgfloat.int64Exactly
 		_ = cgfloat.uint64
 		_ = cgfloat.uint64Exactly
+		
+		_ = cgfloat.double
+		_ = cgfloat.doubleExactly
+		_ = cgfloat.float
+		_ = cgfloat.floatExactly
+		_ = cgfloat.float32
+		_ = cgfloat.float32Exactly
+		#if !(arch(arm64) || arch(arm) || os(watchOS)) // Float80 is now removed for ARM
+		_ = cgfloat.float80
+		#endif
 		
 	}
 	

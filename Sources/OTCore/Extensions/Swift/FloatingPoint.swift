@@ -112,6 +112,47 @@ extension BinaryFloatingPoint {
 	
 }
 
+extension BinaryFloatingPoint {
+	
+	/// **OTCore:**
+	/// Same as `Double()`
+	/// (Functional convenience method)
+	@inlinable public var double: Double { Double(self) }
+	
+	/// **OTCore:**
+	/// Same as `Double(exactly:)`
+	/// (Functional convenience method)
+	@inlinable public var doubleExactly: Double? { Double(exactly: self) }
+	
+	/// **OTCore:**
+	/// Same as `Float()`
+	/// (Functional convenience method)
+	@inlinable public var float: Float { Float(self) }
+	
+	/// **OTCore:**
+	/// Same as `Float(exactly:)`
+	/// (Functional convenience method)
+	@inlinable public var floatExactly: Float? { Float(exactly: self) }
+	
+	/// **OTCore:**
+	/// Same as `Float32()`
+	/// (Functional convenience method)
+	@inlinable public var float32: Float32 { Float32(self) }
+	
+	/// **OTCore:**
+	/// Same as `Float32(exactly:)`
+	/// (Functional convenience method)
+	@inlinable public var float32Exactly: Float32? { Float32(exactly: self) }
+	
+	#if !(arch(arm64) || arch(arm) || os(watchOS)) // Float80 is now removed for ARM
+	/// **OTCore:**
+	/// Same as `Float80()`
+	/// (Functional convenience method)
+	@inlinable public var float80: Float80 { Float80(self) }
+	#endif
+	
+}
+
 
 // MARK: - boolValue
 
