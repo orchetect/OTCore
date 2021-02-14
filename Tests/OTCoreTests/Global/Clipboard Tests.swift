@@ -18,6 +18,10 @@ class Global_Clipboard_Tests: XCTestCase {
 	
 	// no meaningful tests applicable
 	
+	func testEmpty() {
+		XCTAssert(true)
+	}
+	
 }
 
 #endif

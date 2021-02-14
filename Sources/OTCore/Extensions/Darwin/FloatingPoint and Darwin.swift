@@ -17,7 +17,7 @@ extension FloatingPoint {
 	/// **OTCore:**
 	/// Same as `ceil()`
 	/// (Functional convenience method)
-	public var ceiling: Self {
+	@inlinable public var ceiling: Self {
 		
 		Darwin.ceil(self)
 		
@@ -26,7 +26,7 @@ extension FloatingPoint {
 	/// **OTCore:**
 	/// Same as `floor()`
 	/// (Functional convenience method)
-	public var floor: Self {
+	@inlinable public var floor: Self {
 		
 		Darwin.floor(self)
 		
@@ -44,7 +44,7 @@ extension Double: FloatingPointPowerComputable {
 	/// **OTCore:**
 	/// Same as `pow()`
 	/// (Functional convenience method)
-	public func power(_ exponent: Double) -> Double {
+	@inlinable public func power(_ exponent: Double) -> Double {
 		
 		pow(self, exponent)
 		
@@ -57,7 +57,7 @@ extension Float: FloatingPointPowerComputable {
 	/// **OTCore:**
 	/// Same as `powf()`
 	/// (Functional convenience method)
-	public func power(_ exponent: Float) -> Float {
+	@inlinable public func power(_ exponent: Float) -> Float {
 		
 		powf(self, exponent)
 		
@@ -71,7 +71,7 @@ extension Float80: FloatingPointPowerComputable {
 	/// **OTCore:**
 	/// Same as `powl()`
 	/// (Functional convenience method)
-	public func power(_ exponent: Float80) -> Float80 {
+	@inlinable public func power(_ exponent: Float80) -> Float80 {
 		
 		powl(self, exponent)
 		
@@ -132,7 +132,7 @@ extension FloatingPoint {
 	/// This method is more computationally efficient than calling `.integral` and .`fraction` properties separately unless you only require one or the other.
 	///
 	/// Note: this can result in a non-trivial loss of precision for the fractional part.
-	public var integralAndFraction: (integral: Self, fraction: Self) {
+	@inlinable public var integralAndFraction: (integral: Self, fraction: Self) {
 		
 		let integral = trunc(self)
 		let fraction = self - integral
@@ -142,7 +142,7 @@ extension FloatingPoint {
 	
 	/// **OTCore:**
 	/// Returns the integral part (digits before the decimal point)
-	public var integral: Self {
+	@inlinable public var integral: Self {
 		
 		integralAndFraction.integral
 		
@@ -152,7 +152,7 @@ extension FloatingPoint {
 	/// Returns the fractional part (digits after the decimal point)
 	///
 	/// Note: this can result in a non-trivial loss of precision for the fractional part.
-	public var fraction: Self {
+	@inlinable public var fraction: Self {
 		
 		integralAndFraction.fraction
 		

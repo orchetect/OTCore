@@ -18,6 +18,10 @@ class Extensions_Swift_Pointer_Tests: XCTestCase {
 	
 	#warning("add tests")
 	
+	func testEmpty() {
+		XCTAssert(true)
+	}
+	
 }
 
 #endif

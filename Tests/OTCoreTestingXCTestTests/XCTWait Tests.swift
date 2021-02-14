@@ -30,7 +30,7 @@ class XCTWait_Tests: XCTestCase {
 		
 		// test if wait duration was within reasonable margin of error +/-
 		
-		XCTAssert(diffTime.isContained(in: 0.499...0.505))
+		XCTAssert(diffTime.isContained(in: 0.499...0.510))
 		
 	}
 	

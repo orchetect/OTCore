@@ -123,7 +123,7 @@ extension Decimal {
 	/// **OTCore:**
 	/// Same as `pow()`
 	/// (Functional convenience method)
-	public func power(_ exponent: Int) -> Decimal {
+	@inlinable public func power(_ exponent: Int) -> Decimal {
 		
 		pow(self, exponent)
 		
