@@ -13,6 +13,46 @@ import CoreGraphics
 extension CGPoint {
 	
 	/// **OTCore:**
+	/// Returns the point with the X value inverted.
+	@inlinable public var xInverted: CGPoint {
+		
+		var newX = x
+		newX.negate()
+		
+		return .init(x: newX, y: y)
+		
+	}
+	
+	/// **OTCore:**
+	/// Returns the point with the Y value inverted.
+	@inlinable public var yInverted: CGPoint {
+		
+		var newY = y
+		newY.negate()
+		
+		return .init(x: x, y: newY)
+		
+	}
+	
+	/// **OTCore:**
+	/// Returns the point with the X and Y value inverted.
+	@inlinable public var xyInverted: CGPoint {
+		
+		var newX = x
+		newX.negate()
+		
+		var newY = y
+		newY.negate()
+		
+		return .init(x: newX, y: newY)
+		
+	}
+	
+}
+
+extension CGPoint {
+	
+	/// **OTCore:**
 	/// Returns the distance between two coordinate points.
 	@inlinable public func distance(to other: CGPoint) -> CGFloat {
 		

@@ -15,6 +15,63 @@ class Extensions_CoreGraphics_CGPoint_Tests: XCTestCase {
 	override func setUp() { super.setUp() }
 	override func tearDown() { super.tearDown() }
 	
+	func testInverted() {
+		
+		// zero
+		
+		XCTAssertEqual(
+			CGPoint(x: 0, y: 0).xInverted,
+			CGPoint(x: 0, y: 0)
+		)
+		
+		XCTAssertEqual(
+			CGPoint(x: 0, y: 0).yInverted,
+			CGPoint(x: 0, y: 0)
+		)
+		
+		XCTAssertEqual(
+			CGPoint(x: 0, y: 0).xyInverted,
+			CGPoint(x: 0, y: 0)
+		)
+		
+		// X
+		
+		XCTAssertEqual(
+			CGPoint(x:  1, y: 1).xInverted,
+			CGPoint(x: -1, y: 1)
+		)
+		
+		XCTAssertEqual(
+			CGPoint(x: -1, y: 1).xInverted,
+			CGPoint(x:  1, y: 1)
+		)
+		
+		// Y
+		
+		XCTAssertEqual(
+			CGPoint(x: 1, y:  1).yInverted,
+			CGPoint(x: 1, y: -1)
+		)
+		
+		XCTAssertEqual(
+			CGPoint(x: 1, y: -1).yInverted,
+			CGPoint(x: 1, y:  1)
+		)
+		
+		// XY
+		
+		XCTAssertEqual(
+			CGPoint(x: -1, y:  1).xyInverted,
+			CGPoint(x:  1, y: -1)
+		)
+		
+		XCTAssertEqual(
+			CGPoint(x:  1, y: -1).xyInverted,
+			CGPoint(x: -1, y:  1)
+		)
+		
+	}
+	
 	func testCGPoint_distanceToOther() {
 		
 		// 0 deg
