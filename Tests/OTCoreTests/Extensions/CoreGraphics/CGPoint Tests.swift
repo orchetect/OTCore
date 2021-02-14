@@ -17,8 +17,6 @@ class Extensions_CoreGraphics_CGPoint_Tests: XCTestCase {
 	
 	func testCGPoint_distanceToOther() {
 		
-		
-		
 		// 0 deg
 		XCTAssertEqual(
 			CGPoint(x: 0, y: 0).distance(to: CGPoint(x: 1, y: 0)),
@@ -71,7 +69,8 @@ class Extensions_CoreGraphics_CGPoint_Tests: XCTestCase {
 	
 	func testCGPoint_angleToOther() {
 		
-		// 0deg/360deg origin is X:1, Y: 0. Degrees ascend clockwise.
+		// 0deg/360deg origin is X:1, Y: 0
+		// Degrees ascend counterclockwise
 
 		// 0 deg
 		XCTAssertEqual(
@@ -118,6 +117,61 @@ class Extensions_CoreGraphics_CGPoint_Tests: XCTestCase {
 		// 315 deg
 		XCTAssertEqual(
 			CGPoint(x: 0, y: 0).angle(to: CGPoint(x: 1, y: -1)),
+			315.0
+		)
+		
+	}
+	
+	func testCGPoint_cardinalAngleToOther() {
+		
+		// 0deg/360deg origin is X:0, Y: 1 (Cardinal North)
+		// Degrees ascend clockwise
+
+		// 0 deg - North
+		XCTAssertEqual(
+			CGPoint(x: 0, y: 0).cardinalAngle(to: CGPoint(x: 0, y: 1)),
+			0.0
+		)
+		
+		// 45 deg - North East
+		XCTAssertEqual(
+			CGPoint(x: 0, y: 0).cardinalAngle(to: CGPoint(x: 1, y: 1)),
+			45.0
+		)
+		
+		// 90 deg - East
+		XCTAssertEqual(
+			CGPoint(x: 0, y: 0).cardinalAngle(to: CGPoint(x: 1, y: 0)),
+			90.0
+		)
+		
+		// 135 deg - South East
+		XCTAssertEqual(
+			CGPoint(x: 0, y: 0).cardinalAngle(to: CGPoint(x: 1, y: -1)),
+			135.0
+		)
+		
+		// 180 deg - South
+		XCTAssertEqual(
+			CGPoint(x: 0, y: 0).cardinalAngle(to: CGPoint(x: 0, y: -1)),
+			180.0
+		)
+		
+		// 225 deg - South West
+		XCTAssertEqual(
+			CGPoint(x: 0, y: 0).cardinalAngle(to: CGPoint(x: -1, y: -1)),
+			225.0
+		)
+		
+		// 270 deg - West
+		XCTAssertEqual(
+			CGPoint(x: 0, y: 0).cardinalAngle(to: CGPoint(x: -1, y: 0)),
+			270.0
+		)
+		
+		// 315 deg - North West
+		XCTAssertEqual(
+			CGPoint(x: 0, y: 0).cardinalAngle(to: CGPoint(x: -1, y: 1)),
 			315.0
 		)
 		
