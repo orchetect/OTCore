@@ -193,6 +193,124 @@ class Extensions_Swift_FloatingPoint_Tests: XCTestCase {
 		
 	}
 	
+	func testWrappingNumbers() {
+		
+		// ClosedRange
+		
+		// single value ranges
+		
+		XCTAssertEqual(    1.0.wrapped(around: 0...0)		,  0)
+		XCTAssertEqual(    1.0.wrapped(around: -1...(-1))	, -1)
+		
+		// basic ranges
+		
+		XCTAssertEqual((-11.0).wrapped(around: 0...4)		,  4)
+		XCTAssertEqual((-10.0).wrapped(around: 0...4)		,  0)
+		XCTAssertEqual( (-9.0).wrapped(around: 0...4)		,  1)
+		XCTAssertEqual( (-8.0).wrapped(around: 0...4)		,  2)
+		XCTAssertEqual( (-7.0).wrapped(around: 0...4)		,  3)
+		XCTAssertEqual( (-6.0).wrapped(around: 0...4)		,  4)
+		XCTAssertEqual( (-5.0).wrapped(around: 0...4)		,  0)
+		XCTAssertEqual( (-4.0).wrapped(around: 0...4)		,  1)
+		XCTAssertEqual( (-3.0).wrapped(around: 0...4)		,  2)
+		XCTAssertEqual( (-2.0).wrapped(around: 0...4)		,  3)
+		XCTAssertEqual( (-1.0).wrapped(around: 0...4)		,  4)
+		XCTAssertEqual(    0.0.wrapped(around: 0...4)		,  0)
+		XCTAssertEqual(    1.0.wrapped(around: 0...4)		,  1)
+		XCTAssertEqual(    2.0.wrapped(around: 0...4)		,  2)
+		XCTAssertEqual(    3.0.wrapped(around: 0...4)		,  3)
+		XCTAssertEqual(    4.0.wrapped(around: 0...4)		,  4)
+		XCTAssertEqual(    5.0.wrapped(around: 0...4)		,  0)
+		XCTAssertEqual(    6.0.wrapped(around: 0...4)		,  1)
+		XCTAssertEqual(    7.0.wrapped(around: 0...4)		,  2)
+		XCTAssertEqual(    8.0.wrapped(around: 0...4)		,  3)
+		XCTAssertEqual(    9.0.wrapped(around: 0...4)		,  4)
+		XCTAssertEqual(   10.0.wrapped(around: 0...4)		,  0)
+		XCTAssertEqual(   11.0.wrapped(around: 0...4)		,  1)
+		
+		XCTAssertEqual((-11.0).wrapped(around: 1...5)		,  4)
+		XCTAssertEqual((-10.0).wrapped(around: 1...5)		,  5)
+		XCTAssertEqual( (-9.0).wrapped(around: 1...5)		,  1)
+		XCTAssertEqual( (-8.0).wrapped(around: 1...5)		,  2)
+		XCTAssertEqual( (-7.0).wrapped(around: 1...5)		,  3)
+		XCTAssertEqual( (-6.0).wrapped(around: 1...5)		,  4)
+		XCTAssertEqual( (-5.0).wrapped(around: 1...5)		,  5)
+		XCTAssertEqual( (-4.0).wrapped(around: 1...5)		,  1)
+		XCTAssertEqual( (-3.0).wrapped(around: 1...5)		,  2)
+		XCTAssertEqual( (-2.0).wrapped(around: 1...5)		,  3)
+		XCTAssertEqual( (-1.0).wrapped(around: 1...5)		,  4)
+		XCTAssertEqual(    0.0.wrapped(around: 1...5)		,  5)
+		XCTAssertEqual(    1.0.wrapped(around: 1...5)		,  1)
+		XCTAssertEqual(    2.0.wrapped(around: 1...5)		,  2)
+		XCTAssertEqual(    3.0.wrapped(around: 1...5)		,  3)
+		XCTAssertEqual(    4.0.wrapped(around: 1...5)		,  4)
+		XCTAssertEqual(    5.0.wrapped(around: 1...5)		,  5)
+		XCTAssertEqual(    6.0.wrapped(around: 1...5)		,  1)
+		XCTAssertEqual(    7.0.wrapped(around: 1...5)		,  2)
+		XCTAssertEqual(    8.0.wrapped(around: 1...5)		,  3)
+		XCTAssertEqual(    9.0.wrapped(around: 1...5)		,  4)
+		XCTAssertEqual(   10.0.wrapped(around: 1...5)		,  5)
+		XCTAssertEqual(   11.0.wrapped(around: 1...5)		,  1)
+		
+		XCTAssertEqual((-11.0).wrapped(around: -1...3)	, -1)
+		XCTAssertEqual((-10.0).wrapped(around: -1...3)	,  0)
+		XCTAssertEqual( (-9.0).wrapped(around: -1...3)	,  1)
+		XCTAssertEqual( (-8.0).wrapped(around: -1...3)	,  2)
+		XCTAssertEqual( (-7.0).wrapped(around: -1...3)	,  3)
+		XCTAssertEqual( (-6.0).wrapped(around: -1...3)	, -1)
+		XCTAssertEqual( (-5.0).wrapped(around: -1...3)	,  0)
+		XCTAssertEqual( (-4.0).wrapped(around: -1...3)	,  1)
+		XCTAssertEqual( (-3.0).wrapped(around: -1...3)	,  2)
+		XCTAssertEqual( (-2.0).wrapped(around: -1...3)	,  3)
+		XCTAssertEqual( (-1.0).wrapped(around: -1...3)	, -1)
+		XCTAssertEqual(    0.0.wrapped(around: -1...3)	,  0)
+		XCTAssertEqual(    1.0.wrapped(around: -1...3)	,  1)
+		XCTAssertEqual(    2.0.wrapped(around: -1...3)	,  2)
+		XCTAssertEqual(    3.0.wrapped(around: -1...3)	,  3)
+		XCTAssertEqual(    4.0.wrapped(around: -1...3)	, -1)
+		XCTAssertEqual(    5.0.wrapped(around: -1...3)	,  0)
+		XCTAssertEqual(    6.0.wrapped(around: -1...3)	,  1)
+		XCTAssertEqual(    7.0.wrapped(around: -1...3)	,  2)
+		XCTAssertEqual(    8.0.wrapped(around: -1...3)	,  3)
+		XCTAssertEqual(    9.0.wrapped(around: -1...3)	, -1)
+		XCTAssertEqual(   10.0.wrapped(around: -1...3)	,  0)
+		XCTAssertEqual(   11.0.wrapped(around: -1...3)	,  1)
+		
+		// Range
+		
+		// single value ranges
+		
+		XCTAssertEqual(    1.0.wrapped(around: 0..<0)		,  0)
+		XCTAssertEqual(    1.0.wrapped(around: -1..<(-1))	, -1)
+		
+		// basic ranges
+		
+		XCTAssertEqual((-11.0).wrapped(around: 0..<4)		,  1)
+		XCTAssertEqual((-10.0).wrapped(around: 0..<4)		,  2)
+		XCTAssertEqual( (-9.0).wrapped(around: 0..<4)		,  3)
+		XCTAssertEqual( (-8.0).wrapped(around: 0..<4)		,  0)
+		XCTAssertEqual( (-7.0).wrapped(around: 0..<4)		,  1)
+		XCTAssertEqual( (-6.0).wrapped(around: 0..<4)		,  2)
+		XCTAssertEqual( (-5.0).wrapped(around: 0..<4)		,  3)
+		XCTAssertEqual( (-4.0).wrapped(around: 0..<4)		,  0)
+		XCTAssertEqual( (-3.0).wrapped(around: 0..<4)		,  1)
+		XCTAssertEqual( (-2.0).wrapped(around: 0..<4)		,  2)
+		XCTAssertEqual( (-1.0).wrapped(around: 0..<4)		,  3)
+		XCTAssertEqual(    0.0.wrapped(around: 0..<4)		,  0)
+		XCTAssertEqual(    1.0.wrapped(around: 0..<4)		,  1)
+		XCTAssertEqual(    2.0.wrapped(around: 0..<4)		,  2)
+		XCTAssertEqual(    3.0.wrapped(around: 0..<4)		,  3)
+		XCTAssertEqual(    4.0.wrapped(around: 0..<4)		,  0)
+		XCTAssertEqual(    5.0.wrapped(around: 0..<4)		,  1)
+		XCTAssertEqual(    6.0.wrapped(around: 0..<4)		,  2)
+		XCTAssertEqual(    7.0.wrapped(around: 0..<4)		,  3)
+		XCTAssertEqual(    8.0.wrapped(around: 0..<4)		,  0)
+		XCTAssertEqual(    9.0.wrapped(around: 0..<4)		,  1)
+		XCTAssertEqual(   10.0.wrapped(around: 0..<4)		,  2)
+		XCTAssertEqual(   11.0.wrapped(around: 0..<4)		,  3)
+		
+	}
+	
 	func testDegreesToRadians() {
 		
 		// Double

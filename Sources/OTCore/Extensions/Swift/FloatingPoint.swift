@@ -159,6 +159,63 @@ extension FloatingPoint where Self : FloatingPointPowerComputable {
 }
 
 
+// MARK: - Wrapping numbers
+
+extension FloatingPoint {
+	
+	/// **OTCore:**
+	/// Returns a number that has been wrapped around a range.
+	/// If the number already falls within the range, the number is returned as-is.
+	/// If the number underflows or overflows the range, it is wrapped around the range's bounds continuously.
+	///
+	/// Example:
+	///
+	///     (-2.0).wrapped(around: -1.0...3.0) // 3.0
+	///     (-1.0).wrapped(around: -1.0...3.0) // -1.0
+	///        0.0.wrapped(around: -1.0...3.0) // 0.0
+	///        1.0.wrapped(around: -1.0...3.0) // 1.0
+	///        2.0.wrapped(around: -1.0...3.0) // 2.0
+	///        3.0.wrapped(around: -1.0...3.0) // 3.0
+	///        4.0.wrapped(around: -1.0...3.0) // -1.0
+	///        5.0.wrapped(around: -1.0...3.0) // 0.0
+	///        6.0.wrapped(around: -1.0...3.0) // 1.0
+	///        7.0.wrapped(around: -1.0...3.0) // 2.0
+	///        8.0.wrapped(around: -1.0...3.0) // 3.0
+	///        9.0.wrapped(around: -1.0...3.0) // -1.0
+	///
+	/// - parameter range: integer range, allowing negative and positive bounds.
+	@inlinable public func wrapped(around range: ClosedRange<Self>) -> Self {
+		
+		let min = range.lowerBound
+		let max = range.upperBound + 1
+		
+		if self >= min {
+			let calculation = (self - min) % (max - min)
+			return min + calculation
+		} else {
+			let calculation = max - (min - self) % (min - max)
+			return calculation != max ? calculation : min
+		}
+		
+	}
+	
+	/// **OTCore:**
+	/// Returns a number that has been wrapped around a range.
+	/// If the number already falls within the range, the number is returned as-is.
+	/// If the number underflows or overflows the range, it is wrapped around the range's bounds continuously.
+	@inlinable public func wrapped(around range: Range<Self>) -> Self {
+		
+		let min = range.lowerBound
+		var max = range.upperBound - 1
+		
+		if max < min { max = min }
+		
+		return self.wrapped(around: min...max)
+		
+	}
+	
+}
+
 // MARK: - Radians
 
 extension BinaryFloatingPoint {
