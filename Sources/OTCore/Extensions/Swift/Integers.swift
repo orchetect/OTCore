@@ -397,6 +397,10 @@ extension BinaryInteger {
 		
 	}
 	
+	/// **OTCore:**
+	/// Returns a number that has been wrapped around a range.
+	/// If the number already falls within the range, the number is returned as-is.
+	/// If the number underflows or overflows the range, it is wrapped around the range's bounds continuously.
 	@inlinable public func wrapped(around range: Range<Self>) -> Self {
 		
 		let min = range.lowerBound
