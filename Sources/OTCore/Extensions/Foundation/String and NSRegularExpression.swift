@@ -16,13 +16,21 @@ extension String {
 	
 	/// **OTCore:**
 	/// Returns an array of RegEx matches
-	public func regexMatches(pattern: String) -> [String] {
+	public func regexMatches(
+		pattern: String,
+		options: NSRegularExpression.Options = [],
+		matchesOptions: NSRegularExpression.MatchingOptions = [.withTransparentBounds]
+	) -> [String] {
 		
 		do {
 			
-			let regex = try NSRegularExpression(pattern: pattern)
+			let regex = try NSRegularExpression(pattern: pattern,
+												options: options)
 			let nsString = self as NSString
-			let results = regex.matches(in: self, range: NSMakeRange(0, nsString.length))
+			let results = regex.matches(in: self,
+										options: matchesOptions,
+										range: NSMakeRange(0, nsString.length))
+			
 			return results.map { nsString.substring(with: $0.range)}
 			
 		} catch {
@@ -35,22 +43,27 @@ extension String {
 	
 	/// **OTCore:**
 	/// Returns a string from a tokenized string of RegEx matches
-	public func regexMatches(pattern: String, replacementTemplate: String) -> String? {
+	public func regexMatches(
+		pattern: String,
+		replacementTemplate: String,
+		options: NSRegularExpression.Options = [],
+		matchesOptions: NSRegularExpression.MatchingOptions = [.withTransparentBounds],
+		replacingOptions: NSRegularExpression.MatchingOptions = [.withTransparentBounds]
+	) -> String? {
 		
 		do {
 			
-			let regex = try NSRegularExpression(pattern: pattern)
+			let regex = try NSRegularExpression(pattern: pattern,
+												options: options)
 			
 			let nsString = self as NSString
 			
-			regex.numberOfMatches(in: self,
-								  options: .withTransparentBounds,
-								  range: NSMakeRange(0, nsString.length))
-			
-			let replaced = regex.stringByReplacingMatches(in: self,
-														  options: .withTransparentBounds,
-														  range: NSMakeRange(0, nsString.length),
-														  withTemplate: replacementTemplate)
+			let replaced = regex.stringByReplacingMatches(
+				in: self,
+				options: replacingOptions,
+				range: NSMakeRange(0, nsString.length),
+				withTemplate: replacementTemplate
+			)
 			
 			return replaced
 			
@@ -63,28 +76,36 @@ extension String {
 	}
 	
 	/// **OTCore:**
-	/// Returns capture groups from regex matches. nil if an optional capture group is not matched.
-	public func regexMatches(captureGroupsFromPattern: String) -> [String?] {
+	/// Returns capture groups from regex matches. If any capture group is not matched it will be `nil`.
+	public func regexMatches(
+		captureGroupsFromPattern: String,
+		options: NSRegularExpression.Options = [],
+		matchesOptions: NSRegularExpression.MatchingOptions = [.withTransparentBounds]
+	) -> [String?] {
 		
 		do {
 			
-			let regex = try NSRegularExpression(pattern: captureGroupsFromPattern, options: [])
+			let regex = try NSRegularExpression(pattern: captureGroupsFromPattern,
+												options: options)
 			
 			let nsString = self as NSString
 			
-			let results = regex.matches(in: self,
-										options: .withTransparentBounds,
-										range: NSMakeRange(0, nsString.length))
+			let results = regex.matches(
+				in: self,
+				options: matchesOptions,
+				range: NSMakeRange(0, nsString.length)
+			)
+			
 			var matches: [String?] = []
 			
 			for result in results {
-				for i in 1..<result.numberOfRanges {
+				for i in 0..<result.numberOfRanges {
 					let range = result.range(at: i)
 					
 					if range.location == NSNotFound {
 						matches.append(nil)
 					} else {
-						matches.append(nsString.substring( with: range ))
+						matches.append(nsString.substring(with: range ))
 					}
 				}
 			}
