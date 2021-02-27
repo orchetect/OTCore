@@ -41,14 +41,15 @@ class Extensions_Foundation_StringAndNSRegularExpression_Tests: XCTestCase {
 	
 	func testRegExCaptureGroups() {
 	
-		let capturePattern = """
-			([a-zA-z\\s]*)\\s([0-9]+)\\s([a-zA-z\\s]*)\\s([0-9]+)\\s([a-zA-z\\s.]*)
-			"""
+		let capturePattern = #"""
+			([a-zA-z\s]*)\s([0-9]+)\s([a-zA-z\s]*)\s([0-9]+)\s([a-zA-z\s.]*)
+			"""#
 		
 		let str = "The 45 turkeys ate 9 sandwiches."
 		
 		XCTAssertEqual(str.regexMatches(captureGroupsFromPattern: capturePattern),
-					   [Optional("The"),
+					   [Optional("The 45 turkeys ate 9 sandwiches."),
+						Optional("The"),
 						Optional("45"),
 						Optional("turkeys ate"),
 						Optional("9"),
