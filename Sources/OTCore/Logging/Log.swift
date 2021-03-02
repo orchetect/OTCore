@@ -44,16 +44,16 @@ import os.log
 // MARK: - Internal property storage
 
 @available(macOS 10.12, iOS 10.0, watchOS 3.0, tvOS 10.0, *)
-fileprivate var LogEnabled = true
+fileprivate var _otCoreLogEnabled = true
 
 @available(macOS 10.12, iOS 10.0, watchOS 3.0, tvOS 10.0, *)
-fileprivate var DefaultLog = OSLog.default
+fileprivate var _otCoreDefaultLog = OSLog.default
 
 @available(macOS 10.12, iOS 10.0, watchOS 3.0, tvOS 10.0, *)
-fileprivate var DefaultSubsystem: String? = nil
+fileprivate var _otCoreDefaultSubsystem: String? = nil
 
 @available(macOS 10.12, iOS 10.0, watchOS 3.0, tvOS 10.0, *)
-fileprivate var UseEmoji: Log.EmojiType = .disabled
+fileprivate var _otCoreUseEmoji: Log.EmojiType = .disabled
 
 
 // MARK: - Log
@@ -66,29 +66,29 @@ public enum Log {
 	/// **OTCore:**
 	/// Set to false to suppress logging
 	public static var enabled: Bool {
-		get { LogEnabled }
-		set { LogEnabled = newValue }
+		get { _otCoreLogEnabled }
+		set { _otCoreLogEnabled = newValue }
 	}
 	
 	/// **OTCore:**
 	/// Sets the default OSLog to use
 	public static var defaultLog: OSLog {
-		get { DefaultLog }
-		set { DefaultLog = newValue }
+		get { _otCoreDefaultLog }
+		set { _otCoreDefaultLog = newValue }
 	}
 	
 	/// **OTCore:**
 	/// Sets the default OSLog subsystem to use
 	public static var defaultSubsystem: String? {
-		get { DefaultSubsystem }
-		set { DefaultSubsystem = newValue }
+		get { _otCoreDefaultSubsystem }
+		set { _otCoreDefaultSubsystem = newValue }
 	}
 	
 	/// **OTCore:**
 	/// Enables prefixing log messages with emoji icons (ie: ⚠️ for .error)
 	public static var useEmoji: EmojiType {
-		get { UseEmoji }
-		set { UseEmoji = newValue }
+		get { _otCoreUseEmoji }
+		set { _otCoreUseEmoji = newValue }
 	}
 	
 	/// **OTCore:**
@@ -97,10 +97,10 @@ public enum Log {
 							 defaultLog: OSLog? = nil,
 							 defaultSubsystem: String? = nil,
 							 useEmoji: EmojiType? = nil) {
-		LogEnabled = enabled
-		DefaultLog = defaultLog ?? .default
-		DefaultSubsystem = defaultSubsystem
-		UseEmoji = useEmoji ?? .disabled
+		_otCoreLogEnabled = enabled
+		_otCoreDefaultLog = defaultLog ?? .default
+		_otCoreDefaultSubsystem = defaultSubsystem
+		_otCoreUseEmoji = useEmoji ?? .disabled
 	}
 	
 	
@@ -134,7 +134,7 @@ public enum Log {
 		
 		#else
 		
-		guard LogEnabled else { return }
+		guard _otCoreLogEnabled else { return }
 		
 		let fileName = (file as NSString).lastPathComponent
 		
@@ -142,11 +142,11 @@ public enum Log {
 			.map { String(describing: $0 ?? "nil") }
 			.joined(separator: " ")
 		
-		let message = (UseEmoji == .all ? "🔷 " : "")
+		let message = (_otCoreUseEmoji == .all ? "🔷 " : "")
 			+ "\(content) (\(fileName):\(function))"
 		
 		os_log("%{public}@",
-			   log: log ?? DefaultLog,
+			   log: log ?? _otCoreDefaultLog,
 			   type: .debug,
 			   message)
 		
@@ -162,18 +162,18 @@ public enum Log {
 	public static func info(_ items: Any?...,
 							log: OSLog? = nil) {
 		
-		guard LogEnabled else { return }
+		guard _otCoreLogEnabled else { return }
 		
 		let content = items
 			.map { String(describing: $0 ?? "nil") }
 			.joined(separator: " ")
 		
 		let message =
-			(UseEmoji == .all ? "💬 " : "")
+			(_otCoreUseEmoji == .all ? "💬 " : "")
 			+ "\(content)"
 		
 		os_log("%{public}@",
-			   log: log ?? DefaultLog,
+			   log: log ?? _otCoreDefaultLog,
 			   type: .info,
 			   message)
 		
@@ -187,18 +187,18 @@ public enum Log {
 	public static func `default`(_ items: Any?...,
 								 log: OSLog? = nil) {
 		
-		guard LogEnabled else { return }
+		guard _otCoreLogEnabled else { return }
 		
 		let content = items
 			.map { String(describing: $0 ?? "nil") }
 			.joined(separator: " ")
 		
 		let message =
-			(UseEmoji == .all ? "💬 " : "")
+			(_otCoreUseEmoji == .all ? "💬 " : "")
 			+ "\(content)"
 		
 		os_log("%{public}@",
-			   log: log ?? DefaultLog,
+			   log: log ?? _otCoreDefaultLog,
 			   type: .default,
 			   message)
 		
@@ -216,7 +216,7 @@ public enum Log {
 							 column: Int = #column,
 							 function: String = #function) {
 		
-		guard LogEnabled else { return }
+		guard _otCoreLogEnabled else { return }
 		
 		let fileName = (file as NSString).lastPathComponent
 		
@@ -225,11 +225,11 @@ public enum Log {
 			.joined(separator: " ")
 		
 		let message =
-			(UseEmoji == .all || UseEmoji == .errorsOnly ? "⚠️ " : "")
+			(_otCoreUseEmoji == .all || _otCoreUseEmoji == .errorsOnly ? "⚠️ " : "")
 			+ "\(content) (\(fileName):\(line):\(column):\(function))"
 		
 		os_log("%{public}@",
-			   log: log ?? DefaultLog,
+			   log: log ?? _otCoreDefaultLog,
 			   type: .error,
 			   message)
 		
@@ -247,7 +247,7 @@ public enum Log {
 							 column: Int = #column,
 							 function: String = #function) {
 		
-		guard LogEnabled else { return }
+		guard _otCoreLogEnabled else { return }
 		
 		let fileName = (file as NSString).lastPathComponent
 		
@@ -256,11 +256,11 @@ public enum Log {
 			.joined(separator: " ")
 		
 		let message =
-			(UseEmoji == .all || UseEmoji == .errorsOnly ? "🛑 " : "")
+			(_otCoreUseEmoji == .all || _otCoreUseEmoji == .errorsOnly ? "🛑 " : "")
 			+ "\(content) (\(fileName):\(line):\(column):\(function))"
 		
 		os_log("%{public}@",
-			   log: log ?? DefaultLog,
+			   log: log ?? _otCoreDefaultLog,
 			   type: .fault,
 			   message)
 		
@@ -325,6 +325,7 @@ extension OSLogType {
 			
 		default:
 			break
+			
 		}
 		
 	}
