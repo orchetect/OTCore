@@ -16,9 +16,10 @@ import os.log
 // Suggestion:
 // In your library/application that adopts OTCore, you can write your own centralized extension to store references to specific logs, if you require more than one.
 //
-//     fileprivate let subsystem = "com.yourdomain.yourapp"
-//
+//     @available(macOS 10.12, iOS 10.0, watchOS 3.0, tvOS 10.0, *)
 //     extension OSLog {
+//         static let subsystem = "com.yourdomain.yourapp"
+//
 //         public static let general = OSLog(subsystem: subsystem, category: "General")
 //         public static let log2 = OSLog(subsystem: subsystem, category: "Log2")
 //         public static let log3 = OSLog(subsystem: subsystem, category: "Log3")
@@ -97,10 +98,12 @@ public enum Log {
 							 defaultLog: OSLog? = nil,
 							 defaultSubsystem: String? = nil,
 							 useEmoji: EmojiType? = nil) {
+		
 		_otCoreLogEnabled = enabled
 		_otCoreDefaultLog = defaultLog ?? .default
 		_otCoreDefaultSubsystem = defaultSubsystem
 		_otCoreUseEmoji = useEmoji ?? .disabled
+		
 	}
 	
 	
@@ -136,19 +139,23 @@ public enum Log {
 		
 		guard _otCoreLogEnabled else { return }
 		
-		let fileName = (file as NSString).lastPathComponent
-		
-		let content = items
-			.map { String(describing: $0 ?? "nil") }
-			.joined(separator: " ")
-		
-		let message = (_otCoreUseEmoji == .all ? "🔷 " : "")
-			+ "\(content) (\(fileName):\(function))"
-		
-		os_log("%{public}@",
-			   log: log ?? _otCoreDefaultLog,
-			   type: .debug,
-			   message)
+		autoreleasepool {
+			
+			let fileName = (file as NSString).lastPathComponent
+			
+			let content = items
+				.map { String(describing: $0 ?? "nil") }
+				.joined(separator: " ")
+			
+			let message = (_otCoreUseEmoji == .all ? "🔷 " : "")
+				+ "\(content) (\(fileName):\(function))"
+			
+			os_log("%{public}@",
+				   log: log ?? _otCoreDefaultLog,
+				   type: .debug,
+				   message)
+			
+		}
 		
 		#endif
 		
@@ -164,18 +171,22 @@ public enum Log {
 		
 		guard _otCoreLogEnabled else { return }
 		
-		let content = items
-			.map { String(describing: $0 ?? "nil") }
-			.joined(separator: " ")
-		
-		let message =
-			(_otCoreUseEmoji == .all ? "💬 " : "")
-			+ "\(content)"
-		
-		os_log("%{public}@",
-			   log: log ?? _otCoreDefaultLog,
-			   type: .info,
-			   message)
+		autoreleasepool {
+			
+			let content = items
+				.map { String(describing: $0 ?? "nil") }
+				.joined(separator: " ")
+			
+			let message =
+				(_otCoreUseEmoji == .all ? "💬 " : "")
+				+ "\(content)"
+			
+			os_log("%{public}@",
+				   log: log ?? _otCoreDefaultLog,
+				   type: .info,
+				   message)
+			
+		}
 		
 	}
 	
@@ -189,18 +200,22 @@ public enum Log {
 		
 		guard _otCoreLogEnabled else { return }
 		
-		let content = items
-			.map { String(describing: $0 ?? "nil") }
-			.joined(separator: " ")
-		
-		let message =
-			(_otCoreUseEmoji == .all ? "💬 " : "")
-			+ "\(content)"
-		
-		os_log("%{public}@",
-			   log: log ?? _otCoreDefaultLog,
-			   type: .default,
-			   message)
+		autoreleasepool {
+			
+			let content = items
+				.map { String(describing: $0 ?? "nil") }
+				.joined(separator: " ")
+			
+			let message =
+				(_otCoreUseEmoji == .all ? "💬 " : "")
+				+ "\(content)"
+			
+			os_log("%{public}@",
+				   log: log ?? _otCoreDefaultLog,
+				   type: .default,
+				   message)
+			
+		}
 		
 	}
 	
@@ -218,20 +233,24 @@ public enum Log {
 		
 		guard _otCoreLogEnabled else { return }
 		
-		let fileName = (file as NSString).lastPathComponent
-		
-		let content = items
-			.map { String(describing: $0 ?? "nil") }
-			.joined(separator: " ")
-		
-		let message =
-			(_otCoreUseEmoji == .all || _otCoreUseEmoji == .errorsOnly ? "⚠️ " : "")
-			+ "\(content) (\(fileName):\(line):\(column):\(function))"
-		
-		os_log("%{public}@",
-			   log: log ?? _otCoreDefaultLog,
-			   type: .error,
-			   message)
+		autoreleasepool {
+			
+			let fileName = (file as NSString).lastPathComponent
+			
+			let content = items
+				.map { String(describing: $0 ?? "nil") }
+				.joined(separator: " ")
+			
+			let message =
+				(_otCoreUseEmoji == .all || _otCoreUseEmoji == .errorsOnly ? "⚠️ " : "")
+				+ "\(content) (\(fileName):\(line):\(column):\(function))"
+			
+			os_log("%{public}@",
+				   log: log ?? _otCoreDefaultLog,
+				   type: .error,
+				   message)
+			
+		}
 		
 	}
 	
@@ -249,20 +268,24 @@ public enum Log {
 		
 		guard _otCoreLogEnabled else { return }
 		
-		let fileName = (file as NSString).lastPathComponent
-		
-		let content = items
-			.map { String(describing: $0 ?? "nil") }
-			.joined(separator: " ")
-		
-		let message =
-			(_otCoreUseEmoji == .all || _otCoreUseEmoji == .errorsOnly ? "🛑 " : "")
-			+ "\(content) (\(fileName):\(line):\(column):\(function))"
-		
-		os_log("%{public}@",
-			   log: log ?? _otCoreDefaultLog,
-			   type: .fault,
-			   message)
+		autoreleasepool {
+			
+			let fileName = (file as NSString).lastPathComponent
+			
+			let content = items
+				.map { String(describing: $0 ?? "nil") }
+				.joined(separator: " ")
+			
+			let message =
+				(_otCoreUseEmoji == .all || _otCoreUseEmoji == .errorsOnly ? "🛑 " : "")
+				+ "\(content) (\(fileName):\(line):\(column):\(function))"
+			
+			os_log("%{public}@",
+				   log: log ?? _otCoreDefaultLog,
+				   type: .fault,
+				   message)
+			
+		}
 		
 	}
 	
