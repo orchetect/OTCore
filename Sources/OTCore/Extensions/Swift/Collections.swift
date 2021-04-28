@@ -306,3 +306,18 @@ extension Set {
 	}
 	
 }
+
+// MARK: - ArraySlice
+
+extension ArraySlice {
+	
+	/// **OTCore:**
+	/// Same as `Array(self)`, to return the `ArraySlice` as a concrete Array.
+	/// (Functional convenience method)
+	@inlinable public var array: [Element] {
+		
+		Array(self)
+		
+	}
+	
+}

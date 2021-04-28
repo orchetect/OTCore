@@ -252,6 +252,32 @@ class Extensions_Swift_Collections_Tests: XCTestCase {
 		
 	}
 	
+	func testArraySlice_Array() {
+		
+		let sourceArray = ["A", "B", "C"]
+		
+		let slice = sourceArray.suffix(2)
+		
+		// as a precondition, assert that this is an ArraySlice and its indexing is as expected
+		
+		XCTAssertEqual("\(type(of: slice))", "ArraySlice<String>") // brittle, but we'll test it
+		XCTAssertEqual(slice.count, 2)
+		XCTAssertEqual(slice, ["B", "C"])
+		XCTAssertEqual(slice[1], "B") // this slice's indexes start on 1
+		XCTAssertEqual(slice[2], "C")
+		
+		// test formation of array
+		
+		let array = slice.array
+		
+		XCTAssertEqual("\(type(of: array))", "Array<String>") // brittle, but we'll test it
+		XCTAssertEqual(array.count, 2)
+		XCTAssertEqual(array, ["B", "C"])
+		XCTAssertEqual(array[0], "B") // reindexed back to start on 0
+		XCTAssertEqual(array[1], "C")
+		
+	}
+	
 }
 
 #endif
