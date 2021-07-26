@@ -6,10 +6,9 @@
 #if !os(watchOS)
 
 import XCTest
-@testable import OTCoreTesting
-import OTCore
+@testable import OTCore
 
-class XCTWait_Tests: XCTestCase {
+class XCTest_XCTWait_Tests: XCTestCase {
     
     override func setUp() { super.setUp() }
     override func tearDown() { super.tearDown() }

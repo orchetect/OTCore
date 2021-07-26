@@ -7,11 +7,12 @@
 
 import XCTest
 
-public extension XCTestCase {
+extension XCTestCase {
     
+    /// **OTCore:**
     /// Simple XCTest wait timer that does not block the runloop
     /// - Parameter timeout: floating-point duration in seconds
-    func XCTWait(sec timeout: Double) {
+    public func XCTWait(sec timeout: Double) {
         
         let delayExpectation = XCTestExpectation()
         delayExpectation.isInverted = true
