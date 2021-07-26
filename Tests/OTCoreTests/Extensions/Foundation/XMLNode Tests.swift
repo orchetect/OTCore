@@ -1,9 +1,6 @@
 //
 //  XMLNode Tests.swift
-//  OTCore
-//
-//  Created by Steffan Andrews on 2020-05-11.
-//  Copyright © 2020 Steffan Andrews. All rights reserved.
+//  OTCore • https://github.com/orchetect/OTCore
 //
 
 // This is Mac-only because even though XMLNode exists in Foundation, it is only available on macOS
@@ -203,141 +200,141 @@ fileprivate let testXML = """
 """
 
 class Extensions_Foundation_XMLNode_Tests: XCTestCase {
-	
-	override func setUp() { super.setUp() }
-	override func tearDown() { super.tearDown() }
-	
-	func testXMLNode_XMLLoad() {
-		
-		let xmlOptions: XMLNode.Options = [.nodePrettyPrint, .nodeCompactEmptyElement]
-		guard let data = testXML.toData()
-			else { XCTFail() ; return }
-		guard let loadxml = try? XMLDocument(data: data, options: xmlOptions)
-			else { XCTFail() ; return }
-		
-		let root = loadxml.rootElement()
-		let setup = root?.children?
-			.filter(attribute: "name", value: "Setup")
-			.first as? XMLElement
-		
-		XCTAssertEqual(setup?.childCount, 14)
-		
-	}
-	
-	func testCollection_XMLNode_FilterElementName() {
-		
-		// prep
-		
-		let nodes = [XMLNode(kind: .element),
-					 XMLNode(kind: .element),
-					 XMLNode(kind: .element),
-					 XMLNode(kind: .element)]
-		
-		nodes[0].name = "list1A"
-		nodes[1].name = "list1B"
-		nodes[2].name = "list2"
-		nodes[3].name = "obj"
-		
-		// test
-		
-		let filtered1 = nodes.filter(elementName: "list1B")
-		XCTAssertEqual(filtered1[0], nodes[1])
-		
-		let filtered2 = nodes.filter(elementName: "DoesNotExist")
-		XCTAssertEqual(filtered2, [])
-		
-	}
-	
-	func testCollection_XMLNode_FilterAttribute() {
-		
-		// prep
-		
-		let nodes = [try! XMLElement(xmlString: "<obj class='classA' name='name1'/>"),
-					 try! XMLElement(xmlString: "<obj class='classA' name='name2'/>"),
-					 try! XMLElement(xmlString: "<obj class='classB' name='name3'/>"),
-					 try! XMLElement(xmlString: "<obj class='classB' name='name4'/>")]
-		
-		// test
-		
-		var filtered = nodes.filter(attribute: "name", value: "name3")
-		XCTAssertEqual(filtered[0], nodes[2])
-		
-		filtered = nodes.filter(attribute: "name", { $0 == "name4" })
-		XCTAssertEqual(filtered[0], nodes[3])
-		
-		filtered = nodes.filter(attribute: "class", { $0.hasSuffix("B") })
-		XCTAssertEqual(filtered, [nodes[2], nodes[3]])
-		
-	}
-	
-	func testXMLNode_AttributeStringValue() {
-		
-		let node = XMLNode(kind: .element)
-		
-		let attr = XMLNode(kind: .attribute)
-		attr.name = "key1"
-		attr.stringValue = "value1"
-		(node as? XMLElement)?.addAttribute(attr)
-		
-		// as node
-		XCTAssertEqual(node.attributeStringValue(forName: "key1"), "value1")
-		
-		// as element
-		let element = node as! XMLElement
-		XCTAssertEqual(element.attributeStringValue(forName: "key1"), "value1")
-		
-	}
-	
-	func testXMLNode_AttributeObjectValue() {
-		
-		let node = XMLNode(kind: .element)
-		
-		let attr = XMLNode(kind: .attribute)
-		attr.name = "key1"
-		attr.stringValue = "value1"
-		(node as? XMLElement)?.addAttribute(attr)
-		
-		// as node
-		XCTAssertEqual(node.attributeObjectValue(forName: "key1") as? String, "value1")
-		
-		// as element
-		let element = node as! XMLElement
-		XCTAssertEqual(element.attributeObjectValue(forName: "key1") as? String, "value1")
-		
-	}
-	
-	func testXMLNode_AddAttributeWithNameValue() {
-		
-		let node = XMLNode(kind: .element)
-		
-		node.addAttribute(withName: "key1", value: "value1")
-		
-		// as node
-		XCTAssertEqual(node.attributeObjectValue(forName: "key1") as? String, "value1")
-		
-		// as element
-		let element = node as! XMLElement
-		XCTAssertEqual(element.attributeObjectValue(forName: "key1") as? String, "value1")
-		
-	}
-	
-	func testXMLElement_InitNameAttributes() {
-		
-		let element = XMLElement(name: "testname", attributes: [("key1", "value1"),
-																("key2", "value2")])
-		
-		XCTAssertEqual(element.name, "testname")
-		
-		XCTAssertEqual(element.attributes?.count, 2)
-		
-		XCTAssertEqual(element.attributes?[0].name,			"key1")
-		XCTAssertEqual(element.attributes?[0].stringValue,	"value1")
-		
-		XCTAssertEqual(element.attributes?[1].name,			"key2")
-		XCTAssertEqual(element.attributes?[1].stringValue,	"value2")
-		
-	}
-	
+    
+    override func setUp() { super.setUp() }
+    override func tearDown() { super.tearDown() }
+    
+    func testXMLNode_XMLLoad() {
+        
+        let xmlOptions: XMLNode.Options = [.nodePrettyPrint, .nodeCompactEmptyElement]
+        guard let data = testXML.toData()
+        else { XCTFail() ; return }
+        guard let loadxml = try? XMLDocument(data: data, options: xmlOptions)
+        else { XCTFail() ; return }
+        
+        let root = loadxml.rootElement()
+        let setup = root?.children?
+            .filter(attribute: "name", value: "Setup")
+            .first as? XMLElement
+        
+        XCTAssertEqual(setup?.childCount, 14)
+        
+    }
+    
+    func testCollection_XMLNode_FilterElementName() {
+        
+        // prep
+        
+        let nodes = [XMLNode(kind: .element),
+                     XMLNode(kind: .element),
+                     XMLNode(kind: .element),
+                     XMLNode(kind: .element)]
+        
+        nodes[0].name = "list1A"
+        nodes[1].name = "list1B"
+        nodes[2].name = "list2"
+        nodes[3].name = "obj"
+        
+        // test
+        
+        let filtered1 = nodes.filter(elementName: "list1B")
+        XCTAssertEqual(filtered1[0], nodes[1])
+        
+        let filtered2 = nodes.filter(elementName: "DoesNotExist")
+        XCTAssertEqual(filtered2, [])
+        
+    }
+    
+    func testCollection_XMLNode_FilterAttribute() {
+        
+        // prep
+        
+        let nodes = [try! XMLElement(xmlString: "<obj class='classA' name='name1'/>"),
+                     try! XMLElement(xmlString: "<obj class='classA' name='name2'/>"),
+                     try! XMLElement(xmlString: "<obj class='classB' name='name3'/>"),
+                     try! XMLElement(xmlString: "<obj class='classB' name='name4'/>")]
+        
+        // test
+        
+        var filtered = nodes.filter(attribute: "name", value: "name3")
+        XCTAssertEqual(filtered[0], nodes[2])
+        
+        filtered = nodes.filter(attribute: "name", { $0 == "name4" })
+        XCTAssertEqual(filtered[0], nodes[3])
+        
+        filtered = nodes.filter(attribute: "class", { $0.hasSuffix("B") })
+        XCTAssertEqual(filtered, [nodes[2], nodes[3]])
+        
+    }
+    
+    func testXMLNode_AttributeStringValue() {
+        
+        let node = XMLNode(kind: .element)
+        
+        let attr = XMLNode(kind: .attribute)
+        attr.name = "key1"
+        attr.stringValue = "value1"
+        (node as? XMLElement)?.addAttribute(attr)
+        
+        // as node
+        XCTAssertEqual(node.attributeStringValue(forName: "key1"), "value1")
+        
+        // as element
+        let element = node as! XMLElement
+        XCTAssertEqual(element.attributeStringValue(forName: "key1"), "value1")
+        
+    }
+    
+    func testXMLNode_AttributeObjectValue() {
+        
+        let node = XMLNode(kind: .element)
+        
+        let attr = XMLNode(kind: .attribute)
+        attr.name = "key1"
+        attr.stringValue = "value1"
+        (node as? XMLElement)?.addAttribute(attr)
+        
+        // as node
+        XCTAssertEqual(node.attributeObjectValue(forName: "key1") as? String, "value1")
+        
+        // as element
+        let element = node as! XMLElement
+        XCTAssertEqual(element.attributeObjectValue(forName: "key1") as? String, "value1")
+        
+    }
+    
+    func testXMLNode_AddAttributeWithNameValue() {
+        
+        let node = XMLNode(kind: .element)
+        
+        node.addAttribute(withName: "key1", value: "value1")
+        
+        // as node
+        XCTAssertEqual(node.attributeObjectValue(forName: "key1") as? String, "value1")
+        
+        // as element
+        let element = node as! XMLElement
+        XCTAssertEqual(element.attributeObjectValue(forName: "key1") as? String, "value1")
+        
+    }
+    
+    func testXMLElement_InitNameAttributes() {
+        
+        let element = XMLElement(name: "testname", attributes: [("key1", "value1"),
+                                                                ("key2", "value2")])
+        
+        XCTAssertEqual(element.name, "testname")
+        
+        XCTAssertEqual(element.attributes?.count, 2)
+        
+        XCTAssertEqual(element.attributes?[0].name,         "key1")
+        XCTAssertEqual(element.attributes?[0].stringValue,  "value1")
+        
+        XCTAssertEqual(element.attributes?[1].name,         "key2")
+        XCTAssertEqual(element.attributes?[1].stringValue,  "value2")
+        
+    }
+    
 }
 
 #endif

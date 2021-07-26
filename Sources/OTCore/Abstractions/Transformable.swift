@@ -1,9 +1,6 @@
 //
 //  Transformable.swift
-//  OTCore
-//
-//  Created by Steffan Andrews on 2021-02-07.
-//  Copyright © 2021 Steffan Andrews. All rights reserved.
+//  OTCore • https://github.com/orchetect/OTCore
 //
 
 // MARK: - Transformable Protocol
@@ -58,72 +55,72 @@
 /// - warning: Do not add this protocol to types that already conform to `Equatable`.
 /// When conforming a class to `Transformable`, it must be a `final class`.
 public protocol Transformable {
-	
-	func transformed<T>(_ transform: (Self) throws -> T) rethrows -> T
-	
-	mutating func transform(_ mutation: (inout Self) throws -> Void) rethrows -> Self
-	
+    
+    func transformed<T>(_ transform: (Self) throws -> T) rethrows -> T
+    
+    mutating func transform(_ mutation: (inout Self) throws -> Void) rethrows -> Self
+    
 }
 
 
 // MARK: Transformable impl.
 
 extension Transformable {
-	
-	/// **OTCore:**
-	/// Returns a new value transformed by a closure.
-	/// (Functional convenience method)
-	///
-	/// Example 1 - simple operation:
-	///
-	///     123.transformed { $0 * 2 } // 246
-	///
-	/// Example 2 - different resulting type:
-	///
-	///     123.transformed { "\($0)" } // "123"
-	///
-	/// Example 3 - complex transform block
-	///
-	///     123.transformed { (source) -> Bool in
-	///         let calc = Double(source) * 2 / 14.9
-	///         let rounded = round(calc)
-	///         return rounded > 18
-	///     }
-	///
-	/// Example 4 - chainable:
-	///
-	///     123.transformed { $0 * 2 / 12.47 }
-	///         .rounded()
-	///         .transformed { "Rounded value: \($0)" }
-	///     // "Rounded value: 20.0"
-	///
-	/// - note: When `self` is an implicitly-unwrapped Optional, you need to either force-unwrap it before you can use `.transformed` or use the alternative `.transformedOptional` method.
-	///
-	/// Example:
-	///
-	///     let int: Int! = 123
-	///     int!.transformed { $0 * 2 } // 246
-	///     int.transformedOptional { $0! * 2 } // 246
-	///
-	@inlinable public
-	func transformed<T>(_ transform: (Self) throws -> T) rethrows -> T {
-		
-		try transform(self)
-		
-	}
-	
-	/// **OTCore:**
-	/// Mutate a value in place and also return it in order to continue chaining methods.
-	/// (Functional convenience method)
-	@inlinable @discardableResult public
-	mutating func transform(_ mutation: (inout Self) throws -> Void) rethrows -> Self {
-		
-		try mutation(&self)
-		
-		return self
-		
-	}
-	
+    
+    /// **OTCore:**
+    /// Returns a new value transformed by a closure.
+    /// (Functional convenience method)
+    ///
+    /// Example 1 - simple operation:
+    ///
+    ///     123.transformed { $0 * 2 } // 246
+    ///
+    /// Example 2 - different resulting type:
+    ///
+    ///     123.transformed { "\($0)" } // "123"
+    ///
+    /// Example 3 - complex transform block
+    ///
+    ///     123.transformed { (source) -> Bool in
+    ///         let calc = Double(source) * 2 / 14.9
+    ///         let rounded = round(calc)
+    ///         return rounded > 18
+    ///     }
+    ///
+    /// Example 4 - chainable:
+    ///
+    ///     123.transformed { $0 * 2 / 12.47 }
+    ///         .rounded()
+    ///         .transformed { "Rounded value: \($0)" }
+    ///     // "Rounded value: 20.0"
+    ///
+    /// - note: When `self` is an implicitly-unwrapped Optional, you need to either force-unwrap it before you can use `.transformed` or use the alternative `.transformedOptional` method.
+    ///
+    /// Example:
+    ///
+    ///     let int: Int! = 123
+    ///     int!.transformed { $0 * 2 } // 246
+    ///     int.transformedOptional { $0! * 2 } // 246
+    ///
+    @inlinable public
+    func transformed<T>(_ transform: (Self) throws -> T) rethrows -> T {
+        
+        try transform(self)
+        
+    }
+    
+    /// **OTCore:**
+    /// Mutate a value in place and also return it in order to continue chaining methods.
+    /// (Functional convenience method)
+    @inlinable @discardableResult public
+    mutating func transform(_ mutation: (inout Self) throws -> Void) rethrows -> Self {
+        
+        try mutation(&self)
+        
+        return self
+        
+    }
+    
 }
 
 
@@ -131,48 +128,48 @@ extension Transformable {
 // required to allow chaining multiple `.transform{}` blocks
 
 extension Transformable where Self : AnyObject {
-	
-	/// **OTCore:**
-	/// Mutate a value in place and also return it in order to continue chaining methods.
-	/// (Functional convenience method)
-	@inlinable @discardableResult public
-	func transform(_ mutation: (Self) throws -> Void) rethrows -> Self {
-		
-		try mutation(self)
-		
-		return self
-		
-	}
-	
+    
+    /// **OTCore:**
+    /// Mutate a value in place and also return it in order to continue chaining methods.
+    /// (Functional convenience method)
+    @inlinable @discardableResult public
+    func transform(_ mutation: (Self) throws -> Void) rethrows -> Self {
+        
+        try mutation(self)
+        
+        return self
+        
+    }
+    
 }
 
 
 // MARK: - Optional impl.
 
 extension Optional: Transformable {
-	
-	/// **OTCore:**
-	/// Returns the result of transforming a wrapped Optional using a closure.
-	/// (Functional convenience method)
-	@inlinable public
-	func transformedOptional<T>(_ transform: (Self) throws -> T) rethrows -> T {
-		
-		try transform(self)
-		
-	}
-	
-	/// **OTCore:**
-	/// Mutate a wrapped Optional in place and also return it in order to continue chaining methods.
-	/// (Functional convenience method)
-	@inlinable @discardableResult public
-	mutating func transformOptional(_ mutation: (inout Self) throws -> Void) rethrows -> Self {
-		
-		try mutation(&self)
-		
-		return self
-		
-	}
-	
+    
+    /// **OTCore:**
+    /// Returns the result of transforming a wrapped Optional using a closure.
+    /// (Functional convenience method)
+    @inlinable public
+    func transformedOptional<T>(_ transform: (Self) throws -> T) rethrows -> T {
+        
+        try transform(self)
+        
+    }
+    
+    /// **OTCore:**
+    /// Mutate a wrapped Optional in place and also return it in order to continue chaining methods.
+    /// (Functional convenience method)
+    @inlinable @discardableResult public
+    mutating func transformOptional(_ mutation: (inout Self) throws -> Void) rethrows -> Self {
+        
+        try mutation(&self)
+        
+        return self
+        
+    }
+    
 }
 
 
@@ -180,80 +177,80 @@ extension Optional: Transformable {
 // required to allow chaining multiple `.transform{}` blocks
 
 extension Optional where Wrapped : AnyObject {
-	
-	/// **OTCore:**
-	/// Mutate a value in place and also return it in order to continue chaining methods.
-	/// (Functional convenience method)
-	@inlinable @discardableResult public
-	func transform(_ mutation: (Self) throws -> Void) rethrows -> Self {
-		
-		try mutation(self)
-		
-		return self
-		
-	}
-	
+    
+    /// **OTCore:**
+    /// Mutate a value in place and also return it in order to continue chaining methods.
+    /// (Functional convenience method)
+    @inlinable @discardableResult public
+    func transform(_ mutation: (Self) throws -> Void) rethrows -> Self {
+        
+        try mutation(self)
+        
+        return self
+        
+    }
+    
 }
 
 
 // MARK: - Equatable impl.
 
 extension Equatable {
-	
-	/// **OTCore:**
-	/// Returns a new value transformed by a closure.
-	/// (Functional convenience method)
-	///
-	/// Example 1 - simple operation:
-	///
-	///     123.transformed { $0 * 2 } // 246
-	///
-	/// Example 2 - different resulting type:
-	///
-	///     123.transformed { "\($0)" } // "123"
-	///
-	/// Example 3 - complex transform block
-	///
-	///     123.transformed { (source) -> Bool in
-	///         let calc = Double(source) * 2 / 14.9
-	///         let rounded = round(calc)
-	///         return rounded > 18
-	///     }
-	///
-	/// Example 4 - chainable:
-	///
-	///     123.transformed { $0 * 2 / 12.47 }
-	///         .rounded()
-	///         .transformed { "Rounded value: \($0)" }
-	///     // "Rounded value: 20.0"
-	///
-	/// - note: When `self` is an implicitly-unwrapped Optional, you need to either force-unwrap it before you can use `.transformed` or use the alternative `.transformedOptional` method.
-	///
-	/// Example:
-	///
-	///     let int: Int! = 123
-	///     int!.transformed { $0 * 2 } // 246
-	///     int.transformedOptional { $0! * 2 } // 246
-	///
-	@inlinable public
-	func transformed<T>(_ transform: (Self) throws -> T) rethrows -> T {
-		
-		try transform(self)
-		
-	}
-	
-	/// **OTCore:**
-	/// Mutate a value in place and also return it in order to continue chaining methods.
-	/// (Functional convenience method)
-	@inlinable @discardableResult public
-	mutating func transform(_ mutation: (inout Self) throws -> Void) rethrows -> Self {
-		
-		try mutation(&self)
-		
-		return self
-		
-	}
-	
+    
+    /// **OTCore:**
+    /// Returns a new value transformed by a closure.
+    /// (Functional convenience method)
+    ///
+    /// Example 1 - simple operation:
+    ///
+    ///     123.transformed { $0 * 2 } // 246
+    ///
+    /// Example 2 - different resulting type:
+    ///
+    ///     123.transformed { "\($0)" } // "123"
+    ///
+    /// Example 3 - complex transform block
+    ///
+    ///     123.transformed { (source) -> Bool in
+    ///         let calc = Double(source) * 2 / 14.9
+    ///         let rounded = round(calc)
+    ///         return rounded > 18
+    ///     }
+    ///
+    /// Example 4 - chainable:
+    ///
+    ///     123.transformed { $0 * 2 / 12.47 }
+    ///         .rounded()
+    ///         .transformed { "Rounded value: \($0)" }
+    ///     // "Rounded value: 20.0"
+    ///
+    /// - note: When `self` is an implicitly-unwrapped Optional, you need to either force-unwrap it before you can use `.transformed` or use the alternative `.transformedOptional` method.
+    ///
+    /// Example:
+    ///
+    ///     let int: Int! = 123
+    ///     int!.transformed { $0 * 2 } // 246
+    ///     int.transformedOptional { $0! * 2 } // 246
+    ///
+    @inlinable public
+    func transformed<T>(_ transform: (Self) throws -> T) rethrows -> T {
+        
+        try transform(self)
+        
+    }
+    
+    /// **OTCore:**
+    /// Mutate a value in place and also return it in order to continue chaining methods.
+    /// (Functional convenience method)
+    @inlinable @discardableResult public
+    mutating func transform(_ mutation: (inout Self) throws -> Void) rethrows -> Self {
+        
+        try mutation(&self)
+        
+        return self
+        
+    }
+    
 }
 
 
@@ -261,17 +258,17 @@ extension Equatable {
 // required to allow chaining multiple `.transform{}` blocks
 
 extension Equatable where Self : AnyObject {
-	
-	/// **OTCore:**
-	/// Mutate a value in place and also return it in order to continue chaining methods.
-	/// (Functional convenience method)
-	@inlinable @discardableResult public
-	func transform(_ mutation: (Self) throws -> Void) rethrows -> Self {
-		
-		try mutation(self)
-		
-		return self
-		
-	}
-	
+    
+    /// **OTCore:**
+    /// Mutate a value in place and also return it in order to continue chaining methods.
+    /// (Functional convenience method)
+    @inlinable @discardableResult public
+    func transform(_ mutation: (Self) throws -> Void) rethrows -> Self {
+        
+        try mutation(self)
+        
+        return self
+        
+    }
+    
 }
