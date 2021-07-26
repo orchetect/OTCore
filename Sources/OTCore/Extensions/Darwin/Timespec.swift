@@ -69,7 +69,8 @@ extension timespec {
 
 // MARK: - Timespec operators and comparison
 
-/// OTCore
+/// **OTCore:**
+/// Add two isntances of `timespec`
 @inlinable public func + (lhs: timespec, rhs: timespec) -> timespec {
 	
 	let nsRaw = rhs.tv_nsec + lhs.tv_nsec
@@ -82,7 +83,8 @@ extension timespec {
 	
 }
 
-/// OTCore
+/// **OTCore:**
+/// Subtract two isntances of `timespec`
 @inlinable public func - (lhs: timespec, rhs: timespec) -> timespec {
 	
 	let nsRaw = lhs.tv_nsec - rhs.tv_nsec
@@ -111,7 +113,7 @@ extension timespec {
 
 extension timespec: Equatable {
 	
-	/// OTCore
+    // **OTCore**
 	@inlinable static public func == (lhs: Self, rhs: Self) -> Bool {
 		
 		lhs.tv_sec == rhs.tv_sec &&
@@ -123,8 +125,8 @@ extension timespec: Equatable {
 
 extension timespec: Comparable {
 	
-	/// OTCore
-	@inlinable public static func < (lhs: timespec, rhs: timespec) -> Bool {
+    // **OTCore**
+	@inlinable static public func < (lhs: timespec, rhs: timespec) -> Bool {
 		
 		if lhs.tv_sec < rhs.tv_sec { return true }
 		if lhs.tv_sec > rhs.tv_sec { return false }

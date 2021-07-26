@@ -16,7 +16,7 @@ extension URL {
 	
 	/// **OTCore:**
 	/// Returns whether the file/folder exists.
-	/// Convenience proxy for Foundation fileExists method.
+	/// Convenience proxy for Foundation `.fileExists` method.
 	///
 	/// - Will return `false` if used on a symlink and the symlink's original file does not exist.
 	/// - Will still return `true` if used on an alias and the alias' original file does not exist.
