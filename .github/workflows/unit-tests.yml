@@ -8,10 +8,16 @@ on:
     
   workflow_dispatch:
     branches: [main]
+    inputs:
+      manualRun:
+        description: 'Manual Run Trigger'
+        required: false
+        default: 'YES'
     
 jobs: 
   macOS:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }} # only run if build.yml succeeded
+    # only run if build.yml succeeded or if invoked from a manual dispatch
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event.inputs.manualRun == 'YES' }}
     name: macOS
     runs-on: macos-latest
     steps:
@@ -22,7 +28,8 @@ jobs:
       run: xcodebuild test -workspace ".swiftpm/xcode/package.xcworkspace" -scheme "OTCore-CI" -destination "platform=macOS,arch=x86_64"
       
   macCatalyst:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }} # only run if build.yml succeeded
+    # only run if build.yml succeeded or if invoked from a manual dispatch
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event.inputs.manualRun == 'YES' }}
     name: macCatalyst
     runs-on: macos-latest
     steps:
@@ -33,7 +40,8 @@ jobs:
       run: xcodebuild test -workspace ".swiftpm/xcode/package.xcworkspace" -scheme "OTCore-CI" -destination "platform=macOS,variant=Mac Catalyst,arch=x86_64"
 
   iOS:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }} # only run if build.yml succeeded
+    # only run if build.yml succeeded or if invoked from a manual dispatch
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event.inputs.manualRun == 'YES' }}
     name: iOS
     runs-on: macos-latest # this must be macos, GitHub does not offer iOS directly but we can use xcodebuild
     steps:
@@ -44,7 +52,8 @@ jobs:
       run: xcodebuild test -workspace ".swiftpm/xcode/package.xcworkspace" -scheme "OTCore-CI" -destination "platform=iOS Simulator,name=iPhone 12"
 
   tvOS:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }} # only run if build.yml succeeded
+    # only run if build.yml succeeded or if invoked from a manual dispatch
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event.inputs.manualRun == 'YES' }}
     name: tvOS
     runs-on: macos-latest # this must be macos, GitHub does not offer tvOS directly but we can use xcodebuild
     steps:
