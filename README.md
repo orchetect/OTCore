@@ -1,6 +1,6 @@
 # OTCore
 
-[![CI Build Status](https://github.com/orchetect/OTCore/actions/workflows/unit-tests.yml/badge.svg)](https://github.com/orchetect/OTCore/actions/workflows/unit-tests.yml) [![Swift 5.3 Compatible](https://img.shields.io/badge/Swift%205.3-compatible-orange.svg?style=flat)](https://developer.apple.com/swift) [![Platform - macOS | iOS | tvOS | watchOS](https://img.shields.io/badge/platform-macOS%20|%20iOS%20|%20tvOS%20|%20watchOS%20-green.svg?style=flat)](https://developer.apple.com/swift) [![License: MIT](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://github.com/orchetect/OTCore/blob/main/LICENSE)
+[![CI Build Status](https://github.com/orchetect/OTCore/actions/workflows/build.yml/badge.svg)](https://github.com/orchetect/OTCore/actions/workflows/build.yml) [![CI Unit Tests Status](https://github.com/orchetect/OTCore/actions/workflows/unit-tests.yml/badge.svg)](https://github.com/orchetect/OTCore/actions/workflows/unit-tests.yml) [![Platforms - macOS | iOS | tvOS | watchOS](https://img.shields.io/badge/platforms-macOS%20|%20iOS%20|%20tvOS%20|%20watchOS%20-lightgrey.svg?style=flat)](https://developer.apple.com/swift) [![License: MIT](http://img.shields.io/badge/license-MIT-lightgrey.svg?style=flat)](https://github.com/orchetect/OTCore/blob/main/LICENSE)
 
 Multi-platform Swift shared code module with useful extension methods on standard library types.
 
