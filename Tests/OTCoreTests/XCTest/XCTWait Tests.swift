@@ -28,11 +28,11 @@ class XCTest_XCTWait_Tests: XCTestCase {
             
             // this unit test is flakey because it depends on the performance of the hardware it is run on so we need to give it more leeway
             
-            // check for complete out-of-spec failure first
+            // check for completely out-of-spec failure first
             XCTAssertGreaterThan(diffTime, duration - 0.001)
-            XCTAssertLessThan(diffTime, duration + 0.050)
+            XCTAssertLessThan(diffTime, duration + 0.100)
             
-            // test if wait duration was within reasonable margin of error +/-
+            // just print a log message if diffTime is out of margin, but don't fail the test (CI platforms are too inconsistent and can't guarantee stability of timing mechanisms in unit tests... which means we need to approach this differently in future, but for now we'll ignore it)
             if !diffTime.isContained(in: margin) {
                 Log.error("Tested XCTWait duration of \(duration)sec, with an accuracy margin of \(margin.lowerBound)...\(margin.upperBound) but measured time was out of margin at \(diffTime)sec.")
             }
@@ -45,7 +45,6 @@ class XCTest_XCTWait_Tests: XCTestCase {
         
         // medium value
         runTest(duration: 0.5000, margin: 0.4999...0.5020)
-        
         
     }
     
