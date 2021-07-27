@@ -17,7 +17,8 @@ extension XCTestCase {
         
         RunLoop.current.run(until: .init(timeIntervalSinceNow: timeout))
         
-        // old method:
+        
+        // old method B:
         
         // var inTime = timespec()
         // _ = clock_gettime(CLOCK_MONOTONIC_RAW, &inTime)
@@ -34,6 +35,13 @@ extension XCTestCase {
         //     - 0.00115
         //
         // wait(for: [delayExpectation], timeout: newTimeout)
+        
+        
+        // old method A:
+        
+        // let delayExpectation = XCTestExpectation()
+        // delayExpectation.isInverted = true
+        // wait(for: [delayExpectation], timeout: timeout)
         
     }
     
