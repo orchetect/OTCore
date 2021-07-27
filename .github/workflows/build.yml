@@ -22,7 +22,7 @@ on:
     
 jobs: 
   macOS:
-    name: macOS: Build
+    name: macOS
     runs-on: macos-latest
     steps:
     - uses: actions/checkout@main
