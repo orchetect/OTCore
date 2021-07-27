@@ -1,4 +1,4 @@
-name: CI
+name: unit tests
 
 on:
   push:
@@ -26,18 +26,24 @@ jobs:
     runs-on: macos-latest
     steps:
     - uses: actions/checkout@main
-    - name: Build (macOS)
+    - name: Build
       run: xcodebuild build -workspace ".swiftpm/xcode/package.xcworkspace" -scheme "OTCore-CI" -destination "platform=macOS,arch=x86_64"
-    - name: Run Tests (macOS)
+    - name: Run Tests
       run: xcodebuild test -workspace ".swiftpm/xcode/package.xcworkspace" -scheme "OTCore-CI" -destination "platform=macOS,arch=x86_64"
-    - name: Build (macCatalyst)
+      
+  macCatalyst:
+    name: macCatalyst
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@main
+    - name: Build
       run: xcodebuild build -workspace ".swiftpm/xcode/package.xcworkspace" -scheme "OTCore-CI" -destination "platform=macOS,variant=Mac Catalyst,arch=x86_64"
-    - name: Run Tests (macCatalyst)
+    - name: Run Tests
       run: xcodebuild test -workspace ".swiftpm/xcode/package.xcworkspace" -scheme "OTCore-CI" -destination "platform=macOS,variant=Mac Catalyst,arch=x86_64"
 
   iOS:
     name: iOS
-    runs-on: macos-latest # this must be macos, GitHub does not offer iOS; we then use xcodebuild to test
+    runs-on: macos-latest # this must be macos, GitHub does not offer iOS directly but we can use xcodebuild
     steps:
     - uses: actions/checkout@main
     - name: Build (iPhone 12)
@@ -47,7 +53,7 @@ jobs:
 
   tvOS:
     name: tvOS
-    runs-on: macos-latest # this must be macos, GitHub does not offer tvOS; we then use xcodebuild to test
+    runs-on: macos-latest # this must be macos, GitHub does not offer tvOS directly but we can use xcodebuild
     steps:
     - uses: actions/checkout@main
     - name: Build (Apple TV)
