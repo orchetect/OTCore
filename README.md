@@ -1,6 +1,8 @@
 # OTCore
 
 <p>
+<img src="https://github.com/orchetect/OTCore/actions/workflows/macos-test/badge.svg"
+	 alt="Build status" /></a>
 <a href="https://developer.apple.com/swift">
 <img src="https://img.shields.io/badge/Swift%205.3-compatible-orange.svg?style=flat"
 	 alt="Swift 5.3 compatible" /></a>
@@ -17,7 +19,7 @@ The library has full unit test coverage and is actively used in production.
 
 ## Installation: Swift Package Manager (SPM)
 
-#### Dependency within an Application
+### Dependency within an Application
 
 1. Add the package to your Xcode project using Swift Package Manager
    - Select File → Swift Packages → Add Package Dependency
@@ -27,7 +29,7 @@ The library has full unit test coverage and is actively used in production.
    import OTCore
    ```
 
-#### Dependency within a Swift Package
+### Dependency within a Swift Package
 
 1. In your Package.swift file:
 
@@ -42,7 +44,6 @@ The library has full unit test coverage and is actively used in production.
    ```swift
    @_implementationOnly import OTCore
    ```
-   
 
 ## Documentation
 
