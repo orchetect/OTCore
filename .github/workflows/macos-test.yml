@@ -1,17 +1,16 @@
-name: Build and Test on macOS
+name: macOS
 
 on:
   push:
-    branches: [ main, dev ]
+    branches: [ main ]
   pull_request:
-    branches: [ main, dev ]
+    branches: [ main ]
   workflow_dispatch:
-    branches: [ main, dev ]
+    branches: [ main ]
     
 jobs:
-  macOS:
+  build:
     runs-on: macos-latest
-
     steps:
     - uses: actions/checkout@main
     - name: Build
