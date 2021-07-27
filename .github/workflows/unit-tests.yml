@@ -1,27 +1,17 @@
 name: unit tests
 
 on:
-  push:
-    branches: [ main ]
-    paths-ignore:
-      - 'Docs/**'       # Docs folder in root of repo
-      - '**/*.md'       # .md files anywhere in the repo
-      - '**/LICENSE'    # LICENSE files anywhere in the repo
-      - '**/.gitignore' # .gitignore files anywhere in the repo
-      
-  pull_request:
-    branches: [ main ]
-    paths-ignore:
-      - 'Docs/**'       # Docs folder in root of repo
-      - '**/*.md'       # .md files anywhere in the repo
-      - '**/LICENSE'    # LICENSE files anywhere in the repo
-      - '**/.gitignore' # .gitignore files anywhere in the repo
-      
+  workflow_run:
+    workflows: ["build"]
+    branches: [main]
+    types: [completed]
+    
   workflow_dispatch:
-    branches: [ main ]
+    branches: [main]
     
 jobs: 
   macOS:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }} # only run if build.yml succeeded
     name: macOS
     runs-on: macos-latest
     steps:
@@ -32,6 +22,7 @@ jobs:
       run: xcodebuild test -workspace ".swiftpm/xcode/package.xcworkspace" -scheme "OTCore-CI" -destination "platform=macOS,arch=x86_64"
       
   macCatalyst:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }} # only run if build.yml succeeded
     name: macCatalyst
     runs-on: macos-latest
     steps:
@@ -42,6 +33,7 @@ jobs:
       run: xcodebuild test -workspace ".swiftpm/xcode/package.xcworkspace" -scheme "OTCore-CI" -destination "platform=macOS,variant=Mac Catalyst,arch=x86_64"
 
   iOS:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }} # only run if build.yml succeeded
     name: iOS
     runs-on: macos-latest # this must be macos, GitHub does not offer iOS directly but we can use xcodebuild
     steps:
@@ -52,6 +44,7 @@ jobs:
       run: xcodebuild test -workspace ".swiftpm/xcode/package.xcworkspace" -scheme "OTCore-CI" -destination "platform=iOS Simulator,name=iPhone 12"
 
   tvOS:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }} # only run if build.yml succeeded
     name: tvOS
     runs-on: macos-latest # this must be macos, GitHub does not offer tvOS directly but we can use xcodebuild
     steps:
