@@ -1,7 +1,7 @@
 # OTCore
 
 <p>
-<img src="https://github.com/orchetect/OTCore/actions/workflows/macos-test/badge.svg"
+<img src="https://github.com/orchetect/OTCore/actions/workflows/macos-test.yml/badge.svg"
 	 alt="Build status" /></a>
 <a href="https://developer.apple.com/swift">
 <img src="https://img.shields.io/badge/Swift%205.3-compatible-orange.svg?style=flat"
