@@ -56,7 +56,7 @@ extension String {
     /// **OTCore:**
     /// Convenience function to set the system clipboard to a `String`.
     /// Returns `true` if successful.
-    
+    @available(macOS 10.0, macCatalyst 1.0, iOS 1.0, tvOS 9999, watchOS 9999, *)
     @discardableResult
     public func copyToClipboard() -> Bool {
         
