@@ -18,7 +18,6 @@ on:
       - '**/.gitignore' # .gitignore files anywhere in the repo
       
   workflow_dispatch:
-    branches: [main,dev]
     
 jobs: 
   macOS:
@@ -46,9 +45,9 @@ jobs:
     runs-on: macos-latest # this must be macos, GitHub does not offer iOS directly but we can use xcodebuild
     steps:
     - uses: actions/checkout@main
-    - name: iPhone 12 Simulator: Build
+    - name: iPhone 12 Simulator - Build
       run: xcodebuild build -workspace ".swiftpm/xcode/package.xcworkspace" -scheme "OTCore-CI" -destination "platform=iOS Simulator,name=iPhone 12"
-    - name: iPhone 12 Simulator: Unit Tests
+    - name: iPhone 12 Simulator - Unit Tests
       run: xcodebuild test -workspace ".swiftpm/xcode/package.xcworkspace" -scheme "OTCore-CI" -destination "platform=iOS Simulator,name=iPhone 12"
 
   tvOS:
@@ -56,9 +55,9 @@ jobs:
     runs-on: macos-latest # this must be macos, GitHub does not offer tvOS directly but we can use xcodebuild
     steps:
     - uses: actions/checkout@main
-    - name: Apple TV: Build
+    - name: Apple TV - Build
       run: xcodebuild build -workspace ".swiftpm/xcode/package.xcworkspace" -scheme "OTCore-CI" -destination "platform=tvOS Simulator,name=Apple TV"
-    - name: Apple TV: Unit Tests
+    - name: Apple TV - Unit Tests
       run: xcodebuild test -workspace ".swiftpm/xcode/package.xcworkspace" -scheme "OTCore-CI" -destination "platform=tvOS Simulator,name=Apple TV"
 
 
