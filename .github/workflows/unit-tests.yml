@@ -27,11 +27,13 @@ jobs:
     steps:
     - uses: actions/checkout@main
     - name: Build (macOS)
-      run: xcodebuild build -workspace ".swiftpm/xcode/package.xcworkspace" -scheme "OTCore-XcodeServerCI" -destination "platform=macOS,arch=x86_64"
+      run: xcodebuild build -workspace ".swiftpm/xcode/package.xcworkspace" -scheme "OTCore-CI" -destination "platform=macOS,arch=x86_64"
     - name: Run Tests (macOS)
-      run: xcodebuild test -workspace ".swiftpm/xcode/package.xcworkspace" -scheme "OTCore-XcodeServerCI" -destination "platform=macOS,arch=x86_64"
+      run: xcodebuild test -workspace ".swiftpm/xcode/package.xcworkspace" -scheme "OTCore-CI" -destination "platform=macOS,arch=x86_64"
+    - name: Build (macCatalyst)
+      run: xcodebuild build -workspace ".swiftpm/xcode/package.xcworkspace" -scheme "OTCore-CI" -destination "platform=macOS,variant=Mac Catalyst,arch=x86_64"
     - name: Run Tests (macCatalyst)
-      run: xcodebuild test -workspace ".swiftpm/xcode/package.xcworkspace" -scheme "OTCore-XcodeServerCI" -destination "platform=macOS,variant=Mac Catalyst,arch=x86_64"
+      run: xcodebuild test -workspace ".swiftpm/xcode/package.xcworkspace" -scheme "OTCore-CI" -destination "platform=macOS,variant=Mac Catalyst,arch=x86_64"
 
   iOS:
     name: iOS
@@ -39,9 +41,9 @@ jobs:
     steps:
     - uses: actions/checkout@main
     - name: Build (iPhone 12)
-      run: xcodebuild build -workspace ".swiftpm/xcode/package.xcworkspace" -scheme "OTCore-XcodeServerCI" -destination "platform=iOS Simulator,name=iPhone 12"
+      run: xcodebuild build -workspace ".swiftpm/xcode/package.xcworkspace" -scheme "OTCore-CI" -destination "platform=iOS Simulator,name=iPhone 12"
     - name: Run Tests (iPhone 12)
-      run: xcodebuild test -workspace ".swiftpm/xcode/package.xcworkspace" -scheme "OTCore-XcodeServerCI" -destination "platform=iOS Simulator,name=iPhone 12"
+      run: xcodebuild test -workspace ".swiftpm/xcode/package.xcworkspace" -scheme "OTCore-CI" -destination "platform=iOS Simulator,name=iPhone 12"
 
   tvOS:
     name: tvOS
@@ -49,9 +51,9 @@ jobs:
     steps:
     - uses: actions/checkout@main
     - name: Build (Apple TV)
-      run: xcodebuild build -workspace ".swiftpm/xcode/package.xcworkspace" -scheme "OTCore-XcodeServerCI" -destination "platform=tvOS Simulator,name=Apple TV"
+      run: xcodebuild build -workspace ".swiftpm/xcode/package.xcworkspace" -scheme "OTCore-CI" -destination "platform=tvOS Simulator,name=Apple TV"
     - name: Run Tests (Apple TV)
-      run: xcodebuild test -workspace ".swiftpm/xcode/package.xcworkspace" -scheme "OTCore-XcodeServerCI" -destination "platform=tvOS Simulator,name=Apple TV"
+      run: xcodebuild test -workspace ".swiftpm/xcode/package.xcworkspace" -scheme "OTCore-CI" -destination "platform=tvOS Simulator,name=Apple TV"
 
 
 # xcodebuild test reference:
