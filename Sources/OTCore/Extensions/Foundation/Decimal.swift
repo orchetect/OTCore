@@ -193,4 +193,61 @@ extension Substring {
     
 }
 
+// MARK: - .truncated() / .rounded()
+
+extension Decimal {
+    
+    /// **OTCore:**
+    /// Rounds to `decimalPlaces` number of decimal places using rounding `rule`.
+    public func rounded(_ rule: NSDecimalNumber.RoundingMode = .plain,
+                        decimalPlaces: Int) -> Self {
+        
+        var initialDecimal = self
+        var roundedDecimal = Decimal()
+        let decimalPlaces = decimalPlaces.clamped(to: 0...)
+        
+        NSDecimalRound(&roundedDecimal, &initialDecimal, decimalPlaces, rule)
+        
+        return roundedDecimal
+        
+    }
+    
+    /// **OTCore:**
+    /// Replaces this value by rounding it to `decimalPlaces` number of decimal places using rounding `rule`.
+    public mutating func round(_ rule: NSDecimalNumber.RoundingMode = .plain,
+                               decimalPlaces: Int) {
+        
+        self = self.rounded(rule, decimalPlaces: decimalPlaces)
+        
+    }
+    
+    
+    /// **OTCore:**
+    /// Replaces this value by truncating it to `decimalPlaces` number of decimal places.
+    public mutating func truncate(decimalPlaces: Int) {
+        
+        self = self.truncated(decimalPlaces: decimalPlaces)
+        
+    }
+    
+    /// **OTCore:**
+    /// Truncates decimal places to `decimalPlaces` number of decimal places.
+    public func truncated(decimalPlaces: Int) -> Self {
+        
+        var initialDecimal = self
+        var roundedDecimal = Decimal()
+        let decimalPlaces = decimalPlaces.clamped(to: 0...)
+        
+        if self > 0 {
+            NSDecimalRound(&roundedDecimal, &initialDecimal, decimalPlaces, .down)
+        } else {
+            NSDecimalRound(&roundedDecimal, &initialDecimal, decimalPlaces, .up)
+        }
+        
+        return roundedDecimal
+        
+    }
+    
+}
+
 #endif
