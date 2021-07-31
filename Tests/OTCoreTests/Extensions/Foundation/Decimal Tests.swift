@@ -40,7 +40,7 @@ class Extensions_Foundation_Decimal_Tests: XCTestCase {
     
     func testPower() {
         
-        XCTAssertEqual(Decimal(2.0).power(3) , 8.0)
+        XCTAssertEqual(Decimal(string: "2.0")!.power(3) , 8.0)
         
     }
     
@@ -56,15 +56,15 @@ class Extensions_Foundation_Decimal_Tests: XCTestCase {
         
         let str = "1.0"
         
-        XCTAssertEqual(str.decimal, 1.0)
-        XCTAssertEqual(str.decimal(locale: .init(identifier: "en_US")), 1.0)
+        XCTAssertEqual(str.decimal, Decimal(string: "1.0")!)
+        XCTAssertEqual(str.decimal(locale: .init(identifier: "en_US")), Decimal(string: "1.0")!)
         
         // Substring
         
         let subStr = str.prefix(3)
         
-        XCTAssertEqual(subStr.decimal, 1.0)
-        XCTAssertEqual(subStr.decimal(locale: .init(identifier: "en_US")), 1.0)
+        XCTAssertEqual(subStr.decimal, Decimal(string: "1.0")!)
+        XCTAssertEqual(subStr.decimal(locale: .init(identifier: "en_US")), Decimal(string: "1.0")!)
         
     }
     
@@ -123,6 +123,27 @@ class Extensions_Foundation_Decimal_Tests: XCTestCase {
         var dec = Decimal(0.1264)
         dec.truncate(decimalPlaces: 2)
         XCTAssertEqual(dec, Decimal(0.12))
+        
+    }
+    
+    func testQuotientAndRemainder() {
+        
+        let qr = Decimal(string: "17.5")!.quotientAndRemainder(dividingBy: 5.0)
+        
+        XCTAssertEqual(qr.quotient, Decimal(string: "3")!)
+        XCTAssertEqual(qr.remainder, Decimal(string: "2.5")!)
+        
+    }
+    
+    func testIntegralAndFraction() {
+        
+        let iaf = Decimal(string: "17.5")!.integralAndFraction
+        
+        XCTAssertEqual(iaf.integral, Decimal(string: "17")!)
+        XCTAssertEqual(iaf.fraction, Decimal(string: "0.5")!)
+        
+        XCTAssertEqual(Decimal(string: "17.5")!.integral, Decimal(string: "17")!)
+        XCTAssertEqual(Decimal(string: "17.5")!.fraction, Decimal(string: "0.5")!)
         
     }
     
