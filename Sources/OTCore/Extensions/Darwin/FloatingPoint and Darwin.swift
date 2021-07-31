@@ -78,7 +78,7 @@ extension Float80: FloatingPointPowerComputable {
 #endif
 
 
-// MARK: - .truncated() / .rounded
+// MARK: - .truncated()
 
 extension FloatingPoint where Self : FloatingPointPowerComputable {
     
@@ -86,7 +86,7 @@ extension FloatingPoint where Self : FloatingPointPowerComputable {
     /// Replaces this value by truncating it to `decimalPlaces` number of decimal places.
     ///
     /// If `decimalPlaces` <= 0, then `trunc(self)` is returned.
-    public mutating func formTruncated(decimalPlaces: Int) {
+    public mutating func truncate(decimalPlaces: Int) {
         
         self = self.truncated(decimalPlaces: decimalPlaces)
         

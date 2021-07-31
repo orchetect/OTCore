@@ -54,7 +54,7 @@ class Extensions_Darwin_FloatingPointAndDarwin_Tests: XCTestCase {
         XCTAssertEqual(0.123456789.truncated(decimalPlaces: 8), 0.12345678)
         
         var dbl = 0.1264
-        dbl.formTruncated(decimalPlaces: 2)
+        dbl.truncate(decimalPlaces: 2)
         XCTAssertEqual(dbl, 0.12)
         
         // Float .truncated()
@@ -71,10 +71,10 @@ class Extensions_Darwin_FloatingPointAndDarwin_Tests: XCTestCase {
         //flt = 0.123456789
         //XCTAssertEqual(flt.truncated(decimalPlaces: 8), 0.12345678) // fails -- precision issue??
         
-        // Double .formTruncated()
+        // Double .truncate()
         
         flt = 0.1264
-        flt.formTruncated(decimalPlaces: 2)
+        flt.truncate(decimalPlaces: 2)
         XCTAssertEqual(flt, 0.12)
         
     }
