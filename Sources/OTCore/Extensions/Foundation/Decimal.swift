@@ -253,6 +253,17 @@ extension Decimal {
 extension Decimal {
     
     /// **OTCore:**
+    /// Similar to `Double.truncatingRemainder(dividingBy:)` from the standard Swift library.
+    public func truncatingRemainder(dividingBy rhs: Self) -> Self {
+        
+        let calculation = self / rhs
+        let integral = calculation.truncated(decimalPlaces: 0)
+        let fraction = self - (integral * rhs)
+        return fraction
+        
+    }
+    
+    /// **OTCore:**
     /// Similar to `Int.quotientAndRemainder(dividingBy:)` from the standard Swift library.
     public func quotientAndRemainder(dividingBy rhs: Self) -> (quotient: Self, remainder: Self) {
         
