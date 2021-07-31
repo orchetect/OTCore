@@ -126,6 +126,14 @@ class Extensions_Foundation_Decimal_Tests: XCTestCase {
         
     }
     
+    func testTruncatingRemainder() {
+        
+        let tr = Decimal(string: "20.5")!.truncatingRemainder(dividingBy: Decimal(8))
+        
+        XCTAssertEqual(tr, Decimal(string: "4.5")!)
+        
+    }
+    
     func testQuotientAndRemainder() {
         
         let qr = Decimal(string: "17.5")!.quotientAndRemainder(dividingBy: 5.0)
