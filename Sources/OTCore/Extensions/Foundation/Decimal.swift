@@ -250,4 +250,49 @@ extension Decimal {
     
 }
 
+extension Decimal {
+    
+    /// **OTCore:**
+    /// Similar to `Int.quotientAndRemainder(dividingBy:)` from the standard Swift library.
+    public func quotientAndRemainder(dividingBy rhs: Self) -> (quotient: Self, remainder: Self) {
+        
+        let calculation = self / rhs
+        let integral = calculation.truncated(decimalPlaces: 0)
+        let fraction = self - (integral * rhs)
+        return (quotient: integral, remainder: fraction)
+        
+    }
+    
+    /// **OTCore:**
+    /// Returns both integral part and fractional part.
+    ///
+    /// - Note: This method is more computationally efficient than calling both `.integral` and .`fraction` properties separately unless you only require one or the other.
+    @inlinable public var integralAndFraction: (integral: Self, fraction: Self) {
+        
+        let integral = truncated(decimalPlaces: 0)
+        let fraction = self - integral
+        return (integral: integral, fraction: fraction)
+        
+    }
+    
+    /// **OTCore:**
+    /// Returns the integral part (digits before the decimal point)
+    @inlinable public var integral: Self {
+        
+        integralAndFraction.integral
+        
+    }
+    
+    /// **OTCore:**
+    /// Returns the fractional part (digits after the decimal point)
+    ///
+    /// Note: this can result in a non-trivial loss of precision for the fractional part.
+    @inlinable public var fraction: Self {
+        
+        integralAndFraction.fraction
+        
+    }
+    
+}
+
 #endif

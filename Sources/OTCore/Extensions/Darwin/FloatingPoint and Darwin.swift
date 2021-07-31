@@ -113,22 +113,21 @@ extension FloatingPoint {
     
     /// **OTCore:**
     /// Similar to `Int.quotientAndRemainder(dividingBy:)` from the standard Swift library.
-    ///
-    /// - Note: Internally, employs `trunc()` and `.truncatingRemainder(dividingBy:)`.
-    public func quotientAndRemainder(dividingBy: Self) -> (quotient: Self, remainder: Self) {
+    public func quotientAndRemainder(dividingBy rhs: Self) -> (quotient: Self, remainder: Self) {
         
-        let calculation = (self / dividingBy)
+        let calculation = self / rhs
         let integral = trunc(calculation)
-        let fraction = self.truncatingRemainder(dividingBy: dividingBy)
+        let fraction = self - (integral * rhs)
         return (quotient: integral, remainder: fraction)
         
     }
     
     /// **OTCore:**
     /// Returns both integral part and fractional part.
-    /// This method is more computationally efficient than calling `.integral` and .`fraction` properties separately unless you only require one or the other.
     ///
-    /// Note: this can result in a non-trivial loss of precision for the fractional part.
+    /// - Note: This method is more computationally efficient than calling both `.integral` and .`fraction` properties separately unless you only require one or the other.
+    ///
+    /// This method can result in a non-trivial loss of precision for the fractional part.
     @inlinable public var integralAndFraction: (integral: Self, fraction: Self) {
         
         let integral = trunc(self)
@@ -148,7 +147,7 @@ extension FloatingPoint {
     /// **OTCore:**
     /// Returns the fractional part (digits after the decimal point)
     ///
-    /// Note: this can result in a non-trivial loss of precision for the fractional part.
+    /// - Note: this method can result in a non-trivial loss of precision for the fractional part.
     @inlinable public var fraction: Self {
         
         integralAndFraction.fraction

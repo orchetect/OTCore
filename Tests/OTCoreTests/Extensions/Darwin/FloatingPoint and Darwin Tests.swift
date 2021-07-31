@@ -96,7 +96,6 @@ class Extensions_Darwin_FloatingPointAndDarwin_Tests: XCTestCase {
         XCTAssertEqual(iaf.fraction, 0.5)
         
         XCTAssertEqual(17.5.integral, 17)
-        
         XCTAssertEqual(17.5.fraction, 0.5)
         
     }
