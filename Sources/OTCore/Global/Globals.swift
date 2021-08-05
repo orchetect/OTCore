@@ -85,12 +85,13 @@ extension Globals {
         
         
         /// **OTCore:**
-        /// On macOS, returns Mac computer name. On iOS/tvOS/watchOS, returns device name.
+        /// On macOS, returns Mac computer name. On iOS/tvOS, returns device name.
+        @available(macOS 10.6, macCatalyst 13, iOS 2, tvOS 9, watchOS 9999, *)
         public static var name: String {
             
             #if os(macOS)
             return Host.current().localizedName ?? ""
-            #elseif os(iOS) || os(tvOS) || os(watchOS)
+            #elseif os(iOS) || os(tvOS)
             return UIDevice.current.name
             #else
             fatalError("Not implemented on this platform yet.")

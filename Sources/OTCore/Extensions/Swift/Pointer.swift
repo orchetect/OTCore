@@ -16,8 +16,8 @@ extension UnsafePointer {
             ptr = unsafeBufferPointer.baseAddress
         }
         
-        if let ptr = ptr {
-            self = ptr
+        if let unwrappedPtr = ptr {
+            self = unwrappedPtr
         } else {
             return nil
         }
