@@ -15,15 +15,27 @@ class Global_Globals_Tests: XCTestCase {
     
     func testBundle() {
         
-        XCTAssertEqual(Globals.bundle.name, "xctest")
+        // this test could break in future versions of Xcode/XCTest
+        // but we'll test what 'known values' we can here
         
-        XCTAssertEqual(Globals.bundle.bundleID, "com.apple.dt.xctest.tool")
+        XCTAssertEqual(Globals.MainBundle.name, "xctest")
         
-        _ = Globals.bundle.versionShort // XCTest doesn't return a value
+        XCTAssertEqual(Globals.MainBundle.bundleID, "com.apple.dt.xctest.tool")
         
-        XCTAssertEqual(Globals.bundle.versionMajor, 0) // XCTest doesn't return a value
+        // XCTest in Xcode 12 and earlier doesn't return a value
+        // So there isn't a meaningful way to test this
+        //   Xcode 12.4 == ""
+        //   Xcode 13   == "13.0"
+        _ = Globals.MainBundle.versionShort
         
-        XCTAssertTrue(Globals.bundle.versionBuildNumber != "")
+        // XCTest in Xcode 12 and earlier doesn't return a value
+        // So there isn't a meaningful way to test this
+        //   Xcode 12.4 == 0
+        //   Xcode 13   == 13
+        XCTAssert(Globals.MainBundle.versionMajor > -1)
+        
+        // XCTest appears to always return a non-empty value
+        XCTAssertTrue(Globals.MainBundle.versionBuildNumber != "")
         
     }
     
@@ -32,19 +44,19 @@ class Global_Globals_Tests: XCTestCase {
         // values cannot be tested explicitly since they vary by system
         
         #if os(macOS)
-        _ = Globals.system.userName
+        _ = Globals.System.userName
         
-        _ = Globals.system.fullUserName
+        _ = Globals.System.fullUserName
         #endif
         
-        XCTAssert(Globals.system.osVersion != "")
+        XCTAssert(Globals.System.osVersion != "")
         
-        XCTAssert(Globals.system.name != "")
+        XCTAssert(Globals.System.name != "")
         
         #if os(macOS)
-        XCTAssertNotNil(Globals.system.serialNumber)
+        XCTAssertNotNil(Globals.System.serialNumber)
         
-        XCTAssertNotNil(Globals.system.hardwareUUID)
+        XCTAssertNotNil(Globals.System.hardwareUUID)
         #endif
         
     }
