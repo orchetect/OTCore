@@ -9,43 +9,43 @@ extension Bool {
     
     /// **OTCore:**
     /// Returns 1 (true) or 0 (false)
-    @inlinable public var intValue:    Int    { return self ? 1 : 0 }
+    @inlinable public var intValue:    Int    { self ? 1 : 0 }
     
     /// **OTCore:**
     /// Returns 1 (true) or 0 (false)
-    @inlinable public var int8Value:   Int8   { return self ? 1 : 0 }
+    @inlinable public var int8Value:   Int8   { self ? 1 : 0 }
     
     /// **OTCore:**
     /// Returns 1 (true) or 0 (false)
-    @inlinable public var int16Value:  Int16  { return self ? 1 : 0 }
+    @inlinable public var int16Value:  Int16  { self ? 1 : 0 }
     
     /// **OTCore:**
     /// Returns 1 (true) or 0 (false)
-    @inlinable public var int32Value:  Int32  { return self ? 1 : 0 }
+    @inlinable public var int32Value:  Int32  { self ? 1 : 0 }
     
     /// **OTCore:**
     /// Returns 1 (true) or 0 (false)
-    @inlinable public var int64Value:  Int64  { return self ? 1 : 0 }
+    @inlinable public var int64Value:  Int64  { self ? 1 : 0 }
     
     /// **OTCore:**
     /// Returns 1 (true) or 0 (false)
-    @inlinable public var uintValue:   UInt   { return self ? 1 : 0 }
+    @inlinable public var uintValue:   UInt   { self ? 1 : 0 }
     
     /// **OTCore:**
     /// Returns 1 (true) or 0 (false)
-    @inlinable public var uint8Value:  UInt8  { return self ? 1 : 0 }
+    @inlinable public var uint8Value:  UInt8  { self ? 1 : 0 }
     
     /// **OTCore:**
     /// Returns 1 (true) or 0 (false)
-    @inlinable public var uint16Value: UInt16 { return self ? 1 : 0 }
+    @inlinable public var uint16Value: UInt16 { self ? 1 : 0 }
     
     /// **OTCore:**
     /// Returns 1 (true) or 0 (false)
-    @inlinable public var uint32Value: UInt32 { return self ? 1 : 0 }
+    @inlinable public var uint32Value: UInt32 { self ? 1 : 0 }
     
     /// **OTCore:**
     /// Returns 1 (true) or 0 (false)
-    @inlinable public var uint64Value: UInt64 { return self ? 1 : 0 }
+    @inlinable public var uint64Value: UInt64 { self ? 1 : 0 }
     
 }
 
