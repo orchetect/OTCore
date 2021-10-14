@@ -96,7 +96,9 @@ extension Globals {
         /// **OTCore:**
         /// Returns the operating system version on the system.
         public static var osVersion: String {
+            
             ProcessInfo.processInfo.operatingSystemVersionString
+            
         }
         
         
@@ -130,7 +132,10 @@ extension Globals {
         /// Internal use.
         internal static func getSysInfoString(key: String) -> String? {
             
-            let platformExpert = IOServiceGetMatchingService(kIOMasterPortDefault, IOServiceMatching("IOPlatformExpertDevice"))
+            let platformExpert = IOServiceGetMatchingService(
+                kIOMasterPortDefault,
+                IOServiceMatching("IOPlatformExpertDevice")
+            )
             
             defer {
                 IOObjectRelease(platformExpert)
@@ -150,7 +155,7 @@ extension Globals {
                 return nil
             }
             
-            return serialNumber.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+            return serialNumber.trimmingCharacters(in: .whitespacesAndNewlines)
             
         }
         
@@ -163,7 +168,7 @@ extension Globals {
 extension Bundle {
     
     /// **OTCore:**
-    /// Convenience function to get bundle data.
+    /// Convenience function to return an Info.plist key value as a String.
     public func infoDictionaryString(key: String) -> String? {
         
         infoDictionary?[key] as? String
@@ -171,7 +176,7 @@ extension Bundle {
     }
     
     /// **OTCore:**
-    /// Convenience function to get bundle data.
+    /// Convenience function to return an Info.plist key value as a String.
     public func infoDictionaryString(key: CFString) -> String? {
         
         infoDictionary?[key as String] as? String

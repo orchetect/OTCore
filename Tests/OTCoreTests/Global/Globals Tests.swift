@@ -61,6 +61,24 @@ class Global_Globals_Tests: XCTestCase {
         
     }
     
+    func testBundle_infoDictionaryString() {
+        
+        // String key name
+        
+        XCTAssertEqual(
+            Bundle.main.infoDictionaryString(key: kCFBundleIdentifierKey as String),
+            "com.apple.dt.xctest.tool"
+        )
+        
+        // CFString key name
+        
+        XCTAssertEqual(
+            Bundle.main.infoDictionaryString(key: kCFBundleIdentifierKey),
+            "com.apple.dt.xctest.tool"
+        )
+        
+    }
+    
 }
 
 #endif
