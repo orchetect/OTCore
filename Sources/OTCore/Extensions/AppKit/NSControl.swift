@@ -3,7 +3,7 @@
 //  OTCore • https://github.com/orchetect/OTCore
 //
 
-#if canImport(AppKit)
+#if os(macOS)
 
 import AppKit
 
