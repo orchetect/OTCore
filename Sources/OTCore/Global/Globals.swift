@@ -16,27 +16,43 @@ import UIKit
 public enum Globals {
     
     /// General main bundle-related
-    public struct bundle {
+    public struct MainBundle {
         
         /// **OTCore:**
-        /// Returns the name of the app
-        public static let name: String = Bundle.mainInfoDictionary(key: kCFBundleNameKey) ?? ""
+        /// Returns the name of the current executable.
+        public static let name: String =
+            Bundle.main.infoDictionaryString(key: kCFBundleNameKey)
+            ?? ""
         
         /// **OTCore:**
-        /// Returns the app's bundle ID
-        public static let bundleID: String = Bundle.main.bundleIdentifier ?? ""
+        /// Returns the current executable's bundle ID.
+        /// Returns an empty string in case of failure.
+        public static let bundleID: String =
+            Bundle.main.bundleIdentifier
+            ?? ""
         
         /// **OTCore:**
-        /// Returns the value of the app bundle's `CFBundleShortVersionString` key
-        public static let versionShort: String = Bundle.mainInfoDictionary(key: "CFBundleShortVersionString" as CFString) ?? ""
+        /// Returns the value of the current executable's Info.plist `CFBundleShortVersionString` key.
+        /// Returns an empty string in case of failure or if the key does not exist in the bundle's Info.plist.
+        public static let versionShort: String =
+            Bundle.main.infoDictionaryString(key: "CFBundleShortVersionString")
+            ?? ""
         
         /// **OTCore:**
-        /// Returns the major version number from the value of the app bundle's `CFBundleShortVersionString` key
-        public static let versionMajor: Int = Int(versionShort.components(separatedBy: ".").first ?? "0") ?? 0
+        /// Returns the major version number from the value of the current executable's Info.plist `CFBundleShortVersionString` key.
+        /// Returns 0 in case of failure or if the key does not exist in the bundle's Info.plist.
+        public static let versionMajor: Int =
+            Int(
+                versionShort
+                    .components(separatedBy: ".")
+                    .first ?? "0"
+            ) ?? 0
         
         /// **OTCore:**
         /// Returns the value from the app bundle's `kCFBundleVersionKey` key
-        public static let versionBuildNumber: String = Bundle.mainInfoDictionary(key: kCFBundleVersionKey) ?? ""
+        public static let versionBuildNumber: String =
+            Bundle.main.infoDictionaryString(key: kCFBundleVersionKey)
+            ?? ""
         
     }
     
@@ -48,8 +64,8 @@ public enum Globals {
 extension Globals {
     
     /// **OTCore:**
-    /// General system-related
-    public enum system {
+    /// System-related globals.
+    public enum System {
         
         /// **OTCore:**
         /// Returns the username of the current system account.
@@ -80,7 +96,9 @@ extension Globals {
         /// **OTCore:**
         /// Returns the operating system version on the system.
         public static var osVersion: String {
+            
             ProcessInfo.processInfo.operatingSystemVersionString
+            
         }
         
         
@@ -114,7 +132,10 @@ extension Globals {
         /// Internal use.
         internal static func getSysInfoString(key: String) -> String? {
             
-            let platformExpert = IOServiceGetMatchingService(kIOMasterPortDefault, IOServiceMatching("IOPlatformExpertDevice"))
+            let platformExpert = IOServiceGetMatchingService(
+                kIOMasterPortDefault,
+                IOServiceMatching("IOPlatformExpertDevice")
+            )
             
             defer {
                 IOObjectRelease(platformExpert)
@@ -134,7 +155,7 @@ extension Globals {
                 return nil
             }
             
-            return serialNumber.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+            return serialNumber.trimmingCharacters(in: .whitespacesAndNewlines)
             
         }
         
@@ -147,18 +168,18 @@ extension Globals {
 extension Bundle {
     
     /// **OTCore:**
-    /// Convenience function to get bundle data
-    public class func mainInfoDictionary(key: String) -> String? {
+    /// Convenience function to return an Info.plist key value as a String.
+    public func infoDictionaryString(key: String) -> String? {
         
-        self.main.infoDictionary?[key] as? String
+        infoDictionary?[key] as? String
         
     }
     
     /// **OTCore:**
-    /// Convenience function to get bundle data
-    public class func mainInfoDictionary(key: CFString) -> String? {
+    /// Convenience function to return an Info.plist key value as a String.
+    public func infoDictionaryString(key: CFString) -> String? {
         
-        self.main.infoDictionary?[key as String] as? String
+        infoDictionary?[key as String] as? String
         
     }
     

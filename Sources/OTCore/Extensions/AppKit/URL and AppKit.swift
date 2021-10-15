@@ -17,8 +17,7 @@ extension URL {
     /// Thread-safe.
     public var icon: NSImage? {
         
-        guard isFileURL else { return nil }
-        guard fileExists else { return nil }
+        guard isFileURL, fileExists else { return nil }
         
         return NSWorkspace.shared.icon(forFile: self.path)
         

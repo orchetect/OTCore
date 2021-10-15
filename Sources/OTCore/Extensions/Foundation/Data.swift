@@ -45,7 +45,7 @@ extension Data {
     /// Returns nil if Data is not the correct length.
     public func toInt8() -> Int8? {
         
-        if self.count != 1 { return nil }
+        guard self.count == 1 else { return nil }
         
         var int = UInt8()
         withUnsafeMutablePointer(to: &int) {
@@ -131,7 +131,7 @@ extension Data {
     /// Returns nil if Data is not the correct length.
     public func toUInt8() -> UInt8? {
         
-        if self.count != 1 { return nil }
+        guard self.count == 1 else { return nil }
         return self.first
         
     }
@@ -243,7 +243,7 @@ extension Data {
     /// Returns nil if Data is != 4 bytes.
     public func toFloat32(from endianness: NumberEndianness = .platformDefault) -> Float32? {
         
-        if self.count != 4 { return nil }
+        guard self.count == 4 else { return nil }
         
         // define conversions
         
@@ -359,7 +359,7 @@ extension Data {
     /// Returns nil if Data is != 8 bytes.
     public func toDouble(from endianness: NumberEndianness = .platformDefault) -> Double? {
         
-        if self.count != 8 { return nil }
+        guard self.count == 8 else { return nil }
         
         // define conversions
         

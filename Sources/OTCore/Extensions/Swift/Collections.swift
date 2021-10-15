@@ -24,7 +24,7 @@ extension Collection where Self: RangeReplaceableCollection,
 // (inherits from Sequence, Collection)
 // (conformance on Array, ArraySlice, ContiguousArray, CollectionOfOne, EmptyCollection, etc.)
 // (does not conform on Set, Dictionary, Range, ClosedRange, KeyValuePairs, etc.)
-extension MutableCollection where Index : Comparable {
+extension MutableCollection {
     
     /// **OTCore:**
     /// Access collection indexes safely.
@@ -82,7 +82,9 @@ extension Collection {
     /// **OTCore:**
     /// Access collection indexes safely.
     /// If index does not exist (out-of-bounds), `defaultValue` is returned.
-    @inlinable public subscript(safe index: Index, default defaultValue: @autoclosure () -> Element) -> Element {
+    @inlinable public subscript(safe index: Index,
+                                default defaultValue: @autoclosure () -> Element)
+    -> Element {
         
         indices.contains(index) ? self[index] : defaultValue()
         
@@ -119,7 +121,9 @@ extension Collection where Index == Int {
     /// **OTCore:**
     /// Access collection indexes safely.
     /// If index does not exist (out-of-bounds), `defaultValue` is returned.
-    @inlinable public subscript(safe index: Int, default defaultValue: @autoclosure () -> Element) -> Element {
+    @inlinable public subscript(safe index: Int,
+                                default defaultValue: @autoclosure () -> Element
+    ) -> Element {
         
         guard count > 0 else { return defaultValue() }
         guard index >= 0 else { return defaultValue() }
@@ -282,7 +286,8 @@ extension Set {
     
     /// **OTCore:**
     /// Same as `.union()` but replaces existing values with new values instead of `.union()`'s behavior of retaining existing hash-equivalent values.
-    @inlinable public func union<S>(updating other: S) -> Set<Set<Element>.Element> where Element == S.Element, S : Sequence {
+    @inlinable public func union<S>(updating other: S) -> Set<Set<Element>.Element>
+    where Element == S.Element, S : Sequence {
         
         var newSet = self
         
@@ -296,7 +301,8 @@ extension Set {
     
     /// **OTCore:**
     /// Same as `.formUnion()` but replaces existing values with new values instead of `.formUnion()`'s behavior of retaining existing hash-equivalent values.
-    @inlinable public mutating func formUnion<S>(updating other: S) where Element == S.Element, S : Sequence {
+    @inlinable public mutating func formUnion<S>(updating other: S)
+    where Element == S.Element, S : Sequence {
         
         self = self.union(updating: other)
         
