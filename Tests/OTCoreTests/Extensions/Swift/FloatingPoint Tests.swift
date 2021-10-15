@@ -169,22 +169,43 @@ class Extensions_Swift_FloatingPoint_Tests: XCTestCase {
     
     func testBoolValue() {
         
-        // .boolValue
+        // double
+        XCTAssertEqual(Double( -1.0)       .boolValue, false)
+        XCTAssertEqual(Double(  0.0)       .boolValue, false)
+        XCTAssertEqual(Double(  1.0)       .boolValue, true)
+        XCTAssertEqual(Double(123.0)       .boolValue, true)
+        XCTAssertEqual(Double.nan          .boolValue, false)
+        XCTAssertEqual(Double.signalingNaN .boolValue, false)
+        XCTAssertEqual(Double.infinity     .boolValue, true)
         
-        _ = 0.0.boolValue
+        // float
+        XCTAssertEqual(Float( -1.0)        .boolValue, false)
+        XCTAssertEqual(Float(  0.0)        .boolValue, false)
+        XCTAssertEqual(Float(  1.0)        .boolValue, true)
+        XCTAssertEqual(Float(123.0)        .boolValue, true)
+        XCTAssertEqual(Float.nan           .boolValue, false)
+        XCTAssertEqual(Float.signalingNaN  .boolValue, false)
+        XCTAssertEqual(Float.infinity      .boolValue, true)
         
-        _ = Float(1).boolValue
-        
+        // float80
         #if !(arch(arm64) || arch(arm) || os(watchOS)) // Float80 is now removed for ARM
-        _ = Float80(1).boolValue
+        XCTAssertEqual(Float80( -1.0)      .boolValue, false)
+        XCTAssertEqual(Float80(  0.0)      .boolValue, false)
+        XCTAssertEqual(Float80(  1.0)      .boolValue, true)
+        XCTAssertEqual(Float80(123.0)      .boolValue, true)
+        XCTAssertEqual(Float80.nan         .boolValue, false)
+        XCTAssertEqual(Float80.signalingNaN.boolValue, false)
+        XCTAssertEqual(Float80.infinity    .boolValue, true)
         #endif
         
-        _ = CGFloat(1).boolValue
-        
-        XCTAssertEqual((-1.0).boolValue , false)
-        XCTAssertEqual(0.0.boolValue    , false)
-        XCTAssertEqual(1.0.boolValue    , true)
-        XCTAssertEqual(123.0.boolValue  , true)
+        // cgfloat
+        XCTAssertEqual(CGFloat( -1.0)      .boolValue, false)
+        XCTAssertEqual(CGFloat(  0.0)      .boolValue, false)
+        XCTAssertEqual(CGFloat(  1.0)      .boolValue, true)
+        XCTAssertEqual(CGFloat(123.0)      .boolValue, true)
+        XCTAssertEqual(CGFloat.nan         .boolValue, false)
+        XCTAssertEqual(CGFloat.signalingNaN.boolValue, false)
+        XCTAssertEqual(CGFloat.infinity    .boolValue, true)
         
     }
     
@@ -209,6 +230,32 @@ class Extensions_Swift_FloatingPoint_Tests: XCTestCase {
         XCTAssertEqual(Double(1.62456).rounded(.up, decimalPlaces:  4), 1.6246)
         XCTAssertEqual(Double(1.62456).rounded(.up, decimalPlaces:  5), 1.62456)
         XCTAssertEqual(Double(1.62456).rounded(.up, decimalPlaces:  6), 1.62456)
+        
+        // negative values
+        
+        XCTAssertEqual(Double(-1.62456).rounded(decimalPlaces: 2), -1.62)
+        XCTAssertEqual(Double(-1.62456).rounded(.up, decimalPlaces: 1), -1.6)
+        XCTAssertEqual(Double(-1.62456).rounded(.up, decimalPlaces: 2), -1.62)
+        XCTAssertEqual(Double(-1.62456).rounded(.down, decimalPlaces: 1), -1.7)
+        XCTAssertEqual(Double(-1.62456).rounded(.down, decimalPlaces: 2), -1.63)
+        
+        // edge cases
+        
+        XCTAssert(Double.nan.rounded(decimalPlaces: 2).isNaN)
+        XCTAssert(Double.signalingNaN.rounded(decimalPlaces: 2).isNaN)
+        XCTAssertEqual(Double.infinity.rounded(decimalPlaces: 2), .infinity)
+        
+        XCTAssert(Float.nan.rounded(decimalPlaces: 2).isNaN)
+        XCTAssert(Float.signalingNaN.rounded(decimalPlaces: 2).isNaN)
+        XCTAssertEqual(Float.infinity.rounded(decimalPlaces: 2), .infinity)
+        
+        XCTAssert(CGFloat.nan.rounded(decimalPlaces: 2).isNaN)
+        XCTAssert(CGFloat.signalingNaN.rounded(decimalPlaces: 2).isNaN)
+        XCTAssertEqual(CGFloat.infinity.rounded(decimalPlaces: 2), .infinity)
+        
+    }
+    
+    func testRound() {
         
         // Double .round(decimalPlaces:)
         
@@ -338,6 +385,12 @@ class Extensions_Swift_FloatingPoint_Tests: XCTestCase {
         XCTAssertEqual(   10.0.wrapped(around: 0..<4)    ,  2)
         XCTAssertEqual(   11.0.wrapped(around: 0..<4)    ,  3)
         
+        // edge cases
+        
+        XCTAssert(Double.nan.wrapped(around: 0...1).isNaN)
+        XCTAssert(Double.signalingNaN.wrapped(around: 0...1).isNaN)
+        XCTAssertEqual(Double.infinity.wrapped(around: 0...1), .infinity)
+        
     }
     
     func testDegreesToRadians() {
@@ -360,51 +413,84 @@ class Extensions_Swift_FloatingPoint_Tests: XCTestCase {
         XCTAssertEqual(CGFloat(360.0).degreesToRadians, 6.28318530717958647693)
         XCTAssertEqual(CGFloat(6.28318530717958647693).radiansToDegrees, 360.0)
         
+        // edge cases
+        XCTAssert(Double.nan.degreesToRadians.isNaN)
+        XCTAssert(Double.signalingNaN.degreesToRadians.isNaN)
+        XCTAssertEqual(Double.infinity.degreesToRadians, .infinity)
+        
     }
     
     func testTypeConversions_FloatsToString() {
         
-        XCTAssertEqual((1.0).string, "1.0")
+        XCTAssertEqual(Double(1.0).string, "1.0")
+        XCTAssertEqual(Double.nan.string, "nan")
+        XCTAssertEqual(Double.signalingNaN.string, "nan")
+        XCTAssertEqual(Double.infinity.string, "inf")
         
         XCTAssertEqual(Float(1.0).string, "1.0")
+        XCTAssertEqual(Float.nan.string, "nan")
+        XCTAssertEqual(Float.signalingNaN.string, "nan")
+        XCTAssertEqual(Float.infinity.string, "inf")
         
         #if !(arch(arm64) || arch(arm) || os(watchOS)) // Float80 is now removed for ARM
         XCTAssertEqual(Float80(1.0).string, "1.0")
+        XCTAssertEqual(Float80.nan.string, "nan")
+        XCTAssertEqual(Float80.signalingNaN.string, "nan")
+        XCTAssertEqual(Float80.infinity.string, "inf")
         #endif
         
         XCTAssertEqual(CGFloat(1.0).string, "1.0")
+        XCTAssertEqual(CGFloat.nan.string, "nan")
+        XCTAssertEqual(CGFloat.signalingNaN.string, "nan")
+        XCTAssertEqual(CGFloat.infinity.string, "inf")
         
     }
     
     func testTypeConversions_FloatsToString_decimalPlaces() {
         
-        XCTAssertEqual(1.62456.string(decimalPlaces: -1), "2")
-        XCTAssertEqual(1.62456.string(decimalPlaces:  0), "2")
-        XCTAssertEqual(1.62456.string(decimalPlaces:  1), "1.6")
-        XCTAssertEqual(1.62456.string(decimalPlaces:  2), "1.62")
-        XCTAssertEqual(1.62456.string(decimalPlaces:  3), "1.625")
-        XCTAssertEqual(1.62456.string(decimalPlaces:  4), "1.6246")
-        XCTAssertEqual(1.62456.string(decimalPlaces:  5), "1.62456")
-        XCTAssertEqual(1.62456.string(decimalPlaces:  6), "1.624560")
+        XCTAssertEqual(Double(1.62456).string(decimalPlaces: -1), "2")
+        XCTAssertEqual(Double(1.62456).string(decimalPlaces:  0), "2")
+        XCTAssertEqual(Double(1.62456).string(decimalPlaces:  1), "1.6")
+        XCTAssertEqual(Double(1.62456).string(decimalPlaces:  2), "1.62")
+        XCTAssertEqual(Double(1.62456).string(decimalPlaces:  3), "1.625")
+        XCTAssertEqual(Double(1.62456).string(decimalPlaces:  4), "1.6246")
+        XCTAssertEqual(Double(1.62456).string(decimalPlaces:  5), "1.62456")
+        XCTAssertEqual(Double(1.62456).string(decimalPlaces:  6), "1.624560")
         
-        XCTAssertEqual(1.62456.string(rounding: .up, decimalPlaces: -1), "2")
-        XCTAssertEqual(1.62456.string(rounding: .up, decimalPlaces:  0), "2")
-        XCTAssertEqual(1.62456.string(rounding: .up, decimalPlaces:  1), "1.7")
-        XCTAssertEqual(1.62456.string(rounding: .up, decimalPlaces:  2), "1.63")
-        XCTAssertEqual(1.62456.string(rounding: .up, decimalPlaces:  3), "1.625")
-        XCTAssertEqual(1.62456.string(rounding: .up, decimalPlaces:  4), "1.6246")
-        XCTAssertEqual(1.62456.string(rounding: .up, decimalPlaces:  5), "1.62456")
-        XCTAssertEqual(1.62456.string(rounding: .up, decimalPlaces:  6), "1.624560")
+        XCTAssertEqual(Double(1.62456).string(rounding: .up, decimalPlaces: -1), "2")
+        XCTAssertEqual(Double(1.62456).string(rounding: .up, decimalPlaces:  0), "2")
+        XCTAssertEqual(Double(1.62456).string(rounding: .up, decimalPlaces:  1), "1.7")
+        XCTAssertEqual(Double(1.62456).string(rounding: .up, decimalPlaces:  2), "1.63")
+        XCTAssertEqual(Double(1.62456).string(rounding: .up, decimalPlaces:  3), "1.625")
+        XCTAssertEqual(Double(1.62456).string(rounding: .up, decimalPlaces:  4), "1.6246")
+        XCTAssertEqual(Double(1.62456).string(rounding: .up, decimalPlaces:  5), "1.62456")
+        XCTAssertEqual(Double(1.62456).string(rounding: .up, decimalPlaces:  6), "1.624560")
+        
+        // negative values
+        XCTAssertEqual(Double(-1.62456).string(                 decimalPlaces: 2), "-1.62")
+        XCTAssertEqual(Double(-1.62456).string(rounding: .up,   decimalPlaces: 1), "-1.6")
+        XCTAssertEqual(Double(-1.62456).string(rounding: .up,   decimalPlaces: 2), "-1.62")
+        XCTAssertEqual(Double(-1.62456).string(rounding: .down, decimalPlaces: 1), "-1.7")
+        XCTAssertEqual(Double(-1.62456).string(rounding: .down, decimalPlaces: 2), "-1.63")
         
         // double
-        XCTAssertEqual(Double(1.62456).string(decimalPlaces:  1), "1.6")
+        XCTAssertEqual(Double(1.62456)    .string(decimalPlaces: 1), "1.6")
+        XCTAssertEqual(Double.nan         .string(decimalPlaces: 2), "nan")
+        XCTAssertEqual(Double.signalingNaN.string(decimalPlaces: 2), "nan")
+        XCTAssertEqual(Double.infinity    .string(decimalPlaces: 2), "inf")
         
         // float
-        XCTAssertEqual(Float(1.62456).string(decimalPlaces:  1), "1.6")
+        XCTAssertEqual(Float(1.62456)    .string(decimalPlaces: 1), "1.6")
+        XCTAssertEqual(Float.nan         .string(decimalPlaces: 2), "nan")
+        XCTAssertEqual(Float.signalingNaN.string(decimalPlaces: 2), "nan")
+        XCTAssertEqual(Float.infinity    .string(decimalPlaces: 2), "inf")
         
         // float16 - not ready for primetime it seems
         //if #available(macOS 11.0, macCatalyst 14.5, iOS 14.0, tvOS 14.0, watchOS 7.0, *) {
         //    XCTAssertEqual(Float16(1.62456).string(decimalPlaces:  1), "1.6")
+        //    XCTAssertEqual(Float16.nan.string(decimalPlaces: 2), "nan")
+        //    XCTAssertEqual(Float16.signalingNaN.string(decimalPlaces: 2), "nan")
+        //    XCTAssertEqual(Float16.infinity.string(decimalPlaces: 2), "inf")
         //}
         
         // float80
@@ -427,10 +513,25 @@ class Extensions_Swift_FloatingPoint_Tests: XCTestCase {
         XCTAssertEqual(Float80(1.62456).string(rounding: .up, decimalPlaces:  4), "1.6246")
         XCTAssertEqual(Float80(1.62456).string(rounding: .up, decimalPlaces:  5), "1.62456")
         XCTAssertEqual(Float80(1.62456).string(rounding: .up, decimalPlaces:  6), "1.624560")
+        
+        // negative values
+        XCTAssertEqual(Float80(-1.62456).string(                 decimalPlaces: 2), "-1.62")
+        XCTAssertEqual(Float80(-1.62456).string(rounding: .up,   decimalPlaces: 1), "-1.6")
+        XCTAssertEqual(Float80(-1.62456).string(rounding: .up,   decimalPlaces: 2), "-1.62")
+        XCTAssertEqual(Float80(-1.62456).string(rounding: .down, decimalPlaces: 1), "-1.7")
+        XCTAssertEqual(Float80(-1.62456).string(rounding: .down, decimalPlaces: 2), "-1.63")
+        
+        // edge cases
+        XCTAssertEqual(Float80.nan         .string(decimalPlaces: 2), "nan")
+        XCTAssertEqual(Float80.signalingNaN.string(decimalPlaces: 2), "nan")
+        XCTAssertEqual(Float80.infinity    .string(decimalPlaces: 2), "inf")
         #endif
         
         // cgfloat
-        XCTAssertEqual(CGFloat(1.62456).string(decimalPlaces:  1), "1.6")
+        XCTAssertEqual(CGFloat(1.62456)    .string(decimalPlaces: 1), "1.6")
+        XCTAssertEqual(CGFloat.nan         .string(decimalPlaces: 2), "nan")
+        XCTAssertEqual(CGFloat.signalingNaN.string(decimalPlaces: 2), "nan")
+        XCTAssertEqual(CGFloat.infinity    .string(decimalPlaces: 2), "inf")
         
     }
     

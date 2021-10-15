@@ -17,9 +17,9 @@ class Extensions_Foundation_FloatingPointAndFoundation_Tests: XCTestCase {
         
         // Double
         
-        XCTAssertEqual((0.0).stringValueHighPrecision, "0")
-        XCTAssertEqual((0.1).stringValueHighPrecision, "0.1000000000000000055511151231257827021181583404541015625")
-        XCTAssertEqual((1.0).stringValueHighPrecision, "1")
+        XCTAssertEqual(Double(0.0).stringValueHighPrecision, "0")
+        XCTAssertEqual(Double(0.1).stringValueHighPrecision, "0.1000000000000000055511151231257827021181583404541015625")
+        XCTAssertEqual(Double(1.0).stringValueHighPrecision, "1")
         
         let double: Double = 3603.59999999999990905052982270717620849609375
         XCTAssertEqual(double.stringValueHighPrecision, "3603.59999999999990905052982270717620849609375")
@@ -30,8 +30,8 @@ class Extensions_Foundation_FloatingPointAndFoundation_Tests: XCTestCase {
         XCTAssertEqual(float.stringValueHighPrecision, "3603.60009765625")
         
         // Float80
-        
-        // doesn't work yet - not interoperable with CVarArg
+        let float80: Float80 = 3603.59999999999990905052982270717620849609375
+        XCTAssertEqual(float80.stringValueHighPrecision, "3603.599999999999909")
         
         // CGFloat
         

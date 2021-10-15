@@ -12,6 +12,10 @@ import Foundation
 extension Double:  FloatingPointHighPrecisionStringConvertible { }
 extension Float:   FloatingPointHighPrecisionStringConvertible { }
 
+#if !(arch(arm64) || arch(arm) || os(watchOS)) // Float80 is now removed for ARM
+extension Float80: FloatingPointHighPrecisionStringConvertible { }
+#endif
+
 /// Internal - cached
 fileprivate let ZeroCharacterSet   = CharacterSet(charactersIn: "0")
 fileprivate let PeriodCharacterSet = CharacterSet(charactersIn: ".")
@@ -35,5 +39,21 @@ extension FloatingPoint where Self : CVarArg,
     }
     
 }
+
+#if !(arch(arm64) || arch(arm) || os(watchOS)) // Float80 is now removed for ARM
+extension Float80 {
+    
+    /// **OTCore:**
+    /// Returns a string representation of a floating-point number, with maximum 100 decimal places of precision.
+    public var stringValueHighPrecision: String {
+        
+        // String(format:) does not work with Float80
+        // so we need a custom implementation here
+        return String(describing: self)
+        
+    }
+    
+}
+#endif
 
 #endif

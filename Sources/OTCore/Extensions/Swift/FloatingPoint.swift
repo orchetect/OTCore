@@ -228,6 +228,8 @@ extension FloatingPoint {
     /// - parameter range: integer range, allowing negative and positive bounds.
     @inlinable public func wrapped(around range: ClosedRange<Self>) -> Self {
         
+        guard !self.isNaN, !self.isInfinite else { return self }
+        
         let min = range.lowerBound
         let max = range.upperBound + 1
         
@@ -247,6 +249,8 @@ extension FloatingPoint {
     /// If the number underflows or overflows the range, it is wrapped around the range's bounds continuously.
     @inlinable public func wrapped(around range: Range<Self>) -> Self {
         
+        guard !self.isNaN, !self.isInfinite else { return self }
+        
         let min = range.lowerBound
         var max = range.upperBound - 1
         
@@ -263,15 +267,19 @@ extension FloatingPoint {
 extension BinaryFloatingPoint {
     
     /// **OTCore:**
-    /// Returns degrees converted to radians
+    /// Returns degrees converted to radians.
     @inlinable public var degreesToRadians: Self {
+        
         self * .pi / 180
+        
     }
     
     /// **OTCore:**
-    /// Returns radians converted to degrees
+    /// Returns radians converted to degrees.
     @inlinable public var radiansToDegrees: Self {
+        
         self * 180 / .pi
+        
     }
     
 }
@@ -321,31 +329,45 @@ extension FloatingPoint where Self : CVarArg,
         
         let roundedValue = rounded(rule, decimalPlaces: decimalPlaces)
         
-        switch roundedValue {
-        case let castValue as Float80:
-            // String(format:) does not work with Float80
-            // so we need a custom implementation here
-            
-            let rawString = String(describing: castValue)
-            let splitComponents = rawString.split(separator: ".")
-            if decimalPlaces < 1 || splitComponents.count < 2 {
-                return String(splitComponents.first ?? "0")
-            }
-            
-            return (splitComponents[0])
-                + "."
-                + splitComponents[1].padding(toLength: decimalPlaces,
-                                             withPad: "0",
-                                             startingAt: 0)
-            
-        default:
-            return String(format: "%.\(decimalPlaces)f", roundedValue)
-            
-        }
+        // (FYI: String(format:) does not work with Float80)
+        
+        return String(format: "%.\(decimalPlaces)f", roundedValue)
         
     }
     
 }
+
+#if !(arch(arm64) || arch(arm) || os(watchOS)) // Float80 is now removed for ARM
+extension Float80 {
+    
+    /// **OTCore:**
+    /// Returns a string formatted to _n_ decimal places, using the given rounding rule.
+    @inlinable public func string(
+        rounding rule: FloatingPointRoundingRule = .toNearestOrAwayFromZero,
+        decimalPlaces: Int
+    ) -> String {
+        
+        let roundedValue = rounded(rule, decimalPlaces: decimalPlaces)
+        
+        // String(format:) does not work with Float80
+        // so we need a custom implementation here
+        
+        let rawString = String(describing: roundedValue)
+        let splitComponents = rawString.split(separator: ".")
+        if decimalPlaces < 1 || splitComponents.count < 2 {
+            return String(splitComponents.first ?? "0")
+        }
+        
+        return (splitComponents[0])
+        + "."
+        + splitComponents[1].padding(toLength: decimalPlaces,
+                                     withPad: "0",
+                                     startingAt: 0)
+        
+    }
+    
+}
+#endif
 
 
 // MARK: - String To FloatingPoint
