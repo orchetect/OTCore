@@ -63,6 +63,13 @@ class Extensions_Foundation_UserDefaults_Tests: XCTestCase {
         XCTAssertNil(ud.floatOptional(forKey: "does_not_exist"))
         XCTAssertNil(ud.boolOptional(forKey: "does_not_exist"))
         
+        // key exists?
+        XCTAssertTrue(ud.exists(key: "someInt"))
+        XCTAssertTrue(ud.exists(key: "someDouble"))
+        XCTAssertTrue(ud.exists(key: "someFloat"))
+        XCTAssertTrue(ud.exists(key: "someBool"))
+        XCTAssertFalse(ud.exists(key: "does_not_exist"))
+        
         // clean up
         
         UserDefaults.standard.removeSuite(named: domain)

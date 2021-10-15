@@ -13,37 +13,47 @@ extension UserDefaults {
     
     /// **OTCore:**
     /// Convenience method to wrap the built-in `.integer(forKey:)` method in an optional returning nil if the key doesn't exist.
-    public func integerOptional(forKey: String) -> Int? {
+    public func integerOptional(forKey key: String) -> Int? {
         
-        guard self.object(forKey: forKey) != nil else { return nil }
-        return self.integer(forKey: forKey)
+        guard self.object(forKey: key) != nil else { return nil }
+        return self.integer(forKey: key)
         
     }
     
     /// **OTCore:**
     /// Convenience method to wrap the built-in `.double(forKey:)` method in an optional returning nil if the key doesn't exist.
-    public func doubleOptional(forKey: String) -> Double? {
+    public func doubleOptional(forKey key: String) -> Double? {
         
-        guard self.object(forKey: forKey) != nil else { return nil }
-        return self.double(forKey: forKey)
+        guard self.object(forKey: key) != nil else { return nil }
+        return self.double(forKey: key)
         
     }
     
     /// **OTCore:**
     /// Convenience method to wrap the built-in `.float(forKey:)` method in an optional returning nil if the key doesn't exist.
-    public func floatOptional(forKey: String) -> Float? {
+    public func floatOptional(forKey key: String) -> Float? {
         
-        guard self.object(forKey: forKey) != nil else { return nil }
-        return self.float(forKey: forKey)
+        guard self.object(forKey: key) != nil else { return nil }
+        return self.float(forKey: key)
         
     }
     
     /// **OTCore:**
     /// Convenience method to wrap the built-in `.bool(forKey:)` method in an optional returning nil if the key doesn't exist.
-    public func boolOptional(forKey: String) -> Bool? {
+    public func boolOptional(forKey key: String) -> Bool? {
         
-        guard self.object(forKey: forKey) != nil else { return nil }
-        return self.bool(forKey: forKey)
+        guard self.object(forKey: key) != nil else { return nil }
+        return self.bool(forKey: key)
+        
+    }
+    
+    /// **OTCore:**
+    /// Returns `true` if the key exists.
+    ///
+    /// This method is only useful when you don't care about extracting a value from the key and merely want to check for the key's existence.
+    public func exists(key: String) -> Bool {
+        
+        self.object(forKey: key) != nil
         
     }
     
