@@ -9,14 +9,15 @@ import Foundation
 
 // MARK: - FloatingPointHighPrecisionStringConvertible
 
-extension Double: FloatingPointHighPrecisionStringConvertible { }
-extension Float:  FloatingPointHighPrecisionStringConvertible { }
+extension Double:  FloatingPointHighPrecisionStringConvertible { }
+extension Float:   FloatingPointHighPrecisionStringConvertible { }
 
 /// Internal - cached
 fileprivate let ZeroCharacterSet   = CharacterSet(charactersIn: "0")
 fileprivate let PeriodCharacterSet = CharacterSet(charactersIn: ".")
 
-extension CVarArg where Self : FloatingPointHighPrecisionStringConvertible {
+extension FloatingPoint where Self : CVarArg,
+                              Self : FloatingPointHighPrecisionStringConvertible {
     
     /// **OTCore:**
     /// Returns a string representation of a floating-point number, with maximum 100 decimal places of precision.

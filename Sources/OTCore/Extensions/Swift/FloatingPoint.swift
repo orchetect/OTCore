@@ -170,8 +170,10 @@ extension FloatingPoint where Self : FloatingPointPowerComputable {
     /// Rounds to `decimalPlaces` number of decimal places using rounding `rule`.
     ///
     /// If `decimalPlaces` <= 0, trunc(self) is returned.
-    public func rounded(_ rule: FloatingPointRoundingRule = .toNearestOrAwayFromZero,
-                        decimalPlaces: Int) -> Self {
+    public func rounded(
+        _ rule: FloatingPointRoundingRule = .toNearestOrAwayFromZero,
+        decimalPlaces: Int
+    ) -> Self {
         
         if decimalPlaces < 1 {
             return self.rounded(rule)
@@ -187,8 +189,10 @@ extension FloatingPoint where Self : FloatingPointPowerComputable {
     /// Replaces this value by rounding it to `decimalPlaces` number of decimal places using rounding `rule`.
     ///
     /// If `decimalPlaces` <= 0, `trunc(self)` is used.
-    public mutating func round(_ rule: FloatingPointRoundingRule = .toNearestOrAwayFromZero,
-                               decimalPlaces: Int) {
+    public mutating func round(
+        _ rule: FloatingPointRoundingRule = .toNearestOrAwayFromZero,
+        decimalPlaces: Int
+    ) {
         
         self = self.rounded(rule, decimalPlaces: decimalPlaces)
         
@@ -300,6 +304,44 @@ extension FloatingPoint where Self : CustomStringConvertible {
     @inlinable public var string: String {
         
         String(describing: self)
+        
+    }
+    
+}
+
+extension FloatingPoint where Self : CVarArg,
+                              Self : FloatingPointPowerComputable {
+    
+    /// **OTCore:**
+    /// Returns a string formatted to _n_ decimal places, using the given rounding rule.
+    @inlinable public func string(
+        rounding rule: FloatingPointRoundingRule = .toNearestOrAwayFromZero,
+        decimalPlaces: Int
+    ) -> String {
+        
+        let roundedValue = rounded(rule, decimalPlaces: decimalPlaces)
+        
+        switch roundedValue {
+        case let castValue as Float80:
+            // String(format:) does not work with Float80
+            // so we need a custom implementation here
+            
+            let rawString = String(describing: castValue)
+            let splitComponents = rawString.split(separator: ".")
+            if decimalPlaces < 1 || splitComponents.count < 2 {
+                return String(splitComponents.first ?? "0")
+            }
+            
+            return (splitComponents[0])
+                + "."
+                + splitComponents[1].padding(toLength: decimalPlaces,
+                                             withPad: "0",
+                                             startingAt: 0)
+            
+        default:
+            return String(format: "%.\(decimalPlaces)f", roundedValue)
+            
+        }
         
     }
     
