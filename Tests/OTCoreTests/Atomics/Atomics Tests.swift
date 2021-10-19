@@ -124,6 +124,7 @@ class Extensions_Swift_Atomics_Tests: XCTestCase {
     
     /// Write sequential values while reading random values.
     /// This test is more useful with Thread Sanitizer on.
+    @available(macOS 10.15, macCatalyst 13, iOS 13, tvOS 13.0, watchOS 6.0, *)
     func testAtomic_BruteForce_ConcurrentWriteRandomReads() {
         
         class Foo {
