@@ -73,6 +73,8 @@ class Extensions_Swift_Atomics_Tests: XCTestCase {
     
     func testAtomic_BruteForce_ConcurrentMutations() {
         
+        let completionTimeout = expectation(description: "Test Completion Timeout")
+        
         class Foo {
             @Atomic var dict: [String: Int] = [:]
             @Atomic var array: [String] = []
@@ -115,7 +117,12 @@ class Extensions_Swift_Atomics_Tests: XCTestCase {
             }
         }
         
-        g.wait()
+        DispatchQueue.global().async {
+            g.wait()
+            completionTimeout.fulfill()
+        }
+        
+        wait(for: [completionTimeout], timeout: 10)
         
         XCTAssertEqual(foo.dict.count, 0)
         XCTAssertEqual(foo.array.count, 0)
@@ -126,6 +133,8 @@ class Extensions_Swift_Atomics_Tests: XCTestCase {
     /// This test is more useful with Thread Sanitizer on.
     @available(macOS 10.15, macCatalyst 13, iOS 13, tvOS 13.0, watchOS 6.0, *)
     func testAtomic_BruteForce_ConcurrentWriteRandomReads() {
+        
+        let completionTimeout = expectation(description: "Test Completion Timeout")
         
         class Foo {
             @Atomic var dict: [String: Int] = [:]
@@ -171,7 +180,12 @@ class Extensions_Swift_Atomics_Tests: XCTestCase {
             }
         }
         
-        g.wait()
+        DispatchQueue.global().async {
+            g.wait()
+            completionTimeout.fulfill()
+        }
+        
+        wait(for: [completionTimeout], timeout: 10)
         
         timer.cancel()
         
@@ -180,6 +194,8 @@ class Extensions_Swift_Atomics_Tests: XCTestCase {
     /// Write and read sequential values concurrently.
     /// This test is more useful with Thread Sanitizer on.
     func testAtomic_BruteForce_ConcurrentWriteAndRead() {
+        
+        let completionTimeout = expectation(description: "Test Completion Timeout")
         
         class Foo {
             @Atomic var dict: [String: Int] = [:]
@@ -195,28 +211,31 @@ class Extensions_Swift_Atomics_Tests: XCTestCase {
         
         let iterations = 100_000
         
-        DispatchQueue.global().async {
-            for index in 0..<iterations {
-                writeGroup.enter()
-                DispatchQueue.global().async {
-                    foo.dict["key"] = index
-                    foo.array[0] = "\(index)"
-                }
+        for index in 0..<iterations {
+            writeGroup.enter()
+            DispatchQueue.global().async {
+                foo.dict["key"] = index
+                foo.array[0] = "\(index)"
+                writeGroup.leave()
+            }
+        }
+        
+        for _ in 0..<iterations {
+            readGroup.enter()
+            DispatchQueue.global().async {
+                _ = foo.dict["key"]
+                if foo.array.count > 0 { _ = foo.array[0] }
+                readGroup.leave()
             }
         }
         
         DispatchQueue.global().async {
-            for _ in 0..<iterations {
-                writeGroup.enter()
-                DispatchQueue.global().async {
-                    _ = foo.dict["key"]
-                    if foo.array.count > 0 { _ = foo.array[0] }
-                }
-            }
+            writeGroup.wait()
+            readGroup.wait()
+            completionTimeout.fulfill()
         }
         
-        writeGroup.wait()
-        readGroup.wait()
+        wait(for: [completionTimeout], timeout: 10)
         
     }
     
