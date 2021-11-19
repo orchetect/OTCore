@@ -29,9 +29,11 @@ class Extensions_Foundation_FloatingPointAndFoundation_Tests: XCTestCase {
         let float: Float = 3603.59999999999990905052982270717620849609375
         XCTAssertEqual(float.stringValueHighPrecision, "3603.60009765625")
         
+        #if !(arch(arm64) || arch(arm) || os(watchOS)) // Float80 is now removed for ARM
         // Float80
         let float80: Float80 = 3603.59999999999990905052982270717620849609375
         XCTAssertEqual(float80.stringValueHighPrecision, "3603.599999999999909")
+        #endif
         
         // CGFloat
         
