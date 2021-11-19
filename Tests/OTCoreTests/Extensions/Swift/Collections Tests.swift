@@ -275,6 +275,22 @@ class Extensions_Swift_Collections_Tests: XCTestCase {
         
     }
     
+    func testSequence_Grouping() {
+        
+        let ungrouped = ["Bob", "Billy", "Alex", "Kevin", "Adam"]
+        
+        let grouped = ungrouped.grouping(by: { $0.first! })
+        
+        XCTAssertEqual(
+            grouped,
+            [
+                "A": ["Alex", "Adam"],
+                "B": ["Bob", "Billy"],
+                "K": ["Kevin"]
+            ]
+        )
+    }
+    
 }
 
 #endif
