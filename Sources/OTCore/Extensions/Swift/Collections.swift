@@ -324,3 +324,20 @@ extension ArraySlice {
     }
     
 }
+
+// MARK: - Grouping
+
+extension Sequence {
+    
+    /// **OTCore:**
+    /// Same as `Dictionary(grouping: self, by:)`.
+    /// (Functional convenience method)
+    public func grouping<Key: Hashable>(
+        by keyForValue: (Element) throws -> Key
+    ) rethrows -> [Key : [Element]] {
+        
+        try Dictionary(grouping: self, by: keyForValue)
+        
+    }
+    
+}
