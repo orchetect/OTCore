@@ -58,7 +58,7 @@ public protocol Transformable {
     
     func transformed<T>(_ transform: (Self) throws -> T) rethrows -> T
     
-    mutating func transform(_ mutation: (inout Self) throws -> Void) rethrows -> Self
+    mutating func transform(_ transform: (inout Self) throws -> Void) rethrows -> Self
     
 }
 
@@ -113,9 +113,9 @@ extension Transformable {
     /// Mutate a value in place and also return it in order to continue chaining methods.
     /// (Functional convenience method)
     @inlinable @discardableResult public
-    mutating func transform(_ mutation: (inout Self) throws -> Void) rethrows -> Self {
+    mutating func transform(_ transform: (inout Self) throws -> Void) rethrows -> Self {
         
-        try mutation(&self)
+        try transform(&self)
         
         return self
         
@@ -133,9 +133,9 @@ extension Transformable where Self : AnyObject {
     /// Mutate a value in place and also return it in order to continue chaining methods.
     /// (Functional convenience method)
     @inlinable @discardableResult public
-    func transform(_ mutation: (Self) throws -> Void) rethrows -> Self {
+    func transform(_ transform: (Self) throws -> Void) rethrows -> Self {
         
-        try mutation(self)
+        try transform(self)
         
         return self
         
@@ -162,9 +162,9 @@ extension Optional: Transformable {
     /// Mutate a wrapped Optional in place and also return it in order to continue chaining methods.
     /// (Functional convenience method)
     @inlinable @discardableResult public
-    mutating func transformOptional(_ mutation: (inout Self) throws -> Void) rethrows -> Self {
+    mutating func transformOptional(_ transform: (inout Self) throws -> Void) rethrows -> Self {
         
-        try mutation(&self)
+        try transform(&self)
         
         return self
         
@@ -182,9 +182,9 @@ extension Optional where Wrapped : AnyObject {
     /// Mutate a value in place and also return it in order to continue chaining methods.
     /// (Functional convenience method)
     @inlinable @discardableResult public
-    func transform(_ mutation: (Self) throws -> Void) rethrows -> Self {
+    func transform(_ transform: (Self) throws -> Void) rethrows -> Self {
         
-        try mutation(self)
+        try transform(self)
         
         return self
         
@@ -243,9 +243,9 @@ extension Equatable {
     /// Mutate a value in place and also return it in order to continue chaining methods.
     /// (Functional convenience method)
     @inlinable @discardableResult public
-    mutating func transform(_ mutation: (inout Self) throws -> Void) rethrows -> Self {
+    mutating func transform(_ transform: (inout Self) throws -> Void) rethrows -> Self {
         
-        try mutation(&self)
+        try transform(&self)
         
         return self
         
@@ -263,9 +263,9 @@ extension Equatable where Self : AnyObject {
     /// Mutate a value in place and also return it in order to continue chaining methods.
     /// (Functional convenience method)
     @inlinable @discardableResult public
-    func transform(_ mutation: (Self) throws -> Void) rethrows -> Self {
+    func transform(_ transform: (Self) throws -> Void) rethrows -> Self {
         
-        try mutation(self)
+        try transform(self)
         
         return self
         
