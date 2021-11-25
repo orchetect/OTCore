@@ -33,7 +33,7 @@ extension String {
     public var titleCased: String {
         
         var words =
-            self.localizedCapitalized
+            localizedCapitalized
             .split(separator: " ")
             .map({ String($0) })
         

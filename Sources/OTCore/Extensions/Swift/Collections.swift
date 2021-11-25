@@ -147,7 +147,7 @@ extension RangeReplaceableCollection {
     @inlinable public mutating func remove(safeAt index: Index) -> Element? {
         
         if indices.contains(index) {
-            return self.remove(at: index)
+            return remove(at: index)
         }
         
         return nil
@@ -179,7 +179,7 @@ extension Array {
     ///
     @inlinable public subscript(wrapping index: Index) -> Iterator.Element {
         
-        let max = self.count
+        let max = count
         var newIndex: Int
         
         if index >= 0 {
@@ -205,7 +205,7 @@ extension Collection where Element : Hashable {
     /// - complexity: O(*n*)
     @inlinable public func count(of element: Element) -> Int {
         
-        self.filter{$0 == element}.count
+        filter{$0 == element}.count
         
     }
     
@@ -220,7 +220,7 @@ extension Collection where Element: BinaryInteger {
     /// Returns a string of integer literals, useful for generating Swift array declarations when debugging.
     @inlinable public var stringValueArrayLiteral: String {
         
-        self.map { "\($0)" }
+        map { "\($0)" }
             .joined(separator: ", " )
             .wrapped(with: .brackets)
         
@@ -258,11 +258,11 @@ extension Collection where Element: Strideable,
     /// - complexity: O(*n*), where *n* represents index of first gap in the array
     @inlinable public func firstGapValue(after: Element? = nil) -> Element? {
         
-        guard self.count > 0 else { return nil }
+        guard count > 0 else { return nil }
         
-        for idx in self.startIndex..<self.endIndex {
+        for idx in startIndex..<endIndex {
             
-            if idx >= self.endIndex.advanced(by: -1) { continue }
+            if idx >= endIndex.advanced(by: -1) { continue }
             
             if self[idx.advanced(by: 1)] > (self[idx].advanced(by: 1)) {
                 // found a gap
@@ -304,7 +304,7 @@ extension Set {
     @inlinable public mutating func formUnion<S>(updating other: S)
     where Element == S.Element, S : Sequence {
         
-        self = self.union(updating: other)
+        self = union(updating: other)
         
     }
     

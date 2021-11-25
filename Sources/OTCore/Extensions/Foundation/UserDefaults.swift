@@ -15,8 +15,8 @@ extension UserDefaults {
     /// Convenience method to wrap the built-in `.integer(forKey:)` method in an optional returning nil if the key doesn't exist.
     public func integerOptional(forKey key: String) -> Int? {
         
-        guard self.object(forKey: key) != nil else { return nil }
-        return self.integer(forKey: key)
+        guard object(forKey: key) != nil else { return nil }
+        return integer(forKey: key)
         
     }
     
@@ -24,8 +24,8 @@ extension UserDefaults {
     /// Convenience method to wrap the built-in `.double(forKey:)` method in an optional returning nil if the key doesn't exist.
     public func doubleOptional(forKey key: String) -> Double? {
         
-        guard self.object(forKey: key) != nil else { return nil }
-        return self.double(forKey: key)
+        guard object(forKey: key) != nil else { return nil }
+        return double(forKey: key)
         
     }
     
@@ -33,8 +33,8 @@ extension UserDefaults {
     /// Convenience method to wrap the built-in `.float(forKey:)` method in an optional returning nil if the key doesn't exist.
     public func floatOptional(forKey key: String) -> Float? {
         
-        guard self.object(forKey: key) != nil else { return nil }
-        return self.float(forKey: key)
+        guard object(forKey: key) != nil else { return nil }
+        return float(forKey: key)
         
     }
     
@@ -42,8 +42,8 @@ extension UserDefaults {
     /// Convenience method to wrap the built-in `.bool(forKey:)` method in an optional returning nil if the key doesn't exist.
     public func boolOptional(forKey key: String) -> Bool? {
         
-        guard self.object(forKey: key) != nil else { return nil }
-        return self.bool(forKey: key)
+        guard object(forKey: key) != nil else { return nil }
+        return bool(forKey: key)
         
     }
     
@@ -53,7 +53,7 @@ extension UserDefaults {
     /// This method is only useful when you don't care about extracting a value from the key and merely want to check for the key's existence.
     public func exists(key: String) -> Bool {
         
-        self.object(forKey: key) != nil
+        object(forKey: key) != nil
         
     }
     

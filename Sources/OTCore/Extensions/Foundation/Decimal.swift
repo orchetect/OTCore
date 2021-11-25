@@ -217,7 +217,7 @@ extension Decimal {
     public mutating func round(_ rule: NSDecimalNumber.RoundingMode = .plain,
                                decimalPlaces: Int) {
         
-        self = self.rounded(rule, decimalPlaces: decimalPlaces)
+        self = rounded(rule, decimalPlaces: decimalPlaces)
         
     }
     
@@ -226,7 +226,7 @@ extension Decimal {
     /// Replaces this value by truncating it to `decimalPlaces` number of decimal places.
     public mutating func truncate(decimalPlaces: Int) {
         
-        self = self.truncated(decimalPlaces: decimalPlaces)
+        self = truncated(decimalPlaces: decimalPlaces)
         
     }
     

@@ -343,10 +343,10 @@ extension RangeReplaceableCollection where Element : FixedWidthInteger {
                            count: Int) {
         
         self.init()
-        self.reserveCapacity(count)
+        reserveCapacity(count)
         
         for _ in 0..<count {
-            self.append(Element.random(in: randomValuesBetween))
+            append(Element.random(in: randomValuesBetween))
         }
         
     }
@@ -405,7 +405,7 @@ extension BinaryInteger {
         
         if max < min { max = min }
         
-        return self.wrapped(around: min...max)
+        return wrapped(around: min...max)
         
     }
     

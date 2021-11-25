@@ -20,14 +20,14 @@ extension NSAttributedString {
         let paragraph = NSMutableParagraphStyle()
         paragraph.alignment = alignment
         
-        guard let copy = self.mutableCopy() as? NSMutableAttributedString
+        guard let copy = mutableCopy() as? NSMutableAttributedString
         else {
             print("Could not create mutable NSAttributedString copy.")
             return self
         }
         
-        copy.addAttributes([ .paragraphStyle : paragraph ],
-                           range: NSRange(location: 0, length: self.length))
+        copy.addAttributes([.paragraphStyle : paragraph],
+                           range: NSRange(location: 0, length: length))
         
         return copy
         
@@ -44,8 +44,8 @@ extension NSMutableAttributedString {
         let paragraph = NSMutableParagraphStyle()
         paragraph.alignment = alignment
         
-        self.addAttributes([ .paragraphStyle : paragraph ],
-                           range: NSRange(location: 0, length: self.length))
+        addAttributes([.paragraphStyle : paragraph],
+                      range: NSRange(location: 0, length: length))
         
     }
     

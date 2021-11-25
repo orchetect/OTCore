@@ -176,7 +176,7 @@ extension FloatingPoint where Self : FloatingPointPowerComputable {
     ) -> Self {
         
         if decimalPlaces < 1 {
-            return self.rounded(rule)
+            return rounded(rule)
         }
         
         let offset = Self(10).power(Self(decimalPlaces))
@@ -194,7 +194,7 @@ extension FloatingPoint where Self : FloatingPointPowerComputable {
         decimalPlaces: Int
     ) {
         
-        self = self.rounded(rule, decimalPlaces: decimalPlaces)
+        self = rounded(rule, decimalPlaces: decimalPlaces)
         
     }
     
@@ -228,7 +228,7 @@ extension FloatingPoint {
     /// - parameter range: integer range, allowing negative and positive bounds.
     @inlinable public func wrapped(around range: ClosedRange<Self>) -> Self {
         
-        guard !self.isNaN, !self.isInfinite else { return self }
+        guard !isNaN, !isInfinite else { return self }
         
         let min = range.lowerBound
         let max = range.upperBound + 1
@@ -249,14 +249,14 @@ extension FloatingPoint {
     /// If the number underflows or overflows the range, it is wrapped around the range's bounds continuously.
     @inlinable public func wrapped(around range: Range<Self>) -> Self {
         
-        guard !self.isNaN, !self.isInfinite else { return self }
+        guard !isNaN, !isInfinite else { return self }
         
         let min = range.lowerBound
         var max = range.upperBound - 1
         
         if max < min { max = min }
         
-        return self.wrapped(around: min...max)
+        return wrapped(around: min...max)
         
     }
     

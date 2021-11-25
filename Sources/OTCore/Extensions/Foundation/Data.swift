@@ -45,7 +45,7 @@ extension Data {
     /// Returns nil if Data is not the correct length.
     public func toInt8() -> Int8? {
         
-        guard self.count == 1 else { return nil }
+        guard count == 1 else { return nil }
         
         var int = UInt8()
         withUnsafeMutablePointer(to: &int) {
@@ -131,8 +131,8 @@ extension Data {
     /// Returns nil if Data is not the correct length.
     public func toUInt8() -> UInt8? {
         
-        guard self.count == 1 else { return nil }
-        return self.first
+        guard count == 1 else { return nil }
+        return first
         
     }
     
@@ -243,7 +243,7 @@ extension Data {
     /// Returns nil if Data is != 4 bytes.
     public func toFloat32(from endianness: NumberEndianness = .platformDefault) -> Float32? {
         
-        guard self.count == 4 else { return nil }
+        guard count == 4 else { return nil }
         
         // define conversions
         
@@ -359,7 +359,7 @@ extension Data {
     /// Returns nil if Data is != 8 bytes.
     public func toDouble(from endianness: NumberEndianness = .platformDefault) -> Double? {
         
-        guard self.count == 8 else { return nil }
+        guard count == 8 else { return nil }
         
         // define conversions
         
@@ -432,8 +432,8 @@ extension FixedWidthInteger {
         
         switch endianness {
         case .platformDefault:  int = self
-        case .littleEndian:             int = self.littleEndian
-        case .bigEndian:                int = self.bigEndian
+        case .littleEndian:             int = littleEndian
+        case .bigEndian:                int = bigEndian
         }
         
         withUnsafeBytes(of: &int) { rawBuffer in
@@ -510,7 +510,7 @@ extension String {
     /// Returns a Data representation of a String, defaulting to utf8 encoding.
     public func toData(using encoding: String.Encoding = .utf8) -> Data? {
         
-        self.data(using: encoding)
+        data(using: encoding)
         
     }
     

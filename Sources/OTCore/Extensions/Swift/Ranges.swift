@@ -294,10 +294,10 @@ extension ClosedRange where Bound: SignedInteger, Bound.Stride: SignedInteger {
     public func first(excluding: ArraySlice<Bound>) -> Bound? {
         
         guard excluding.count > 0 else {
-            return self.first
+            return first
         }
         
-        return self.first(where: { !excluding.contains($0) } )
+        return first(where: { !excluding.contains($0) } )
         
     }
     
@@ -327,24 +327,24 @@ extension ClosedRange where Bound: SignedInteger, Bound.Stride: SignedInteger {
     public func first(presortedExcluding: ArraySlice<Bound>) -> Bound? {
         
         guard presortedExcluding.count > 0 else {
-            return self.first
+            return first
         }
         
         // optimization: check to see if entire excluding value set is < or > first base value; if so, just return first value
-        if self.lowerBound < presortedExcluding.first! { return self.lowerBound }  // do excluding values start > first base value?
-        if self.lowerBound > presortedExcluding.last! { return self.lowerBound }   // do excluding values end < first base value?
+        if lowerBound < presortedExcluding.first! { return lowerBound }  // do excluding values start > first base value?
+        if lowerBound > presortedExcluding.last! { return lowerBound }   // do excluding values end < first base value?
         
         var trimmedSortedExcluding: ArraySlice<Bound>?
         
         // optimization: trim exclusions, if exclusions start before first base value
-        if self.lowerBound > presortedExcluding.first! {
-            if let minExclusion = presortedExcluding.binarySearch(forValue: self.lowerBound) {
+        if lowerBound > presortedExcluding.first! {
+            if let minExclusion = presortedExcluding.binarySearch(forValue: lowerBound) {
                 trimmedSortedExcluding = presortedExcluding[minExclusion.lowerBound..<presortedExcluding.endIndex]
             }
         }
         
         // optimization: trim exclusions, if exclusions end after last base value
-        if let maxExclusion = presortedExcluding.binarySearch(forValue: self.upperBound) {
+        if let maxExclusion = presortedExcluding.binarySearch(forValue: upperBound) {
             if trimmedSortedExcluding != nil {
                 trimmedSortedExcluding = trimmedSortedExcluding![trimmedSortedExcluding!.startIndex...maxExclusion.upperBound]
             } else {
@@ -352,9 +352,9 @@ extension ClosedRange where Bound: SignedInteger, Bound.Stride: SignedInteger {
             }
         }
         
-        return trimmedSortedExcluding != nil ?
-            self.first(excluding: trimmedSortedExcluding!) :
-            self.first(excluding: presortedExcluding)
+        return trimmedSortedExcluding != nil
+            ? first(excluding: trimmedSortedExcluding!)
+            : first(excluding: presortedExcluding)
         
     }
     
@@ -382,11 +382,11 @@ extension ClosedRange where Bound: SignedInteger, Bound.Stride: SignedInteger {
     public func first(sortingAndExcluding: ArraySlice<Bound>) -> Bound? {
         
         // optimization: if not excluding anything, just return first value
-        if sortingAndExcluding.count == 0 { return self.lowerBound }
+        if sortingAndExcluding.count == 0 { return lowerBound }
         
         let sortedExcluding = sortingAndExcluding.sorted()
         
-        return self.first(excluding: sortedExcluding)
+        return first(excluding: sortedExcluding)
         
     }
     
@@ -412,12 +412,15 @@ extension ClosedRange where Bound.Stride: SignedInteger, Bound: Strideable {
     /// - complexity: O(1) or slightly higher
     public func first(excluding: ClosedRange<Bound>) -> Bound? {
         
-        if excluding.lowerBound > self.lowerBound { return self.lowerBound }
+        if excluding.lowerBound > lowerBound { return lowerBound }
         
-        if excluding.upperBound < self.lowerBound { return self.lowerBound } // no overlaps in ranges; return first
+        // no overlaps in ranges; return first
+        if excluding.upperBound < lowerBound { return lowerBound }
         
-        if excluding.upperBound >= self.lowerBound &&
-            excluding.upperBound < self.upperBound { return excluding.upperBound.advanced(by: 1) }
+        if excluding.upperBound >= lowerBound &&
+            excluding.upperBound < upperBound {
+            return excluding.upperBound.advanced(by: 1)
+        }
         
         return nil
         
@@ -429,12 +432,15 @@ extension ClosedRange where Bound.Stride: SignedInteger, Bound: Strideable {
     /// - complexity: O(1) or slightly higher
     public func first(excluding: Range<Bound>) -> Bound? {
         
-        if excluding.lowerBound > self.lowerBound { return self.lowerBound }
+        if excluding.lowerBound > lowerBound { return lowerBound }
         
-        if excluding.upperBound <= self.lowerBound { return self.lowerBound } // no overlaps in ranges; return first
+        // no overlaps in ranges; return first
+        if excluding.upperBound <= lowerBound { return lowerBound }
         
-        if excluding.upperBound > self.lowerBound &&
-            excluding.upperBound <= self.upperBound { return excluding.upperBound }
+        if excluding.upperBound > lowerBound &&
+            excluding.upperBound <= upperBound {
+            return excluding.upperBound
+        }
         
         return nil
         
@@ -446,9 +452,9 @@ extension ClosedRange where Bound.Stride: SignedInteger, Bound: Strideable {
     /// - complexity: O(1) or slightly higher
     public func first(excluding: PartialRangeFrom<Bound>) -> Bound? {
         
-        if excluding.lowerBound <= self.lowerBound { return nil }
+        if excluding.lowerBound <= lowerBound { return nil }
         
-        return self.lowerBound
+        return lowerBound
         
     }
     
@@ -458,9 +464,9 @@ extension ClosedRange where Bound.Stride: SignedInteger, Bound: Strideable {
     /// - complexity: O(1) or slightly higher
     public func first(excluding: PartialRangeThrough<Bound>) -> Bound? {
         
-        if excluding.upperBound < self.lowerBound { return self.lowerBound }
+        if excluding.upperBound < lowerBound { return lowerBound }
         
-        if excluding.upperBound < self.upperBound { return excluding.upperBound.advanced(by: 1) }
+        if excluding.upperBound < upperBound { return excluding.upperBound.advanced(by: 1) }
         
         return nil
         
@@ -472,9 +478,9 @@ extension ClosedRange where Bound.Stride: SignedInteger, Bound: Strideable {
     /// - complexity: O(1) or slightly higher
     public func first(excluding: PartialRangeUpTo<Bound>) -> Bound? {
         
-        if excluding.upperBound <= self.lowerBound { return self.lowerBound }
+        if excluding.upperBound <= lowerBound { return lowerBound }
         
-        if excluding.upperBound <= self.upperBound { return excluding.upperBound }
+        if excluding.upperBound <= upperBound { return excluding.upperBound }
         
         return nil
         
@@ -499,10 +505,10 @@ extension Range where Bound: SignedInteger, Bound.Stride: SignedInteger {
             return self.first
         }
         
-        if self.upperBound == self.lowerBound { return nil }
+        if upperBound == lowerBound { return nil }
         
         // Form ClosedRange and call .first(...) on it
-        return (self.lowerBound...self.upperBound-1)
+        return (lowerBound...upperBound-1)
             .first(excluding: excluding)
         
     }
@@ -529,10 +535,10 @@ extension Range where Bound: SignedInteger, Bound.Stride: SignedInteger {
     /// - complexity: O(*n1* * *n2*), where *n1* == self.count, *n2* == excluding.count; lazily over `self.count`.
     public func first(presortedExcluding: ArraySlice<Bound>) -> Bound? {
         
-        if self.upperBound == self.lowerBound { return nil }
+        if upperBound == lowerBound { return nil }
         
         // Form ClosedRange and call .first(...) on it
-        return (self.lowerBound...self.upperBound-1)
+        return (lowerBound...upperBound-1)
             .first(presortedExcluding: presortedExcluding)
         
     }
@@ -548,10 +554,10 @@ extension Range where Bound: SignedInteger, Bound.Stride: SignedInteger {
     /// - complexity: O(*n1* * *n2*), where *n1* == self.count, *n2* == excluding.count; lazily over `self.count`.
     public func first(presortedExcluding: [Bound]) -> Bound? {
         
-        if self.upperBound == self.lowerBound { return nil }
+        if upperBound == lowerBound { return nil }
         
         // Form ClosedRange and call .first(...) on it
-        return (self.lowerBound...self.upperBound-1)
+        return (lowerBound...upperBound-1)
             .first(presortedExcluding: ArraySlice(presortedExcluding))
         
     }
@@ -565,10 +571,10 @@ extension Range where Bound: SignedInteger, Bound.Stride: SignedInteger {
     /// - complexity: Varies, somewhere between O(`sortingAndExcluding.count`) and O(`self.count * excluding.count`).
     public func first(sortingAndExcluding: ArraySlice<Bound>) -> Bound? {
         
-        if self.upperBound == self.lowerBound { return nil }
+        if upperBound == lowerBound { return nil }
         
         // Form ClosedRange and call .first(...) on it
-        return (self.lowerBound...self.upperBound-1)
+        return (lowerBound...upperBound-1)
             .first(sortingAndExcluding: sortingAndExcluding)
         
     }
@@ -595,12 +601,13 @@ extension Range where Bound : Strideable, Bound.Stride : SignedInteger {
     /// - complexity: O(1) or slightly higher
     public func first(excluding: ClosedRange<Bound>) -> Bound? {
         
-        if excluding.lowerBound > self.lowerBound { return self.lowerBound }
+        if excluding.lowerBound > lowerBound { return lowerBound }
         
-        if excluding.upperBound < self.lowerBound { return self.lowerBound } // no overlaps in ranges; return first
+        // no overlaps in ranges; return first
+        if excluding.upperBound < lowerBound { return lowerBound }
         
-        if excluding.upperBound >= self.lowerBound &&
-            excluding.upperBound < self.upperBound.advanced(by: -1) {
+        if excluding.upperBound >= lowerBound &&
+            excluding.upperBound < upperBound.advanced(by: -1) {
             return excluding.upperBound.advanced(by: 1)
         }
         
@@ -613,12 +620,13 @@ extension Range where Bound : Strideable, Bound.Stride : SignedInteger {
     /// - complexity: O(1) or slightly higher
     public func first(excluding: Range<Bound>) -> Bound? {
         
-        if excluding.lowerBound > self.lowerBound { return self.lowerBound }
+        if excluding.lowerBound > lowerBound { return lowerBound }
         
-        if excluding.upperBound <= self.lowerBound { return self.lowerBound } // no overlaps in ranges; return first
+        // no overlaps in ranges; return first
+        if excluding.upperBound <= lowerBound { return lowerBound }
         
-        if excluding.upperBound >= self.lowerBound &&
-            excluding.upperBound.advanced(by: -1) < self.upperBound.advanced(by: -1) {
+        if excluding.upperBound >= lowerBound &&
+            excluding.upperBound.advanced(by: -1) < upperBound.advanced(by: -1) {
             return excluding.upperBound
         }
         
@@ -631,9 +639,9 @@ extension Range where Bound : Strideable, Bound.Stride : SignedInteger {
     /// - complexity: O(1) or slightly higher
     public func first(excluding: PartialRangeFrom<Bound>) -> Bound? {
         
-        if excluding.lowerBound <= self.lowerBound { return nil }
+        if excluding.lowerBound <= lowerBound { return nil }
         
-        return self.lowerBound
+        return lowerBound
         
     }
     
@@ -642,9 +650,9 @@ extension Range where Bound : Strideable, Bound.Stride : SignedInteger {
     /// - complexity: O(1) or slightly higher
     public func first(excluding: PartialRangeThrough<Bound>) -> Bound? {
         
-        if excluding.upperBound < self.lowerBound { return self.lowerBound }
+        if excluding.upperBound < lowerBound { return lowerBound }
         
-        if excluding.upperBound < self.upperBound.advanced(by: -1) {
+        if excluding.upperBound < upperBound.advanced(by: -1) {
             return excluding.upperBound.advanced(by: 1)
         }
         
@@ -657,9 +665,9 @@ extension Range where Bound : Strideable, Bound.Stride : SignedInteger {
     /// - complexity: O(1) or slightly higher
     public func first(excluding: PartialRangeUpTo<Bound>) -> Bound? {
         
-        if excluding.upperBound <= self.lowerBound { return self.lowerBound }
+        if excluding.upperBound <= lowerBound { return lowerBound }
         
-        if excluding.upperBound < self.upperBound { return excluding.upperBound }
+        if excluding.upperBound < upperBound { return excluding.upperBound }
         
         return nil
         
@@ -681,7 +689,7 @@ extension PartialRangeFrom where Bound.Stride: SignedInteger, Bound: Strideable 
         // should always succeed since PartialRangeFrom values ascend infinitely
         // however, we provide a fallback
         
-        self.first(where: { !excluding.contains($0) } )
+        first(where: { !excluding.contains($0) } )
             ?? lowerBound
         
     }
@@ -704,12 +712,12 @@ extension PartialRangeFrom where Bound.Stride: SignedInteger, Bound: Strideable 
     /// - complexity: O(*n*), where *n* is the length of the exclusion array.
     public func first(presortedExcluding: ArraySlice<Bound>) -> Bound {
         
-        if presortedExcluding.isEmpty { return self.lowerBound }
+        if presortedExcluding.isEmpty { return lowerBound }
         
-        if presortedExcluding.last! < self.lowerBound { return self.lowerBound }
+        if presortedExcluding.last! < lowerBound { return lowerBound }
         
         return presortedExcluding
-            .firstGapValue(after: self.lowerBound.advanced(by: -1))
+            .firstGapValue(after: lowerBound.advanced(by: -1))
             ?? presortedExcluding.last!.advanced(by: 1)
         
     }
@@ -734,14 +742,14 @@ extension PartialRangeFrom where Bound.Stride: SignedInteger, Bound: Strideable 
     /// - complexity: O(*n*), where *n* is the length of the exclusion array.
     public func first(sortingAndExcluding: ArraySlice<Bound>) -> Bound {
         
-        if sortingAndExcluding.isEmpty { return self.lowerBound }
+        if sortingAndExcluding.isEmpty { return lowerBound }
         
         let sortedExcluding = sortingAndExcluding.sorted()
         
-        if sortedExcluding.last! < self.lowerBound { return self.lowerBound }
+        if sortedExcluding.last! < lowerBound { return lowerBound }
         
         return sortedExcluding
-            .firstGapValue(after: self.lowerBound.advanced(by: -1))
+            .firstGapValue(after: lowerBound.advanced(by: -1))
             ?? sortedExcluding.last!.advanced(by: 1)
         
     }
@@ -767,9 +775,10 @@ extension PartialRangeFrom where Bound.Stride: SignedInteger, Bound: Strideable 
     /// - complexity: O(1) or slightly higher
     public func first(excluding: ClosedRange<Bound>) -> Bound {
         
-        if self.lowerBound < excluding.lowerBound { return self.lowerBound }
+        if lowerBound < excluding.lowerBound { return lowerBound }
         
-        if excluding.upperBound < self.lowerBound { return self.lowerBound } // no overlaps in ranges; return first
+        // no overlaps in ranges; return first
+        if excluding.upperBound < lowerBound { return lowerBound }
         
         return excluding.upperBound.advanced(by: 1)
         
@@ -781,9 +790,10 @@ extension PartialRangeFrom where Bound.Stride: SignedInteger, Bound: Strideable 
     /// - complexity: O(1) or slightly higher
     public func first(excluding: Range<Bound>) -> Bound {
         
-        if self.lowerBound < excluding.lowerBound { return self.lowerBound }
+        if lowerBound < excluding.lowerBound { return lowerBound }
         
-        if excluding.upperBound < self.lowerBound { return self.lowerBound } // no overlaps in ranges; return first
+        // no overlaps in ranges; return first
+        if excluding.upperBound < lowerBound { return lowerBound }
         
         return excluding.upperBound
         
@@ -795,9 +805,9 @@ extension PartialRangeFrom where Bound.Stride: SignedInteger, Bound: Strideable 
     /// - complexity: O(1) or slightly higher
     public func first(excluding: PartialRangeFrom<Bound>) -> Bound? {
         
-        if excluding.lowerBound <= self.lowerBound { return nil }
+        if excluding.lowerBound <= lowerBound { return nil }
         
-        return self.lowerBound
+        return lowerBound
         
     }
     
@@ -807,7 +817,7 @@ extension PartialRangeFrom where Bound.Stride: SignedInteger, Bound: Strideable 
     /// - complexity: O(1) or slightly higher
     public func first(excluding: PartialRangeThrough<Bound>) -> Bound {
         
-        if excluding.upperBound < self.lowerBound { return self.lowerBound }
+        if excluding.upperBound < lowerBound { return lowerBound }
         
         return excluding.upperBound.advanced(by: 1)
         
@@ -819,7 +829,7 @@ extension PartialRangeFrom where Bound.Stride: SignedInteger, Bound: Strideable 
     /// - complexity: O(1) or slightly higher
     public func first(excluding: PartialRangeUpTo<Bound>) -> Bound {
         
-        if excluding.upperBound <= self.lowerBound { return self.lowerBound }
+        if excluding.upperBound <= lowerBound { return lowerBound }
         
         return excluding.upperBound
         
