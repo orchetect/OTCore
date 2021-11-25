@@ -53,7 +53,7 @@ extension CGPoint {
     /// Returns the distance between two coordinate points.
     @inlinable public func distance(to other: CGPoint) -> CGFloat {
         
-        hypot(other.x - self.x, other.y - self.y)
+        hypot(other.x - x, other.y - y)
         
     }
     
@@ -65,7 +65,7 @@ extension CGPoint {
     /// To calculate the where cardinal North is the origin (0°), use `cardinalAngle(to:)` instead.
     @inlinable public func angle(to other: CGPoint) -> CGFloat {
         
-        let calc = atan2(other.y - self.y, other.x - self.x).radiansToDegrees
+        let calc = atan2(other.y - y, other.x - x).radiansToDegrees
         
         if calc < 0 {
             return calc + 360.0

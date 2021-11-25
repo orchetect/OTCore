@@ -97,7 +97,7 @@ extension StringProtocol {
     /// (Functional convenience method)
     public func range(backwards find: Self) -> Range<Index>? {
         
-        self.range(of: find, options: .backwards)
+        range(of: find, options: .backwards)
         
     }
     
@@ -106,7 +106,7 @@ extension StringProtocol {
     /// (Functional convenience method)
     public func range(backwardsCaseInsensitive find: Self) -> Range<Index>? {
         
-        self.range(of: find, options: [.caseInsensitive, .backwards])
+        range(of: find, options: [.caseInsensitive, .backwards])
         
     }
     
@@ -114,7 +114,7 @@ extension StringProtocol {
     /// Convenience method: returns `true` if contains string. Case-insensitive.
     public func contains(caseInsensitive find: Self) -> Bool {
         
-        self.range(of: find, options: .caseInsensitive) != nil
+        range(of: find, options: .caseInsensitive) != nil
             ? true
             : false
         
@@ -124,7 +124,7 @@ extension StringProtocol {
     /// Convenience method: returns `true` if starts with the specified string. Case-insensitive.
     public func starts(withCaseInsensitive prefix: Self) -> Bool {
         
-        self.uppercased()
+        uppercased()
             .starts(with: prefix.uppercased())
         
     }
@@ -154,7 +154,7 @@ extension Substring {
     /// (Functional convenience method)
     public func repeating(_ count: Int) -> String {
         
-        String(repeating: self.string, count: count)
+        String(repeating: string, count: count)
         
     }
     
@@ -166,7 +166,7 @@ extension StringProtocol {
     /// Convenience function to return a new string with whitespaces and newlines trimmed off start and end.
     @inlinable public var trimmed: String {
         
-        self.trimmingCharacters(in: .whitespacesAndNewlines)
+        trimmingCharacters(in: .whitespacesAndNewlines)
         
     }
     
@@ -178,7 +178,7 @@ extension String {
     /// Convenience function to trim whitespaces and newlines off start and end.
     @inlinable public mutating func trim() {
         
-        self = self.trimmed
+        self = trimmed
         
     }
     
@@ -192,26 +192,26 @@ extension StringProtocol {
         
         var result: [Self.SubSequence] = []
         
-        for i in stride(from: 0, to: self.count, by: every) {
+        for i in stride(from: 0, to: count, by: every) {
             
             switch backwards {
             case true:
-                let endIndex = self.index(self.endIndex, offsetBy: -i)
-                let startIndex = self.index(endIndex,
-                                            offsetBy: -every,
-                                            limitedBy: self.startIndex)
-                    ?? self.startIndex
+                let offsetEndIndex = index(endIndex, offsetBy: -i)
+                let offsetStartIndex = index(offsetEndIndex,
+                                       offsetBy: -every,
+                                       limitedBy: startIndex)
+                ?? startIndex
                 
-                result.insert(self[startIndex..<endIndex], at: 0)
+                result.insert(self[offsetStartIndex..<offsetEndIndex], at: 0)
                 
             case false:
-                let startIndex = self.index(self.startIndex, offsetBy: i)
-                let endIndex = self.index(startIndex,
-                                          offsetBy: every,
-                                          limitedBy: self.endIndex)
-                    ?? self.endIndex
+                let offsetStartIndex = index(startIndex, offsetBy: i)
+                let offsetEndIndex = index(offsetStartIndex,
+                                     offsetBy: every,
+                                     limitedBy: endIndex)
+                ?? endIndex
                 
-                result.append(self[startIndex..<endIndex])
+                result.append(self[offsetStartIndex..<offsetEndIndex])
                 
             }
             
@@ -232,8 +232,8 @@ extension String {
     /// Removes the prefix of a String if it exists and returns a new String.
     public func removingPrefix(_ prefix: String) -> String {
         
-        if self.hasPrefix(prefix) {
-            return String(self.dropFirst(prefix.count))
+        if hasPrefix(prefix) {
+            return String(dropFirst(prefix.count))
         }
         
         return self
@@ -244,8 +244,8 @@ extension String {
     /// Removes the prefix of a String if it exists.
     public mutating func removePrefix(_ prefix: String) {
         
-        if self.hasPrefix(prefix) {
-            self.removeFirst(prefix.count)
+        if hasPrefix(prefix) {
+            removeFirst(prefix.count)
         }
         
     }
@@ -254,8 +254,8 @@ extension String {
     /// Removes the suffix of a String if it exists and returns a new String.
     public func removingSuffix(_ suffix: String) -> String {
         
-        if self.hasSuffix(suffix) {
-            return String(self.dropLast(suffix.count))
+        if hasSuffix(suffix) {
+            return String(dropLast(suffix.count))
         }
         
         return self
@@ -266,8 +266,8 @@ extension String {
     /// Removes the suffix of a String if it exists.
     public mutating func removeSuffix(_ suffix: String) {
         
-        if self.hasSuffix(suffix) {
-            self.removeLast(suffix.count)
+        if hasSuffix(suffix) {
+            removeLast(suffix.count)
         }
         
     }
@@ -328,7 +328,8 @@ extension DefaultStringInterpolation {
 extension Substring {
     
     /// **OTCore:**
-    /// Return a new `String`.
+    /// Same as `String(self)`
+    /// (Functional convenience method)
     @inlinable public var string: String {
         
         String(self)
@@ -340,7 +341,7 @@ extension Substring {
 extension Character {
     
     /// **OTCore:**
-    /// Same as `String()`
+    /// Same as `String(self)`
     /// (Functional convenience method)
     @inlinable public var string: String {
         

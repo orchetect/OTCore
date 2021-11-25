@@ -19,7 +19,7 @@ extension URL {
     /// - Will still return `true` if used on an alias and the alias' original file does not exist.
     public var fileExists: Bool {
         
-        FileManager.default.fileExists(atPath: self.path)
+        FileManager.default.fileExists(atPath: path)
         
     }
     
@@ -29,7 +29,7 @@ extension URL {
     /// - Will return `nil` if the URL is not a properly formatted file URL, or there was a problem querying the URL's file system attributes.
     public var isFolder: Bool? {
         
-        try? self.resourceValues(forKeys: Set([URLResourceKey.isDirectoryKey]))
+        try? resourceValues(forKeys: Set([URLResourceKey.isDirectoryKey]))
             .isDirectory
         
     }
@@ -118,7 +118,7 @@ extension URL {
     /// Convenience method to test if a file URL is a Finder alias.
     public var isFinderAlias: Bool {
         
-        guard self.isFileURL else { return false }
+        guard isFileURL else { return false }
         
         return (try? URL.bookmarkData(withContentsOf: self)) != nil
         
@@ -129,7 +129,7 @@ extension URL {
     public func createFinderAlias(at url: URL) throws {
         
         let data = try
-            self.bookmarkData(
+            bookmarkData(
                 options: .suitableForBookmarkFile,
                 includingResourceValuesForKeys: nil,
                 relativeTo: nil
@@ -148,7 +148,7 @@ extension URL {
     /// - does not exist.
     public var resolvedFinderAlias: URL? {
         
-        guard self.isFileURL else { return nil }
+        guard isFileURL else { return nil }
         
         guard let data = try? URL.bookmarkData(withContentsOf: self)
         else { return nil }
@@ -176,11 +176,11 @@ extension URL {
     /// - Returns `nil` if the URL is not a properly formatted file URL, or there was a problem querying the URL's file system attributes.
     public var isSymLink: Bool? {
         
-        guard self.isFileURL
+        guard isFileURL
         else { return nil }
         
         guard let getAttr = try? FileManager.default
-                .attributesOfItem(atPath: self.path)
+                .attributesOfItem(atPath: path)
         else { return nil }
         
         guard let getFileType = getAttr[.type]
@@ -200,7 +200,7 @@ extension URL {
         guard file.isFileURL
         else { return nil }
         
-        return self.isSymLinkOf(file: file.path)
+        return isSymLinkOf(file: file.path)
         
     }
     
@@ -211,12 +211,12 @@ extension URL {
     /// - Returns `nil` if the URL is not a properly formatted file URL.
     public func isSymLinkOf(file: String) -> Bool? {
         
-        guard self.isFileURL
+        guard isFileURL
         else { return nil }
         
         // returns path of original file, even if original file no longer exists
         guard let dest = try? FileManager.default
-                .destinationOfSymbolicLink(atPath: self.path)
+                .destinationOfSymbolicLink(atPath: path)
         else { return false }
         
         return file == dest

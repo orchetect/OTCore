@@ -27,10 +27,10 @@ extension StringProtocol {
         
         // iterate over characters
         
-        var currentGroupingStartIndex: Self.Index? = self.indices.first
+        var currentGroupingStartIndex: Self.Index? = indices.first
         var lastCharSetIndex: Int? = nil
         
-        for idx in self.indices {
+        for idx in indices {
             
             // helper
             
@@ -53,13 +53,13 @@ extension StringProtocol {
             let firstMatchingCharSetIndex = characterSets.firstIndex(where: { $0.contains(scalar) })
             
             if lastCharSetIndex != firstMatchingCharSetIndex
-                && idx != self.indices.first {
+                && idx != indices.first {
                 
                 // grouping separator here
                 
                 // close off previous grouping and append to result array
                 
-                closeGrouping(closingIdx: self.index(before: idx))
+                closeGrouping(closingIdx: index(before: idx))
                 
                 // start new grouping
                 
@@ -69,8 +69,8 @@ extension StringProtocol {
             
             // close off if we've reached the end of the string
             
-            if idx == self.indices.last {
-                if idx == self.indices.first {
+            if idx == indices.last {
+                if idx == indices.first {
                     lastCharSetIndex = firstMatchingCharSetIndex
                 }
                 
@@ -103,7 +103,7 @@ extension StringProtocol {
     ///
     public func only(_ characterSet: CharacterSet) -> String {
         
-        self.map { characterSet.contains(UnicodeScalar("\($0)")!) ? "\($0)" : "" }
+        map { characterSet.contains(UnicodeScalar("\($0)")!) ? "\($0)" : "" }
             .joined()
         
     }
@@ -112,7 +112,7 @@ extension StringProtocol {
     /// Returns a string preserving only characters from the passed string and removing all other characters.
     public func only(characters: String) -> String {
         
-        self.only(CharacterSet(charactersIn: characters))
+        only(CharacterSet(charactersIn: characters))
         
     }
     
@@ -120,7 +120,7 @@ extension StringProtocol {
     /// Returns a string containing only alphanumeric characters and removing all other characters.
     public var onlyAlphanumerics: String {
         
-        self.only(.alphanumerics)
+        only(.alphanumerics)
         
     }
     
@@ -128,7 +128,7 @@ extension StringProtocol {
     /// Returns a string removing all characters from the passed CharacterSet.
     public func removing(_ characterSet: CharacterSet) -> String {
         
-        self.components(separatedBy: characterSet)
+        components(separatedBy: characterSet)
             .joined()
         
     }
@@ -137,7 +137,7 @@ extension StringProtocol {
     /// Returns a string removing all characters from the passed string.
     public func removing(characters: String) -> String {
         
-        self.components(separatedBy: CharacterSet(charactersIn: characters))
+        components(separatedBy: CharacterSet(charactersIn: characters))
             .joined()
         
     }

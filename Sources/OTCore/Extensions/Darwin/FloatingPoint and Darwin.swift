@@ -88,14 +88,14 @@ extension FloatingPoint where Self : FloatingPointPowerComputable {
     /// If `decimalPlaces` <= 0, then `trunc(self)` is returned.
     public mutating func truncate(decimalPlaces: Int) {
         
-        self = self.truncated(decimalPlaces: decimalPlaces)
+        self = truncated(decimalPlaces: decimalPlaces)
         
     }
     
     /// **OTCore:**
     /// Truncates decimal places to `decimalPlaces` number of decimal places.
     ///
-    /// If `decimalPlaces` <= 0, then trunc(self) is returned.
+    /// If `decimalPlaces` <= 0, then `trunc(self)` is returned.
     public func truncated(decimalPlaces: Int) -> Self {
         
         if decimalPlaces < 1 {

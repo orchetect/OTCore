@@ -35,12 +35,12 @@ extension Collection where Self: RangeReplaceableCollection,
     func insert(_ element: Element,
                 position: CollectionPosition = .default) {
         
-        if !self.contains(element) {
+        if !contains(element) {
             switch position {
             case .start:
-                self.insert(element, at: startIndex)
+                insert(element, at: startIndex)
             case .end, .default:
-                self.append(element)
+                append(element)
             }
             
         }
@@ -52,23 +52,23 @@ extension Collection where Self: RangeReplaceableCollection,
     @inlinable public mutating func update(with newMember: Element,
                                            position: CollectionPosition = .default) {
         
-        if let index = self.firstIndex(of: newMember) {
+        if let index = firstIndex(of: newMember) {
             switch position {
             case .default:
                 self[index] = newMember
             case .start:
-                self.remove(at: index)
-                self.insert(newMember, at: startIndex)
+                remove(at: index)
+                insert(newMember, at: startIndex)
             case .end:
-                self.remove(at: index)
-                self.append(newMember)
+                remove(at: index)
+                append(newMember)
             }
         } else {
             switch position {
             case .start:
-                self.insert(newMember, at: startIndex)
+                insert(newMember, at: startIndex)
             case .end, .default:
-                self.append(newMember)
+                append(newMember)
             }
         }
         
@@ -78,7 +78,7 @@ extension Collection where Self: RangeReplaceableCollection,
     /// Similar behavior to a Set, but removes all instances of the element.
     @inlinable public mutating func removeAll(_ member: Element) {
         
-        self.removeAll(where: { $0 == member })
+        removeAll(where: { $0 == member })
         
     }
     
@@ -101,8 +101,8 @@ extension Collection where Self: RangeReplaceableCollection,
     @inlinable public mutating func formUnion<S>(_ other: S) where Element == S.Element, S : Sequence {
         
         other.forEach {
-            if !self.contains($0) {
-                self.append($0)
+            if !contains($0) {
+                append($0)
             }
         }
         
@@ -125,7 +125,7 @@ extension Collection where Self: RangeReplaceableCollection,
     @inlinable public mutating func formUnion<S>(updating other: S) where Element == S.Element, S : Sequence {
         
         other.forEach {
-            self.update(with: $0)
+            update(with: $0)
         }
         
     }

@@ -19,7 +19,7 @@ extension URL {
         
         guard isFileURL, fileExists else { return nil }
         
-        return NSWorkspace.shared.icon(forFile: self.path)
+        return NSWorkspace.shared.icon(forFile: path)
         
     }
     

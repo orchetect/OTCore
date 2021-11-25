@@ -31,7 +31,7 @@ extension Collection where Element : XMLNode {
     /// Filters by the given XML element name
     @inlinable public func filter(elementName: String) -> [XMLNode] {
         
-        self.filter { $0.name == elementName }
+        filter { $0.name == elementName }
         
     }
     
@@ -40,7 +40,7 @@ extension Collection where Element : XMLNode {
     @inlinable public func filter(attribute: String,
                                   value: String) -> [XMLNode] {
         
-        self.filter {
+        filter {
             $0.asElement?
                 .attribute(forName: attribute)?
                 .stringValue == value
@@ -53,7 +53,7 @@ extension Collection where Element : XMLNode {
     @inlinable public func filter(attribute: String,
                                   _ isIncluded: (String) throws -> Bool) rethrows -> [XMLNode] {
         
-        try self.filter {
+        try filter {
             let filtered = try [$0.attributeStringValue(forName: attribute)]
                 .compactMap{$0}
                 .filter(isIncluded)
@@ -72,7 +72,7 @@ extension XMLNode {
     /// Gets an attribute value. If attribute name does not exist or does not have a value, nil will be returned.
     public func attributeStringValue(forName: String) -> String? {
         
-        self.asElement?.attribute(forName: forName)?.stringValue
+        asElement?.attribute(forName: forName)?.stringValue
         
     }
     
@@ -80,7 +80,7 @@ extension XMLNode {
     /// Gets an attribute value. If attribute name does not exist or does not have a value, nil will be returned.
     public func attributeObjectValue(forName: String) -> Any? {
         
-        self.asElement?.attribute(forName: forName)?.objectValue
+        asElement?.attribute(forName: forName)?.objectValue
         
     }
     
@@ -92,7 +92,7 @@ extension XMLNode {
         attr.name = withName
         attr.stringValue = value
         
-        self.asElement?.addAttribute(attr)
+        asElement?.addAttribute(attr)
         
     }
     
@@ -111,7 +111,7 @@ extension XMLElement {
         
         self.init(name: name)
         
-        self.addAttributes(attributes)
+        addAttributes(attributes)
         
     }
     
@@ -121,7 +121,7 @@ extension XMLElement {
     public func addAttributes(_ attributes: [(name: String, value: String)]) {
         
         attributes.forEach {
-            self.addAttribute(withName: $0.name, value: $0.value)
+            addAttribute(withName: $0.name, value: $0.value)
         }
         
     }

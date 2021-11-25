@@ -57,7 +57,7 @@ extension String {
     /// Same as `self.wrapped(with: .parentheses)`
     @inlinable public var parens: Self {
         
-        self.wrapped(with: .parentheses)
+        wrapped(with: .parentheses)
         
     }
     
@@ -66,7 +66,7 @@ extension String {
     /// Same as `self.wrapped(with: .singleQuotes)`
     @inlinable public var singleQuoted: Self {
         
-        self.wrapped(with: .singleQuotes)
+        wrapped(with: .singleQuotes)
         
     }
     
@@ -75,7 +75,7 @@ extension String {
     /// Same as `self.wrapped(with: .quotes)`
     @inlinable public var quoted: Self {
         
-        self.wrapped(with: .quotes)
+        wrapped(with: .quotes)
         
     }
     
