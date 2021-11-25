@@ -341,3 +341,38 @@ extension Sequence {
     }
     
 }
+
+// MARK: - Dictionary map
+
+extension Dictionary {
+    
+    // Swift Standard Library provides `mapValues`,
+    // so `mapKeys` and `mapDictionary` methods are useful accompaniments
+    
+    /// **OTCore:**
+    /// Returns a new dictionary containing the values of this dictionary with the keys transformed by the given closure.
+    public func mapKeys<K: Hashable>(
+        _ transform: (Key) throws -> K
+    ) rethrows -> Dictionary<K, Value> {
+        
+        try reduce(into: [:]) { partialResult, keyValuePair in
+            let transformedKey = try transform(keyValuePair.0)
+            partialResult[transformedKey] = keyValuePair.1
+        }
+        
+    }
+    
+    /// **OTCore:**
+    /// Returns a new dictionary with key/value pairs transformed by the given closure.
+    public func mapDictionary<K: Hashable, V: Any>(
+        _ transform: (Key, Value) throws -> (K, V)
+    ) rethrows -> Dictionary<K, V> {
+        
+        try reduce(into: [:]) { partialResult, keyValuePair in
+            let transformedKeyPair = try transform(keyValuePair.0, keyValuePair.1)
+            partialResult[transformedKeyPair.0] = transformedKeyPair.1
+        }
+        
+    }
+    
+}

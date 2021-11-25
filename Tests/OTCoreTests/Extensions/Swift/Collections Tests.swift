@@ -291,6 +291,79 @@ class Extensions_Swift_Collections_Tests: XCTestCase {
         )
     }
     
+    func testDictionary_mapKeys_SameTypes() {
+        
+        let dict = ["One": 1,
+                    "Two": 2]
+        
+        let mapped = dict.mapKeys {
+            $0 + " Key"
+        }
+        
+        XCTAssertEqual(mapped,
+                       ["One Key": 1,
+                        "Two Key": 2]
+        )
+        
+    }
+    
+    func testDictionary_mapKeys_DifferentTypes() {
+        
+        struct MyKey: Equatable, Hashable {
+            var name: String
+        }
+        
+        let dict = ["One": 1,
+                    "Two": 2]
+        
+        let mapped = dict.mapKeys {
+            MyKey(name: $0 + " Key")
+        }
+        
+        XCTAssertEqual(mapped,
+                       [MyKey(name: "One Key"): 1,
+                        MyKey(name: "Two Key"): 2]
+        )
+        
+    }
+    
+    
+    func testDictionary_mapDictionary_SameTypes() {
+        
+        let dict = ["One": 1,
+                    "Two": 2]
+        
+        let mapped = dict.mapDictionary {
+            ($0 + " plus Two", $1 + 2)
+        }
+        
+        XCTAssertEqual(mapped,
+                       ["One plus Two": 3,
+                        "Two plus Two": 4]
+        )
+        
+    }
+    
+    func testDictionary_mapDictionary_DifferentTypes() {
+        
+        struct MyKey: Equatable, Hashable {
+            var name: String
+        }
+        
+        let dict = ["One": 1,
+                    "Two": 2]
+        
+        let mapped = dict.mapDictionary {
+            (MyKey(name: $0 + " plus 2.5"), Double($1) + 2.5)
+        }
+        
+        XCTAssertEqual(mapped,
+                       [MyKey(name: "One plus 2.5"): 3.5,
+                        MyKey(name: "Two plus 2.5"): 4.5]
+        )
+        
+    }
+    
 }
 
 #endif
