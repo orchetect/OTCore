@@ -21,4 +21,34 @@ extension CharacterSet {
     
 }
 
+extension CharacterSet {
+    
+    /// English consonant letters, omitting vowels.
+    public static var consonants = CharacterSet.letters.subtracting(Self.vowels)
+    
+    /// English vowel letters (a, e, i, o, u) including all cases and diacritic variants.
+    public static var vowels = lowercaseVowels.union(uppercaseVowels)
+    
+    /// English lowercase vowel letters (a, e, i, o, u) including diacritic variants.
+    public static var lowercaseVowels = CharacterSet(
+        charactersIn:
+            "aàáâäæãåā" + "ª" + "ăąǟǻȁȃȧᵃḁạảấầẩẫậắằẳẵặ"
+        + "eèéêëēėę" + "ĕėěȅȇȩᵉḕḗḙḛḝẹẻẽếềểễệ"
+        + "iîïíīįì" + "ĩĭįıǐȉȋᵢḭḯỉịⁱ"
+        + "oôöòóœøōõ" + "ŏőơǒǫǭȍȏȫȭȯȱᵒṍṏṑṓọỏốồổỗộ"
+        + "uûüùúū" + "ũŭůűųưǔǖǘǚǜȕȗᵘᵤṳṵṷṹṻụủứừửữự"
+    )
+    
+    /// English uppercase vowel letters (a, e, i, o, u) including diacritic variants.
+    public static var uppercaseVowels = CharacterSet(
+        charactersIn:
+            "AÀÁÂÄÆÃÅĀ" + "ĂĄǞǺȀȂȦᴬḀẠẢẤẦẨẪẬẮẰẲẴẶ"
+        + "EÈÉÊËĒĖĘ" + "ĔĖĚȄȆȨᴱḔḖḘḚḜẸẺẼẾỀỀỂỄỆ"
+        + "IÎÏÍĪĮÌ" + "ĨĬĮİǏȈȊᴵḬḮỈỊ"
+        + "OÔÖÒÓŒØŌÕ" + "ŎŐƠǑǪǬȌȎȪȬȮȰᴼṌṎṐṒỌỎỐỒỔỖỘỚ"
+        + "UÛÜÙÚŪ" + "ŨŬŮŰŲƯǓǕǗǙǛȔȖᵁṲṴṶṸṺỤỦỨỪỬỮỰ"
+    )
+    
+}
+
 #endif
