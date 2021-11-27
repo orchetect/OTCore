@@ -27,6 +27,44 @@ class Extensions_Foundation_CharacterSet_Tests: XCTestCase {
         
     }
     
+    func testOperators() {
+        
+        // +
+        
+        let added: CharacterSet = .letters + .decimalDigits
+        
+        XCTAssertTrue(added.contains("a"))
+        XCTAssertTrue(added.contains("1"))
+        XCTAssertFalse(added.contains("!"))
+        
+        // +=
+        
+        var addedInPlace: CharacterSet = .letters
+        addedInPlace += .decimalDigits
+        
+        XCTAssertTrue(addedInPlace.contains("a"))
+        XCTAssertTrue(addedInPlace.contains("1"))
+        XCTAssertFalse(addedInPlace.contains("!"))
+        
+        // -
+        
+        let subtracted: CharacterSet = .alphanumerics - .decimalDigits
+        
+        XCTAssertTrue(subtracted.contains("a"))
+        XCTAssertFalse(subtracted.contains("1"))
+        XCTAssertFalse(subtracted.contains("!"))
+        
+        // -=
+        
+        var subtractedInPlace: CharacterSet = .alphanumerics
+        subtractedInPlace -= .decimalDigits
+        
+        XCTAssertTrue(subtractedInPlace.contains("a"))
+        XCTAssertFalse(subtractedInPlace.contains("1"))
+        XCTAssertFalse(subtractedInPlace.contains("!"))
+        
+    }
+    
     func testConsonants() {
         
         // random sampling of test characters

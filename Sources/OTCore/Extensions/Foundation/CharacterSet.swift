@@ -11,12 +11,41 @@ extension CharacterSet {
     
     /// **OTCore:**
     /// Returns true if the `CharacterSet` contains the given `Character`.
+    @_disfavoredOverload
     public func contains(_ character: Character) -> Bool {
         
         character
             .unicodeScalars
             .allSatisfy(contains(_:))
         
+    }
+    
+}
+
+extension CharacterSet {
+    
+    /// **OTCore:**
+    /// Same as `lhs.union(rhs)`.
+    public static func + (lhs: Self, rhs: Self) -> Self {
+        lhs.union(rhs)
+    }
+    
+    /// **OTCore:**
+    /// Same as `lhs.formUnion(rhs)`.
+    public static func += (lhs: inout Self, rhs: Self) {
+        lhs.formUnion(rhs)
+    }
+    
+    /// **OTCore:**
+    /// Same as `lhs.subtracting(rhs)`.
+    public static func - (lhs: Self, rhs: Self) -> Self {
+        lhs.subtracting(rhs)
+    }
+    
+    /// **OTCore:**
+    /// Same as `lhs.subtract(rhs)`.
+    public static func -= (lhs: inout Self, rhs: Self) {
+        lhs.subtract(rhs)
     }
     
 }
