@@ -182,6 +182,61 @@ class Extensions_Foundation_StringAndCharacterSet_Tests: XCTestCase {
         
     }
     
+    func testIsASCII() {
+        
+        let asciiString = (0...127)
+            .map { UnicodeScalar($0)! }
+            .map { "\($0)" }
+            .joined()
+        
+        XCTAssertTrue(asciiString.isASCII)
+        
+    }
+    
+    func testContainsOnlyCharacterSet() {
+        
+        // .isOnly - single character set
+        
+        XCTAssertTrue("abcABC123àÀ".isOnly(.alphanumerics))
+        XCTAssertFalse("abcABC123!@#".isOnly(.alphanumerics))
+        
+        XCTAssertTrue("bcA2".isOnly(characters: "abcABC123"))
+        XCTAssertFalse("abcABC123!@#".isOnly(characters: "abcABC123"))
+        XCTAssertFalse("abcABC123!@#".isOnly(characters: ""))
+        
+    }
+    
+    func testContainsOnlyCharacterSets() {
+        
+        // .isOnly - more than one character set
+        
+        XCTAssertTrue("abcABC123àÀ".isOnly(.letters, .decimalDigits))
+        XCTAssertFalse("abcABC123!@#".isOnly(.letters, .decimalDigits))
+        
+    }
+    
+    func testContainsAnyCharacterSet() {
+        
+        // .contains(any:) - single character set
+        
+        XCTAssertTrue("abcABC123àÀ!@#$".contains(any: .alphanumerics))
+        XCTAssertFalse("!@#$ [],.".contains(any: .alphanumerics))
+        
+        XCTAssertTrue("abcABC123àÀ!@#$".contains(anyCharacters: "abc!"))
+        XCTAssertFalse("!@#$ [],.".contains(anyCharacters: "abc"))
+        XCTAssertFalse("!@#$ [],.".contains(anyCharacters: ""))
+        
+    }
+    
+    func testContainsAnyCharacterSets() {
+        
+        // .contains(any:) - more than one character set
+        
+        XCTAssertTrue("abcABC123àÀ!@#$".contains(any: .letters, .decimalDigits))
+        XCTAssertFalse("!@#$ [],.".contains(any: .letters, .decimalDigits))
+        
+    }
+    
 }
 
 #endif

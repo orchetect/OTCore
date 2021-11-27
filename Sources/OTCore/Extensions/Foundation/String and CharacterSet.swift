@@ -102,11 +102,12 @@ extension StringProtocol {
     ///     "A string 123".only(.alphanumerics)`
     ///     "A string 123".only(.letters, .decimalDigits)`
     ///
-    public func only(_ characterSet: CharacterSet, _ characterSets: CharacterSet...) -> String {
+    public func only(_ characterSet: CharacterSet,
+                     _ characterSets: CharacterSet...) -> String {
         
         let mergedCharacterSet = characterSets.isEmpty
             ? characterSet
-            : characterSets.reduce(into: characterSet) { $0.formUnion($1) }
+            : characterSets.reduce(into: characterSet, +=)
         
         return unicodeScalars
             .filter { mergedCharacterSet.contains($0) }
@@ -139,11 +140,12 @@ extension StringProtocol {
     ///     "A string 123".removing(.whitespaces)`
     ///     "A string 123".removing(.letters, .decimalDigits)`
     ///
-    public func removing(_ characterSet: CharacterSet, _ characterSets: CharacterSet...) -> String {
+    public func removing(_ characterSet: CharacterSet,
+                         _ characterSets: CharacterSet...) -> String {
         
         let mergedCharacterSet = characterSets.isEmpty
             ? characterSet
-            : characterSets.reduce(into: characterSet) { $0.formUnion($1) }
+            : characterSets.reduce(into: characterSet, +=)
         
         return components(separatedBy: mergedCharacterSet)
             .joined()
@@ -156,6 +158,73 @@ extension StringProtocol {
         
         components(separatedBy: CharacterSet(charactersIn: characters))
             .joined()
+        
+    }
+    
+}
+
+// MARK: - Character tests
+
+extension StringProtocol {
+    
+    /// **OTCore:**
+    /// Returns true if the string is entirely comprised of ASCII characters (0-127).
+    public var isASCII: Bool {
+        
+        allSatisfy(\.isASCII)
+        
+    }
+    
+    /// **OTCore:**
+    /// Returns true if all characters in the string are contained in the character set.
+    public func isOnly(_ characterSet: CharacterSet,
+                       _ characterSets: CharacterSet...) -> Bool {
+        
+        let mergedCharacterSet = characterSets.isEmpty
+            ? characterSet
+            : characterSets.reduce(into: characterSet, +=)
+        
+        return allSatisfy(mergedCharacterSet.contains(_:))
+        
+    }
+    
+    /// **OTCore:**
+    /// Returns true if all characters in the string are contained in the character set.
+    public func isOnly(characters: String) -> Bool {
+        
+        let characterSet = CharacterSet(charactersIn: characters)
+        return allSatisfy(characterSet.contains(_:))
+        
+    }
+    
+    /// **OTCore:**
+    /// Returns true if any character in the string are contained in the character set.
+    public func contains(any characterSet: CharacterSet,
+                         _ characterSets: CharacterSet...) -> Bool {
+        
+        let mergedCharacterSet = characterSets.isEmpty
+            ? characterSet
+            : characterSets.reduce(into: characterSet, +=)
+        
+        for char in self {
+            if mergedCharacterSet.contains(char) { return true }
+        }
+        
+        return false
+        
+    }
+    
+    /// **OTCore:**
+    /// Returns true if any character in the string are contained in the character set.
+    public func contains(anyCharacters characters: String) -> Bool {
+        
+        let characterSet = CharacterSet(charactersIn: characters)
+        
+        for char in self {
+            if characterSet.contains(char) { return true }
+        }
+        
+        return false
         
     }
     
