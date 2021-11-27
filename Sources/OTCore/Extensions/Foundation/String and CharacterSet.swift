@@ -108,7 +108,9 @@ extension StringProtocol {
             ? characterSet
             : characterSets.reduce(into: characterSet) { $0.formUnion($1) }
         
-        return map { mergedCharacterSet.contains(UnicodeScalar("\($0)")!) ? "\($0)" : "" }
+        return unicodeScalars
+            .filter { mergedCharacterSet.contains($0) }
+            .map { "\($0)" }
             .joined()
         
     }
@@ -130,10 +132,20 @@ extension StringProtocol {
     }
     
     /// **OTCore:**
-    /// Returns a string removing all characters from the passed CharacterSet.
-    public func removing(_ characterSet: CharacterSet) -> String {
+    /// Returns a string removing all characters from the passed `CharacterSet`s.
+    ///
+    /// Example:
+    ///
+    ///     "A string 123".removing(.whitespaces)`
+    ///     "A string 123".removing(.letters, .decimalDigits)`
+    ///
+    public func removing(_ characterSet: CharacterSet, _ characterSets: CharacterSet...) -> String {
         
-        components(separatedBy: characterSet)
+        let mergedCharacterSet = characterSets.isEmpty
+            ? characterSet
+            : characterSets.reduce(into: characterSet) { $0.formUnion($1) }
+        
+        return components(separatedBy: mergedCharacterSet)
             .joined()
         
     }

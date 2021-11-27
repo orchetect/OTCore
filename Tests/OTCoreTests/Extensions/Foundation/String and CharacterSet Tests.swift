@@ -108,7 +108,7 @@ class Extensions_Foundation_StringAndCharacterSet_Tests: XCTestCase {
     
     func testOnlyCharacterSet() {
         
-        // .only(_ characterSet:)
+        // .only - single character set
         
         XCTAssertEqual("abcdefg 12345678 abcdefg 12345678"
                         .only(CharacterSet(charactersIn: "def456")),
@@ -139,7 +139,7 @@ class Extensions_Foundation_StringAndCharacterSet_Tests: XCTestCase {
     
     func testOnlyCharacterSets() {
         
-        // .only(_ characterSets: ...)
+        // .only - more than one character set
         
         XCTAssertEqual("💚test_123,456. 789"
                         .only(.letters, .decimalDigits),
@@ -147,9 +147,9 @@ class Extensions_Foundation_StringAndCharacterSet_Tests: XCTestCase {
         
     }
     
-    func testRemovingCharacters() {
+    func testRemovingCharacterSet() {
         
-        // .removing
+        // .removing - single character set
         
         XCTAssertEqual("abcdefg 12345678 abcdefg 12345678"
                         .removing(.alphanumerics),
@@ -165,6 +165,20 @@ class Extensions_Foundation_StringAndCharacterSet_Tests: XCTestCase {
         XCTAssertEqual("abcdefg 12345678 abcdefg 12345678"
                         .removing(characters: "bdf"),
                        "aceg 12345678 aceg 12345678")
+        
+    }
+    
+    func testRemovingCharacterSets() {
+        
+        // .removing - more than one character set
+        
+        XCTAssertEqual("abcdefg 12345678 abcdefg 12345678"
+                        .removing(.letters, .decimalDigits),
+                       "   ")
+        
+        XCTAssertEqual("abcdefg 12345678 abcdefg 12345678"
+                        .removing(.letters, .whitespaces),
+                       "1234567812345678")
         
     }
     
