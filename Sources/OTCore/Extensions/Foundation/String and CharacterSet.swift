@@ -95,15 +95,20 @@ extension StringProtocol {
 extension StringProtocol {
     
     /// **OTCore:**
-    /// Returns a string preserving only characters from the CharacterSet and removing all other characters.
+    /// Returns a string preserving only characters from one or more `CharacterSet`s.
     ///
     /// Example:
     ///
     ///     "A string 123".only(.alphanumerics)`
+    ///     "A string 123".only(.letters, .decimalDigits)`
     ///
-    public func only(_ characterSet: CharacterSet) -> String {
+    public func only(_ characterSet: CharacterSet, _ characterSets: CharacterSet...) -> String {
         
-        map { characterSet.contains(UnicodeScalar("\($0)")!) ? "\($0)" : "" }
+        let mergedCharacterSet = characterSets.isEmpty
+            ? characterSet
+            : characterSets.reduce(into: characterSet) { $0.formUnion($1) }
+        
+        return map { mergedCharacterSet.contains(UnicodeScalar("\($0)")!) ? "\($0)" : "" }
             .joined()
         
     }
