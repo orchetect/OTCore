@@ -70,6 +70,22 @@ class Extensions_Foundation_StringAndFoundation_Tests: XCTestCase {
         
     }
     
+    func testSubscriptPosition_NSRange() {
+        
+        let nsRange = NSMakeRange(1, 2) // (start: 1, length: 2) == 1...3
+        
+        // String
+        
+        XCTAssertEqual("abc123"[position: nsRange], "bc1")
+        
+        // Substring
+        
+        let string = "abc123"
+        let substring = string.suffix(4)
+        XCTAssertEqual(substring[position: nsRange], "123")
+        
+    }
+    
     func testContainsCaseInsensitive() {
         
         // .contains(caseInsensitive:)

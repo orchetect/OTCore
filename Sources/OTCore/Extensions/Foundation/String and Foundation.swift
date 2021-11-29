@@ -42,6 +42,16 @@ extension StringProtocol {
     }
     
     /// **OTCore:**
+    /// Returns the substring in the given range of character positions (offsets from the start index).
+    public subscript(position offsetRange: NSRange) -> SubSequence {
+        
+        let fromIndex = index(startIndex, offsetBy: offsetRange.location)
+        let toIndex = index(startIndex, offsetBy: offsetRange.location + offsetRange.length)
+        return self[fromIndex...toIndex]
+        
+    }
+    
+    /// **OTCore:**
     /// Convenience method: returns `true` if contains string. Case-insensitive.
     public func contains<T: StringProtocol>(caseInsensitive find: T) -> Bool {
         
