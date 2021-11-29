@@ -147,6 +147,113 @@ class Extensions_Swift_Collections_Tests: XCTestCase {
         XCTAssertEqual(arrCont, [1,1,1])
         
         XCTAssertEqual(arrCont.remove(safeAt: 3), nil)  // silently fails
+        
+    }
+    
+    func testStartIndexOffsetBy() {
+        
+        // .startIndex(offsetBy:)
+        
+        let array = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
+        
+        XCTAssertEqual(array.startIndex(offsetBy: 0),
+                       array.startIndex)
+        
+        XCTAssertEqual(array.startIndex(offsetBy: 1),
+                       array.index(array.startIndex, offsetBy: 1))
+        
+    }
+    
+    func testEndIndexOffsetBy() {
+        
+        // .endIndex(offsetBy:)
+        
+        let array = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
+        
+        XCTAssertEqual(array.endIndex(offsetBy: 0),
+                       array.endIndex)
+        
+        XCTAssertEqual(array.endIndex(offsetBy: -1),
+                       array.index(array.endIndex, offsetBy: -1))
+        
+    }
+    
+    func testSubscriptPosition_OffsetIndex() {
+        
+        let array = ["a", "b", "c", "1", "2", "3"]
+        
+        // [String]
+        XCTAssertEqual(array[position: 2], "c")
+        
+        // [String].SubSequence a.k.a. ArraySlice<String>
+        let slice = array.suffix(4)
+        XCTAssertEqual(slice[position: 2], "2")
+        
+    }
+    
+    func testSubscriptPosition_ClosedRange() {
+        
+        let array = ["a", "b", "c", "1", "2", "3"]
+        
+        // [String]
+        XCTAssertEqual(array[position: 1...3], ["b", "c", "1"])
+        
+        // [String].SubSequence a.k.a. ArraySlice<String>
+        let slice = array.suffix(4)
+        XCTAssertEqual(slice[position: 1...3], ["1", "2", "3"])
+        
+    }
+    
+    func testSubscriptPosition_Range() {
+        
+        let array = ["a", "b", "c", "1", "2", "3"]
+        
+        // [String]
+        XCTAssertEqual(array[position: 1..<3], ["b", "c"])
+        
+        // [String].SubSequence a.k.a. ArraySlice<String>
+        let slice = array.suffix(4)
+        XCTAssertEqual(slice[position: 1..<3], ["1", "2"])
+        
+    }
+    
+    func testSubscriptPosition_PartialRangeFrom() {
+        
+        let array = ["a", "b", "c", "1", "2", "3"]
+        
+        // [String]
+        XCTAssertEqual(array[position: 2...], ["c", "1", "2", "3"])
+        
+        // [String].SubSequence a.k.a. ArraySlice<String>
+        let slice = array.suffix(4)
+        XCTAssertEqual(slice[position: 2...], ["2", "3"])
+        
+    }
+    
+    func testSubscriptPosition_PartialRangeThrough() {
+        
+        let array = ["a", "b", "c", "1", "2", "3"]
+        
+        // [String]
+        XCTAssertEqual(array[position: ...3], ["a", "b", "c", "1"])
+        
+        // [String].SubSequence a.k.a. ArraySlice<String>
+        let slice = array.suffix(4)
+        XCTAssertEqual(slice[position: ...3], ["c", "1", "2", "3"])
+        
+    }
+    
+    func testSubscriptPosition_PartialRangeUpTo() {
+        
+        let array = ["a", "b", "c", "1", "2", "3"]
+        
+        // [String]
+        XCTAssertEqual(array[position: ..<3], ["a", "b", "c"])
+        
+        // [String].SubSequence a.k.a. ArraySlice<String>
+        let slice = array.suffix(4)
+        XCTAssertEqual(slice[position: ..<3], ["c", "1", "2"])
+        
     }
     
     func testWrappingIndexSubscript() {

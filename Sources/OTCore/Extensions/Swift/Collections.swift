@@ -18,7 +18,7 @@ extension Collection where Self: RangeReplaceableCollection,
     
 }
 
-// MARK: - Collection & array indexes
+// MARK: - Safe subscripts
 
 // MutableCollection:
 // (inherits from Sequence, Collection)
@@ -153,6 +153,85 @@ extension RangeReplaceableCollection {
         }
         
         return nil
+        
+    }
+    
+}
+
+
+// MARK: - Indexes
+
+extension Collection {
+    
+    /// **OTCore:**
+    /// Returns an index that is the specified distance from the start index.
+    public func startIndex(offsetBy distance: Int) -> Index {
+        index(startIndex, offsetBy: distance)
+    }
+    
+    /// **OTCore:**
+    /// Returns an index that is the specified distance from the start index.
+    public func endIndex(offsetBy distance: Int) -> Index {
+        index(endIndex, offsetBy: distance)
+    }
+    
+}
+
+extension Collection {
+    
+    /// **OTCore:**
+    /// Returns the character at the given character position (offset from the start index).
+    public subscript(position offsetIndex: Int) -> Element {
+        
+        let fromIndex = index(startIndex, offsetBy: offsetIndex)
+        return self[fromIndex]
+        
+    }
+    
+    /// **OTCore:**
+    /// Returns the substring in the given range of character positions (offsets from the start index).
+    public subscript(position offsetRange: ClosedRange<Int>) -> SubSequence {
+        
+        let fromIndex = index(startIndex, offsetBy: offsetRange.lowerBound)
+        let toIndex = index(startIndex, offsetBy: offsetRange.upperBound)
+        return self[fromIndex...toIndex]
+        
+    }
+    
+    /// **OTCore:**
+    /// Returns the substring in the given range of character positions (offsets from the start index).
+    public subscript(position offsetRange: Range<Int>) -> SubSequence {
+        
+        let fromIndex = index(startIndex, offsetBy: offsetRange.lowerBound)
+        let toIndex = index(startIndex, offsetBy: offsetRange.upperBound)
+        return self[fromIndex..<toIndex]
+        
+    }
+    
+    /// **OTCore:**
+    /// Returns the substring in the given range of character positions (offsets from the start index).
+    public subscript(position offsetRange: PartialRangeFrom<Int>) -> SubSequence {
+        
+        let fromIndex = index(startIndex, offsetBy: offsetRange.lowerBound)
+        return self[fromIndex...]
+        
+    }
+    
+    /// **OTCore:**
+    /// Returns the substring in the given range of character positions (offsets from the start index).
+    public subscript(position offsetRange: PartialRangeThrough<Int>) -> SubSequence {
+        
+        let toIndex = index(startIndex, offsetBy: offsetRange.upperBound)
+        return self[...toIndex]
+        
+    }
+    
+    /// **OTCore:**
+    /// Returns the substring in the given range of character positions (offsets from the start index).
+    public subscript(position offsetRange: PartialRangeUpTo<Int>) -> SubSequence {
+        
+        let toIndex = index(startIndex, offsetBy: offsetRange.upperBound)
+        return self[..<toIndex]
         
     }
     
