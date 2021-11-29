@@ -234,8 +234,8 @@ extension StringProtocol {
     /// Returns the character at the given character position (offset from the start index).
     public subscript(position offsetIndex: Int) -> Character {
         
-        let index = index(startIndex, offsetBy: offsetIndex)
-        return self[index]
+        let fromIndex = self.index(startIndex, offsetBy: offsetIndex)
+        return self[fromIndex]
         
     }
     
