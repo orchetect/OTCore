@@ -62,75 +62,46 @@ extension Character {
 extension String {
     
     /// **OTCore:**
-    /// Appends a newline to the end of the string and returns a copy.
-    public var newLined: Self {
+    /// Returns a new String appending a newline character to the end.
+    @inlinable public var newLined: Self {
         self + Self.newLine
     }
     
     /// **OTCore:**
-    /// Appends a tab to the end of the string and returns a copy.
-    public var tabbed: Self {
+    /// Returns a new String appending a tab character to the end.
+    @inlinable public var tabbed: Self {
         self + Self.tab
     }
     
     /// **OTCore:**
-    /// Appends a newline to the end of the string.
-    public mutating func newLine() {
+    /// Appends a newline character to the end of the string.
+    @inlinable public mutating func newLine() {
         self += Self.newLine
     }
     
     /// **OTCore:**
-    /// Appends a tab to the end of the string.
-    public mutating func tab() {
+    /// Appends a tab character to the end of the string.
+    @inlinable public mutating func tab() {
         self += Self.tab
     }
     
 }
 
-
-// MARK: - Ranges
-
-extension StringProtocol {
+extension Substring {
     
     /// **OTCore:**
-    /// Same as `.range(of: find, options: .backwards)`
-    /// (Functional convenience method)
-    public func range(backwards find: Self) -> Range<Index>? {
-        
-        range(of: find, options: .backwards)
-        
+    /// Returns a new String appending a newline character to the end.
+    @inlinable public var newLined: String {
+        String(self) + String.newLine
     }
     
     /// **OTCore:**
-    /// Same as `.range(of: find, options: [.caseInsensitiveSearch, .backwards])`
-    /// (Functional convenience method)
-    public func range(backwardsCaseInsensitive find: Self) -> Range<Index>? {
-        
-        range(of: find, options: [.caseInsensitive, .backwards])
-        
-    }
-    
-    /// **OTCore:**
-    /// Convenience method: returns `true` if contains string. Case-insensitive.
-    public func contains(caseInsensitive find: Self) -> Bool {
-        
-        range(of: find, options: .caseInsensitive) != nil
-            ? true
-            : false
-        
-    }
-    
-    /// **OTCore:**
-    /// Convenience method: returns `true` if starts with the specified string. Case-insensitive.
-    public func starts(withCaseInsensitive prefix: Self) -> Bool {
-        
-        uppercased()
-            .starts(with: prefix.uppercased())
-        
+    /// Returns a new String appending a tab character to the end.
+    @inlinable public var tabbed: String {
+        String(self) + String.tab
     }
     
 }
-
 
 // MARK: - Segmentation
 
@@ -139,6 +110,7 @@ extension String {
     /// **OTCore:**
     /// Same as `String(repeating: self, count: count)`
     /// (Functional convenience method)
+    @_disfavoredOverload
     public func repeating(_ count: Int) -> String {
         
         String(repeating: self, count: count)
@@ -155,6 +127,19 @@ extension Substring {
     public func repeating(_ count: Int) -> String {
         
         String(repeating: string, count: count)
+        
+    }
+    
+}
+
+extension Character {
+    
+    /// **OTCore:**
+    /// Same as `String(repeating: self, count: count)`
+    /// (Functional convenience method)
+    public func repeating(_ count: Int) -> String {
+        
+        String(repeating: self, count: count)
         
     }
     
@@ -188,7 +173,8 @@ extension StringProtocol {
     
     /// **OTCore:**
     /// Splits a string into groups of `length` characters, grouping from left-to-right. If `backwards` is true, right-to-left.
-    public func split(every: Int, backwards: Bool = false) -> [Self.SubSequence] {
+    public func split(every: Int,
+                      backwards: Bool = false) -> [SubSequence] {
         
         var result: [Self.SubSequence] = []
         
@@ -224,25 +210,116 @@ extension StringProtocol {
 }
 
 
-// MARK: - Prefix and Suffix
+// MARK: - Indexes
 
-extension String {
+extension StringProtocol {
     
     /// **OTCore:**
-    /// Removes the prefix of a String if it exists and returns a new String.
-    public func removingPrefix(_ prefix: String) -> String {
+    /// Returns an index that is the specified distance from the start index.
+    func startIndex(offsetBy distance: Int) -> Index {
+        index(startIndex, offsetBy: distance)
+    }
+    
+    /// **OTCore:**
+    /// Returns an index that is the specified distance from the start index.
+    func endIndex(offsetBy distance: Int) -> Index {
+        index(endIndex, offsetBy: distance)
+    }
+    
+}
+
+extension StringProtocol {
+    
+    /// **OTCore:**
+    /// Returns the character at the given character position (offset from the start index).
+    public subscript(position offsetIndex: Int) -> Character {
         
-        if hasPrefix(prefix) {
-            return String(dropFirst(prefix.count))
-        }
-        
-        return self
+        let index = index(startIndex, offsetBy: offsetIndex)
+        return self[index]
         
     }
     
     /// **OTCore:**
+    /// Returns the substring in the given range of character positions (offsets from the start index).
+    public subscript(position offsetRange: ClosedRange<Int>) -> SubSequence {
+        
+        let fromIndex = index(startIndex, offsetBy: offsetRange.lowerBound)
+        let toIndex = index(startIndex, offsetBy: offsetRange.upperBound)
+        return self[fromIndex...toIndex]
+        
+    }
+    
+    /// **OTCore:**
+    /// Returns the substring in the given range of character positions (offsets from the start index).
+    public subscript(position offsetRange: Range<Int>) -> SubSequence {
+        
+        let fromIndex = index(startIndex, offsetBy: offsetRange.lowerBound)
+        let toIndex = index(startIndex, offsetBy: offsetRange.upperBound)
+        return self[fromIndex..<toIndex]
+        
+    }
+    
+    /// **OTCore:**
+    /// Returns the substring in the given range of character positions (offsets from the start index).
+    public subscript(position offsetRange: PartialRangeFrom<Int>) -> SubSequence {
+        
+        let fromIndex = index(startIndex, offsetBy: offsetRange.lowerBound)
+        return self[fromIndex...]
+        
+    }
+    
+    /// **OTCore:**
+    /// Returns the substring in the given range of character positions (offsets from the start index).
+    public subscript(position offsetRange: PartialRangeThrough<Int>) -> SubSequence {
+        
+        let toIndex = index(startIndex, offsetBy: offsetRange.upperBound)
+        return self[...toIndex]
+        
+    }
+    
+    /// **OTCore:**
+    /// Returns the substring in the given range of character positions (offsets from the start index).
+    public subscript(position offsetRange: PartialRangeUpTo<Int>) -> SubSequence {
+        
+        let toIndex = index(startIndex, offsetBy: offsetRange.upperBound)
+        return self[..<toIndex]
+        
+    }
+    
+}
+
+
+// MARK: - Prefix and Suffix
+
+extension StringProtocol {
+    
+    /// **OTCore:**
+    /// Returns a new SubSequence, removing the prefix if it matches.
+    @inlinable public func removingPrefix<T: StringProtocol>(_ prefix: T) -> SubSequence {
+        
+        hasPrefix(prefix)
+            ? dropFirst(prefix.count)
+            : self[startIndex..<endIndex]
+        
+    }
+    
+    /// **OTCore:**
+    /// Returns a new SubSequence, removing the suffix if it matches.
+    @inlinable public func removingSuffix<T: StringProtocol>(_ suffix: T) -> SubSequence {
+        
+        hasSuffix(suffix)
+            ? dropLast(suffix.count)
+            : self[startIndex..<endIndex]
+        
+    }
+    
+}
+
+extension String {
+    
+    /// **OTCore:**
     /// Removes the prefix of a String if it exists.
-    public mutating func removePrefix(_ prefix: String) {
+    @inlinable public mutating func removePrefix<T: StringProtocol>(_ prefix: T) {
         
         if hasPrefix(prefix) {
             removeFirst(prefix.count)
@@ -251,20 +328,8 @@ extension String {
     }
     
     /// **OTCore:**
-    /// Removes the suffix of a String if it exists and returns a new String.
-    public func removingSuffix(_ suffix: String) -> String {
-        
-        if hasSuffix(suffix) {
-            return String(dropLast(suffix.count))
-        }
-        
-        return self
-        
-    }
-    
-    /// **OTCore:**
     /// Removes the suffix of a String if it exists.
-    public mutating func removeSuffix(_ suffix: String) {
+    @inlinable public mutating func removeSuffix<T: StringProtocol>(_ suffix: T) {
         
         if hasSuffix(suffix) {
             removeLast(suffix.count)
@@ -284,7 +349,8 @@ extension String {
 ///
 ///     "\(object, ifNil: "Object is nil.")"
 ///
-@inlinable public func optionalString(describing object: Any?, ifNil: String) -> String {
+@inlinable public func optionalString(describing object: Any?,
+                                      ifNil: String) -> String {
     
     object != nil
         ? String(describing: object!)
@@ -299,7 +365,8 @@ extension DefaultStringInterpolation {
     
     /// **OTCore:**
     /// Convenience: Returns unwrapped String representation of a Swift Optional, otherwise returns contents of `ifNil` string.
-    @inlinable public mutating func appendInterpolation(_ object: Any?, ifNil: String) {
+    @inlinable public mutating func appendInterpolation(_ object: Any?,
+                                                        ifNil: String) {
         
         appendLiteral(optionalString(describing: object, ifNil: ifNil))
         
@@ -311,7 +378,8 @@ extension DefaultStringInterpolation {
     
     /// **OTCore:**
     /// Convenience interpolator for converting a value to a given radix.
-    @inlinable public mutating func appendInterpolation(_ value: String, radix: Int) {
+    @inlinable public mutating func appendInterpolation(_ value: String,
+                                                        radix: Int) {
         
         guard let result = Int(value, radix: radix) else {
             appendLiteral("nil")

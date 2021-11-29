@@ -9,7 +9,7 @@ import Foundation
 
 // MARK: - RegEx
 
-extension String {
+extension StringProtocol {
     
     /// **OTCore:**
     /// Returns an array of RegEx matches
@@ -23,10 +23,29 @@ extension String {
             
             let regex = try NSRegularExpression(pattern: pattern,
                                                 options: options)
-            let nsString = self as NSString
-            let results = regex.matches(in: self,
-                                        options: matchesOptions,
-                                        range: NSMakeRange(0, nsString.length))
+            
+            func runRegEx(in source: String) -> [NSTextCheckingResult] {
+                regex.matches(in: source,
+                              options: matchesOptions,
+                              range: NSMakeRange(0, nsString.length))
+            }
+            
+            let nsString: NSString
+            let results: [NSTextCheckingResult]
+            
+            switch self {
+            case let _self as String:
+                nsString = _self as NSString
+                results = runRegEx(in: _self)
+                
+            case let _self as Substring:
+                let stringSelf = String(_self)
+                nsString = stringSelf as NSString
+                results = runRegEx(in: stringSelf)
+                
+            default:
+                return []
+            }
             
             return results.map { nsString.substring(with: $0.range)}
             
@@ -53,16 +72,30 @@ extension String {
             let regex = try NSRegularExpression(pattern: pattern,
                                                 options: options)
             
-            let nsString = self as NSString
+            func runRegEx(in source: String) -> String {
+                regex.stringByReplacingMatches(
+                    in: source,
+                    options: replacingOptions,
+                    range: NSMakeRange(0, source.count),
+                    withTemplate: replacementTemplate
+                )
+            }
             
-            let replaced = regex.stringByReplacingMatches(
-                in: self,
-                options: replacingOptions,
-                range: NSMakeRange(0, nsString.length),
-                withTemplate: replacementTemplate
-            )
+            let result: String
             
-            return replaced
+            switch self {
+            case let _self as String:
+                result = runRegEx(in: _self)
+                
+            case let _self as Substring:
+                let stringSelf = String(_self)
+                result = runRegEx(in: stringSelf)
+                
+            default:
+                return nil
+            }
+            
+            return result
             
         } catch {
             
@@ -85,29 +118,47 @@ extension String {
             let regex = try NSRegularExpression(pattern: captureGroupsFromPattern,
                                                 options: options)
             
-            let nsString = self as NSString
+            let result: [String?]
             
-            let results = regex.matches(
-                in: self,
-                options: matchesOptions,
-                range: NSMakeRange(0, nsString.length)
-            )
-            
-            var matches: [String?] = []
-            
-            for result in results {
-                for i in 0..<result.numberOfRanges {
-                    let range = result.range(at: i)
-                    
-                    if range.location == NSNotFound {
-                        matches.append(nil)
-                    } else {
-                        matches.append(nsString.substring(with: range ))
+            func runRegEx(in source: String) -> [String?] {
+                let results = regex.matches(
+                    in: source,
+                    options: matchesOptions,
+                    range: NSMakeRange(0, source.count)
+                )
+                
+                let nsString = source as NSString
+                
+                var matches: [String?] = []
+                
+                for result in results {
+                    for i in 0..<result.numberOfRanges {
+                        let range = result.range(at: i)
+                        
+                        if range.location == NSNotFound {
+                            matches.append(nil)
+                        } else {
+                            matches.append(nsString.substring(with: range ))
+                        }
                     }
                 }
+                
+                return matches
             }
             
-            return matches
+            switch self {
+            case let _self as String:
+                result = runRegEx(in: _self)
+                
+            case let _self as Substring:
+                let stringSelf = String(_self)
+                result = runRegEx(in: stringSelf)
+                
+            default:
+                return []
+            }
+            
+            return result
             
         } catch {
             
