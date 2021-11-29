@@ -6,7 +6,7 @@
 #if !os(watchOS)
 
 import XCTest
-@testable import OTCore
+import OTCore
 
 class Global_Clipboard_Tests: XCTestCase {
     

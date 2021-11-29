@@ -216,13 +216,13 @@ extension StringProtocol {
     
     /// **OTCore:**
     /// Returns an index that is the specified distance from the start index.
-    func startIndex(offsetBy distance: Int) -> Index {
+    public func startIndex(offsetBy distance: Int) -> Index {
         index(startIndex, offsetBy: distance)
     }
     
     /// **OTCore:**
     /// Returns an index that is the specified distance from the start index.
-    func endIndex(offsetBy distance: Int) -> Index {
+    public func endIndex(offsetBy distance: Int) -> Index {
         index(endIndex, offsetBy: distance)
     }
     
