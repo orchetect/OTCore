@@ -116,6 +116,34 @@ class Extensions_Swift_String_Tests: XCTestCase {
         
     }
     
+    func testStartIndexOffsetBy() {
+        
+        // .startIndex(offsetBy:)
+        
+        let str = "1234567890"
+        
+        XCTAssertEqual(str.startIndex(offsetBy: 0),
+                       str.startIndex)
+        
+        XCTAssertEqual(str.startIndex(offsetBy: 1),
+                       str.index(str.startIndex, offsetBy: 1))
+        
+    }
+    
+    func testEndIndexOffsetBy() {
+        
+        // .endIndex(offsetBy:)
+        
+        let str = "1234567890"
+        
+        XCTAssertEqual(str.endIndex(offsetBy: 0),
+                       str.endIndex)
+        
+        XCTAssertEqual(str.endIndex(offsetBy: -1),
+                       str.index(str.endIndex, offsetBy: -1))
+        
+    }
+    
     func testRemovingPrefix() {
         
         // .removingPrefix
