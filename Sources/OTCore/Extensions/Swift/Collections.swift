@@ -82,9 +82,10 @@ extension Collection {
     /// **OTCore:**
     /// Access collection indexes safely.
     /// If index does not exist (out-of-bounds), `defaultValue` is returned.
-    @inlinable public subscript(safe index: Index,
-                                default defaultValue: @autoclosure () -> Element)
-    -> Element {
+    @inlinable public subscript(
+        safe index: Index,
+        default defaultValue: @autoclosure () -> Element
+    ) -> Element {
         
         indices.contains(index) ? self[index] : defaultValue()
         
@@ -121,8 +122,9 @@ extension Collection where Index == Int {
     /// **OTCore:**
     /// Access collection indexes safely.
     /// If index does not exist (out-of-bounds), `defaultValue` is returned.
-    @inlinable public subscript(safe index: Int,
-                                default defaultValue: @autoclosure () -> Element
+    @inlinable public subscript(
+        safe index: Int,
+        default defaultValue: @autoclosure () -> Element
     ) -> Element {
         
         guard count > 0 else { return defaultValue() }
@@ -332,7 +334,7 @@ extension Sequence {
     /// **OTCore:**
     /// Same as `Dictionary(grouping: self, by:)`.
     /// (Functional convenience method)
-    public func grouping<Key: Hashable>(
+    @inlinable public func grouping<Key: Hashable>(
         by keyForValue: (Element) throws -> Key
     ) rethrows -> [Key : [Element]] {
         
@@ -351,7 +353,7 @@ extension Dictionary {
     
     /// **OTCore:**
     /// Returns a new dictionary containing the values of this dictionary with the keys transformed by the given closure.
-    public func mapKeys<K: Hashable>(
+    @inlinable public func mapKeys<K: Hashable>(
         _ transform: (Key) throws -> K
     ) rethrows -> Dictionary<K, Value> {
         
@@ -364,7 +366,7 @@ extension Dictionary {
     
     /// **OTCore:**
     /// Returns a new dictionary with key/value pairs transformed by the given closure.
-    public func mapDictionary<K: Hashable, V: Any>(
+    @inlinable public func mapDictionary<K: Hashable, V: Any>(
         _ transform: (Key, Value) throws -> (K, V)
     ) rethrows -> Dictionary<K, V> {
         

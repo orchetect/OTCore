@@ -106,6 +106,7 @@ class Extensions_Swift_String_Tests: XCTestCase {
         XCTAssertTrue( str.contains(caseInsensitive: "example"))
         XCTAssertTrue( str.contains(caseInsensitive: "EXAMPLE"))
         XCTAssertFalse(str.contains(caseInsensitive: "zzz"))
+        XCTAssertFalse(str.contains(caseInsensitive: ""))
         
     }
     
@@ -115,23 +116,47 @@ class Extensions_Swift_String_Tests: XCTestCase {
         
         let str = "This is an example string."
         
+        XCTAssertTrue( str.starts(withCaseInsensitive: "This"))
         XCTAssertTrue( str.starts(withCaseInsensitive: "this"))
         XCTAssertTrue( str.starts(withCaseInsensitive: "THIS"))
         XCTAssertFalse(str.starts(withCaseInsensitive: "zzz"))
+        XCTAssertFalse(str.starts(withCaseInsensitive: ""))
         
     }
     
     func testRepeating() {
         
-        XCTAssertEqual("A".repeating(5), "AAAAA")
+        // String
+        
+        XCTAssertEqual("AB".repeating(0), "")
+        XCTAssertEqual("AB".repeating(1), "AB")
+        XCTAssertEqual("AB".repeating(5), "ABABABABAB")
+        
+        // Substring
+        
+        let substring = "ABCD".suffix(2)
+        XCTAssertEqual(substring.repeating(0), "")
+        XCTAssertEqual(substring.repeating(1), "CD")
+        XCTAssertEqual(substring.repeating(5), "CDCDCDCDCD")
+        
+        // Character
+        
+        XCTAssertEqual(Character("A").repeating(0), "")
+        XCTAssertEqual(Character("A").repeating(1), "A")
+        XCTAssertEqual(Character("A").repeating(5), "AAAAA")
         
     }
     
     func testTrimmed() {
         
-        // .trimmed
+        // String
         
         XCTAssertEqual("    string    ".trimmed, "string")
+        
+        // Substring
+        
+        let substring = "    string    ".suffix(13)
+        XCTAssertEqual(substring.trimmed, "string")
         
     }
     
@@ -158,11 +183,17 @@ class Extensions_Swift_String_Tests: XCTestCase {
         
     }
     
-    func testRemovePrefix() {
-        
-        var strrr = "///Users/user"
+    func testRemovingPrefix() {
         
         // .removingPrefix
+        
+        let strrr = "///Users/user"
+        
+        XCTAssertEqual(strrr.removingPrefix(""), "///Users/user")
+        XCTAssertEqual(strrr, "///Users/user")
+        
+        XCTAssertEqual(strrr.removingPrefix("nonexisting"), "///Users/user")
+        XCTAssertEqual(strrr, "///Users/user")
         
         XCTAssertEqual(strrr.removingPrefix("/"), "//Users/user")
         XCTAssertEqual(strrr, "///Users/user")
@@ -173,7 +204,19 @@ class Extensions_Swift_String_Tests: XCTestCase {
         XCTAssertEqual(strrr.removingPrefix("zz"), "///Users/user")
         XCTAssertEqual(strrr, "///Users/user")
         
+    }
+    
+    func testRemovePrefix() {
+        
         // .removePrefix
+        
+        var strrr = "///Users/user"
+        
+        strrr.removePrefix("")
+        XCTAssertEqual(strrr, "///Users/user")
+        
+        strrr.removePrefix("nonexisting")
+        XCTAssertEqual(strrr, "///Users/user")
         
         strrr.removePrefix("/")
         XCTAssertEqual(strrr, "//Users/user")
