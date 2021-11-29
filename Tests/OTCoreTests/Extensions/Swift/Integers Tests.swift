@@ -18,26 +18,26 @@ class Extensions_Swift_Integers_Tests: XCTestCase {
         // Int
         
         _ = 1.int
-        _ = 1.uint
+        _ = 1.uInt
         _ = 1.int8
-        _ = 1.uint8
+        _ = 1.uInt8
         _ = 1.int16
-        _ = 1.uint16
+        _ = 1.uInt16
         _ = 1.int32
-        _ = 1.uint32
+        _ = 1.uInt32
         _ = 1.int64
-        _ = 1.uint64
+        _ = 1.uInt64
         
         _ = 1.intExactly?.bitWidth
-        _ = 1.uintExactly?.bitWidth
+        _ = 1.uIntExactly?.bitWidth
         _ = 1.int8Exactly?.bitWidth
-        _ = 1.uint8Exactly?.bitWidth
+        _ = 1.uInt8Exactly?.bitWidth
         _ = 1.int16Exactly?.bitWidth
-        _ = 1.uint16Exactly?.bitWidth
+        _ = 1.uInt16Exactly?.bitWidth
         _ = 1.int32Exactly?.bitWidth
-        _ = 1.uint32Exactly?.bitWidth
+        _ = 1.uInt32Exactly?.bitWidth
         _ = 1.int64Exactly?.bitWidth
-        _ = 1.uint64Exactly?.bitWidth
+        _ = 1.uInt64Exactly?.bitWidth
         
         _ = 1.double
         _ = 1.doubleExactly?.bitPattern
@@ -53,26 +53,26 @@ class Extensions_Swift_Integers_Tests: XCTestCase {
         // UInt
         
         _ = UInt(1).int
-        _ = UInt(1).uint
+        _ = UInt(1).uInt
         _ = UInt(1).int8
-        _ = UInt(1).uint8
+        _ = UInt(1).uInt8
         _ = UInt(1).int16
-        _ = UInt(1).uint16
+        _ = UInt(1).uInt16
         _ = UInt(1).int32
-        _ = UInt(1).uint32
+        _ = UInt(1).uInt32
         _ = UInt(1).int64
-        _ = UInt(1).uint64
+        _ = UInt(1).uInt64
         
         _ = UInt(1).intExactly?.bitWidth
-        _ = UInt(1).uintExactly?.bitWidth
+        _ = UInt(1).uIntExactly?.bitWidth
         _ = UInt(1).int8Exactly?.bitWidth
-        _ = UInt(1).uint8Exactly?.bitWidth
+        _ = UInt(1).uInt8Exactly?.bitWidth
         _ = UInt(1).int16Exactly?.bitWidth
-        _ = UInt(1).uint16Exactly?.bitWidth
+        _ = UInt(1).uInt16Exactly?.bitWidth
         _ = UInt(1).int32Exactly?.bitWidth
-        _ = UInt(1).uint32Exactly?.bitWidth
+        _ = UInt(1).uInt32Exactly?.bitWidth
         _ = UInt(1).int64Exactly?.bitWidth
-        _ = UInt(1).uint64Exactly?.bitWidth
+        _ = UInt(1).uInt64Exactly?.bitWidth
         
         _ = UInt(1).double
         _ = UInt(1).doubleExactly?.bitPattern
@@ -88,26 +88,26 @@ class Extensions_Swift_Integers_Tests: XCTestCase {
         // Int8
         
         _ = Int8(1).int
-        _ = Int8(1).uint
+        _ = Int8(1).uInt
         _ = Int8(1).int8
-        _ = Int8(1).uint8
+        _ = Int8(1).uInt8
         _ = Int8(1).int16
-        _ = Int8(1).uint16
+        _ = Int8(1).uInt16
         _ = Int8(1).int32
-        _ = Int8(1).uint32
+        _ = Int8(1).uInt32
         _ = Int8(1).int64
-        _ = Int8(1).uint64
+        _ = Int8(1).uInt64
         
         _ = Int8(1).intExactly?.bitWidth
-        _ = Int8(1).uintExactly?.bitWidth
+        _ = Int8(1).uIntExactly?.bitWidth
         _ = Int8(1).int8Exactly?.bitWidth
-        _ = Int8(1).uint8Exactly?.bitWidth
+        _ = Int8(1).uInt8Exactly?.bitWidth
         _ = Int8(1).int16Exactly?.bitWidth
-        _ = Int8(1).uint16Exactly?.bitWidth
+        _ = Int8(1).uInt16Exactly?.bitWidth
         _ = Int8(1).int32Exactly?.bitWidth
-        _ = Int8(1).uint32Exactly?.bitWidth
+        _ = Int8(1).uInt32Exactly?.bitWidth
         _ = Int8(1).int64Exactly?.bitWidth
-        _ = Int8(1).uint64Exactly?.bitWidth
+        _ = Int8(1).uInt64Exactly?.bitWidth
         
         _ = Int8(1).double
         _ = Int8(1).doubleExactly?.bitPattern
@@ -123,26 +123,26 @@ class Extensions_Swift_Integers_Tests: XCTestCase {
         // UInt8
         
         _ = UInt8(1).int
-        _ = UInt8(1).uint
+        _ = UInt8(1).uInt
         _ = UInt8(1).int8
-        _ = UInt8(1).uint8
+        _ = UInt8(1).uInt8
         _ = UInt8(1).int16
-        _ = UInt8(1).uint16
+        _ = UInt8(1).uInt16
         _ = UInt8(1).int32
-        _ = UInt8(1).uint32
+        _ = UInt8(1).uInt32
         _ = UInt8(1).int64
-        _ = UInt8(1).uint64
+        _ = UInt8(1).uInt64
         
         _ = UInt8(1).int.intExactly?.bitWidth
-        _ = UInt8(1).uint.intExactly?.bitWidth
+        _ = UInt8(1).uInt.intExactly?.bitWidth
         _ = UInt8(1).int8.intExactly?.bitWidth
-        _ = UInt8(1).uint8.intExactly?.bitWidth
+        _ = UInt8(1).uInt8.intExactly?.bitWidth
         _ = UInt8(1).int16.intExactly?.bitWidth
-        _ = UInt8(1).uint16.intExactly?.bitWidth
+        _ = UInt8(1).uInt16.intExactly?.bitWidth
         _ = UInt8(1).int32.intExactly?.bitWidth
-        _ = UInt8(1).uint32.intExactly?.bitWidth
+        _ = UInt8(1).uInt32.intExactly?.bitWidth
         _ = UInt8(1).int64.intExactly?.bitWidth
-        _ = UInt8(1).uint64.intExactly?.bitWidth
+        _ = UInt8(1).uInt64.intExactly?.bitWidth
         
         _ = UInt8(1).double
         _ = UInt8(1).doubleExactly?.bitPattern
@@ -158,26 +158,26 @@ class Extensions_Swift_Integers_Tests: XCTestCase {
         // Int16
         
         _ = Int16(1).int
-        _ = Int16(1).uint
+        _ = Int16(1).uInt
         _ = Int16(1).int8
-        _ = Int16(1).uint8
+        _ = Int16(1).uInt8
         _ = Int16(1).int16
-        _ = Int16(1).uint16
+        _ = Int16(1).uInt16
         _ = Int16(1).int32
-        _ = Int16(1).uint32
+        _ = Int16(1).uInt32
         _ = Int16(1).int64
-        _ = Int16(1).uint64
+        _ = Int16(1).uInt64
         
         _ = Int16(1).int.intExactly?.bitWidth
-        _ = Int16(1).uint.intExactly?.bitWidth
+        _ = Int16(1).uInt.intExactly?.bitWidth
         _ = Int16(1).int8.intExactly?.bitWidth
-        _ = Int16(1).uint8.intExactly?.bitWidth
+        _ = Int16(1).uInt8.intExactly?.bitWidth
         _ = Int16(1).int16.intExactly?.bitWidth
-        _ = Int16(1).uint16.intExactly?.bitWidth
+        _ = Int16(1).uInt16.intExactly?.bitWidth
         _ = Int16(1).int32.intExactly?.bitWidth
-        _ = Int16(1).uint32.intExactly?.bitWidth
+        _ = Int16(1).uInt32.intExactly?.bitWidth
         _ = Int16(1).int64.intExactly?.bitWidth
-        _ = Int16(1).uint64.intExactly?.bitWidth
+        _ = Int16(1).uInt64.intExactly?.bitWidth
         
         _ = Int16(1).double
         _ = Int16(1).doubleExactly?.bitPattern
@@ -193,26 +193,26 @@ class Extensions_Swift_Integers_Tests: XCTestCase {
         // UInt16
         
         _ = UInt16(1).int
-        _ = UInt16(1).uint
+        _ = UInt16(1).uInt
         _ = UInt16(1).int8
-        _ = UInt16(1).uint8
+        _ = UInt16(1).uInt8
         _ = UInt16(1).int16
-        _ = UInt16(1).uint16
+        _ = UInt16(1).uInt16
         _ = UInt16(1).int32
-        _ = UInt16(1).uint32
+        _ = UInt16(1).uInt32
         _ = UInt16(1).int64
-        _ = UInt16(1).uint64
+        _ = UInt16(1).uInt64
         
         _ = UInt16(1).int.intExactly?.bitWidth
-        _ = UInt16(1).uint.intExactly?.bitWidth
+        _ = UInt16(1).uInt.intExactly?.bitWidth
         _ = UInt16(1).int8.intExactly?.bitWidth
-        _ = UInt16(1).uint8.intExactly?.bitWidth
+        _ = UInt16(1).uInt8.intExactly?.bitWidth
         _ = UInt16(1).int16.intExactly?.bitWidth
-        _ = UInt16(1).uint16.intExactly?.bitWidth
+        _ = UInt16(1).uInt16.intExactly?.bitWidth
         _ = UInt16(1).int32.intExactly?.bitWidth
-        _ = UInt16(1).uint32.intExactly?.bitWidth
+        _ = UInt16(1).uInt32.intExactly?.bitWidth
         _ = UInt16(1).int64.intExactly?.bitWidth
-        _ = UInt16(1).uint64.intExactly?.bitWidth
+        _ = UInt16(1).uInt64.intExactly?.bitWidth
         
         _ = UInt16(1).double
         _ = UInt16(1).doubleExactly?.bitPattern
@@ -228,26 +228,26 @@ class Extensions_Swift_Integers_Tests: XCTestCase {
         // Int32
         
         _ = Int32(1).int
-        _ = Int32(1).uint
+        _ = Int32(1).uInt
         _ = Int32(1).int8
-        _ = Int32(1).uint8
+        _ = Int32(1).uInt8
         _ = Int32(1).int16
-        _ = Int32(1).uint16
+        _ = Int32(1).uInt16
         _ = Int32(1).int32
-        _ = Int32(1).uint32
+        _ = Int32(1).uInt32
         _ = Int32(1).int64
-        _ = Int32(1).uint64
+        _ = Int32(1).uInt64
         
         _ = Int32(1).int.intExactly?.bitWidth
-        _ = Int32(1).uint.intExactly?.bitWidth
+        _ = Int32(1).uInt.intExactly?.bitWidth
         _ = Int32(1).int8.intExactly?.bitWidth
-        _ = Int32(1).uint8.intExactly?.bitWidth
+        _ = Int32(1).uInt8.intExactly?.bitWidth
         _ = Int32(1).int16.intExactly?.bitWidth
-        _ = Int32(1).uint16.intExactly?.bitWidth
+        _ = Int32(1).uInt16.intExactly?.bitWidth
         _ = Int32(1).int32.intExactly?.bitWidth
-        _ = Int32(1).uint32.intExactly?.bitWidth
+        _ = Int32(1).uInt32.intExactly?.bitWidth
         _ = Int32(1).int64.intExactly?.bitWidth
-        _ = Int32(1).uint64.intExactly?.bitWidth
+        _ = Int32(1).uInt64.intExactly?.bitWidth
         
         _ = Int32(1).double
         _ = Int32(1).doubleExactly?.bitPattern
@@ -263,26 +263,26 @@ class Extensions_Swift_Integers_Tests: XCTestCase {
         // UInt32
         
         _ = UInt32(1).int
-        _ = UInt32(1).uint
+        _ = UInt32(1).uInt
         _ = UInt32(1).int8
-        _ = UInt32(1).uint8
+        _ = UInt32(1).uInt8
         _ = UInt32(1).int16
-        _ = UInt32(1).uint16
+        _ = UInt32(1).uInt16
         _ = UInt32(1).int32
-        _ = UInt32(1).uint32
+        _ = UInt32(1).uInt32
         _ = UInt32(1).int64
-        _ = UInt32(1).uint64
+        _ = UInt32(1).uInt64
         
         _ = UInt32(1).int.intExactly?.bitWidth
-        _ = UInt32(1).uint.intExactly?.bitWidth
+        _ = UInt32(1).uInt.intExactly?.bitWidth
         _ = UInt32(1).int8.intExactly?.bitWidth
-        _ = UInt32(1).uint8.intExactly?.bitWidth
+        _ = UInt32(1).uInt8.intExactly?.bitWidth
         _ = UInt32(1).int16.intExactly?.bitWidth
-        _ = UInt32(1).uint16.intExactly?.bitWidth
+        _ = UInt32(1).uInt16.intExactly?.bitWidth
         _ = UInt32(1).int32.intExactly?.bitWidth
-        _ = UInt32(1).uint32.intExactly?.bitWidth
+        _ = UInt32(1).uInt32.intExactly?.bitWidth
         _ = UInt32(1).int64.intExactly?.bitWidth
-        _ = UInt32(1).uint64.intExactly?.bitWidth
+        _ = UInt32(1).uInt64.intExactly?.bitWidth
         
         _ = UInt32(1).double
         _ = UInt32(1).doubleExactly?.bitPattern
@@ -298,26 +298,26 @@ class Extensions_Swift_Integers_Tests: XCTestCase {
         // Int64
         
         _ = Int64(1).int
-        _ = Int64(1).uint
+        _ = Int64(1).uInt
         _ = Int64(1).int8
-        _ = Int64(1).uint8
+        _ = Int64(1).uInt8
         _ = Int64(1).int16
-        _ = Int64(1).uint16
+        _ = Int64(1).uInt16
         _ = Int64(1).int32
-        _ = Int64(1).uint32
+        _ = Int64(1).uInt32
         _ = Int64(1).int64
-        _ = Int64(1).uint64
+        _ = Int64(1).uInt64
         
         _ = Int64(1).int.intExactly?.bitWidth
-        _ = Int64(1).uint.intExactly?.bitWidth
+        _ = Int64(1).uInt.intExactly?.bitWidth
         _ = Int64(1).int8.intExactly?.bitWidth
-        _ = Int64(1).uint8.intExactly?.bitWidth
+        _ = Int64(1).uInt8.intExactly?.bitWidth
         _ = Int64(1).int16.intExactly?.bitWidth
-        _ = Int64(1).uint16.intExactly?.bitWidth
+        _ = Int64(1).uInt16.intExactly?.bitWidth
         _ = Int64(1).int32.intExactly?.bitWidth
-        _ = Int64(1).uint32.intExactly?.bitWidth
+        _ = Int64(1).uInt32.intExactly?.bitWidth
         _ = Int64(1).int64.intExactly?.bitWidth
-        _ = Int64(1).uint64.intExactly?.bitWidth
+        _ = Int64(1).uInt64.intExactly?.bitWidth
         
         _ = Int64(1).double
         _ = Int64(1).doubleExactly?.bitPattern
@@ -333,26 +333,26 @@ class Extensions_Swift_Integers_Tests: XCTestCase {
         // UInt64
         
         _ = UInt64(1).int
-        _ = UInt64(1).uint
+        _ = UInt64(1).uInt
         _ = UInt64(1).int8
-        _ = UInt64(1).uint8
+        _ = UInt64(1).uInt8
         _ = UInt64(1).int16
-        _ = UInt64(1).uint16
+        _ = UInt64(1).uInt16
         _ = UInt64(1).int32
-        _ = UInt64(1).uint32
+        _ = UInt64(1).uInt32
         _ = UInt64(1).int64
-        _ = UInt64(1).uint64
+        _ = UInt64(1).uInt64
         
         _ = UInt64(1).int.intExactly?.bitWidth
-        _ = UInt64(1).uint.intExactly?.bitWidth
+        _ = UInt64(1).uInt.intExactly?.bitWidth
         _ = UInt64(1).int8.intExactly?.bitWidth
-        _ = UInt64(1).uint8.intExactly?.bitWidth
+        _ = UInt64(1).uInt8.intExactly?.bitWidth
         _ = UInt64(1).int16.intExactly?.bitWidth
-        _ = UInt64(1).uint16.intExactly?.bitWidth
+        _ = UInt64(1).uInt16.intExactly?.bitWidth
         _ = UInt64(1).int32.intExactly?.bitWidth
-        _ = UInt64(1).uint32.intExactly?.bitWidth
+        _ = UInt64(1).uInt32.intExactly?.bitWidth
         _ = UInt64(1).int64.intExactly?.bitWidth
-        _ = UInt64(1).uint64.intExactly?.bitWidth
+        _ = UInt64(1).uInt64.intExactly?.bitWidth
         
         _ = UInt64(1).double
         _ = UInt64(1).doubleExactly?.bitPattern
@@ -370,15 +370,15 @@ class Extensions_Swift_Integers_Tests: XCTestCase {
     func testTypeConversions_StringToInts() {
         
         XCTAssertEqual("1".int      ,          1 )
-        XCTAssertEqual("1".uint     ,     UInt(1))
+        XCTAssertEqual("1".uInt     ,     UInt(1))
         XCTAssertEqual("1".int8     ,     Int8(1))
-        XCTAssertEqual("1".uint8    ,    UInt8(1))
+        XCTAssertEqual("1".uInt8    ,    UInt8(1))
         XCTAssertEqual("1".int16    ,    Int16(1))
-        XCTAssertEqual("1".uint16   ,   UInt16(1))
+        XCTAssertEqual("1".uInt16   ,   UInt16(1))
         XCTAssertEqual("1".int32    ,    Int32(1))
-        XCTAssertEqual("1".uint32   ,   UInt32(1))
+        XCTAssertEqual("1".uInt32   ,   UInt32(1))
         XCTAssertEqual("1".int64    ,    Int64(1))
-        XCTAssertEqual("1".uint64   ,   UInt64(1))
+        XCTAssertEqual("1".uInt64   ,   UInt64(1))
         
     }
     
@@ -450,9 +450,9 @@ class Extensions_Swift_Integers_Tests: XCTestCase {
     
     func testBit() {
         
-        XCTAssertEqual(0b100.uint8.bit(0),  0)
-        XCTAssertEqual(0b100.uint8.bit(1),  0)
-        XCTAssertEqual(0b100.uint8.bit(2),  1)
+        XCTAssertEqual(0b100.uInt8.bit(0),  0)
+        XCTAssertEqual(0b100.uInt8.bit(1),  0)
+        XCTAssertEqual(0b100.uInt8.bit(2),  1)
         
     }
     

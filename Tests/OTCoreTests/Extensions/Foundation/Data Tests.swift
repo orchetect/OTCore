@@ -220,8 +220,8 @@ class Extensions_Foundation_Data_Tests: XCTestCase {
         
         // .toData
         
-        XCTAssertEqual(0b1.uint.toData(.littleEndian)   , Data([0b1,0,0,0,0,0,0,0]))
-        XCTAssertEqual(0b1.uint.toData(.bigEndian)      , Data([0,0,0,0,0,0,0,0b1]))
+        XCTAssertEqual(0b1.uInt.toData(.littleEndian)   , Data([0b1,0,0,0,0,0,0,0]))
+        XCTAssertEqual(0b1.uInt.toData(.bigEndian)      , Data([0,0,0,0,0,0,0,0b1]))
         
         // .toUInt
         
@@ -294,8 +294,8 @@ class Extensions_Foundation_Data_Tests: XCTestCase {
         
         // .toData
         
-        XCTAssertEqual(0b1.uint8.toData()               , Data([0b1]))
-        XCTAssertEqual(0b1111_1111.uint8.toData()       , Data([0b1111_1111]))
+        XCTAssertEqual(0b1.uInt8.toData()               , Data([0b1]))
+        XCTAssertEqual(0b1111_1111.uInt8.toData()       , Data([0b1111_1111]))
         
         // .toUInt8
         
@@ -305,8 +305,8 @@ class Extensions_Foundation_Data_Tests: XCTestCase {
         
         // both ways
         
-        XCTAssertEqual(1.uint8     .toData().toUInt8(), 1)
-        XCTAssertEqual(255.uint8   .toData().toUInt8(), 255)
+        XCTAssertEqual(1.uInt8     .toData().toUInt8(), 1)
+        XCTAssertEqual(255.uInt8   .toData().toUInt8(), 255)
         
     }
     
@@ -314,8 +314,8 @@ class Extensions_Foundation_Data_Tests: XCTestCase {
         
         // .toData
         
-        XCTAssertEqual(0b1.uint16.toData(.littleEndian) , Data([0b1,0]))
-        XCTAssertEqual(0b1.uint16.toData(.bigEndian)    , Data([0,0b1]))
+        XCTAssertEqual(0b1.uInt16.toData(.littleEndian) , Data([0b1,0]))
+        XCTAssertEqual(0b1.uInt16.toData(.bigEndian)    , Data([0,0b1]))
         
         // .toUInt16
         
@@ -343,8 +343,8 @@ class Extensions_Foundation_Data_Tests: XCTestCase {
         
         // .toData
         
-        XCTAssertEqual(0b1.uint32.toData(.littleEndian) , Data([0b1,0,0,0]))
-        XCTAssertEqual(0b1.uint32.toData(.bigEndian)    , Data([0,0,0,0b1]))
+        XCTAssertEqual(0b1.uInt32.toData(.littleEndian) , Data([0b1,0,0,0]))
+        XCTAssertEqual(0b1.uInt32.toData(.bigEndian)    , Data([0,0,0,0b1]))
         
         // .toUInt32
         
@@ -374,8 +374,8 @@ class Extensions_Foundation_Data_Tests: XCTestCase {
         
         // .toData
         
-        XCTAssertEqual(0b1.uint64.toData(.littleEndian) , Data([0b1,0,0,0,0,0,0,0]))
-        XCTAssertEqual(0b1.uint64.toData(.bigEndian)    , Data([0,0,0,0,0,0,0,0b1]))
+        XCTAssertEqual(0b1.uInt64.toData(.littleEndian) , Data([0b1,0,0,0,0,0,0,0]))
+        XCTAssertEqual(0b1.uInt64.toData(.bigEndian)    , Data([0,0,0,0,0,0,0,0b1]))
         
         // .toUInt64
         

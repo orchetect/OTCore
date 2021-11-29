@@ -13,7 +13,6 @@ extension StringProtocol {
     
     /// **OTCore:**
     /// Returns the index of the first match, or `nil` if no matches are found.
-    @_disfavoredOverload
     func firstIndex<T: StringProtocol>(of substring: T) -> String.Index? {
         
         range(of: substring,

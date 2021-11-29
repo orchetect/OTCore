@@ -15,7 +15,7 @@ extension BinaryInteger {
     /// **OTCore:**
     /// Same as `UInt`
     /// (Functional convenience method)
-    @inlinable public var uint: UInt { UInt(self) }
+    @inlinable public var uInt: UInt { UInt(self) }
     
     /// **OTCore:**
     /// Same as `Int8`
@@ -25,7 +25,7 @@ extension BinaryInteger {
     /// **OTCore:**
     /// Same as `UInt8`
     /// (Functional convenience method)
-    @inlinable public var uint8: UInt8 { UInt8(self) }
+    @inlinable public var uInt8: UInt8 { UInt8(self) }
     
     /// **OTCore:**
     /// Same as `Int16`
@@ -35,7 +35,7 @@ extension BinaryInteger {
     /// **OTCore:**
     /// Same as `UInt16`
     /// (Functional convenience method)
-    @inlinable public var uint16: UInt16 { UInt16(self) }
+    @inlinable public var uInt16: UInt16 { UInt16(self) }
     
     /// **OTCore:**
     /// Same as `Int32`
@@ -45,7 +45,7 @@ extension BinaryInteger {
     /// **OTCore:**
     /// Same as `UInt32`
     /// (Functional convenience method)
-    @inlinable public var uint32: UInt32 { UInt32(self) }
+    @inlinable public var uInt32: UInt32 { UInt32(self) }
     
     /// **OTCore:**
     /// Same as `Int64`
@@ -55,7 +55,7 @@ extension BinaryInteger {
     /// **OTCore:**
     /// Same as `UInt64`
     /// (Functional convenience method)
-    @inlinable public var uint64: UInt64 { UInt64(self) }
+    @inlinable public var uInt64: UInt64 { UInt64(self) }
     
 }
 
@@ -69,7 +69,7 @@ extension BinaryInteger {
     /// **OTCore:**
     /// Same as `UInt(exactly:)`
     /// (Functional convenience method)
-    @inlinable public var uintExactly: UInt? { UInt(exactly: self) }
+    @inlinable public var uIntExactly: UInt? { UInt(exactly: self) }
     
     /// **OTCore:**
     /// Same as `Int8(exactly:)`
@@ -79,7 +79,7 @@ extension BinaryInteger {
     /// **OTCore:**
     /// Same as `UInt8(exactly:)`
     /// (Functional convenience method)
-    @inlinable public var uint8Exactly: UInt8? { UInt8(exactly: self) }
+    @inlinable public var uInt8Exactly: UInt8? { UInt8(exactly: self) }
     
     /// **OTCore:**
     /// Same as `Int16(exactly:)`
@@ -89,7 +89,7 @@ extension BinaryInteger {
     /// **OTCore:**
     /// Same as `UInt16(exactly:)`
     /// (Functional convenience method)
-    @inlinable public var uint16Exactly: UInt16? { UInt16(exactly: self) }
+    @inlinable public var uInt16Exactly: UInt16? { UInt16(exactly: self) }
     
     /// **OTCore:**
     /// Same as `Int32(exactly:)`
@@ -99,7 +99,7 @@ extension BinaryInteger {
     /// **OTCore:**
     /// Same as `UInt32(exactly:)`
     /// (Functional convenience method)
-    @inlinable public var uint32Exactly: UInt32? { UInt32(exactly: self) }
+    @inlinable public var uInt32Exactly: UInt32? { UInt32(exactly: self) }
     
     /// **OTCore:**
     /// Same as `Int64(exactly:)`
@@ -109,7 +109,7 @@ extension BinaryInteger {
     /// **OTCore:**
     /// Same as `UInt64(exactly:)`
     /// (Functional convenience method)
-    @inlinable public var uint64Exactly: UInt64? { UInt64(exactly: self) }
+    @inlinable public var uInt64Exactly: UInt64? { UInt64(exactly: self) }
     
 }
 
@@ -159,7 +159,7 @@ extension StringProtocol {
     /// **OTCore:**
     /// Same as `Int()`
     /// (Functional convenience method)
-    @inlinable public var uint: UInt? { UInt(self) }
+    @inlinable public var uInt: UInt? { UInt(self) }
     
     /// **OTCore:**
     /// Same as `Int8()`
@@ -169,7 +169,7 @@ extension StringProtocol {
     /// **OTCore:**
     /// Same as `UInt8()`
     /// (Functional convenience method)
-    @inlinable public var uint8: UInt8? { UInt8(self) }
+    @inlinable public var uInt8: UInt8? { UInt8(self) }
     
     /// **OTCore:**
     /// Same as `Int16()`
@@ -179,7 +179,7 @@ extension StringProtocol {
     /// **OTCore:**
     /// Same as `UInt16()`
     /// (Functional convenience method)
-    @inlinable public var uint16: UInt16? { UInt16(self) }
+    @inlinable public var uInt16: UInt16? { UInt16(self) }
     
     /// **OTCore:**
     /// Same as `Int32()`
@@ -189,7 +189,7 @@ extension StringProtocol {
     /// **OTCore:**
     /// Same as `UInt32()`
     /// (Functional convenience method)
-    @inlinable public var uint32: UInt32? { UInt32(self) }
+    @inlinable public var uInt32: UInt32? { UInt32(self) }
     
     /// **OTCore:**
     /// Same as `Int64()`
@@ -199,7 +199,7 @@ extension StringProtocol {
     /// **OTCore:**
     /// Same as `UInt64()`
     /// (Functional convenience method)
-    @inlinable public var uint64: UInt64? { UInt64(self) }
+    @inlinable public var uInt64: UInt64? { UInt64(self) }
     
 }
 
