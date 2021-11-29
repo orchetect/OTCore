@@ -29,23 +29,23 @@ extension Bool {
     
     /// **OTCore:**
     /// Returns 1 (true) or 0 (false)
-    @inlinable public var uintValue:   UInt   { self ? 1 : 0 }
+    @inlinable public var uIntValue:   UInt   { self ? 1 : 0 }
     
     /// **OTCore:**
     /// Returns 1 (true) or 0 (false)
-    @inlinable public var uint8Value:  UInt8  { self ? 1 : 0 }
+    @inlinable public var uInt8Value:  UInt8  { self ? 1 : 0 }
     
     /// **OTCore:**
     /// Returns 1 (true) or 0 (false)
-    @inlinable public var uint16Value: UInt16 { self ? 1 : 0 }
+    @inlinable public var uInt16Value: UInt16 { self ? 1 : 0 }
     
     /// **OTCore:**
     /// Returns 1 (true) or 0 (false)
-    @inlinable public var uint32Value: UInt32 { self ? 1 : 0 }
+    @inlinable public var uInt32Value: UInt32 { self ? 1 : 0 }
     
     /// **OTCore:**
     /// Returns 1 (true) or 0 (false)
-    @inlinable public var uint64Value: UInt64 { self ? 1 : 0 }
+    @inlinable public var uInt64Value: UInt64 { self ? 1 : 0 }
     
 }
 

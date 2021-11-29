@@ -21,28 +21,28 @@ class Extensions_Swift_FloatingPoint_Tests: XCTestCase {
         
         _ = double.int
         _ = double.intExactly
-        _ = double.uint
-        _ = double.uintExactly
+        _ = double.uInt
+        _ = double.uIntExactly
         
         _ = double.int8
         _ = double.int8Exactly
-        _ = double.uint8
-        _ = double.uint8Exactly
+        _ = double.uInt8
+        _ = double.uInt8Exactly
         
         _ = double.int16
         _ = double.int16Exactly
-        _ = double.uint16
-        _ = double.uint16Exactly
+        _ = double.uInt16
+        _ = double.uInt16Exactly
         
         _ = double.int32
         _ = double.int32Exactly
-        _ = double.uint32
-        _ = double.uint32Exactly
+        _ = double.uInt32
+        _ = double.uInt32Exactly
         
         _ = double.int64
         _ = double.int64Exactly
-        _ = double.uint64
-        _ = double.uint64Exactly
+        _ = double.uInt64
+        _ = double.uInt64Exactly
         
         _ = double.double
         _ = double.doubleExactly
@@ -60,28 +60,28 @@ class Extensions_Swift_FloatingPoint_Tests: XCTestCase {
         
         _ = float.int
         _ = float.intExactly
-        _ = float.uint
-        _ = float.uintExactly
+        _ = float.uInt
+        _ = float.uIntExactly
         
         _ = float.int8
         _ = float.int8Exactly
-        _ = float.uint8
-        _ = float.uint8Exactly
+        _ = float.uInt8
+        _ = float.uInt8Exactly
         
         _ = float.int16
         _ = float.int16Exactly
-        _ = float.uint16
-        _ = float.uint16Exactly
+        _ = float.uInt16
+        _ = float.uInt16Exactly
         
         _ = float.int32
         _ = float.int32Exactly
-        _ = float.uint32
-        _ = float.uint32Exactly
+        _ = float.uInt32
+        _ = float.uInt32Exactly
         
         _ = float.int64
         _ = float.int64Exactly
-        _ = float.uint64
-        _ = float.uint64Exactly
+        _ = float.uInt64
+        _ = float.uInt64Exactly
         
         // Float80
         
@@ -91,28 +91,28 @@ class Extensions_Swift_FloatingPoint_Tests: XCTestCase {
         
         _ = float80.int
         _ = float80.intExactly
-        _ = float80.uint
-        _ = float80.uintExactly
+        _ = float80.uInt
+        _ = float80.uIntExactly
         
         _ = float80.int8
         _ = float80.int8Exactly
-        _ = float80.uint8
-        _ = float80.uint8Exactly
+        _ = float80.uInt8
+        _ = float80.uInt8Exactly
         
         _ = float80.int16
         _ = float80.int16Exactly
-        _ = float80.uint16
-        _ = float80.uint16Exactly
+        _ = float80.uInt16
+        _ = float80.uInt16Exactly
         
         _ = float80.int32
         _ = float80.int32Exactly
-        _ = float80.uint32
-        _ = float80.uint32Exactly
+        _ = float80.uInt32
+        _ = float80.uInt32Exactly
         
         _ = float80.int64
         _ = float80.int64Exactly
-        _ = float80.uint64
-        _ = float80.uint64Exactly
+        _ = float80.uInt64
+        _ = float80.uInt64Exactly
         
         _ = float80.double
         _ = float80.doubleExactly
@@ -132,28 +132,28 @@ class Extensions_Swift_FloatingPoint_Tests: XCTestCase {
         
         _ = cgfloat.int
         _ = cgfloat.intExactly
-        _ = cgfloat.uint
-        _ = cgfloat.uintExactly
+        _ = cgfloat.uInt
+        _ = cgfloat.uIntExactly
         
         _ = cgfloat.int8
         _ = cgfloat.int8Exactly
-        _ = cgfloat.uint8
-        _ = cgfloat.uint8Exactly
+        _ = cgfloat.uInt8
+        _ = cgfloat.uInt8Exactly
         
         _ = cgfloat.int16
         _ = cgfloat.int16Exactly
-        _ = cgfloat.uint16
-        _ = cgfloat.uint16Exactly
+        _ = cgfloat.uInt16
+        _ = cgfloat.uInt16Exactly
         
         _ = cgfloat.int32
         _ = cgfloat.int32Exactly
-        _ = cgfloat.uint32
-        _ = cgfloat.uint32Exactly
+        _ = cgfloat.uInt32
+        _ = cgfloat.uInt32Exactly
         
         _ = cgfloat.int64
         _ = cgfloat.int64Exactly
-        _ = cgfloat.uint64
-        _ = cgfloat.uint64Exactly
+        _ = cgfloat.uInt64
+        _ = cgfloat.uInt64Exactly
         
         _ = cgfloat.double
         _ = cgfloat.doubleExactly
