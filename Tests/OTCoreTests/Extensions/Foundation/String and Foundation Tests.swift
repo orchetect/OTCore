@@ -32,7 +32,7 @@ class Extensions_Foundation_StringAndFoundation_Tests: XCTestCase {
                        str.index(str.startIndex, offsetBy: 11))
         
         // ensure Swift Standard Library method works
-        
+        // and does not produce ambiguous overloads
         XCTAssertEqual(str.firstIndex(of: Character("i")),
                        str.index(str.startIndex, offsetBy: 2))
         
