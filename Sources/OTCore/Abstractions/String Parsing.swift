@@ -9,7 +9,7 @@ extension String {
     
     /// **OTCore:**
     /// Returns true if the string is a valid email address.
-    var isValidEmailAddress: Bool {
+    public var isValidEmailAddress: Bool {
         
         // prefix@domain.TLD
         

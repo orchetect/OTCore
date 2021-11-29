@@ -6,7 +6,7 @@
 #if !os(watchOS)
 
 import XCTest
-@testable import OTCore
+import OTCore
 
 class Extensions_Swift_Pointers_Tests: XCTestCase {
     
