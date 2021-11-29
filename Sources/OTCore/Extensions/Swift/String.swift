@@ -103,68 +103,6 @@ extension Substring {
     
 }
 
-
-// MARK: - Ranges
-
-extension StringProtocol {
-    
-    /// **OTCore:**
-    /// Same as `.range(of: find, options: .backwards)`
-    /// (Functional convenience method)
-    public func range<T: StringProtocol>(backwards find: T) -> Range<Index>? {
-        
-        range(of: find, options: .backwards)
-        
-    }
-    
-    /// **OTCore:**
-    /// Same as `.range(of: find, options: [.caseInsensitiveSearch, .backwards])`
-    /// (Functional convenience method)
-    public func range<T: StringProtocol>(backwardsCaseInsensitive find: T) -> Range<Index>? {
-        
-        range(of: find, options: [.caseInsensitive, .backwards])
-        
-    }
-    
-    /// **OTCore:**
-    /// Convenience method: returns `true` if contains string. Case-insensitive.
-    public func contains<T: StringProtocol>(caseInsensitive find: T) -> Bool {
-        
-        range(of: find, options: .caseInsensitive) != nil
-            ? true
-            : false
-        
-    }
-    
-    /// **OTCore:**
-    /// Convenience method: returns `true` if starts with the specified string. Case-insensitive, non-localized.
-    public func starts<T: StringProtocol>(withCaseInsensitive possiblePrefix: T) -> Bool {
-        
-        // Method 1
-        // --------
-        // uppercased()
-        //    .starts(with: possiblePrefix.uppercased())
-        
-        // Method 2
-        // --------
-        // guard count >= possiblePrefix.count else { return false }
-        //
-        // let selfPrefix = self[self.startIndex ..<
-        //                       self.index(self.startIndex,
-        //                                  offsetBy: possiblePrefix.count)]
-        // return selfPrefix.caseInsensitiveCompare(possiblePrefix) == .orderedSame
-        
-        // Method 3
-        // --------
-        guard let range = range(of: possiblePrefix,
-                                options: .caseInsensitive) else { return false }
-        return range.lowerBound == self.startIndex
-        
-    }
-    
-}
-
-
 // MARK: - Segmentation
 
 extension String {
