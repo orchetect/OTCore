@@ -144,6 +144,84 @@ class Extensions_Swift_String_Tests: XCTestCase {
         
     }
     
+    func testSubscriptPosition_OffsetIndex() {
+        
+        // String
+        
+        XCTAssertEqual("abc123"[position: 2], "c")
+        
+        // Substring
+        
+        let substring = "abc123".suffix(4)
+        XCTAssertEqual(substring[position: 2], "2")
+        
+    }
+    
+    func testSubscriptPosition_ClosedRange() {
+        
+        // String
+        
+        XCTAssertEqual("abc123"[position: 1...3], "bc1")
+        
+        // Substring
+        
+        let substring = "abc123".suffix(4)
+        XCTAssertEqual(substring[position: 1...3], "123")
+        
+    }
+    
+    func testSubscriptPosition_Range() {
+        
+        // String
+        
+        XCTAssertEqual("abc123"[position: 1..<3], "bc")
+        
+        // Substring
+        
+        let substring = "abc123".suffix(4)
+        XCTAssertEqual(substring[position: 1..<3], "12")
+        
+    }
+    
+    func testSubscriptPosition_PartialRangeFrom() {
+        
+        // String
+        
+        XCTAssertEqual("abc123"[position: 2...], "c123")
+        
+        // Substring
+        
+        let substring = "abc123".suffix(4)
+        XCTAssertEqual(substring[position: 2...], "23")
+        
+    }
+    
+    func testSubscriptPosition_PartialRangeThrough() {
+        
+        // String
+        
+        XCTAssertEqual("abc123"[position: ...3], "abc1")
+        
+        // Substring
+        
+        let substring = "abc123".suffix(4)
+        XCTAssertEqual(substring[position: ...3], "c123")
+        
+    }
+    
+    func testSubscriptPosition_PartialRangeUpTo() {
+        
+        // String
+        
+        XCTAssertEqual("abc123"[position: ..<3], "abc")
+        
+        // Substring
+        
+        let substring = "abc123".suffix(4)
+        XCTAssertEqual(substring[position: ..<3], "c12")
+        
+    }
+    
     func testRemovingPrefix() {
         
         // .removingPrefix
