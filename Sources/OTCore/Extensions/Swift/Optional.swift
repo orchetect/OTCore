@@ -6,23 +6,28 @@
 // MARK: - OptionalType
 
 /// **OTCore:**
-/// Protocol describing an optional, so `.optional` is available on all Optionals.
-/// Used to enable extensions on types such as `Type<T>?`.
+/// Protocol describing an optional, used to enable extensions on types such as `Type<T>?`.
 public protocol OptionalType {
     
     associatedtype Wrapped
+
+    /// **OTCore:**
+    /// Semantic workaround used to enable extensions on types such as `Type<T>?
+    @inlinable var optional: Wrapped? { get }
+    
+}
+
+extension OptionalType {
     
     /// **OTCore:**
-    /// Return an object as an optional.
-    @inlinable var optional: Wrapped? { get }
+    /// Internal use.
+    @inlinable
+    internal static var _none: Optional<Wrapped> { .none }
     
 }
 
 extension Optional: OptionalType {
     
-    /// **OTCore:**
-    /// Semantic workaround to make `.optional` available on all Optionals.
-    /// Used to enable extensions on types such as `Type<T>?`.
     @inlinable public var optional: Wrapped? {
         
         self

@@ -16,7 +16,7 @@ class Extensions_Swift_Collections_Tests: XCTestCase {
     func testOperator_PlusEquals() {
         
         // [String]
-        
+                                                  
         var arr1: [String] = []
         arr1 += "test"
         XCTAssertEqual(arr1, ["test"])
@@ -42,29 +42,29 @@ class Extensions_Swift_Collections_Tests: XCTestCase {
         
     }
     
-    func testSafeIndexSubscript() {
+    func testSubscript_Safe_Get() {
         
         // [Int]
+        let arr = [1, 2, 3, 4, 5, 6]
         
-        var arr = [1, 2, 3]
+        XCTAssertEqual(arr[safe: -1], nil)
+        XCTAssertEqual(arr[safe: 0], 1)
+        XCTAssertEqual(arr[safe: 1], 2)
+        XCTAssertEqual(arr[safe: 5], 6)
+        XCTAssertEqual(arr[safe: 6], nil)
         
-        // get
+        // [Int].SubSequence a.k.a. ArraySlice<Int>
+        let slice = arr.suffix(4)
+        XCTAssertEqual(slice[safe: -1], nil)
+        XCTAssertEqual(slice[safe: 0], nil)
+        XCTAssertEqual(slice[safe: 1], nil)
+        XCTAssertEqual(slice[safe: 2], 3)
+        XCTAssertEqual(slice[safe: 5], 6)
+        XCTAssertEqual(slice[safe: 6], nil)
         
-        XCTAssertNotNil(arr[safe:  0])
-        XCTAssertNil(   arr[safe: -1])
-        XCTAssertNil(   arr[safe:  3])
-        
-        // set
-        
-        arr[safe: 0] = 4        // succeeds
-        
-        XCTAssertEqual(arr, [4,2,3])
-        
-        arr[safe: 3] = 4        // silently fails
-        
-        XCTAssertEqual(arr, [4,2,3])
-        
-        // edge cases
+    }
+    
+    func testSubscript_Safe_Get_EdgeCases() {
         
         // empty array
         XCTAssertEqual([Int]()[safe: -1], nil)
@@ -76,15 +76,178 @@ class Extensions_Swift_Collections_Tests: XCTestCase {
         XCTAssertEqual([1][safe:  0], 1)
         XCTAssertEqual([1][safe:  1], nil)
         
+        // [Int?]
+        let arr: [Int?] = [nil, 2, 3, 4, 5, 6]
+        XCTAssertEqual(arr[safe: -1], nil)
+        XCTAssertEqual(arr[safe: 0], Optional<Int>(nil))
+        XCTAssertNotEqual(arr[safe: 0], nil)
+        XCTAssertEqual(arr[safe: 1], Optional<Int>(2))
+        XCTAssertEqual(arr[safe: 5], Optional<Int>(6))
+        XCTAssertEqual(arr[safe: 6], nil)
+        
     }
     
-    func testSafeIndexSubscriptDefaultValue() {
+    func testSubscript_Safe_Set() {
         
         // [Int]
+        var arr = [1, 2, 3, 4, 5, 6]
         
-        let arr = [1,2,3]
+        arr[safe: 0] = 9        // succeeds
+        arr[safe: 5] = 8        // succeeds
         
-        // get
+        XCTAssertEqual(arr, [9, 2, 3, 4, 5, 8])
+        
+        arr[safe: -1] = 0       // silently fails
+        arr[safe: 6] = 7        // silently fails
+        
+        XCTAssertEqual(arr, [9, 2, 3, 4, 5, 8])
+        
+        // [Int].SubSequence a.k.a. ArraySlice<Int>
+        var slice = arr.suffix(4)
+        
+        slice[safe: 0] = 0        // silently fails
+        XCTAssertEqual(slice, [3, 4, 5, 8])
+        
+        slice[safe: 1] = 0        // silently fails
+        XCTAssertEqual(slice, [3, 4, 5, 8])
+        
+        slice[safe: 2] = 0        // succeeds
+        XCTAssertEqual(slice, [0, 4, 5, 8])
+        
+        slice[safe: 5] = 0        // succeeds
+        XCTAssertEqual(slice, [0, 4, 5, 0])
+        
+        slice[safe: 6] = 7        // silently fails
+        XCTAssertEqual(slice, [0, 4, 5, 0])
+        
+    }
+    
+    func testSubscript_Safe_Set_EdgeCases() throws {
+        
+        // skip test for now, because setting to nil currently throws a preconditionFailure that we can't catch in unit tests without it halting the whole tests module execution...
+        
+        // [Int]
+        var arr = [1, 2, 3, 4, 5, 6]
+        
+        arr[safe: -1] = nil       // silently fails
+        //arr[safe: 0] = nil        // throws precondition failure
+        arr[safe: 6] = nil        // silently fails
+        
+        XCTAssertEqual(arr, [1, 2, 3, 4, 5, 6])
+        
+        // [Int?]
+        var arr2: [Int?] = [1, 2, 3, 4, 5, 6]
+        
+        arr2[safe: -1] = nil       // silently fails
+        arr2[safe: 0] = nil        // succeeds
+        arr2[safe: 6] = nil        // silently fails
+        
+        XCTAssertEqual(arr2, [nil, 2, 3, 4, 5, 6])
+        
+    }
+    
+    func testSubscript_SafePosition_Get() {
+        
+        // [Int]
+        let arr = [1, 2, 3, 4, 5, 6]
+        
+        XCTAssertEqual(arr[safePosition: -1], nil)
+        XCTAssertEqual(arr[safePosition: 0], 1)
+        XCTAssertEqual(arr[safePosition: 1], 2)
+        XCTAssertEqual(arr[safePosition: 5], 6)
+        XCTAssertEqual(arr[safePosition: 6], nil)
+        
+        // [Int].SubSequence a.k.a. ArraySlice<Int>
+        let slice = arr.suffix(4)
+        XCTAssertEqual(slice[safePosition: -1], nil)
+        XCTAssertEqual(slice[safePosition: 0], 3)
+        XCTAssertEqual(slice[safePosition: 1], 4)
+        XCTAssertEqual(slice[safePosition: 3], 6)
+        XCTAssertEqual(slice[safePosition: 4], nil)
+        
+    }
+    
+    func testSubscript_SafePosition_Get_EdgeCases() {
+        
+        // empty array
+        XCTAssertEqual([Int]()[safePosition: -1], nil)
+        XCTAssertEqual([Int]()[safePosition:  0], nil)
+        XCTAssertEqual([Int]()[safePosition:  1], nil)
+        
+        // single element array
+        XCTAssertEqual([1][safePosition: -1], nil)
+        XCTAssertEqual([1][safePosition:  0], 1)
+        XCTAssertEqual([1][safePosition:  1], nil)
+        
+        // [Int?]
+        let arr: [Int?] = [nil, 2, 3, 4, 5, 6]
+        XCTAssertEqual(arr[safePosition: -1], nil)
+        XCTAssertEqual(arr[safePosition: 0], Optional<Int>(nil))
+        XCTAssertNotEqual(arr[safePosition: 0], nil)
+        XCTAssertEqual(arr[safePosition: 1], Optional<Int>(2))
+        XCTAssertEqual(arr[safePosition: 5], Optional<Int>(6))
+        XCTAssertEqual(arr[safePosition: 6], nil)
+        
+    }
+    
+    func testSubscript_SafePosition_Set() {
+        
+        // [Int]
+        var arr = [1, 2, 3, 4, 5, 6]
+        
+        arr[safePosition: 0] = 9        // succeeds
+        arr[safePosition: 5] = 8        // succeeds
+        
+        XCTAssertEqual(arr, [9, 2, 3, 4, 5, 8])
+        
+        arr[safePosition: -1] = 0       // silently fails
+        arr[safePosition: 6] = 7        // silently fails
+        
+        XCTAssertEqual(arr, [9, 2, 3, 4, 5, 8])
+        
+        // [Int].SubSequence a.k.a. ArraySlice<Int>
+        var slice = arr.suffix(4)
+        
+        slice[safePosition: 0] = 1      // succeeds
+        slice[safePosition: 3] = 6      // succeeds
+        
+        XCTAssertEqual(slice, [1, 4, 5, 6])
+        
+        slice[safePosition: -1] = 0       // silently fails
+        slice[safePosition: 4] = 7        // silently fails
+        
+        XCTAssertEqual(slice, [1, 4, 5, 6])
+        
+    }
+    
+    func testSubscript_SafePosition_Set_EdgeCases() throws {
+        
+        // setting an existing element to `nil` currently throws a preconditionFailure that we can't catch in unit tests without it halting the whole tests module execution
+        
+        // [Int]
+        var arr = [1, 2, 3, 4, 5, 6]
+        
+        arr[safePosition: -1] = nil       // silently fails, out of bounds
+        //arr[safePosition: 0] = nil        // throws precondition failure
+        arr[safePosition: 6] = nil        // silently fails, out of bounds
+        
+        XCTAssertEqual(arr, [1, 2, 3, 4, 5, 6])
+        
+        // [Int?]
+        var arr2: [Int?] = [1, 2, 3, 4, 5, 6]
+        
+        arr2[safePosition: -1] = nil       // silently fails
+        arr2[safePosition: 0] = nil        // succeeds
+        arr2[safePosition: 6] = nil        // silently fails
+        
+        XCTAssertEqual(arr2, [nil, 2, 3, 4, 5, 6])
+        
+    }
+    
+    func testSubscript_Safe_Get_DefaultValue() {
+        
+        // [Int]
+        let arr = [1, 2, 3]
         
         XCTAssertEqual(arr[safe: -1, default: 99], 99)
         XCTAssertEqual(arr[safe:  0, default: 99], 1)
@@ -92,7 +255,18 @@ class Extensions_Swift_Collections_Tests: XCTestCase {
         XCTAssertEqual(arr[safe:  2, default: 99], 3)
         XCTAssertEqual(arr[safe:  3, default: 99], 99)
         
-        // edge cases
+        // [Int].SubSequence a.k.a. ArraySlice<Int>
+        let slice = arr.suffix(2)
+        
+        XCTAssertEqual(slice[safe: -1, default: 99], 99)
+        XCTAssertEqual(slice[safe:  0, default: 99], 99)
+        XCTAssertEqual(slice[safe:  1, default: 99], 2)
+        XCTAssertEqual(slice[safe:  2, default: 99], 3)
+        XCTAssertEqual(slice[safe:  3, default: 99], 99)
+        
+    }
+    
+    func testSubscript_Safe_Get_DefaultValue_EdgeCases() {
         
         // empty array
         XCTAssertEqual([Int]()[safe: -1, default: 99], 99)
@@ -103,6 +277,41 @@ class Extensions_Swift_Collections_Tests: XCTestCase {
         XCTAssertEqual([1][safe: -1, default: 99], 99)
         XCTAssertEqual([1][safe:  0, default: 99], 1)
         XCTAssertEqual([1][safe:  1, default: 99], 99)
+        
+    }
+    
+    func testSubscript_SafePosition_Get_DefaultValue() {
+        
+        // [Int]
+        let arr = [1, 2, 3]
+        
+        XCTAssertEqual(arr[safePosition: -1, default: 99], 99)
+        XCTAssertEqual(arr[safePosition:  0, default: 99], 1)
+        XCTAssertEqual(arr[safePosition:  1, default: 99], 2)
+        XCTAssertEqual(arr[safePosition:  2, default: 99], 3)
+        XCTAssertEqual(arr[safePosition:  3, default: 99], 99)
+        
+        // [Int].SubSequence a.k.a. ArraySlice<Int>
+        let slice = arr.suffix(2)
+        
+        XCTAssertEqual(slice[safePosition: -1, default: 99], 99)
+        XCTAssertEqual(slice[safePosition:  0, default: 99], 2)
+        XCTAssertEqual(slice[safePosition:  1, default: 99], 3)
+        XCTAssertEqual(slice[safePosition:  2, default: 99], 99)
+        
+    }
+    
+    func testSubscript_SafePosition_Get_DefaultValue_EdgeCases() {
+        
+        // empty array
+        XCTAssertEqual([Int]()[safePosition: -1, default: 99], 99)
+        XCTAssertEqual([Int]()[safePosition:  0, default: 99], 99)
+        XCTAssertEqual([Int]()[safePosition:  1, default: 99], 99)
+        
+        // single element array
+        XCTAssertEqual([1][safePosition: -1, default: 99], 99)
+        XCTAssertEqual([1][safePosition:  0, default: 99], 1)
+        XCTAssertEqual([1][safePosition:  1, default: 99], 99)
         
     }
     
