@@ -18,7 +18,7 @@ extension Collection where Self: RangeReplaceableCollection,
     
 }
 
-// MARK: - Safe subscripts
+// MARK: - [safe:]
 
 // MutableCollection:
 // (inherits from Sequence, Collection)
@@ -116,6 +116,152 @@ extension MutableCollection where Element : OptionalType {
     
 }
 
+// Collection:
+// (inherits from Sequence)
+// (conformance on Array, ArraySlice, ContiguousArray, Dictionary, Set, Range, ClosedRange, KeyValuePairs, CollectionOfOne, EmptyCollection, etc.)
+// (does not conform on NSArray, NSDictionary, etc.)
+extension Collection {
+    
+    /// **OTCore:**
+    /// Access collection indexes safely.
+    ///
+    /// Get: if index does not exist (out-of-bounds), `nil` is returned.
+    ///
+    /// Set: if index does not exist, set fails silently and the value is not stored.
+    ///
+    /// Example:
+    ///
+    ///     let arr = [1, 2, 3]
+    ///     arr[safe: 0] // Optional(1)
+    ///     arr[safe: 3] // nil
+    ///
+    ///     // for slice, index numbers are preserved like native subscript
+    ///     let arrSlice = [1, 2, 3].suffix(2)
+    ///     arrSlice[safe: 0] // nil
+    ///     arrSlice[safe: 1] // Optional(2)
+    ///     arrSlice[safe: 2] // Optional(3)
+    ///     arrSlice[safe: 3] // nil
+    ///
+    @_disfavoredOverload
+    @inlinable public subscript(safe index: Index) -> Element? {
+        
+        indices.contains(index) ? self[index] : nil
+        
+    }
+    
+    /// **OTCore:**
+    /// Access collection indexes safely.
+    /// If index does not exist (out-of-bounds), `defaultValue` is returned.
+    @_disfavoredOverload
+    @inlinable public subscript(
+        safe index: Index,
+        default defaultValue: @autoclosure () -> Element
+    ) -> Element {
+        
+        indices.contains(index) ? self[index] : defaultValue()
+        
+    }
+    
+}
+
+extension Collection where Index == Int {
+    
+    /// **OTCore:**
+    /// Access collection indexes safely.
+    ///
+    /// Get: if index does not exist (out-of-bounds), `nil` is returned.
+    ///
+    /// Set: if index does not exist, set fails silently and the value is not stored.
+    ///
+    /// Example:
+    ///
+    ///     let arr = [1, 2, 3]
+    ///     arr[safe: 0] // Optional(1)
+    ///     arr[safe: 3] // nil
+    ///
+    ///     // for slice, index numbers are preserved like native subscript
+    ///     let arrSlice = [1, 2, 3].suffix(2)
+    ///     arrSlice[safe: 0] // nil
+    ///     arrSlice[safe: 1] // Optional(2)
+    ///     arrSlice[safe: 2] // Optional(3)
+    ///     arrSlice[safe: 3] // nil
+    ///
+    @inlinable public subscript(safe index: Int) -> Element? {
+        
+        indices.contains(index) ? self[index] : nil
+        
+    }
+    
+}
+
+// MARK: - [safe: Range]
+
+extension Collection {
+    
+    /// **OTCore:**
+    /// Access collection indexes safely.
+    /// If index range is not fully contained within the collection's indices, `nil` is returned.
+    @inlinable public subscript(safe range: ClosedRange<Index>) -> SubSequence? {
+        
+        guard range.lowerBound >= startIndex,
+              range.upperBound < endIndex else { return nil }
+        
+        return self[range.lowerBound...range.upperBound]
+        
+    }
+    
+    /// **OTCore:**
+    /// Access collection indexes safely.
+    /// If index range is not fully contained within the collection's indices, `nil` is returned.
+    @inlinable public subscript(safe range: Range<Index>) -> SubSequence? {
+        
+        guard range.lowerBound >= startIndex,
+              range.upperBound <= endIndex else { return nil }
+        
+        return self[range.lowerBound..<range.upperBound]
+        
+    }
+    
+    /// **OTCore:**
+    /// Access collection indexes safely.
+    /// If index range is not fully contained within the collection's indices, `nil` is returned.
+    @inlinable public subscript(safe range: PartialRangeFrom<Index>) -> SubSequence? {
+        
+        guard range.lowerBound >= startIndex,
+              range.lowerBound <= endIndex else { return nil }
+        
+        return self[range.lowerBound...]
+        
+    }
+    
+    /// **OTCore:**
+    /// Access collection indexes safely.
+    /// If index range is not fully contained within the collection's indices, `nil` is returned.
+    @inlinable public subscript(safe range: PartialRangeThrough<Index>) -> SubSequence? {
+        
+        guard range.upperBound >= startIndex,
+              range.upperBound < endIndex else { return nil }
+        
+        return self[...range.upperBound]
+        
+    }
+    
+    /// **OTCore:**
+    /// Access collection indexes safely.
+    /// If index range is not fully contained within the collection's indices, `nil` is returned.
+    @inlinable public subscript(safe range: PartialRangeUpTo<Index>) -> SubSequence? {
+        
+        guard range.upperBound >= startIndex,
+              range.upperBound <= endIndex else { return nil }
+        
+        return self[..<range.upperBound]
+        
+    }
+    
+}
+
+// MARK: - [safePosition:]
+
 extension MutableCollection {
     
     /// **OTCore:**
@@ -207,81 +353,7 @@ extension MutableCollection where Element : OptionalType {
     
 }
 
-// Collection:
-// (inherits from Sequence)
-// (conformance on Array, ArraySlice, ContiguousArray, Dictionary, Set, Range, ClosedRange, KeyValuePairs, CollectionOfOne, EmptyCollection, etc.)
-// (does not conform on NSArray, NSDictionary, etc.)
-extension Collection {
-    
-    /// **OTCore:**
-    /// Access collection indexes safely.
-    ///
-    /// Get: if index does not exist (out-of-bounds), `nil` is returned.
-    ///
-    /// Set: if index does not exist, set fails silently and the value is not stored.
-    ///
-    /// Example:
-    ///
-    ///     let arr = [1, 2, 3]
-    ///     arr[safe: 0] // Optional(1)
-    ///     arr[safe: 3] // nil
-    ///
-    ///     // for slice, index numbers are preserved like native subscript
-    ///     let arrSlice = [1, 2, 3].suffix(2)
-    ///     arrSlice[safe: 0] // nil
-    ///     arrSlice[safe: 1] // Optional(2)
-    ///     arrSlice[safe: 2] // Optional(3)
-    ///     arrSlice[safe: 3] // nil
-    ///
-    @_disfavoredOverload
-    @inlinable public subscript(safe index: Index) -> Element? {
-        
-        indices.contains(index) ? self[index] : nil
-        
-    }
-    
-    /// **OTCore:**
-    /// Access collection indexes safely.
-    /// If index does not exist (out-of-bounds), `defaultValue` is returned.
-    @_disfavoredOverload
-    @inlinable public subscript(
-        safe index: Index,
-        default defaultValue: @autoclosure () -> Element
-    ) -> Element {
-        
-        indices.contains(index) ? self[index] : defaultValue()
-        
-    }
-    
-}
-
 extension Collection where Index == Int {
-    
-    /// **OTCore:**
-    /// Access collection indexes safely.
-    ///
-    /// Get: if index does not exist (out-of-bounds), `nil` is returned.
-    ///
-    /// Set: if index does not exist, set fails silently and the value is not stored.
-    ///
-    /// Example:
-    ///
-    ///     let arr = [1, 2, 3]
-    ///     arr[safe: 0] // Optional(1)
-    ///     arr[safe: 3] // nil
-    ///
-    ///     // for slice, index numbers are preserved like native subscript
-    ///     let arrSlice = [1, 2, 3].suffix(2)
-    ///     arrSlice[safe: 0] // nil
-    ///     arrSlice[safe: 1] // Optional(2)
-    ///     arrSlice[safe: 2] // Optional(3)
-    ///     arrSlice[safe: 3] // nil
-    ///
-    @inlinable public subscript(safe index: Int) -> Element? {
-        
-        indices.contains(index) ? self[index] : nil
-        
-    }
     
     /// **OTCore:**
     /// Access collection indexes safely, referenced by position offset `0..<count`. (Same as `[position: Int]` but returns `nil` if out-of-bounds.
@@ -365,33 +437,7 @@ extension Collection where Index == Int {
     
 }
 
-extension Collection {
-    
-    /// **OTCore:**
-    /// Access collection indexes safely.
-    /// If index range is not fully contained within the collection's indices, `nil` is returned.
-    @inlinable public subscript(safe range: ClosedRange<Index>) -> SubSequence? {
-        
-        guard range.lowerBound >= startIndex,
-              range.upperBound < endIndex else { return nil }
-        
-        return self[range.lowerBound...range.upperBound]
-        
-    }
-    
-    /// **OTCore:**
-    /// Access collection indexes safely.
-    /// If index range is not fully contained within the collection's indices, `nil` is returned.
-    @inlinable public subscript(safe range: Range<Index>) -> SubSequence? {
-        
-        guard range.lowerBound >= startIndex,
-              range.upperBound <= endIndex else { return nil }
-        
-        return self[range.lowerBound..<range.upperBound]
-        
-    }
-    
-}
+// MARK: - [safePosition: Range]
 
 extension Collection where Index == Int {
     
@@ -420,6 +466,45 @@ extension Collection where Index == Int {
         let toIndex = index(startIndex, offsetBy: range.upperBound)
         
         return self[fromIndex..<toIndex]
+        
+    }
+    
+    /// **OTCore:**
+    /// Access collection indexes safely, referenced by position offset `0..<count`. (Same as `[Int]` but if position range is not fully contained within the collection's element position offsets, `nil` is returned.
+    @inlinable public subscript(safePosition range: PartialRangeFrom<Int>) -> SubSequence? {
+        
+        let fromIndex = index(startIndex, offsetBy: range.lowerBound)
+        
+        guard fromIndex >= startIndex,
+              fromIndex <= endIndex else { return nil }
+        
+        return self[fromIndex...]
+        
+    }
+    
+    /// **OTCore:**
+    /// Access collection indexes safely, referenced by position offset `0..<count`. (Same as `[Int]` but if position range is not fully contained within the collection's element position offsets, `nil` is returned.
+    @inlinable public subscript(safePosition range: PartialRangeThrough<Int>) -> SubSequence? {
+        
+        let toIndex = index(startIndex, offsetBy: range.upperBound)
+        
+        guard toIndex >= startIndex,
+              toIndex < endIndex else { return nil }
+        
+        return self[...toIndex]
+        
+    }
+    
+    /// **OTCore:**
+    /// Access collection indexes safely, referenced by position offset `0..<count`. (Same as `[Int]` but if position range is not fully contained within the collection's element position offsets, `nil` is returned.
+    @inlinable public subscript(safePosition range: PartialRangeUpTo<Int>) -> SubSequence? {
+        
+        let toIndex = index(startIndex, offsetBy: range.upperBound)
+        
+        guard toIndex >= startIndex,
+              toIndex <= endIndex else { return nil }
+        
+        return self[..<toIndex]
         
     }
     
