@@ -315,6 +315,122 @@ class Extensions_Swift_Collections_Tests: XCTestCase {
         
     }
     
+    func testSubscript_Safe_ClosedRange_Index() {
+        
+        // [Int]
+        let arr = [1, 2, 3, 4, 5, 6]
+        
+        do {
+            let fromIndex = arr.index(arr.startIndex, offsetBy: 1)
+            let toIndex = arr.index(arr.startIndex, offsetBy: 3)
+            let slice = arr[safe: fromIndex...toIndex]
+            XCTAssertEqual(slice, [2, 3, 4])
+        }
+        
+        do {
+            let fromIndex = arr.index(arr.startIndex, offsetBy: 1)
+            let toIndex = arr.index(arr.startIndex, offsetBy: 5)
+            let slice = arr[safe: fromIndex...toIndex]
+            XCTAssertEqual(slice, [2, 3, 4, 5, 6])
+        }
+        
+        do {
+            let fromIndex = arr.index(arr.startIndex, offsetBy: 1)
+            let toIndex = arr.index(arr.startIndex, offsetBy: 6)
+            let slice = arr[safe: fromIndex...toIndex]
+            XCTAssertEqual(slice, nil)
+        }
+        
+    }
+    
+    func testSubscript_Safe_ClosedRange_Index_EdgeCases() {
+        
+        // empty array
+        do {
+            let arr: [Int] = []
+            
+            let fromIndex = arr.index(arr.startIndex, offsetBy: 1)
+            let toIndex = arr.index(arr.startIndex, offsetBy: 3)
+            let slice = arr[safe: fromIndex...toIndex]
+            XCTAssertEqual(slice, nil)
+        }
+        
+        // single element array
+        do {
+            let arr: [Int] = [1]
+            
+            let fromIndex = arr.index(arr.startIndex, offsetBy: 1)
+            let toIndex = arr.index(arr.startIndex, offsetBy: 3)
+            let slice = arr[safe: fromIndex...toIndex]
+            XCTAssertEqual(slice, nil)
+        }
+        do {
+            let arr: [Int] = [1]
+            
+            let fromIndex = arr.index(arr.startIndex, offsetBy: 0)
+            let toIndex = arr.index(arr.startIndex, offsetBy: 0)
+            let slice = arr[safe: fromIndex...toIndex]
+            XCTAssertEqual(slice, [1])
+        }
+    }
+    
+    func testSubscript_Safe_ClosedRange_Int() {
+        
+        // [Int]
+        let arr = [1, 2, 3, 4, 5, 6]
+        
+        do {
+            let slice = arr[safe: 1...3]
+            XCTAssertEqual(slice, [2, 3, 4])
+        }
+        
+        do {
+            let slice = arr[safe: 1...5]
+            XCTAssertEqual(slice, [2, 3, 4, 5, 6])
+        }
+        
+        do {
+            let slice = arr[safe: 1...6]
+            XCTAssertEqual(slice, nil)
+        }
+        
+        do {
+            let slice = arr[safe: -1...3]
+            XCTAssertEqual(slice, nil)
+        }
+        
+    }
+    
+    func testSubscript_SafePosition_ClosedRange_Int() {
+        
+        // [Int].SubSequence a.k.a. ArraySlice<Int>
+        let slice = [1, 2, 3, 4, 5, 6][2...] // [3, 4, 5, 6]
+        
+        do {
+            XCTAssertEqual(slice[safePosition: (-1)...(-1)], nil)
+            XCTAssertEqual(slice[safePosition: 0...0], [3])
+            XCTAssertEqual(slice[safePosition: 1...1], [4])
+            XCTAssertEqual(slice[safePosition: 3...3], [6])
+            XCTAssertEqual(slice[safePosition: 4...4], nil)
+        }
+        
+        do {
+            let slice2 = slice[safePosition: 1...3]
+            XCTAssertEqual(slice2, [4, 5, 6])
+        }
+        
+        do {
+            let slice2 = slice[safePosition: 1...4]
+            XCTAssertEqual(slice2, nil)
+        }
+        
+        do {
+            let slice2 = slice[safePosition: -1...3]
+            XCTAssertEqual(slice2, nil)
+        }
+        
+    }
+    
     func testArrayRemoveSafeAt() {
         
         // Array

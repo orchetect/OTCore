@@ -365,6 +365,40 @@ extension Collection where Index == Int {
     
 }
 
+extension Collection {
+    
+    /// **OTCore:**
+    /// Access collection indexes safely.
+    /// If index range is not fully contained within the collection's indices, `nil` is returned.
+    @inlinable public subscript(safe range: ClosedRange<Index>) -> SubSequence? {
+        
+        guard range.lowerBound >= startIndex,
+              range.upperBound < endIndex else { return nil }
+        
+        return self[range.lowerBound...range.upperBound]
+        
+    }
+    
+}
+
+extension Collection where Index == Int {
+    
+    /// **OTCore:**
+    /// Access collection indexes safely, referenced by position offset `0..<count`. (Same as `[Int]` but if position range is not fully contained within the collection's element position offsets, `nil` is returned.
+    @inlinable public subscript(safePosition range: ClosedRange<Int>) -> SubSequence? {
+        
+        guard range.lowerBound >= 0,
+              range.upperBound < count else { return nil }
+        
+        let fromIndex = index(startIndex, offsetBy: range.lowerBound)
+        let toIndex = index(startIndex, offsetBy: range.upperBound)
+        
+        return self[fromIndex...toIndex]
+        
+    }
+    
+}
+
 
 // MARK: - .remove(safeAt:)
 
