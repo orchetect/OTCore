@@ -30,76 +30,73 @@ import os.log
 // Suggestion:
 // It's possible to emit emoji in log messages only for debug builds easily, to make errors stand out more.
 //
+//     let log = Logger()
+//
 //     #if RELEASE
-//     Log.useEmoji = .disabled
+//     log.useEmoji = .disabled
 //     #else
-//     Log.useEmoji = .all
+//     log.useEmoji = .all
 //     #endif
 //
 // ------------------------------------------------------------------------
 
-
-// MARK: - Internal property storage
-
-@available(macOS 10.12, iOS 10.0, watchOS 3.0, tvOS 10.0, *)
-fileprivate var _otCoreLogEnabled = true
-
-@available(macOS 10.12, iOS 10.0, watchOS 3.0, tvOS 10.0, *)
-fileprivate var _otCoreDefaultLog = OSLog.default
-
-@available(macOS 10.12, iOS 10.0, watchOS 3.0, tvOS 10.0, *)
-fileprivate var _otCoreDefaultSubsystem: String? = nil
-
-@available(macOS 10.12, iOS 10.0, watchOS 3.0, tvOS 10.0, *)
-fileprivate var _otCoreUseEmoji: Log.EmojiType = .disabled
-
-
-// MARK: - Log
+// MARK: - Logger
 
 /// **OTCore:**
-/// Centralized logging via os_log
+/// Centralized logging via os_log.
 @available(macOS 10.12, iOS 10.0, watchOS 3.0, tvOS 10.0, *)
-public enum Log {
+open class Logger {
     
     /// **OTCore:**
-    /// Set to false to suppress logging
-    public static var enabled: Bool {
-        get { _otCoreLogEnabled }
-        set { _otCoreLogEnabled = newValue }
-    }
+    /// Set to `false` to suppress all logging.
+    @inline(__always)
+    public var enabled: Bool
     
     /// **OTCore:**
-    /// Sets the default OSLog to use
-    public static var defaultLog: OSLog {
-        get { _otCoreDefaultLog }
-        set { _otCoreDefaultLog = newValue }
-    }
+    /// Sets the default `OSLog` to use.
+    @inline(__always)
+    public var defaultLog: OSLog
     
     /// **OTCore:**
-    /// Sets the default OSLog subsystem to use
-    public static var defaultSubsystem: String? {
-        get { _otCoreDefaultSubsystem }
-        set { _otCoreDefaultSubsystem = newValue }
-    }
+    /// Enables prefixing log message body text with emoji icons (ie: ⚠️ for `.error`).
+    /// Individual emoji for each log level can be set using the `.level*Emoji` properties.
+    @inline(__always)
+    public var useEmoji: EmojiType
     
     /// **OTCore:**
-    /// Enables prefixing log messages with emoji icons (ie: ⚠️ for .error)
-    public static var useEmoji: EmojiType {
-        get { _otCoreUseEmoji }
-        set { _otCoreUseEmoji = newValue }
-    }
+    /// Set the emoji to prefix `.debug` level messages if `useEmoji == true`.
+    @inline(__always)
+    public var levelDebugEmoji: Character = "🔷"
     
     /// **OTCore:**
-    /// Sets up all Log properties at once
-    public static func setup(enabled: Bool = true,
-                             defaultLog: OSLog? = nil,
-                             defaultSubsystem: String? = nil,
-                             useEmoji: EmojiType? = nil) {
+    /// Set the emoji to prefix `.info` level messages if `useEmoji == true`.
+    @inline(__always)
+    public var levelInfoEmoji: Character = "💬"
+    
+    /// **OTCore:**
+    /// Set the emoji to prefix `.default` level messages if `useEmoji == true`.
+    @inline(__always)
+    public var levelDefaultEmoji: Character = "💬"
+    
+    /// **OTCore:**
+    /// Set the emoji to prefix `.error` level messages if `useEmoji == true`.
+    @inline(__always)
+    public var levelErrorEmoji: Character = "⚠️"
+    
+    /// **OTCore:**
+    /// Set the emoji to prefix `.fault` level messages if `useEmoji == true`.
+    @inline(__always)
+    public var levelFaultEmoji: Character = "🛑"
+    
+    /// **OTCore:**
+    /// Initialize a new Logger instance.
+    public init(enabled: Bool = true,
+                defaultLog: OSLog = .default,
+                useEmoji: EmojiType = .disabled) {
         
-        _otCoreLogEnabled = enabled
-        _otCoreDefaultLog = defaultLog ?? .default
-        _otCoreDefaultSubsystem = defaultSubsystem
-        _otCoreUseEmoji = useEmoji ?? .disabled
+        self.enabled = enabled
+        self.defaultLog = defaultLog
+        self.useEmoji = useEmoji
         
     }
     
@@ -120,13 +117,15 @@ public enum Log {
     /// **OTCore:**
     /// Log a debug message.
     /// Verbose file, line number, and function name will be included.
+    ///
     /// - note: These messages are not posted to the log in a release build.
+    ///
     /// - remark: OSLog Description: The lowest priority. Only captured in memory. Not stored on disk.
     @inline(__always)
-    public static func debug(_ items: Any?...,
-                             log: OSLog? = nil,
-                             file: String = #file,
-                             function: String = #function) {
+    open func debug(_ items: Any?...,
+                    log: OSLog? = nil,
+                    file: String = #file,
+                    function: String = #function) {
         
         #if RELEASE
         
@@ -134,7 +133,7 @@ public enum Log {
         
         #else
         
-        guard _otCoreLogEnabled else { return }
+        guard enabled else { return }
         
         autoreleasepool {
             
@@ -144,11 +143,11 @@ public enum Log {
                 .map { String(describing: $0 ?? "nil") }
                 .joined(separator: " ")
             
-            let message = (_otCoreUseEmoji == .all ? "🔷 " : "")
+            let message = (useEmoji == .all ? "(levelDebugEmoji) " : "")
                 + "\(content) (\(fileName):\(function))"
             
             os_log("%{public}@",
-                   log: log ?? _otCoreDefaultLog,
+                   log: log ?? defaultLog,
                    type: .debug,
                    message)
             
@@ -161,12 +160,13 @@ public enum Log {
     /// **OTCore:**
     /// Log a message with default log type.
     /// Appears in both release and debug builds.
+    ///
     /// - remark: OSLog Description: Purely informational in nature. Only captured in memory and not stored on disk unless otherwise specified. Eventually purged.
     @inline(__always)
-    public static func info(_ items: Any?...,
-                            log: OSLog? = nil) {
+    open func info(_ items: Any?...,
+                   log: OSLog? = nil) {
         
-        guard _otCoreLogEnabled else { return }
+        guard enabled else { return }
         
         autoreleasepool {
             
@@ -175,11 +175,11 @@ public enum Log {
                 .joined(separator: " ")
             
             let message =
-                (_otCoreUseEmoji == .all ? "💬 " : "")
+                (useEmoji == .all ? "\(levelInfoEmoji) " : "")
                 + "\(content)"
             
             os_log("%{public}@",
-                   log: log ?? _otCoreDefaultLog,
+                   log: log ?? defaultLog,
                    type: .info,
                    message)
             
@@ -190,12 +190,13 @@ public enum Log {
     /// **OTCore:**
     /// Log a message with default log type.
     /// Appears in both release and debug builds.
+    ///
     /// - remark: OSLog Description: Default behavior. Stored on disk. Eventually purged.
     @inline(__always)
-    public static func `default`(_ items: Any?...,
-                                 log: OSLog? = nil) {
+    open func `default`(_ items: Any?...,
+                        log: OSLog? = nil) {
         
-        guard _otCoreLogEnabled else { return }
+        guard enabled else { return }
         
         autoreleasepool {
             
@@ -204,11 +205,11 @@ public enum Log {
                 .joined(separator: " ")
             
             let message =
-                (_otCoreUseEmoji == .all ? "💬 " : "")
+                (useEmoji == .all ? "\(levelDefaultEmoji) " : "")
                 + "\(content)"
             
             os_log("%{public}@",
-                   log: log ?? _otCoreDefaultLog,
+                   log: log ?? defaultLog,
                    type: .default,
                    message)
             
@@ -219,16 +220,17 @@ public enum Log {
     /// **OTCore:**
     /// Log an error.
     /// Appears in both release and debug builds.
+    ///
     /// - remark: OSLog Description: Something is amiss and might fail if not corrected. Always stored on disk. Eventually purged.
     @inline(__always)
-    public static func error(_ items: Any?...,
-                             log: OSLog? = nil,
-                             file: String = #file,
-                             line: Int = #line,
-                             column: Int = #column,
-                             function: String = #function) {
+    open func error(_ items: Any?...,
+                    log: OSLog? = nil,
+                    file: String = #file,
+                    line: Int = #line,
+                    column: Int = #column,
+                    function: String = #function) {
         
-        guard _otCoreLogEnabled else { return }
+        guard enabled else { return }
         
         autoreleasepool {
             
@@ -239,11 +241,11 @@ public enum Log {
                 .joined(separator: " ")
             
             let message =
-                (_otCoreUseEmoji == .all || _otCoreUseEmoji == .errorsOnly ? "⚠️ " : "")
+                (useEmoji == .all || useEmoji == .errorsOnly ? "\(levelErrorEmoji) " : "")
                 + "\(content) (\(fileName):\(line):\(column):\(function))"
             
             os_log("%{public}@",
-                   log: log ?? _otCoreDefaultLog,
+                   log: log ?? defaultLog,
                    type: .error,
                    message)
             
@@ -254,16 +256,17 @@ public enum Log {
     /// **OTCore:**
     /// Log an error.
     /// Appears in both release and debug builds.
+    ///
     /// - remark: OSLog Description: Something has failed. Always stored on disk. Eventually purged.
     @inline(__always)
-    public static func fault(_ items: Any?...,
-                             log: OSLog? = nil,
-                             file: String = #file,
-                             line: Int = #line,
-                             column: Int = #column,
-                             function: String = #function) {
+    open func fault(_ items: Any?...,
+                    log: OSLog? = nil,
+                    file: String = #file,
+                    line: Int = #line,
+                    column: Int = #column,
+                    function: String = #function) {
         
-        guard _otCoreLogEnabled else { return }
+        guard enabled else { return }
         
         autoreleasepool {
             
@@ -274,11 +277,11 @@ public enum Log {
                 .joined(separator: " ")
             
             let message =
-                (_otCoreUseEmoji == .all || _otCoreUseEmoji == .errorsOnly ? "🛑 " : "")
+                (useEmoji == .all || useEmoji == .errorsOnly ? "\(levelFaultEmoji) " : "")
                 + "\(content) (\(fileName):\(line):\(column):\(function))"
             
             os_log("%{public}@",
-                   log: log ?? _otCoreDefaultLog,
+                   log: log ?? defaultLog,
                    type: .fault,
                    message)
             
@@ -286,62 +289,60 @@ public enum Log {
         
     }
     
-}
-
-@available(macOS 10.12, iOS 10.0, watchOS 3.0, tvOS 10.0, *)
-extension OSLogType {
-    
     /// **OTCore:**
-    /// Log an error using the `self` log message type.
+    /// Log an error using the passed log message type.
     ///
-    /// - note: Where possible, use the `Log.*` methods instead (ie: `Log.debug()`, `Log.error()`, etc.)
+    /// - note: Where possible, use direct `Logger` instance methods instead (ie: `.debug(...)`, `.error(...), etc.`), as it will typically be more performant.
     @inline(__always)
-    public func log(_ items: Any?...,
-                    log: OSLog? = nil,
-                    file: String = #file,
-                    line: Int = #line,
-                    column: Int = #column,
-                    function: String = #function) {
+    open func log(_ items: Any?...,
+                  level: OSLogType,
+                  log: OSLog? = nil,
+                  file: String = #file,
+                  line: Int = #line,
+                  column: Int = #column,
+                  function: String = #function) {
+        
+        let log = log ?? defaultLog
         
         // we have to flatten the items here,
-        // otherwise it gets internally converted from Any?... to [Any?]
+        // otherwise it gets internally converted from `Any?...` to `[Any?]`
         // which produces undesirable results when passed into another
-        // function which takes an Any?... parameter
+        // function which takes an `Any?...` parameter
         
         let content = items
             .map { String(describing: $0 ?? "nil") }
             .joined(separator: " ")
         
-        switch self {
+        switch level {
         case .debug:
-            Log.debug(content,
-                      log: log,
-                      file: file,
-                      function: function)
+            debug(content,
+                  log: log,
+                  file: file,
+                  function: function)
             
         case .info:
-            Log.info(content,
-                     log: log)
+            info(content,
+                 log: log)
             
-        case .default:
-            Log.default(content,
-                        log: log)
+        case .`default`:
+            `default`(content,
+                      log: log)
             
         case .error:
-            Log.error(content,
-                      log: log,
-                      file: file,
-                      line: line,
-                      column: column,
-                      function: function)
+            error(content,
+                  log: log,
+                  file: file,
+                  line: line,
+                  column: column,
+                  function: function)
             
         case .fault:
-            Log.fault(content,
-                      log: log,
-                      file: file,
-                      line: line,
-                      column: column,
-                      function: function)
+            fault(content,
+                  log: log,
+                  file: file,
+                  line: line,
+                  column: column,
+                  function: function)
             
         default:
             break

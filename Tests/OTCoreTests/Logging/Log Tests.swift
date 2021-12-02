@@ -9,95 +9,98 @@ import XCTest
 import OTCore
 import OSLog
 
+@available(macOS 10.12, iOS 10.0, watchOS 3.0, tvOS 10.0, *)
 class Logging_Log_Tests: XCTestCase {
     
     override func setUp() { super.setUp() }
     override func tearDown() { super.tearDown() }
     
+    func testLogger_DefaultLog_NoEmojis() {
+        
+        // this test does not assert anything, it's just for diagnostic
+        
+        print("---------- default log, no emojis ----------")
+        
+        let logger = Logger(enabled: true,
+                            useEmoji: .disabled)
+        
+        logger.debug  ("Test log.debug()"  , 123)
+        logger.info   ("Test log.info()"   , 123)
+        logger.default("Test log.default()", 123)
+        logger.error  ("Test log.error()"  , 123)
+        logger.fault  ("Test log.fault()"  , 123)
+        
+    }
+    
+    func testLogger_DefaultLog_OnlyErrorEmojis() {
+        
+        // this test does not assert anything, it's just for diagnostic
+        
+        print("---------- default log, only error emojis ----------")
+        
+        let logger = Logger(enabled: true,
+                            useEmoji: .errorsOnly)
+        
+        logger.debug  ("Test log.debug()"  , 123)
+        logger.info   ("Test log.info()"   , 123)
+        logger.default("Test log.default()", 123)
+        logger.error  ("Test log.error()"  , 123)
+        logger.fault  ("Test log.fault()"  , 123)
+        
+    }
+    
+    func testLogger_DefaultLog_AllEmojis() {
+        
+        // this test does not assert anything, it's just for diagnostic
+        
+        print("---------- default log, all emojis ----------")
+        
+        let logger = Logger(enabled: true,
+                            useEmoji: .all)
+        
+        logger.debug  ("Test log.debug()"  , 123)
+        logger.info   ("Test log.info()"   , 123)
+        logger.default("Test log.default()", 123)
+        logger.error  ("Test log.error()"  , 123)
+        logger.fault  ("Test log.fault()"  , 123)
+        
+    }
+    
+    func testLogger_CustomLog_AllEmojis() {
+        
+        // this test does not assert anything, it's just for diagnostic
+        
+        print("---------- custom log, all emojis ----------")
+        
+        let logger = Logger(enabled: true,
+                            defaultLog: .loggerTestLog, // <-- custom log
+                            useEmoji: .all)
+        
+        logger.debug  ("Test log.debug()"  , 123)
+        logger.info   ("Test log.info()"   , 123)
+        logger.default("Test log.default()", 123)
+        logger.error  ("Test log.error()"  , 123)
+        logger.fault  ("Test log.fault()"  , 123)
+        
+    }
+    
     @available(macOS 10.12, iOS 10.0, watchOS 3.0, tvOS 10.0, *)
-    func testLog() {
+    func testLogger_LogMethod() {
         
         // this test does not assert anything, it's just for diagnostic
         
         // default log
         
-        print("---------- default log, no emojis ----------")
-        
-        Log.setup(enabled: true,
-                  defaultLog: nil,
-                  defaultSubsystem: "com.orchetect.otcore.logtest",
-                  useEmoji: .disabled)
-        
-        Log.debug  ("Test log.debug()"  , 123)
-        Log.info   ("Test log.info()"   , 123)
-        Log.default("Test log.default()", 123)
-        Log.error  ("Test log.error()"  , 123)
-        Log.fault  ("Test log.fault()"  , 123)
-        
-        // default log
-        
-        print("---------- default log, only error emojis ----------")
-        
-        Log.setup(enabled: true,
-                  defaultLog: nil,
-                  defaultSubsystem: "com.orchetect.otcore.logtest",
-                  useEmoji: .errorsOnly)
-        
-        Log.debug  ("Test log.debug()"  , 123)
-        Log.info   ("Test log.info()"   , 123)
-        Log.default("Test log.default()", 123)
-        Log.error  ("Test log.error()"  , 123)
-        Log.fault  ("Test log.fault()"  , 123)
-        
-        // default log
-        
-        print("---------- default log, all emojis ----------")
-        
-        Log.setup(enabled: true,
-                  defaultLog: nil,
-                  defaultSubsystem: "com.orchetect.otcore.logtest",
-                  useEmoji: .all)
-        
-        Log.debug  ("Test log.debug()"  , 123)
-        Log.info   ("Test log.info()"   , 123)
-        Log.default("Test log.default()", 123)
-        Log.error  ("Test log.error()"  , 123)
-        Log.fault  ("Test log.fault()"  , 123)
-        
-        // custom log
-        
-        print("---------- custom log, all emojis ----------")
-        
-        Log.setup(enabled: true,
-                  defaultLog: .custom, // <-- custom log
-                  defaultSubsystem: "com.orchetect.otcore.logtest",
-                  useEmoji: .all)
-        
-        Log.debug  ("Test log.debug()"  , 123)
-        Log.info   ("Test log.info()"   , 123)
-        Log.default("Test log.default()", 123)
-        Log.error  ("Test log.error()"  , 123)
-        Log.fault  ("Test log.fault()"  , 123)
-        
-    }
-    
-    @available(macOS 10.12, iOS 10.0, watchOS 3.0, tvOS 10.0, *)
-    func testOSLogType_Log() {
-        
-        // default log
-        
         print("---------- default log, OSLogType.x.log(), all emojis ----------")
         
-        Log.setup(enabled: true,
-                  defaultLog: nil,
-                  defaultSubsystem: "com.orchetect.otcore.logtest",
-                  useEmoji: .all)
+        let logger = Logger(enabled: true,
+                            useEmoji: .all)
         
-        OSLogType.debug  .log("Test log.debug()"  , 123)
-        OSLogType.info   .log("Test log.info()"   , 123)
-        OSLogType.default.log("Test log.default()", 123)
-        OSLogType.error  .log("Test log.error()"  , 123)
-        OSLogType.fault  .log("Test log.fault()"  , 123)
+        logger.log("Test log(... , level: .debug)"  , 123, level: .debug)
+        logger.log("Test log(... , level: .info)"   , 123, level: .info)
+        logger.log("Test log(... , level: .default)", 123, level: .default)
+        logger.log("Test log(... , level: .error)"  , 123, level: .error)
+        logger.log("Test log(... , level: .fault)"  , 123, level: .fault)
         
     }
     
@@ -106,8 +109,8 @@ class Logging_Log_Tests: XCTestCase {
 @available(macOS 10.12, iOS 10.0, watchOS 3.0, tvOS 10.0, *)
 fileprivate extension OSLog {
     
-    static let custom = OSLog(subsystem: "com.orchetect.otcore.logtest",
-                              category: "General")
+    static let loggerTestLog = OSLog(subsystem: "com.orchetect.otcore.logtest",
+                                     category: "General")
     
 }
 
