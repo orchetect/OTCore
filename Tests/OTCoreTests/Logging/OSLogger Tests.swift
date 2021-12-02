@@ -1,5 +1,5 @@
 //
-//  Log Tests.swift
+//  OSLogger Tests.swift
 //  OTCore • https://github.com/orchetect/OTCore
 //
 
@@ -21,8 +21,8 @@ class Logging_Log_Tests: XCTestCase {
         
         print("---------- default log, no emojis ----------")
         
-        let logger = Logger(enabled: true,
-                            useEmoji: .disabled)
+        let logger = OSLogger(enabled: true,
+                              useEmoji: .disabled)
         
         logger.debug  ("Test log.debug()"  , 123)
         logger.info   ("Test log.info()"   , 123)
@@ -38,8 +38,8 @@ class Logging_Log_Tests: XCTestCase {
         
         print("---------- default log, only error emojis ----------")
         
-        let logger = Logger(enabled: true,
-                            useEmoji: .errorsOnly)
+        let logger = OSLogger(enabled: true,
+                              useEmoji: .errorsOnly)
         
         logger.debug  ("Test log.debug()"  , 123)
         logger.info   ("Test log.info()"   , 123)
@@ -55,8 +55,8 @@ class Logging_Log_Tests: XCTestCase {
         
         print("---------- default log, all emojis ----------")
         
-        let logger = Logger(enabled: true,
-                            useEmoji: .all)
+        let logger = OSLogger(enabled: true,
+                              useEmoji: .all)
         
         logger.debug  ("Test log.debug()"  , 123)
         logger.info   ("Test log.info()"   , 123)
@@ -72,9 +72,9 @@ class Logging_Log_Tests: XCTestCase {
         
         print("---------- custom log, all emojis ----------")
         
-        let logger = Logger(enabled: true,
-                            defaultLog: .loggerTestLog, // <-- custom log
-                            useEmoji: .all)
+        let logger = OSLogger(enabled: true,
+                              defaultLog: .loggerTestLog, // <-- custom log
+                              useEmoji: .all)
         
         logger.debug  ("Test log.debug()"  , 123)
         logger.info   ("Test log.info()"   , 123)
@@ -93,8 +93,8 @@ class Logging_Log_Tests: XCTestCase {
         
         print("---------- default log, OSLogType.x.log(), all emojis ----------")
         
-        let logger = Logger(enabled: true,
-                            useEmoji: .all)
+        let logger = OSLogger(enabled: true,
+                              useEmoji: .all)
         
         logger.log("Test log(... , level: .debug)"  , 123, level: .debug)
         logger.log("Test log(... , level: .info)"   , 123, level: .info)

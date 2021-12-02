@@ -1,5 +1,5 @@
 //
-//  Log.swift
+//  OSLogger.swift
 //  OTCore • https://github.com/orchetect/OTCore
 //
 
@@ -24,13 +24,13 @@ import os.log
 //
 // Then you can log to it easily:
 //
-//     Log("test", log: .log2)
+//     logger.debug("test", log: .log2)
 //
 // ------------------------------------------------------------------------
 // Suggestion:
 // It's possible to emit emoji in log messages only for debug builds easily, to make errors stand out more.
 //
-//     let log = Logger()
+//     let log = OSLogger()
 //
 //     #if RELEASE
 //     log.useEmoji = .disabled
@@ -40,12 +40,12 @@ import os.log
 //
 // ------------------------------------------------------------------------
 
-// MARK: - Logger
+// MARK: - OSLogger
 
 /// **OTCore:**
 /// Centralized logging via os_log.
 @available(macOS 10.12, iOS 10.0, watchOS 3.0, tvOS 10.0, *)
-open class Logger {
+open class OSLogger {
     
     /// **OTCore:**
     /// Set to `false` to suppress all logging.
@@ -89,7 +89,7 @@ open class Logger {
     public var levelFaultEmoji: Character = "🛑"
     
     /// **OTCore:**
-    /// Initialize a new Logger instance.
+    /// Initialize a new `OSLogger` instance.
     public init(enabled: Bool = true,
                 defaultLog: OSLog = .default,
                 useEmoji: EmojiType = .disabled) {
@@ -292,7 +292,7 @@ open class Logger {
     /// **OTCore:**
     /// Log an error using the passed log message type.
     ///
-    /// - note: Where possible, use direct `Logger` instance methods instead (ie: `.debug(...)`, `.error(...), etc.`), as it will typically be more performant.
+    /// - note: Where possible, use direct `OSLogger` instance methods instead (ie: `.debug(...)`, `.error(...), etc.`), as it will typically be more performant.
     @inline(__always)
     open func log(_ items: Any?...,
                   level: OSLogType,
