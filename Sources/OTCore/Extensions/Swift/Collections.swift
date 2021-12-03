@@ -626,7 +626,21 @@ extension RangeReplaceableCollection {
         
     }
     
-    #warning("> TODO: add a .remove(safePosition:) method")
+}
+
+extension RangeReplaceableCollection where Index == Int {
+    
+    /// **OTCore:**
+    /// Same as `.remove(at:)` but returns an optional instead of throwing an exception if the element at the given offset position does not exist.
+    /// References index as an offset from `startIndex` and does not reference indexes directly.
+    @discardableResult
+    @inlinable public mutating func remove(safePositionAt indexOffset: Int) -> Element? {
+        
+        guard indexOffset >= 0, indexOffset < count else { return nil }
+        let idx = index(startIndex, offsetBy: indexOffset)
+        return remove(at: idx)
+        
+    }
     
 }
 

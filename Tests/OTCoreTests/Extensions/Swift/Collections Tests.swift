@@ -972,45 +972,44 @@ class Extensions_Swift_Collections_Tests: XCTestCase {
     
     func testArrayRemoveSafeAt() {
         
-        // Array
-        
-        var arr = [1,2,3]
+        // [Int]
+        var arr = [1, 2, 3]
         
         XCTAssertEqual(arr.remove(safeAt: 0), 1)    // succeeds
-        
         XCTAssertEqual(arr, [2,3])
         
         XCTAssertEqual(arr.remove(safeAt: -1), nil) // silently fails
-        
         XCTAssertEqual(arr, [2,3])
         
         XCTAssertEqual(arr.remove(safeAt: 2), nil)  // silently fails
-        
         XCTAssertEqual(arr, [2,3])
         
         XCTAssertEqual(arr.remove(safeAt: 0), 2)    // succeeds
-        
         XCTAssertEqual(arr, [3])
         
-        // ArraySlice
+    }
+    
+    func testArrayRemoveSafePositionAt() {
         
-        var arrSlice = ArraySlice(repeating: 1, count: 4)
+        // [Int]
+        let arr = [0, 0, 1, 2, 3, 4, 5, 6]
         
-        XCTAssertEqual(arrSlice.remove(safeAt: 0), 1)   // succeeds
+        // [Int].SubSequence a.k.a. ArraySlice<Int>
+        var slice = arr.suffix(6)
         
-        XCTAssertEqual(arrSlice, [1,1,1])
+        XCTAssertEqual(slice.remove(safePositionAt: -1), nil)
         
-        XCTAssertEqual(arrSlice.remove(safeAt: 3), nil) // silently fails
+        XCTAssertEqual(slice.remove(safePositionAt: 0), 1)
+        XCTAssertEqual(slice, [2, 3, 4, 5, 6])
         
-        // ContiguousArray
+        XCTAssertEqual(slice.remove(safePositionAt: 0), 2)
+        XCTAssertEqual(slice, [3, 4, 5, 6])
         
-        var arrCont = ContiguousArray(repeating: 1, count: 4)
+        XCTAssertEqual(slice.remove(safePositionAt: 3), 6)
+        XCTAssertEqual(slice, [3, 4, 5])
         
-        XCTAssertEqual(arrCont.remove(safeAt: 0), 1)    // succeeds
-        
-        XCTAssertEqual(arrCont, [1,1,1])
-        
-        XCTAssertEqual(arrCont.remove(safeAt: 3), nil)  // silently fails
+        XCTAssertEqual(slice.remove(safePositionAt: 3), nil)
+        XCTAssertEqual(slice, [3, 4, 5])
         
     }
     
