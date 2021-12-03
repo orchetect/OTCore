@@ -126,6 +126,43 @@ class Extensions_Swift_Collections_Tests: XCTestCase {
         
     }
     
+    func testSubscript_Safe_Modify() {
+        
+        struct Foo {
+            var value: Int = 0
+        }
+        
+        // [Foo]
+        var arr = [Foo(value: 0), Foo(value: 1), Foo(value: 2)]
+        
+        arr[safe: 0]?.value = 9
+        
+        XCTAssertEqual(arr[0].value, 9)
+        
+    }
+    
+    func testSubscript_Safe_Modify_OptionalElement() {
+        
+        struct Foo: Equatable {
+            var value: Int = 0
+        }
+        
+        // [Foo?]
+        let arr: [Foo?] = [Foo(value: 0), Foo(value: 1), Foo(value: 2)]
+        
+        // [Foo?].SubSequence a.k.a. ArraySlice<Foo?>
+        var slice = arr[1...]
+        
+        // succeeds
+        slice[safe: 1]??.value = 9
+        XCTAssertEqual(slice, [Foo(value: 9), Foo(value: 2)])
+        
+        // fails silently
+        slice[safe: 3]??.value = 8
+        XCTAssertEqual(slice, [Foo(value: 9), Foo(value: 2)])
+        
+    }
+    
     func testSubscript_Safe_Set_EdgeCases() throws {
         
         // setting an existing element to nil currently
@@ -733,6 +770,46 @@ class Extensions_Swift_Collections_Tests: XCTestCase {
         arr2[safePosition: 6] = nil        // silently fails
         
         XCTAssertEqual(arr2, [nil, 2, 3, 4, 5, 6])
+        
+    }
+    
+    func testSubscript_SafePosition_Modify() {
+        
+        struct Foo: Equatable {
+            var value: Int = 0
+        }
+        
+        // [Foo]
+        let arr = [Foo(value: 0), Foo(value: 1), Foo(value: 2)]
+        
+        // [Foo].SubSequence a.k.a. ArraySlice<Foo>
+        var slice = arr[1...]
+        
+        slice[safePosition: 1]?.value = 9
+        
+        XCTAssertEqual(slice, [Foo(value: 1), Foo(value: 9)])
+        
+    }
+    
+    func testSubscript_SafePosition_Modify_OptionalElement() {
+        
+        struct Foo: Equatable {
+            var value: Int = 0
+        }
+        
+        // [Foo?]
+        let arr: [Foo?] = [Foo(value: 0), Foo(value: 1), Foo(value: 2)]
+        
+        // [Foo?].SubSequence a.k.a. ArraySlice<Foo?>
+        var slice = arr[1...]
+        
+        // succeeds
+        slice[safePosition: 1]??.value = 9
+        XCTAssertEqual(slice, [Foo(value: 1), Foo(value: 9)])
+        
+        // fails silently
+        slice[safePosition: 2]??.value = 8
+        XCTAssertEqual(slice, [Foo(value: 1), Foo(value: 9)])
         
     }
     

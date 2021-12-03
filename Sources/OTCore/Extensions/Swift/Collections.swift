@@ -54,7 +54,7 @@ extension MutableCollection {
         set {
             guard indices.contains(index) else { return }
             
-            // subscript get{} and set{} must be of the same type
+            // subscript getter and setter must be of the same type
             // (get is `Element?` so the set must also be `Element?`)
             
             // implementation makes it difficult or impossible to
@@ -66,7 +66,35 @@ extension MutableCollection {
                 assertionFailure("Do not use [safe:] setter to set nil for elements on collections that contain Optionals. Setting nil has no effect.")
                 return
             }
+            
             self[index] = newValueUnwrapped
+        }
+        _modify {
+            guard indices.contains(index) else {
+                // _modify { } requires yield to be called, so we can't just return.
+                // we have to allow the yield on a dummy variable first
+                var dummy: Element? = nil
+                yield &dummy
+                return
+            }
+            
+            var valueForMutation: Element? = self[index]
+            yield &valueForMutation
+
+            // subscript getter and setter must be of the same type
+            // (get is `Element?` so the set must also be `Element?`)
+            
+            // implementation makes it difficult or impossible to
+            // allow setting an element to `nil` in a collection that contains Optionals,
+            // because it's not easy to tell whether the collection contains Optionals or not,
+            // so the best course of action is to not allow setting elements to `nil` at all.
+            
+            guard let valueToStore = valueForMutation else {
+                assertionFailure("Do not use [safe:] setter to set nil for elements on collections that contain Optionals. Setting nil has no effect.")
+                return
+            }
+            
+            self[index] = valueToStore
         }
         
     }
@@ -109,7 +137,25 @@ extension MutableCollection where Element : OptionalType {
             case .some(let wrapped):
                 self[index] = wrapped
             }
+        }
+        _modify {
+            guard indices.contains(index) else {
+                // _modify { } requires yield to be called, so we can't just return.
+                // we have to allow the yield on a dummy variable first
+                var dummy: Element? = nil
+                yield &dummy
+                return
+            }
             
+            var valueForMutation: Element? = self[index]
+            yield &valueForMutation
+            
+            switch valueForMutation {
+            case .none:
+                self[index] = Element._none as! Element
+            case .some(let wrapped):
+                self[index] = wrapped
+            }
         }
         
     }
@@ -292,7 +338,7 @@ extension MutableCollection {
             guard indexOffset >= 0, indexOffset < count else { return }
             let idx = index(startIndex, offsetBy: indexOffset)
             
-            // subscript get{} and set{} must be of the same type
+            // subscript getter and setter must be of the same type
             // (get is `Element?` so the set must also be `Element?`)
             
             // implementation makes it difficult or impossible to
@@ -304,7 +350,37 @@ extension MutableCollection {
                 assertionFailure("Do not use [safe:] setter to set nil for elements on collections that contain Optionals. Setting nil has no effect.")
                 return
             }
+            
             self[idx] = newValueUnwrapped
+        }
+        _modify {
+            guard indexOffset >= 0, indexOffset < count else {
+                // _modify { } requires yield to be called, so we can't just return.
+                // we have to allow the yield on a dummy variable first
+                var dummy: Element? = nil
+                yield &dummy
+                return
+            }
+            
+            let idx = index(startIndex, offsetBy: indexOffset)
+            
+            var valueForMutation: Element? = self[idx]
+            yield &valueForMutation
+            
+            // subscript getter and setter must be of the same type
+            // (get is `Element?` so the set must also be `Element?`)
+            
+            // implementation makes it difficult or impossible to
+            // allow setting an element to `nil` in a collection that contains Optionals,
+            // because it's not easy to tell whether the collection contains Optionals or not,
+            // so the best course of action is to not allow setting elements to `nil` at all.
+            
+            guard let valueToStore = valueForMutation else {
+                assertionFailure("Do not use [safe:] setter to set nil for elements on collections that contain Optionals. Setting nil has no effect.")
+                return
+            }
+            
+            self[idx] = valueToStore
         }
         
     }
@@ -347,6 +423,28 @@ extension MutableCollection where Element : OptionalType {
             case .some(let wrapped):
                 self[idx] = wrapped
             }
+        }
+        _modify {
+            guard indexOffset >= 0, indexOffset < count else {
+                // _modify { } requires yield to be called, so we can't just return.
+                // we have to allow the yield on a dummy variable first
+                var dummy: Element? = nil
+                yield &dummy
+                return
+            }
+            
+            let idx = index(startIndex, offsetBy: indexOffset)
+            
+            var valueForMutation: Element? = self[idx]
+            yield &valueForMutation
+            
+            switch valueForMutation {
+            case .none:
+                self[idx] = Element._none as! Element
+            case .some(let wrapped):
+                self[idx] = wrapped
+            }
+            
         }
         
     }
@@ -528,6 +626,8 @@ extension RangeReplaceableCollection {
         
     }
     
+    #warning("> TODO: add a .remove(safePosition:) method")
+    
 }
 
 
@@ -538,13 +638,17 @@ extension Collection {
     /// **OTCore:**
     /// Returns an index that is the specified distance from the start index.
     public func startIndex(offsetBy distance: Int) -> Index {
+        
         index(startIndex, offsetBy: distance)
+        
     }
     
     /// **OTCore:**
     /// Returns an index that is the specified distance from the start index.
     public func endIndex(offsetBy distance: Int) -> Index {
+        
         index(endIndex, offsetBy: distance)
+        
     }
     
 }

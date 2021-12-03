@@ -13,9 +13,7 @@ class Extensions_Foundation_NSArray_Tests: XCTestCase {
     override func setUp() { super.setUp() }
     override func tearDown() { super.tearDown() }
     
-    func testNSArray_SafeIndexSubscript() {
-        
-        // get
+    func testNSArray_SafeIndexSubscript_Get() {
         
         let nsArr = [1,2,3] as NSArray
         
@@ -41,9 +39,7 @@ class Extensions_Foundation_NSArray_Tests: XCTestCase {
         
     }
     
-    func testNSMutableArray_SafeIndexSubscript() {
-        
-        // get
+    func testNSMutableArray_SafeIndexSubscript_Get() {
         
         let nsArr = [1,2,3] as NSMutableArray
         
@@ -92,6 +88,36 @@ class Extensions_Foundation_NSArray_Tests: XCTestCase {
         nsArr2[safeMutable: 3] = 8 // fails silently, no value stored
         
         XCTAssertEqual(nsArr2, [5,6,7])
+        
+    }
+    
+    func testNSMutableArray_SafeIndexSubscript_Modify() {
+        
+        struct Foo {
+            var value: Int = 0
+        }
+        
+        // NSMutableArray
+        let arr: NSMutableArray = [Foo(value: 0), Foo(value: 1), Foo(value: 2)]
+        _ = arr
+        
+        // this is not testable (or even usable) because
+        // NSMutableArray seems to only support get and
+        // set by assignment, not inline mutability.
+        
+//        // we would want this to succeed
+//        (arr[safeMutable: 1] as! Foo).value = 9
+//        XCTAssertEqual(arr.count, 3)
+//        XCTAssertEqual((arr[0] as? Foo)?.value, 0)
+//        XCTAssertEqual((arr[1] as? Foo)?.value, 9)
+//        XCTAssertEqual((arr[2] as? Foo)?.value, 2)
+//
+//        // fails silently
+//        (arr[safeMutable: 3] as? Foo)?.value = 8
+//        XCTAssertEqual(arr.count, 3)
+//        XCTAssertEqual((arr[0] as? Foo)?.value, 0)
+//        XCTAssertEqual((arr[1] as? Foo)?.value, 9)
+//        XCTAssertEqual((arr[2] as? Foo)?.value, 2)
         
     }
     
