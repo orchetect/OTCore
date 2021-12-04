@@ -45,6 +45,61 @@ class Logging_Log_Tests: XCTestCase {
         
     }
     
+    /// This test is only useful with Thread Sanitizer on.
+    func testThreading() {
+        
+        let completionTimeout = expectation(description: "Test Completion Timeout")
+        
+        let group1 = DispatchGroup()
+        let group2 = DispatchGroup()
+        
+        let iterations = 2000
+        
+        // log operations
+        
+        let logger = OSLogger { $0.coerceInfoAndDebugToDefault = false }
+        
+        for index in 0..<iterations {
+            group1.enter()
+            DispatchQueue.global().async {
+                logger.debug("Log thread 1 test # \(index)")
+                
+                // it's useful to note that os_log output to
+                // Xcode's console when called rapidly
+                // can sometimes produce jumbled messages
+                //os_log("%{public}@",
+                //       log: .default,
+                //       type: .debug,
+                //       "Log thread 1 test # \(index)")
+                
+                group1.leave()
+            }
+            group2.enter()
+            DispatchQueue.global().async {
+                logger.debug("Log thread 2 test # \(index)")
+                
+                // it's useful to note that os_log output to
+                // Xcode's console when called rapidly
+                // can sometimes produce jumbled messages
+                //os_log("%{public}@",
+                //       log: .default,
+                //       type: .debug,
+                //       "Log thread 2 test # \(index)")
+                
+                group2.leave()
+            }
+        }
+        
+        DispatchQueue.global().async {
+            group1.wait()
+            group2.wait()
+            completionTimeout.fulfill()
+        }
+        
+        wait(for: [completionTimeout], timeout: 10)
+        
+    }
+    
     func testLogger() {
         
         // this test does not assert anything, it's just for diagnostic
