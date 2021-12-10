@@ -15,8 +15,6 @@ class Extensions_AppKit_NSEvent_Tests: XCTestCase {
     override func tearDown() { super.tearDown() }
     
     func testLocationInView() {
-        // not sure why, but this test doesn't run unless you start it with a print statement
-        print("Starting test...")
         
         let view = NSView(frame: NSRect())
         let subview = NSView(frame: NSRect())
