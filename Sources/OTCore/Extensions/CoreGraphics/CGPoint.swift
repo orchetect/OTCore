@@ -8,8 +8,8 @@
 import CoreGraphics
 
 
-// Foundation contains Core Graphics
-#if canImport(Foundation)
+// AppKit contains Core Graphics
+#if canImport(AppKit)
 
 import Foundation
 

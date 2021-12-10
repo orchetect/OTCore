@@ -3,7 +3,7 @@
 //  OTCore • https://github.com/orchetect/OTCore
 //
 
-#if canImport(Foundation)
+#if canImport(AppKit)
 
 import Foundation // imports Core Graphics
 

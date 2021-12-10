@@ -3,7 +3,7 @@
 //  OTCore • https://github.com/orchetect/OTCore
 //
 
-#if !os(watchOS)
+#if !os(watchOS) && canImport(AppKit)
 
 import XCTest
 @testable import OTCore
