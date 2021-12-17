@@ -7,10 +7,30 @@
 
 import CoreGraphics
 
+
+// AppKit contains Core Graphics
+#if canImport(AppKit)
+
+import Foundation
+
 extension CGPoint {
     
     /// **OTCore:**
-    /// Returns the point with the X value inverted.
+    /// Returns the `CGPoint` as a `NSPoint` (toll-free bridged).
+    public var nsPoint: NSPoint {
+        
+        self as NSPoint
+        
+    }
+    
+}
+
+#endif
+
+extension CGPoint {
+    
+    /// **OTCore:**
+    /// Returns the point with the X value inverted on its axis.
     @inlinable public var xInverted: CGPoint {
         
         var newX = x
@@ -21,7 +41,7 @@ extension CGPoint {
     }
     
     /// **OTCore:**
-    /// Returns the point with the Y value inverted.
+    /// Returns the point with the Y value inverted on its axis.
     @inlinable public var yInverted: CGPoint {
         
         var newY = y
@@ -32,7 +52,7 @@ extension CGPoint {
     }
     
     /// **OTCore:**
-    /// Returns the point with the X and Y value inverted.
+    /// Returns the point with the X and Y value inverted on their axes.
     @inlinable public var xyInverted: CGPoint {
         
         var newX = x

@@ -13,6 +13,17 @@ class Extensions_CoreGraphics_CGPoint_Tests: XCTestCase {
     override func setUp() { super.setUp() }
     override func tearDown() { super.tearDown() }
     
+    #if canImport(AppKit)
+    func testNSPoint() {
+        
+        let nsPoint = CGPoint(x: 1.23, y: 2.5).nsPoint
+        
+        XCTAssertEqual(nsPoint.x, 1.23)
+        XCTAssertEqual(nsPoint.y, 2.5)
+        
+    }
+    #endif
+    
     func testInverted() {
         
         // zero
