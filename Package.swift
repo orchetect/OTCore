@@ -7,6 +7,10 @@ let package = Package(
     
     name: "OTCore",
     
+    platforms: [
+        .macOS(.v10_12)
+    ],
+    
     products: [
         .library(
             name: "OTCore",

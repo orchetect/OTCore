@@ -294,7 +294,308 @@ class Extensions_Swift_Ranges_Tests: XCTestCase {
         
     }
     
-    func testNumberClampedToRanges() {
+    func testClosedRange_contains_ClosedRange() {
+        
+        XCTAssertTrue( (1...10).contains( 1 ...  1))
+        XCTAssertTrue( (1...10).contains( 1 ... 10))
+        XCTAssertTrue( (1...10).contains(10 ... 10))
+        
+        XCTAssertFalse((1...10).contains( 0 ...  0))
+        XCTAssertFalse((1...10).contains( 0 ...  1))
+        XCTAssertFalse((1...10).contains( 0 ...  2))
+        XCTAssertFalse((1...10).contains( 0 ... 10))
+        XCTAssertFalse((1...10).contains( 9 ... 11))
+        XCTAssertFalse((1...10).contains(10 ... 11))
+        XCTAssertFalse((1...10).contains(11 ... 11))
+        
+        XCTAssertFalse((1...10).contains(-1 ...  1))
+        
+    }
+    
+    func testClosedRange_contains_Range() {
+        
+        XCTAssertFalse((1...10).contains( 1 ..<  1)) // empty, but in range
+        XCTAssertTrue ((1...10).contains( 1 ..< 10)) // 1...9
+        XCTAssertTrue ((1...10).contains( 1 ..< 11)) // 1...10
+        XCTAssertFalse((1...10).contains(10 ..< 10)) // empty
+        XCTAssertTrue ((1...10).contains(10 ..< 11)) // 10...10
+
+        XCTAssertFalse((1...10).contains( 0 ..<  0)) // empty, out of range
+        XCTAssertFalse((1...10).contains( 0 ..<  1)) // 0...0, out of range
+        XCTAssertFalse((1...10).contains( 0 ..<  2)) // 0...1, lowerBound out of range
+        XCTAssertFalse((1...10).contains( 0 ..< 10)) // 0...9, lowerBound out of range
+        XCTAssertTrue ((1...10).contains( 9 ..< 11)) // 9...10
+        XCTAssertTrue ((1...10).contains(10 ..< 11)) // 10...10
+        XCTAssertFalse((1...10).contains(11 ..< 11)) // empty, out of range
+
+        XCTAssertFalse((1...10).contains(-1 ..< 1))
+        
+    }
+    
+    func testRange_contains_ClosedRange() {
+        
+        XCTAssertTrue ((1..<10).contains( 1 ...  1))
+        XCTAssertTrue ((1..<10).contains( 1 ...  9))
+        XCTAssertFalse((1..<10).contains( 1 ... 10))
+        XCTAssertFalse((1..<10).contains(10 ... 10))
+        
+        XCTAssertFalse((1..<10).contains( 0 ...  0))
+        XCTAssertFalse((1..<10).contains( 0 ...  1))
+        XCTAssertFalse((1..<10).contains( 0 ...  2))
+        XCTAssertFalse((1..<10).contains( 0 ...  9))
+        XCTAssertFalse((1..<10).contains( 0 ... 10))
+        XCTAssertFalse((1..<10).contains( 9 ... 11))
+        XCTAssertFalse((1..<10).contains(10 ... 11))
+        XCTAssertFalse((1..<10).contains(11 ... 11))
+        
+        XCTAssertFalse((1..<10).contains(-1 ...  1))
+        
+    }
+    
+    func testRange_contains_Range() {
+
+        XCTAssertTrue ((1..<10).contains( 1 ..<  1)) // empty, but in range
+        XCTAssertTrue ((1..<10).contains( 1 ..< 10)) // identical
+        XCTAssertFalse((1..<10).contains( 1 ..< 11)) // 1...10
+        XCTAssertTrue ((1..<10).contains(10 ..< 10)) // empty, but in range
+        XCTAssertFalse((1..<10).contains(10 ..< 11)) // 10...10
+
+        XCTAssertFalse((1..<10).contains( 0 ..<  0)) // empty, out of range
+        XCTAssertFalse((1..<10).contains( 0 ..<  1)) // 0...0, out of range
+        XCTAssertFalse((1..<10).contains( 0 ..<  2)) // 0...1, lowerBound out of range
+        XCTAssertFalse((1..<10).contains( 0 ..< 10)) // 0...9, lowerBound out of range
+        XCTAssertFalse((1..<10).contains( 9 ..< 11)) // 9...10
+        XCTAssertFalse((1..<10).contains(10 ..< 11)) // 10...10, out of range
+        XCTAssertFalse((1..<10).contains(11 ..< 12)) // 11...11, out of range
+        XCTAssertFalse((1..<10).contains(11 ..< 11)) // empty, out of range
+
+        XCTAssertFalse((1..<10).contains(-1 ..< 1))
+        
+        // edge cases
+        
+        XCTAssertTrue ((Int.min..<Int.max).contains(1..<10))
+        XCTAssertFalse((Int.max..<Int.max).contains(1..<10))
+        XCTAssertTrue ((Int.min..<Int.max).contains(Int.min..<Int.max))
+        XCTAssertFalse((Int.max..<Int.max).contains(Int.min..<Int.max))
+        
+    }
+    
+    func testPartialRangeFrom_contains_ClosedRange() {
+        
+        XCTAssertTrue (((-1)...).contains(1...10))
+        XCTAssertTrue ((  0... ).contains(1...10))
+        XCTAssertTrue ((  1... ).contains(1...10))
+        XCTAssertFalse((  2... ).contains(1...10))
+        XCTAssertFalse((  9... ).contains(1...10))
+        XCTAssertFalse(( 10... ).contains(1...10))
+        XCTAssertFalse(( 11... ).contains(1...10))
+        
+        // edge cases
+        
+        XCTAssertTrue ((Int.min...).contains(1...10))
+        XCTAssertFalse((Int.max...).contains(1...10))
+        XCTAssertTrue ((Int.min...).contains(Int.min...Int.max))
+        XCTAssertFalse((Int.max...).contains(Int.min...Int.max))
+        
+    }
+    
+    func testPartialRangeFrom_contains_Range() {
+        
+        XCTAssertTrue (((-1)...).contains(1..<10)) // 1...9
+        XCTAssertTrue ((  0... ).contains(1..<10)) // 1...9
+        XCTAssertTrue ((  1... ).contains(1..<10)) // 1...9
+        XCTAssertFalse((  2... ).contains(1..<10)) // 1...9
+        XCTAssertFalse((  9... ).contains(1..<10)) // 1...9
+        XCTAssertFalse(( 10... ).contains(1..<10)) // 1...9
+        XCTAssertFalse(( 11... ).contains(1..<10)) // 1...9
+        
+        // edge cases
+        
+        XCTAssertTrue ((Int.min...).contains(1..<10))
+        XCTAssertFalse((Int.max...).contains(1..<10))
+        XCTAssertTrue ((Int.min...).contains(Int.min..<Int.max))
+        XCTAssertFalse((Int.max...).contains(Int.min..<Int.max))
+        
+    }
+    
+    func testPartialRangeFrom_contains_PartialRangeFrom() {
+        
+        XCTAssertFalse((1...).contains((-1)...))
+        XCTAssertFalse((1...).contains(  0... ))
+        XCTAssertTrue ((1...).contains(  1... ))
+        XCTAssertTrue ((1...).contains(  2... ))
+        
+        // edge cases
+        
+        XCTAssertTrue ((Int.min...).contains(1...))
+        XCTAssertFalse((Int.max...).contains(1...))
+        XCTAssertTrue ((Int.min...).contains(Int.min...))
+        XCTAssertFalse((Int.max...).contains(Int.min...))
+        XCTAssertTrue ((Int.max...).contains(Int.max...))
+        
+    }
+    
+    func testPartialRangeThrough_contains_ClosedRange() {
+        
+        XCTAssertTrue ((...(-1)).contains(-10 ... -1))
+        XCTAssertFalse((...(-1)).contains(1...10))
+        XCTAssertFalse((...0   ).contains(1...10))
+        XCTAssertFalse((...1   ).contains(1...10))
+        XCTAssertFalse((...2   ).contains(1...10))
+        XCTAssertFalse((...9   ).contains(1...10))
+        XCTAssertTrue ((...10  ).contains(1...10))
+        XCTAssertTrue ((...11  ).contains(1...10))
+        
+        // edge cases
+        
+        XCTAssertFalse((...Int.min).contains(1...10))
+        XCTAssertTrue ((...Int.max).contains(1...10))
+        XCTAssertTrue ((...Int.min).contains(Int.min...Int.min))
+        XCTAssertFalse((...Int.min).contains(Int.min...Int.max))
+        XCTAssertTrue ((...Int.max).contains(Int.min...Int.max))
+        
+    }
+    
+    func testPartialRangeThrough_contains_Range() {
+        
+        XCTAssertTrue ((...(-1)).contains(-10 ..< 0)) // -10 ... -1
+        XCTAssertFalse((...(-1)).contains(1..<10)) // 1...9
+        XCTAssertFalse((...0   ).contains(1..<10)) // 1...9
+        XCTAssertFalse((...1   ).contains(1..<10)) // 1...9
+        XCTAssertFalse((...2   ).contains(1..<10)) // 1...9
+        XCTAssertTrue ((...9   ).contains(1..<10)) // 1...9
+        XCTAssertTrue ((...10  ).contains(1..<10)) // 1...9
+        XCTAssertTrue ((...11  ).contains(1..<10)) // 1...9
+        
+        // edge cases
+        
+        XCTAssertFalse((...Int.min).contains(1..<10))
+        XCTAssertTrue ((...Int.max).contains(1..<10))
+        XCTAssertFalse((...Int.min).contains(Int.min..<Int.min))
+        XCTAssertFalse((...Int.min).contains(Int.min..<Int.max))
+        XCTAssertTrue ((...Int.max).contains(Int.max..<Int.max))
+        XCTAssertTrue ((...Int.max).contains(Int.min..<Int.max))
+        
+    }
+
+    func testPartialRangeThrough_contains_PartialRangeThrough() {
+
+        XCTAssertFalse((...(-1)).contains(...1))
+        XCTAssertFalse((  ...0 ).contains(...1))
+        XCTAssertTrue ((  ...1 ).contains(...1))
+        XCTAssertTrue ((  ...2 ).contains(...1))
+        
+        // edge cases
+        
+        XCTAssertFalse((...Int.min).contains(...1))
+        XCTAssertTrue ((...Int.max).contains(...1))
+        XCTAssertTrue ((...Int.min).contains(...Int.min))
+        XCTAssertFalse((...Int.min).contains(...Int.max))
+        XCTAssertTrue ((...Int.max).contains(...Int.min))
+        XCTAssertTrue ((...Int.max).contains(...Int.max))
+        
+    }
+
+    func testPartialRangeThrough_contains_PartialRangeUpTo() {
+        
+        XCTAssertFalse((...(-1)).contains(..<1))
+        XCTAssertFalse((  ...0 ).contains(..<1))
+        XCTAssertFalse((  ...1 ).contains(..<1))
+        XCTAssertTrue ((  ...2 ).contains(..<1))
+        
+        // edge cases
+        
+        XCTAssertFalse((...Int.min).contains(..<1))
+        XCTAssertTrue ((...Int.max).contains(..<1))
+        XCTAssertFalse((...Int.min).contains(..<Int.min))
+        XCTAssertFalse((...Int.min).contains(..<Int.max))
+        XCTAssertTrue ((...Int.max).contains(..<Int.min))
+        XCTAssertFalse((...Int.max).contains(..<Int.max))
+        
+    }
+    
+    func testPartialRangeUpTo_contains_ClosedRange() {
+        
+        XCTAssertTrue ((..<(-1)).contains(-10 ... -2))
+        XCTAssertFalse((..<(-1)).contains(-10 ... -1))
+        XCTAssertFalse((..<(-1)).contains(1...10))
+        XCTAssertFalse((..<0   ).contains(1...10))
+        XCTAssertFalse((..<1   ).contains(1...10))
+        XCTAssertFalse((..<2   ).contains(1...10))
+        XCTAssertFalse((..<9   ).contains(1...10))
+        XCTAssertFalse((..<10  ).contains(1...10))
+        XCTAssertTrue ((..<11  ).contains(1...10))
+        
+        // edge cases
+        
+        XCTAssertFalse((..<Int.min).contains(1...10))
+        XCTAssertTrue ((..<Int.max).contains(1...10))
+        XCTAssertFalse((..<Int.min).contains(Int.min...Int.min))
+        XCTAssertFalse((..<Int.min).contains(Int.min...Int.max))
+        XCTAssertFalse((..<Int.max).contains(Int.min...Int.max))
+        
+    }
+    
+    func testPartialRangeUpTo_contains_Range() {
+        
+        XCTAssertTrue ((..<(-1)).contains(-10 ..< -1)) // -10 ... -2
+        XCTAssertFalse((..<(-1)).contains(-10 ..< 0))  // -10 ... -1
+        XCTAssertFalse((..<(-1)).contains(1..<10)) // 1...9
+        XCTAssertFalse((..<0   ).contains(1..<10)) // 1...9
+        XCTAssertFalse((..<1   ).contains(1..<10)) // 1...9
+        XCTAssertFalse((..<2   ).contains(1..<10)) // 1...9
+        XCTAssertFalse((..<9   ).contains(1..<10)) // 1...9
+        XCTAssertTrue ((..<10  ).contains(1..<10)) // 1...9
+        XCTAssertTrue ((..<11  ).contains(1..<10)) // 1...9
+        
+        // edge cases
+        
+        XCTAssertFalse((..<Int.min).contains(1..<10))
+        XCTAssertTrue ((..<Int.max).contains(1..<10))
+        XCTAssertTrue ((..<Int.min).contains(Int.min..<Int.min))
+        XCTAssertFalse((..<Int.min).contains(Int.min..<Int.max))
+        XCTAssertTrue ((..<Int.max).contains(Int.max..<Int.max))
+        XCTAssertTrue ((..<Int.max).contains(Int.min..<Int.max))
+        
+    }
+    
+    func testPartialRangeUpTo_contains_PartialRangeThrough() {
+        
+        XCTAssertFalse((..<(-1)).contains(...1))
+        XCTAssertFalse((  ..<0 ).contains(...1))
+        XCTAssertFalse((  ..<1 ).contains(...1))
+        XCTAssertTrue ((  ..<2 ).contains(...1))
+        
+        // edge cases
+        
+        XCTAssertFalse((..<Int.min).contains(...1))
+        XCTAssertTrue ((..<Int.max).contains(...1))
+        XCTAssertFalse((..<Int.min).contains(...Int.min))
+        XCTAssertFalse((..<Int.min).contains(...Int.max))
+        XCTAssertTrue ((..<Int.max).contains(...Int.min))
+        XCTAssertFalse((..<Int.max).contains(...Int.max))
+        
+    }
+    
+    func testPartialRangeUpTo_contains_PartialRangeUpTo() {
+        
+        XCTAssertFalse((..<(-1)).contains(..<1))
+        XCTAssertFalse((  ..<0 ).contains(..<1))
+        XCTAssertTrue ((  ..<1 ).contains(..<1))
+        XCTAssertTrue ((  ..<2 ).contains(..<1))
+        
+        // edge cases
+        
+        XCTAssertFalse((..<Int.min).contains(..<1))
+        XCTAssertTrue ((..<Int.max).contains(..<1))
+        XCTAssertTrue ((..<Int.min).contains(..<Int.min))
+        XCTAssertFalse((..<Int.min).contains(..<Int.max))
+        XCTAssertTrue ((..<Int.max).contains(..<Int.min))
+        XCTAssertTrue ((..<Int.max).contains(..<Int.max))
+        
+    }
+    
+    func testNumber_ClampedTo_Ranges() {
         
         // .clamped(ClosedRange)
         
