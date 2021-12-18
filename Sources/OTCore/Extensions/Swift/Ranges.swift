@@ -17,17 +17,17 @@ extension Comparable {
     ///
     /// Example:
     ///
-    ///     5.isContained(in: 1...4)
+    ///     5.isContained(in: 1...4) // == false
     ///
     /// To test if `self` is NOT contained in `range`:
     ///
-    ///     !5.isContained(in: 1...4)
+    ///     !5.isContained(in: 1...4) // == true
     ///     // or
-    ///     5.isContained(in: 1...4).toggled()
+    ///     5.isContained(in: 1...4).toggled() // == true
     ///
     @inlinable public
-    func isContained<T: RangeExpression>(in range: T) -> Bool
-    where Self == T.Bound {
+    func isContained<R: RangeExpression>(in range: R) -> Bool
+    where Self == R.Bound {
         
         range.contains(self)
         
@@ -57,9 +57,9 @@ extension Comparable {
     ///     }
     ///
     @inlinable public
-    func ifContained<T: RangeExpression>(in range: T,
-                                         then newValue: @autoclosure () throws -> T.Bound) rethrows -> T.Bound
-    where Self == T.Bound {
+    func ifContained<R: RangeExpression>(in range: R,
+                                         then newValue: @autoclosure () throws -> R.Bound) rethrows -> R.Bound
+    where Self == R.Bound {
         
         try range.contains(self) ? newValue() : self
         
@@ -82,9 +82,9 @@ extension Comparable {
     ///     } // 700
     ///
     @inlinable public
-    func ifContained<T: RangeExpression>(in range: T,
-                                         then newValue: (Self) throws -> T.Bound) rethrows -> T.Bound
-    where Self == T.Bound {
+    func ifContained<R: RangeExpression>(in range: R,
+                                         then newValue: (Self) throws -> R.Bound) rethrows -> R.Bound
+    where Self == R.Bound {
         
         try range.contains(self) ? newValue(self) : self
         
@@ -109,9 +109,9 @@ extension Comparable {
     ///     } nil
     ///
     @inlinable public
-    func ifContained<T: RangeExpression, U>(in range: T,
+    func ifContained<R: RangeExpression, U>(in range: R,
                                             then newValue: (Self) throws -> U) rethrows -> U?
-    where Self == T.Bound {
+    where Self == R.Bound {
         
         try range.contains(self) ? newValue(self) : nil
         
@@ -141,9 +141,9 @@ extension Comparable {
     ///     }
     ///
     @inlinable public
-    func ifNotContained<T: RangeExpression>(in range: T,
-                                            then newValue: @autoclosure () throws -> T.Bound) rethrows -> T.Bound
-    where Self == T.Bound {
+    func ifNotContained<R: RangeExpression>(in range: R,
+                                            then newValue: @autoclosure () throws -> R.Bound) rethrows -> R.Bound
+    where Self == R.Bound {
         
         try range.contains(self) ? self : newValue()
         
@@ -166,9 +166,9 @@ extension Comparable {
     ///     } // 705
     ///
     @inlinable public
-    func ifNotContained<T: RangeExpression>(in range: T,
-                                            then newValue: (Self) throws -> T.Bound) rethrows -> T.Bound
-    where Self == T.Bound {
+    func ifNotContained<R: RangeExpression>(in range: R,
+                                            then newValue: (Self) throws -> R.Bound) rethrows -> R.Bound
+    where Self == R.Bound {
         
         try range.contains(self) ? self : newValue(self)
         
@@ -193,11 +193,228 @@ extension Comparable {
     ///     } // Optional("700 not in range")
     ///
     @inlinable public
-    func ifNotContained<T: RangeExpression, U>(in range: T,
+    func ifNotContained<R: RangeExpression, U>(in range: R,
                                                then newValue: (Self) throws -> U) rethrows -> U?
-    where Self == T.Bound {
+    where Self == R.Bound {
         
         try range.contains(self) ? nil : newValue(self)
+        
+    }
+    
+}
+
+
+// MARK: - ClosedRange.contains(range)
+
+// these don't make sense to implement since they would always return false:
+// - ClosedRange.contains(PartialRangeFrom)
+// - ClosedRange.contains(PartialRangeUpTo)
+// - ClosedRange.contains(PartialRangeThrough)
+
+extension ClosedRange {
+    
+    /// **OTCore:**
+    /// Returns `true` if base range contains the given range.
+    @inlinable public
+    func contains(_ other: ClosedRange<Bound>) -> Bool {
+        
+        other.lowerBound >= lowerBound &&
+        other.upperBound <= upperBound
+        
+    }
+    
+}
+
+extension ClosedRange where Bound : Strideable,
+                            Bound.Stride : SignedInteger {
+    
+    /// **OTCore:**
+    /// Returns `true` if base range contains the given range.
+    @inlinable public
+    func contains(_ other: Range<Bound>) -> Bool {
+        
+        guard let unwrappedMax = self.max() else { return false }
+        
+        guard !other.isEmpty else { return false }
+        
+        return other.lowerBound >= lowerBound &&
+            other.upperBound.advanced(by: -1) <= unwrappedMax
+        
+    }
+    
+}
+
+
+// MARK: - Range.contains(range)
+
+// these don't make sense to implement since they would always return false:
+// - Range.contains(PartialRangeFrom)
+// - Range.contains(PartialRangeUpTo)
+// - Range.contains(PartialRangeThrough)
+
+extension Range {
+    
+    /// **OTCore:**
+    /// Returns `true` if base range contains the given range.
+    @inlinable public
+    func contains(_ other: ClosedRange<Bound>) -> Bool {
+        
+        other.lowerBound >= lowerBound &&
+        other.upperBound < upperBound
+        
+    }
+    
+}
+
+extension Range where Bound : Strideable,
+                      Bound.Stride : SignedInteger {
+    
+    /// **OTCore:**
+    /// Returns `true` if base range contains the given range.
+    @inlinable public
+    func contains(_ other: Range<Bound>) -> Bool {
+        
+        other.lowerBound >= lowerBound &&
+        other.upperBound <= upperBound
+        
+    }
+    
+}
+
+
+// MARK: - PartialRangeFrom.contains(range)
+
+// these don't make sense to implement since they would always return false:
+// - PartialRangeFrom.contains(PartialRangeUpTo)
+// - PartialRangeFrom.contains(PartialRangeThrough)
+
+extension PartialRangeFrom {
+    
+    /// **OTCore:**
+    /// Returns `true` if base range contains the given range.
+    @inlinable public
+    func contains(_ other: ClosedRange<Bound>) -> Bool {
+        
+        other.lowerBound >= lowerBound
+        
+    }
+    
+    /// **OTCore:**
+    /// Returns `true` if base range contains the given range.
+    @inlinable public
+    func contains(_ other: Range<Bound>) -> Bool {
+        
+        other.lowerBound >= lowerBound
+        
+    }
+    
+    /// **OTCore:**
+    /// Returns `true` if base range contains the given range.
+    @inlinable public
+    func contains(_ other: PartialRangeFrom<Bound>) -> Bool {
+        
+        other.lowerBound >= lowerBound
+        
+    }
+    
+}
+
+
+// MARK: - PartialRangeThrough.contains(range)
+
+// these don't make sense to implement since they would always return false:
+// - PartialRangeThrough.contains(PartialRangeFrom)
+
+extension PartialRangeThrough {
+    
+    /// **OTCore:**
+    /// Returns `true` if base range contains the given range.
+    @inlinable public
+    func contains(_ other: ClosedRange<Bound>) -> Bool {
+        
+        other.upperBound <= upperBound
+        
+    }
+}
+
+extension PartialRangeThrough where Bound : BinaryInteger,
+                                    Bound.Stride : FixedWidthInteger {
+    
+    /// **OTCore:**
+    /// Returns `true` if base range contains the given range.
+    @inlinable public
+    func contains(_ other: Range<Bound>) -> Bool {
+        
+        guard other.upperBound > Bound.Stride.min else { return false }
+        
+        return other.upperBound.advanced(by: -1) <= upperBound
+        
+    }
+    
+}
+
+extension PartialRangeThrough {
+    
+    /// **OTCore:**
+    /// Returns `true` if base range contains the given range.
+    @inlinable public
+    func contains(_ other: PartialRangeThrough<Bound>) -> Bool {
+        
+        other.upperBound <= upperBound
+        
+    }
+    
+    /// **OTCore:**
+    /// Returns `true` if base range contains the given range.
+    @inlinable public
+    func contains(_ other: PartialRangeUpTo<Bound>) -> Bool {
+        
+        other.upperBound < upperBound
+        
+    }
+    
+}
+
+// MARK: - PartialRangeUpTo.contains(range)
+
+// these don't make sense to implement since they would always return false:
+// - PartialRangeUpTo.contains(PartialRangeFrom)
+
+extension PartialRangeUpTo {
+    
+    /// **OTCore:**
+    /// Returns `true` if base range contains the given range.
+    @inlinable public
+    func contains(_ other: ClosedRange<Bound>) -> Bool {
+        
+        other.upperBound < upperBound
+        
+    }
+    
+    /// **OTCore:**
+    /// Returns `true` if base range contains the given range.
+    @inlinable public
+    func contains(_ other: Range<Bound>) -> Bool {
+        
+        other.upperBound <= upperBound
+        
+    }
+    
+    /// **OTCore:**
+    /// Returns `true` if base range contains the given range.
+    @inlinable public
+    func contains(_ other: PartialRangeThrough<Bound>) -> Bool {
+        
+        other.upperBound < upperBound
+        
+    }
+    
+    /// **OTCore:**
+    /// Returns `true` if base range contains the given range.
+    @inlinable public
+    func contains(_ other: PartialRangeUpTo<Bound>) -> Bool {
+        
+        other.upperBound <= upperBound
         
     }
     
@@ -213,7 +430,8 @@ extension Comparable {
     // ie: "a".clamped(to: "b"..."h")
     /// **OTCore:**
     /// Returns the value clamped to the passed range.
-    @inlinable public func clamped(to limits: ClosedRange<Self>) -> Self {
+    @inlinable public
+    func clamped(to limits: ClosedRange<Self>) -> Self {
         
         min(max(self, limits.lowerBound), limits.upperBound)
         
