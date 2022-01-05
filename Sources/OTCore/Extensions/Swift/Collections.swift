@@ -792,7 +792,7 @@ extension Collection where Element: BinaryInteger {
     @inlinable public var stringValueArrayLiteral: String {
         
         map { "\($0)" }
-            .joined(separator: ", " )
+            .joined(separator: ", ")
             .wrapped(with: .brackets)
         
     }
@@ -935,6 +935,7 @@ extension Dictionary {
     
     /// **OTCore:**
     /// Returns a new dictionary with key/value pairs transformed by the given closure.
+    /// Analogous to Swift's standard `.map` method.
     @inlinable public func mapDictionary<K: Hashable, V: Any>(
         _ transform: (Key, Value) throws -> (K, V)
     ) rethrows -> Dictionary<K, V> {
@@ -942,6 +943,21 @@ extension Dictionary {
         try reduce(into: [:]) { partialResult, keyValuePair in
             let transformedKeyPair = try transform(keyValuePair.0, keyValuePair.1)
             partialResult[transformedKeyPair.0] = transformedKeyPair.1
+        }
+        
+    }
+    
+    /// **OTCore:**
+    /// Returns a new dictionary with key/value pairs transformed by the given closure.
+    /// Analogous to Swift's standard `.compactMap` method.
+    @inlinable public func compactMapDictionary<K: Hashable, V: Any>(
+        _ transform: (Key, Value) throws -> (K, V)?
+    ) rethrows -> Dictionary<K, V> {
+        
+        try reduce(into: [:]) { partialResult, keyValuePair in
+            if let transformedKeyPair = try transform(keyValuePair.0, keyValuePair.1) {
+                partialResult[transformedKeyPair.0] = transformedKeyPair.1
+            }
         }
         
     }

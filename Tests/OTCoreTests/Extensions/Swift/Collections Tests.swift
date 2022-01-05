@@ -1354,15 +1354,105 @@ class Extensions_Swift_Collections_Tests: XCTestCase {
         let dict = ["One": 1,
                     "Two": 2]
         
-        let mapped = dict.mapDictionary {
-            (MyKey(name: $0 + " plus 2.5"), Double($1) + 2.5)
+        // with parameter tokens
+        do {
+            let mapped = dict.mapDictionary {
+                (MyKey(name: $0 + " plus 2.5"), Double($1) + 2.5)
+            }
+            
+            XCTAssertEqual(mapped,
+                           [MyKey(name: "One plus 2.5"): 3.5,
+                            MyKey(name: "Two plus 2.5"): 4.5]
+            )
         }
         
-        XCTAssertEqual(mapped,
-                       [MyKey(name: "One plus 2.5"): 3.5,
-                        MyKey(name: "Two plus 2.5"): 4.5]
-        )
+        // with explicit closure signature
+        do {
+            let mapped = dict.mapDictionary { key, value in
+                (MyKey(name: key + " plus 2.5"), Double(value) + 2.5)
+            }
+            
+            XCTAssertEqual(mapped,
+                           [MyKey(name: "One plus 2.5"): 3.5,
+                            MyKey(name: "Two plus 2.5"): 4.5]
+            )
+        }
+    }
+    
+    // MARK: - .compactMapDictionary
+    
+    func testDictionary_compactMapDictionary_SameTypes() {
         
+        let dict = ["One": 1,
+                    "Two": 2,
+                    "Three": 3]
+        
+        // with parameter tokens
+        do {
+            let mapped: [String: Int] = dict.compactMapDictionary {
+                if $0 == "Two" { return nil }
+                return ($0 + " plus Two", $1 + 2)
+            }
+            
+            XCTAssertEqual(mapped,
+                           ["One plus Two": 3,
+                            "Three plus Two": 5]
+            )
+        }
+        
+        // with explicit closure signature
+        do {
+            let mapped = dict.compactMapDictionary { (key, value) in
+                key != "Two"
+                    ? (key + " plus Two", value + 2)
+                    : nil
+            }
+            
+            XCTAssertEqual(mapped,
+                           ["One plus Two": 3,
+                            "Three plus Two": 5]
+            )
+        }
+        
+    }
+    
+    func testDictionary_compactMapDictionary_DifferentTypes() {
+        
+        struct MyKey: Equatable, Hashable {
+            var name: String
+        }
+        
+        let dict = ["One": 1,
+                    "Two": 2,
+                    "Three": 3]
+        
+        // with parameter tokens
+        do {
+            let mapped = dict.compactMapDictionary {
+                $0 != "Two"
+                    ? (MyKey(name: $0 + " plus 2.5"), Double($1) + 2.5)
+                    : nil
+            }
+            
+            XCTAssertEqual(mapped,
+                           [MyKey(name: "One plus 2.5"): 3.5,
+                            MyKey(name: "Three plus 2.5"): 5.5]
+            )
+        }
+        
+        // with explicit closure signature
+        do {
+            let mapped = dict.compactMapDictionary { (key, value) in
+                key != "Two"
+                    ? (MyKey(name: key + " plus 2.5"), Double(value) + 2.5)
+                    : nil
+            }
+            
+            XCTAssertEqual(mapped,
+                           [MyKey(name: "One plus 2.5"): 3.5,
+                            MyKey(name: "Three plus 2.5"): 5.5]
+            )
+        }
     }
     
 }
