@@ -7,6 +7,9 @@ let package = Package(
     
     name: "OTCore",
     
+    // certain features of the library are marked @available only on newer versions of OSes,
+    // but a platforms spec here determines what base platforms
+    // the library is currently supported on
     platforms: [
         .macOS(.v10_12)
     ],
