@@ -130,8 +130,9 @@ public struct UserDefaultsBacked<Value> {
         self.storage = storage
         self.processor = nil
         
-        // store value right away
-        wrappedValue = defaultValue
+        // update stored value
+        let readValue = wrappedValue
+        wrappedValue = readValue
         
     }
     
@@ -153,8 +154,9 @@ public struct UserDefaultsBacked<Value> {
         
         self.defaultValue = self.processor!(defaultValue)
         
-        // validate and store value right away
-        wrappedValue = self.defaultValue
+        // update stored value
+        let readValue = wrappedValue
+        wrappedValue = readValue
         
     }
     
@@ -168,8 +170,9 @@ public struct UserDefaultsBacked<Value> {
         self.processor = closure
         self.defaultValue = closure(defaultValue)
         
-        // validate and store value right away
-        wrappedValue = self.defaultValue
+        // update stored value
+        let readValue = wrappedValue
+        wrappedValue = readValue
         
     }
     
