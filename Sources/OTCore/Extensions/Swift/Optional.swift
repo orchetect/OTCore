@@ -3,11 +3,11 @@
 //  OTCore • https://github.com/orchetect/OTCore
 //
 
-// MARK: - OptionalType
+// MARK: - OTCoreOptionalTyped
 
 /// **OTCore:**
 /// Protocol describing an optional, used to enable extensions on types such as `Type<T>?`.
-public protocol OptionalType {
+public protocol OTCoreOptionalTyped {
     
     associatedtype Wrapped
 
@@ -17,16 +17,16 @@ public protocol OptionalType {
     
 }
 
-extension OptionalType {
+extension OTCoreOptionalTyped {
     
     /// **OTCore:**
-    /// Internal use.
+    /// Same as `Wrapped?.none`.
     @inlinable
-    internal static var _none: Optional<Wrapped> { .none }
+    public static var noneValue: Optional<Wrapped> { .none }
     
 }
 
-extension Optional: OptionalType {
+extension Optional: OTCoreOptionalTyped {
     
     @inlinable public var optional: Wrapped? {
         
@@ -36,6 +36,87 @@ extension Optional: OptionalType {
     
 }
 
+// MARK: - OTCoreOptional
+
+/// **OTCore:**
+/// Protocol to allow conditional casting of an unknown type to an Optional.
+///
+/// First, conditionally cast `Any` as? `OTCoreOptional`:
+///
+///     let value: Any = Optional("Test")
+///     guard let asOptional = value as? OTCoreOptional else { ... }
+///
+/// An easy way to test if the Optional is `nil`:
+///
+///     asOptional.isNone // false
+///
+/// Switch over wrapped concrete type:
+///
+///     switch asOptional.wrappedType() {
+///     case is String.Type:
+///         // case matches if wrapped type is String
+///         // regardless whether it's .some() or nil
+///     case is Int.Type:
+///         // ...
+///     }
+///
+/// Switch by conditionally casting concrete type, preserving the Optional:
+///
+///     switch asOptional {
+///     case let string as String?:
+///         // string == Optional("Test")
+///     case let int as Int?:
+///         // ...
+///     }
+///
+/// Unwrap by switching:
+///
+///     switch asOptional {
+///     case let string as String:
+///         // string == "Test"
+///     case let int as Int:
+///         // ...
+///     default:
+///         // nil
+///     }
+///
+/// Unwrap by `if let` binding:
+///
+///     if let string = asOptional.asAny() as? String {
+///         // string == "Test" (unwrapped)
+///     } else {
+///         // nil
+///     }
+///
+protocol OTCoreOptional {
+    
+    /// **OTCore:**
+    /// Returns the optional Typed as `Any?`.
+    func asAny() -> Any?
+    
+    /// **OTCore:**
+    /// Returns the wrapped type of an Optional.
+    func wrappedType() -> Any.Type
+    
+    /// **OTCore:**
+    /// Returns `true` if optional is `.none` (`nil`).
+    var isNone: Bool { get }
+    
+}
+
+extension Optional: OTCoreOptional {
+    public func asAny() -> Any? {
+        self as Any?
+    }
+    
+    public func wrappedType() -> Any.Type {
+        Wrapped.self
+    }
+    
+    public var isNone: Bool {
+        self == nil
+    }
+}
 
 // MARK: - .ifNil(_:)
 

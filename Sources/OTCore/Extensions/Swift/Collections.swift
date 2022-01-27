@@ -101,7 +101,7 @@ extension MutableCollection {
     
 }
 
-extension MutableCollection where Element : OptionalType {
+extension MutableCollection where Element : OTCoreOptionalTyped {
     
     /// **OTCore:**
     /// Access collection indexes safely.
@@ -133,7 +133,7 @@ extension MutableCollection where Element : OptionalType {
             
             switch newValue {
             case .none:
-                self[index] = Element._none as! Element
+                self[index] = Element.noneValue as! Element
             case .some(let wrapped):
                 self[index] = wrapped
             }
@@ -152,7 +152,7 @@ extension MutableCollection where Element : OptionalType {
             
             switch valueForMutation {
             case .none:
-                self[index] = Element._none as! Element
+                self[index] = Element.noneValue as! Element
             case .some(let wrapped):
                 self[index] = wrapped
             }
@@ -387,7 +387,7 @@ extension MutableCollection {
     
 }
 
-extension MutableCollection where Element : OptionalType {
+extension MutableCollection where Element : OTCoreOptionalTyped {
     
     /// **OTCore:**
     /// Access collection indexes safely, referenced by position offset `0..<count`. (Same as `[position: Int]` but returns `nil` if out-of-bounds.
@@ -419,7 +419,7 @@ extension MutableCollection where Element : OptionalType {
             
             switch newValue {
             case .none:
-                self[idx] = Element._none as! Element
+                self[idx] = Element.noneValue as! Element
             case .some(let wrapped):
                 self[idx] = wrapped
             }
@@ -440,7 +440,7 @@ extension MutableCollection where Element : OptionalType {
             
             switch valueForMutation {
             case .none:
-                self[idx] = Element._none as! Element
+                self[idx] = Element.noneValue as! Element
             case .some(let wrapped):
                 self[idx] = wrapped
             }

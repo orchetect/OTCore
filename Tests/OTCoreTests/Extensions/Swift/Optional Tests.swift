@@ -12,7 +12,7 @@ import OTCore
 
 fileprivate protocol testStructProtocol { }
 
-fileprivate extension Collection where Element: OptionalType,
+fileprivate extension Collection where Element: OTCoreOptionalTyped,
                                        Element.Wrapped: testStructProtocol {
     
     var foo: Int { return 2 }
