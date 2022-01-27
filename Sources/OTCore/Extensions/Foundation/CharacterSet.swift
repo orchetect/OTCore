@@ -10,6 +10,30 @@ import Foundation
 extension CharacterSet {
     
     /// **OTCore:**
+    /// Initialize a `CharacterSet` from one or more `Character`.
+    public init(_ characters: Character...) {
+        
+        self.init(characters)
+        
+    }
+    
+    /// **OTCore:**
+    /// Initialize a `CharacterSet` from one or more `Character`.
+    public init(_ characters: [Character]) {
+        
+        self.init()
+
+        characters.forEach {
+            $0.unicodeScalars.forEach { insert($0) }
+        }
+        
+    }
+    
+}
+
+extension CharacterSet {
+    
+    /// **OTCore:**
     /// Returns true if the `CharacterSet` contains the given `Character`.
     @_disfavoredOverload
     public func contains(_ character: Character) -> Bool {
