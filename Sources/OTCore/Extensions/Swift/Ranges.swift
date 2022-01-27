@@ -1056,6 +1056,137 @@ extension PartialRangeFrom where Bound.Stride: SignedInteger, Bound: Strideable 
 }
 
 
+// MARK: - @Clamped Property Wrapper
+
+@propertyWrapper
+public struct Clamped<Value> where Value : Comparable {
+    
+    var min: Value?
+    var max: Value?
+    private var value: Value
+    
+    public var wrappedValue: Value {
+        get {
+            value
+        }
+        set {
+            value = Self.clamping(newValue, min: min, max: max)
+        }
+    }
+    
+    private static func clamping(_ value: Value,
+                                 min: Value?,
+                                 max: Value?) -> Value {
+        
+        if let min = min {
+            if let max = max {
+                return value.clamped(to: min...max)
+            } else {
+                return value.clamped(to: min...)
+            }
+        } else if let max = max {
+            return value.clamped(to: ...max)
+        } else {
+            return value
+        }
+        
+    }
+    
+    public init(wrappedValue defaultValue: Value,
+                to range: ClosedRange<Value>) {
+        
+        let newMin = range.lowerBound
+        let newMax = range.upperBound
+        
+        self.min = newMin
+        self.max = newMax
+        
+        self.value = Self.clamping(defaultValue,
+                                   min: newMin,
+                                   max: newMax)
+        
+    }
+    
+    public init(wrappedValue defaultValue: Value,
+                to range: Range<Value>) where Value : Strideable {
+        
+        var newMin: Value?
+        var newMax: Value?
+        
+        if range.lowerBound == range.upperBound {
+            newMin = nil
+            newMax = nil
+        } else {
+            let adjustedMin = range.lowerBound
+            let adjustedMax = range.upperBound.advanced(by: -1)
+            
+            if adjustedMax <= adjustedMin {
+                // invalid range
+                newMin = nil
+                newMax = nil
+            } else {
+                newMin = adjustedMin
+                newMax = adjustedMax
+            }
+        }
+        
+        self.min = newMin
+        self.max = newMax
+        
+        self.value = Self.clamping(defaultValue,
+                                   min: newMin,
+                                   max: newMax)
+        
+    }
+    
+    public init(wrappedValue defaultValue: Value,
+                to range: PartialRangeUpTo<Value>) where Value : Strideable {
+        
+        let newMin: Value? = nil
+        let newMax: Value? = range.upperBound.advanced(by: -1)
+        
+        self.min = newMin
+        self.max = newMax
+        
+        self.value = Self.clamping(defaultValue,
+                                   min: newMin,
+                                   max: newMax)
+        
+    }
+    
+    public init(wrappedValue defaultValue: Value,
+                to range: PartialRangeThrough<Value>) {
+        
+        let newMin: Value? = nil
+        let newMax: Value? = range.upperBound
+        
+        self.min = newMin
+        self.max = newMax
+        
+        self.value = Self.clamping(defaultValue,
+                                   min: newMin,
+                                   max: newMax)
+        
+    }
+    
+    public init(wrappedValue defaultValue: Value,
+                to range: PartialRangeFrom<Value>) {
+        
+        let newMin: Value? = range.lowerBound
+        let newMax: Value? = nil
+        
+        self.min = newMin
+        self.max = newMax
+        
+        self.value = Self.clamping(defaultValue,
+                                   min: newMin,
+                                   max: newMax)
+        
+    }
+    
+}
+
+
 // MARK: - .repeatEach { }
 
 extension BinaryInteger {
