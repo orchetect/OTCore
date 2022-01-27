@@ -59,4 +59,70 @@ extension UserDefaults {
     
 }
 
+// MARK: - Backed PropertyWrappers
+
+/// **OTCore:**
+/// Read and write the value of a `UserDefaults` key.
+///
+/// If a default value is provided, the `Value` will be treated as a non-Optional.
+///
+///     @UserDefaultsBacked(key: "myPref")
+///     var myPref = true
+///
+/// If no default is provided, the `Value` will be treated as an Optional.
+///
+///     @UserDefaultsBacked(key: "myPref")
+///     var myPref: Bool?
+///
+/// If a defaults suite is not specified, `.standard` will be used.
+@propertyWrapper
+public struct UserDefaultsBacked<Value> {
+    
+    private let key: String
+    private let defaultValue: Value
+    public var storage: UserDefaults
+    
+    public var wrappedValue: Value {
+        get {
+            let value = storage.value(forKey: key) as? Value
+            return value ?? defaultValue
+        }
+        set {
+            // we have to treat newValue == nil as a special case
+            // otherwise .setValue() will throw an exception
+            
+            if let asOptional = newValue as? OTCoreOptional,
+               asOptional.isNone {
+                storage.removeObject(forKey: key)
+            } else {
+                storage.setValue(newValue, forKey: key)
+            }
+        }
+    }
+    
+    public init(wrappedValue defaultValue: Value,
+                key: String,
+                storage: UserDefaults = .standard) {
+        
+        self.defaultValue = defaultValue
+        self.key = key
+        self.storage = storage
+        
+    }
+    
+}
+
+extension UserDefaultsBacked where Value: ExpressibleByNilLiteral {
+
+    public init(key: String,
+                storage: UserDefaults = .standard) {
+
+        self.init(wrappedValue: nil,
+                  key: key,
+                  storage: storage)
+
+    }
+    
+}
+
 #endif

@@ -10,26 +10,37 @@ import XCTest
 
 class Extensions_Foundation_UserDefaults_Tests: XCTestCase {
     
-    override func setUp() { super.setUp() }
-    override func tearDown() { super.tearDown() }
+    fileprivate let domain = "com.orchetect.otcore.userdefaultstests"
+    fileprivate var ud: UserDefaults!
     
-    func testUserDefaults() {
+    override func setUp() {
+        super.setUp()
         
         // since we are accessing actual UserDefaults for these tests,
         // we need to ensure resiliency and do not mutate them
         
         // using a custom volatile domain should keep tests isolated
         
-        let domain = "com.orchetect.otcore.userdefaultstests"
+        // just in case, remove suite in case it wasn't cleaned up properly
+        UserDefaults.standard.removePersistentDomain(forName: domain)
         
-        // set up UserDefaults suite
+        // set up new UserDefaults suite
+        ud = UserDefaults(suiteName: domain)
         
-        UserDefaults.standard.removeSuite(named: domain)
-        
-        guard let ud = UserDefaults(suiteName: domain) else {
+        guard ud != nil else {
             XCTFail("Could not set up UserDefaults suite for testing.")
             return
         }
+    }
+    
+    override func tearDown() {
+        super.tearDown()
+        
+        // clean up
+        UserDefaults.standard.removePersistentDomain(forName: domain)
+    }
+    
+    func testOptionalGetters() {
         
         // push sample data to volatile user defaults
         
@@ -70,9 +81,65 @@ class Extensions_Foundation_UserDefaults_Tests: XCTestCase {
         XCTAssertTrue(ud.exists(key: "someBool"))
         XCTAssertFalse(ud.exists(key: "does_not_exist"))
         
-        // clean up
+    }
+    
+    func testUserDefaultsBacked_Defaulted() {
         
-        UserDefaults.standard.removeSuite(named: domain)
+        struct DummyPrefs {
+            static let prefKey = "defaultedPref"
+            
+            @UserDefaultsBacked(key: prefKey)
+            var pref = 2
+            
+            init(defaults: UserDefaults) {
+                // have to inject here
+                _pref.storage = defaults
+            }
+        }
+        
+        var dummyPrefs = DummyPrefs(defaults: ud)
+        
+        // UserDefaults returns Int 0 if key is not existent
+        XCTAssertEqual(ud.integer(forKey: DummyPrefs.prefKey), 0)
+        
+        // check our property wrapper default value being returned
+        XCTAssertEqual(dummyPrefs.pref, 2)
+        
+        dummyPrefs.pref = 4
+        
+        XCTAssertEqual(ud.integer(forKey: DummyPrefs.prefKey), 4)
+        XCTAssertEqual(dummyPrefs.pref, 4)
+        
+    }
+    
+    func testUserDefaultsBacked_NonDefaulted() {
+        
+        struct DummyPrefs {
+            static let prefKey = "nonDefaultedPref"
+            
+            @UserDefaultsBacked(key: prefKey)
+            var pref: String?
+            
+            init(defaults: UserDefaults) {
+                _pref.storage = defaults // have to inject here
+            }
+        }
+        
+        var dummyPrefs = DummyPrefs(defaults: ud)
+        
+        XCTAssertEqual(ud.string(forKey: DummyPrefs.prefKey), nil)
+        XCTAssertEqual(dummyPrefs.pref, nil)
+        
+        dummyPrefs.pref = "A String"
+        
+        XCTAssertEqual(ud.string(forKey: DummyPrefs.prefKey), "A String")
+        XCTAssertEqual(dummyPrefs.pref, "A String")
+        XCTAssertEqual(dummyPrefs.pref!, "A String") // proves it's an Optional type
+        
+        dummyPrefs.pref = nil
+        
+        XCTAssertEqual(ud.string(forKey: DummyPrefs.prefKey), nil)
+        XCTAssertEqual(dummyPrefs.pref, nil)
         
     }
     
