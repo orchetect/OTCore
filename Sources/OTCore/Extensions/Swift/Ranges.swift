@@ -1058,6 +1058,149 @@ extension PartialRangeFrom where Bound.Stride: SignedInteger, Bound: Strideable 
 
 // MARK: - @Clamped Property Wrapper
 
+extension RangeExpression {
+    
+    /// **OTCore:**
+    /// Returns the absolute bound values. Value(s) are `nil` when unbounded.
+    public func getAbsoluteBounds() -> (min: Bound?, max: Bound?) {
+        
+        switch self {
+        case let range as ClosedRange<Bound>:
+            return range.absoluteBounds
+            
+        //case let range as Range<Bound>:
+        //    return range.absoluteBounds
+            
+        case let range as PartialRangeFrom<Bound>:
+            return range.absoluteBounds
+            
+        //case let range as PartialRangeUpTo<Bound>:
+        //    return range.absoluteBounds
+            
+        case let range as PartialRangeThrough<Bound>:
+            return range.absoluteBounds
+            
+        default:
+            fatalError("Unexpected range type.")
+        }
+        
+    }
+    
+}
+
+extension RangeExpression where Bound : Strideable {
+    
+    /// **OTCore:**
+    /// Returns the absolute bound values. Value(s) are `nil` when unbounded.
+    public func getAbsoluteBounds() -> (min: Bound?, max: Bound?) {
+        
+        switch self {
+        case let range as ClosedRange<Bound>:
+            return range.absoluteBounds
+            
+        case let range as Range<Bound>:
+            return range.absoluteBounds
+            
+        case let range as PartialRangeFrom<Bound>:
+            return range.absoluteBounds
+            
+        case let range as PartialRangeUpTo<Bound>:
+            return range.absoluteBounds
+            
+        case let range as PartialRangeThrough<Bound>:
+            return range.absoluteBounds
+            
+        default:
+            fatalError("Unexpected range type.")
+        }
+        
+    }
+    
+}
+
+extension ClosedRange {
+    
+    /// **OTCore:**
+    /// Returns the absolute bound values. Value(s) are `nil` when unbounded.
+    public var absoluteBounds: (min: Bound, max: Bound) {
+        
+        (min: lowerBound, max: upperBound)
+        
+    }
+    
+}
+
+extension Range where Bound : Strideable {
+    
+    /// **OTCore:**
+    /// Returns the absolute bound values. Value(s) are `nil` when unbounded.
+    /// If range is empty, `min` and `max` will return `nil`.
+    public var absoluteBounds: (min: Bound?, max: Bound?) {
+        
+        var newMin: Bound?
+        var newMax: Bound?
+        
+        if lowerBound == upperBound {
+            newMin = nil
+            newMax = nil
+        } else {
+            let adjustedMin = lowerBound
+            let adjustedMax = upperBound.advanced(by: -1)
+            
+            if adjustedMax <= adjustedMin {
+                // invalid range
+                newMin = nil
+                newMax = nil
+            } else {
+                newMin = adjustedMin
+                newMax = adjustedMax
+            }
+        }
+        
+        return (min: newMin, max: newMax)
+        
+    }
+    
+}
+
+extension PartialRangeUpTo where Bound : Strideable {
+    
+    /// **OTCore:**
+    /// Returns the absolute bound values. Value(s) are `nil` when unbounded.
+    public var absoluteBounds: (min: Bound?, max: Bound) {
+        
+        (min: nil, max: upperBound.advanced(by: -1))
+        
+    }
+    
+}
+
+extension PartialRangeThrough {
+    
+    /// **OTCore:**
+    /// Returns the absolute bound values. Value(s) are `nil` when unbounded.
+    public var absoluteBounds: (min: Bound?, max: Bound) {
+        
+        (min: nil, max: upperBound)
+        
+    }
+    
+}
+
+extension PartialRangeFrom {
+    
+    /// **OTCore:**
+    /// Returns the absolute bound values. Value(s) are `nil` when unbounded.
+    public var absoluteBounds: (min: Bound, max: Bound?) {
+        
+        (min: lowerBound, max: nil)
+        
+    }
+    
+}
+
+/// **OTCore:**
+/// Property wrapper that clamps the wrapped value to a given range.
 @propertyWrapper
 public struct Clamped<Value> where Value : Comparable {
     
@@ -1074,7 +1217,7 @@ public struct Clamped<Value> where Value : Comparable {
         }
     }
     
-    private static func clamping(_ value: Value,
+    internal static func clamping(_ value: Value,
                                  min: Value?,
                                  max: Value?) -> Value {
         
@@ -1095,92 +1238,70 @@ public struct Clamped<Value> where Value : Comparable {
     public init(wrappedValue defaultValue: Value,
                 to range: ClosedRange<Value>) {
         
-        let newMin = range.lowerBound
-        let newMax = range.upperBound
+        let formRange = range.absoluteBounds
         
-        self.min = newMin
-        self.max = newMax
+        self.min = formRange.min
+        self.max = formRange.max
         
         self.value = Self.clamping(defaultValue,
-                                   min: newMin,
-                                   max: newMax)
+                                   min: formRange.min,
+                                   max: formRange.max)
         
     }
     
     public init(wrappedValue defaultValue: Value,
                 to range: Range<Value>) where Value : Strideable {
         
-        var newMin: Value?
-        var newMax: Value?
+        let formRange = range.absoluteBounds
         
-        if range.lowerBound == range.upperBound {
-            newMin = nil
-            newMax = nil
-        } else {
-            let adjustedMin = range.lowerBound
-            let adjustedMax = range.upperBound.advanced(by: -1)
-            
-            if adjustedMax <= adjustedMin {
-                // invalid range
-                newMin = nil
-                newMax = nil
-            } else {
-                newMin = adjustedMin
-                newMax = adjustedMax
-            }
-        }
-        
-        self.min = newMin
-        self.max = newMax
+        self.min = formRange.min
+        self.max = formRange.max
         
         self.value = Self.clamping(defaultValue,
-                                   min: newMin,
-                                   max: newMax)
+                                   min: formRange.min,
+                                   max: formRange.max)
         
     }
     
     public init(wrappedValue defaultValue: Value,
                 to range: PartialRangeUpTo<Value>) where Value : Strideable {
         
-        let newMin: Value? = nil
-        let newMax: Value? = range.upperBound.advanced(by: -1)
+        let formRange = range.absoluteBounds
         
-        self.min = newMin
-        self.max = newMax
+        self.min = formRange.min
+        self.max = formRange.max
         
         self.value = Self.clamping(defaultValue,
-                                   min: newMin,
-                                   max: newMax)
+                                   min: formRange.min,
+                                   max: formRange.max)
         
     }
     
     public init(wrappedValue defaultValue: Value,
                 to range: PartialRangeThrough<Value>) {
         
-        let newMin: Value? = nil
-        let newMax: Value? = range.upperBound
+        let formRange = range.absoluteBounds
         
-        self.min = newMin
-        self.max = newMax
+        self.min = formRange.min
+        self.max = formRange.max
         
         self.value = Self.clamping(defaultValue,
-                                   min: newMin,
-                                   max: newMax)
+                                   min: formRange.min,
+                                   max: formRange.max)
         
     }
     
     public init(wrappedValue defaultValue: Value,
                 to range: PartialRangeFrom<Value>) {
         
-        let newMin: Value? = range.lowerBound
-        let newMax: Value? = nil
+        let formRange = range.absoluteBounds
         
-        self.min = newMin
-        self.max = newMax
+        self.min = formRange.min
+        self.max = formRange.max
         
         self.value = Self.clamping(defaultValue,
-                                   min: newMin,
-                                   max: newMax)
+                                   min: formRange.min,
+                                   max: formRange.max)
         
     }
     

@@ -8,10 +8,11 @@
 import XCTest
 @testable import OTCore
 
+fileprivate var ud: UserDefaults!
+
 class Extensions_Foundation_UserDefaults_Tests: XCTestCase {
     
     fileprivate let domain = "com.orchetect.otcore.userdefaultstests"
-    fileprivate var ud: UserDefaults!
     
     override func setUp() {
         super.setUp()
@@ -88,21 +89,13 @@ class Extensions_Foundation_UserDefaults_Tests: XCTestCase {
         struct DummyPrefs {
             static let prefKey = "defaultedPref"
             
-            @UserDefaultsBacked(key: prefKey)
+            @UserDefaultsBacked(key: prefKey, storage: ud)
             var pref = 2
-            
-            init(defaults: UserDefaults) {
-                // have to inject here
-                _pref.storage = defaults
-            }
         }
         
-        var dummyPrefs = DummyPrefs(defaults: ud)
+        var dummyPrefs = DummyPrefs()
         
-        // UserDefaults returns Int 0 if key is not existent
-        XCTAssertEqual(ud.integer(forKey: DummyPrefs.prefKey), 0)
-        
-        // check our property wrapper default value being returned
+        XCTAssertEqual(ud.integer(forKey: DummyPrefs.prefKey), 2)
         XCTAssertEqual(dummyPrefs.pref, 2)
         
         dummyPrefs.pref = 4
@@ -117,15 +110,11 @@ class Extensions_Foundation_UserDefaults_Tests: XCTestCase {
         struct DummyPrefs {
             static let prefKey = "nonDefaultedPref"
             
-            @UserDefaultsBacked(key: prefKey)
+            @UserDefaultsBacked(key: prefKey, storage: ud)
             var pref: String?
-            
-            init(defaults: UserDefaults) {
-                _pref.storage = defaults // have to inject here
-            }
         }
         
-        var dummyPrefs = DummyPrefs(defaults: ud)
+        var dummyPrefs = DummyPrefs()
         
         XCTAssertEqual(ud.string(forKey: DummyPrefs.prefKey), nil)
         XCTAssertEqual(dummyPrefs.pref, nil)
@@ -140,6 +129,92 @@ class Extensions_Foundation_UserDefaults_Tests: XCTestCase {
         
         XCTAssertEqual(ud.string(forKey: DummyPrefs.prefKey), nil)
         XCTAssertEqual(dummyPrefs.pref, nil)
+        
+    }
+    
+    func testUserDefaultsBacked_Defaulted_Clamped() {
+        
+        struct DummyPrefs {
+            static let prefKey = "clampedPref"
+            
+            @UserDefaultsBacked(key: prefKey, clamped: 5...10, storage: ud)
+            var pref = 1
+        }
+        
+        var dummyPrefs = DummyPrefs()
+        
+        // default value clamped
+        XCTAssertEqual(ud.integer(forKey: DummyPrefs.prefKey), 5)
+        XCTAssertEqual(dummyPrefs.pref, 5)
+        
+        dummyPrefs.pref = 2
+        
+        XCTAssertEqual(ud.integer(forKey: DummyPrefs.prefKey), 5)
+        XCTAssertEqual(dummyPrefs.pref, 5)
+            
+        dummyPrefs.pref = 5
+        
+        XCTAssertEqual(ud.integer(forKey: DummyPrefs.prefKey), 5)
+        XCTAssertEqual(dummyPrefs.pref, 5)
+        
+        dummyPrefs.pref = 6
+        
+        XCTAssertEqual(ud.integer(forKey: DummyPrefs.prefKey), 6)
+        XCTAssertEqual(dummyPrefs.pref, 6)
+        
+        dummyPrefs.pref = 10
+        
+        XCTAssertEqual(ud.integer(forKey: DummyPrefs.prefKey), 10)
+        XCTAssertEqual(dummyPrefs.pref, 10)
+        
+        dummyPrefs.pref = 11
+        
+        XCTAssertEqual(ud.integer(forKey: DummyPrefs.prefKey), 10)
+        XCTAssertEqual(dummyPrefs.pref, 10)
+        
+    }
+    
+    func testUserDefaultsBacked_Defaulted_Validated() {
+        
+        struct DummyPrefs {
+            static let prefKey = "validatedPref"
+            
+            @UserDefaultsBacked(key: prefKey,
+                                validation: { $0.clamped(to: 5...10) },
+                                storage: ud)
+            var pref = 1
+        }
+        
+        var dummyPrefs = DummyPrefs()
+        
+        // default value clamped
+        XCTAssertEqual(ud.integer(forKey: DummyPrefs.prefKey), 5)
+        XCTAssertEqual(dummyPrefs.pref, 5)
+        
+        dummyPrefs.pref = 2
+        
+        XCTAssertEqual(ud.integer(forKey: DummyPrefs.prefKey), 5)
+        XCTAssertEqual(dummyPrefs.pref, 5)
+        
+        dummyPrefs.pref = 5
+        
+        XCTAssertEqual(ud.integer(forKey: DummyPrefs.prefKey), 5)
+        XCTAssertEqual(dummyPrefs.pref, 5)
+        
+        dummyPrefs.pref = 6
+        
+        XCTAssertEqual(ud.integer(forKey: DummyPrefs.prefKey), 6)
+        XCTAssertEqual(dummyPrefs.pref, 6)
+        
+        dummyPrefs.pref = 10
+        
+        XCTAssertEqual(ud.integer(forKey: DummyPrefs.prefKey), 10)
+        XCTAssertEqual(dummyPrefs.pref, 10)
+        
+        dummyPrefs.pref = 11
+        
+        XCTAssertEqual(ud.integer(forKey: DummyPrefs.prefKey), 10)
+        XCTAssertEqual(dummyPrefs.pref, 10)
         
     }
     
