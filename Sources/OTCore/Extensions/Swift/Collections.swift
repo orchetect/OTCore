@@ -955,6 +955,25 @@ extension Collection {
     
 }
 
+extension Collection where Index == Int {
+    
+    /// **OTCore:**
+    /// Returns indices in groups of n number of indices.
+    public func indices(splitEvery: Int) -> [ClosedRange<Index>] {
+        
+        // this should work but doesn't
+        //return indices.split(every: splitEvery)
+        
+        // so we need a workaround. this is really stupid but it works.
+        // there is some compiler issue that reports type(of: indices) as `Range<Index>`
+        // but only works if you cast it as... itself (Range<Index>, effectively Range<Int>)
+        guard let i = indices as? Range<Index> else { return [] }
+        return i.split(every: splitEvery)
+        
+    }
+    
+}
+
 // MARK: - Dictionary map
 
 extension Dictionary {
