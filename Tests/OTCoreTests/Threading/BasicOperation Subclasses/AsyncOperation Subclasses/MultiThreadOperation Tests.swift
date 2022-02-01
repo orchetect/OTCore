@@ -3,6 +3,8 @@
 //  OTCore • https://github.com/orchetect/OTCore
 //
 
+#if shouldTestCurrentPlatform
+
 @testable import OTCore
 import XCTest
 
@@ -191,3 +193,5 @@ final class Threading_MultiThreadOperation_Tests: XCTestCase {
     }
     
 }
+
+#endif

@@ -3,6 +3,8 @@
 //  OTCore • https://github.com/orchetect/OTCore
 //
 
+#if shouldTestCurrentPlatform
+
 import OTCore
 import XCTest
 
@@ -88,3 +90,5 @@ final class Threading_AsyncOperation_Tests: XCTestCase {
     }
     
 }
+
+#endif

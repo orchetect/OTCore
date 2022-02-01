@@ -3,7 +3,7 @@
 //  OTCore • https://github.com/orchetect/OTCore
 //
 
-#if !os(watchOS)
+#if shouldTestCurrentPlatform
 
 import XCTest
 import OTCore
@@ -51,7 +51,9 @@ class Global_Globals_Tests: XCTestCase {
         
         XCTAssert(Globals.System.osVersion != "")
         
+        #if !os(watchOS)
         XCTAssert(Globals.System.name != "")
+        #endif
         
         #if os(macOS)
         XCTAssertNotNil(Globals.System.serialNumber)

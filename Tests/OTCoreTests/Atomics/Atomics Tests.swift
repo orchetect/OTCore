@@ -3,7 +3,7 @@
 //  OTCore • https://github.com/orchetect/OTCore
 //
 
-#if !os(watchOS)
+#if shouldTestCurrentPlatform
 
 import XCTest
 import OTCore

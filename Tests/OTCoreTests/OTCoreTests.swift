@@ -3,9 +3,9 @@
 //  OTCore • https://github.com/orchetect/OTCore
 //
 
-// MARK: - Shared constants and objects for tests
+#if shouldTestCurrentPlatform
 
-#if !os(watchOS)
+// MARK: - Shared constants and objects for tests
 
 /// Test enum for use in unit tests
 enum fooEnum: Hashable, CustomStringConvertible {
