@@ -6,7 +6,7 @@
 import OTCore
 import XCTest
 
-final class Threading_BasicClosureOperationTests: XCTestCase {
+final class Threading_BasicClosureOperation_Tests: XCTestCase {
     
     override func setUp() async throws {
         mainCheck = { }

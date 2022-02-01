@@ -6,7 +6,7 @@
 import OTCore
 import XCTest
 
-final class Threading_BasicOperationTests: XCTestCase {
+final class Threading_BasicOperation_Tests: XCTestCase {
     
     override func setUp() { super.setUp() }
     override func tearDown() { super.tearDown() }

@@ -6,7 +6,7 @@
 @testable import OTCore
 import XCTest
 
-final class Threading_MultiThreadOperationTests: XCTestCase {
+final class Threading_MultiThreadOperation_Tests: XCTestCase {
     
     /// Standalone operation, serial FIFO queue mode. Run it.
     func testOp_serialFIFO_Run() {

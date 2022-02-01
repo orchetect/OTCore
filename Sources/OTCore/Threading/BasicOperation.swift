@@ -23,16 +23,25 @@ import Foundation
 /// 3. Finally, at the end of the operation you must call `completeOperation()`.
 open class BasicOperation: Operation {
     
+    // adding KVO compliance
     public final override var isExecuting: Bool { _isExecuting }
     private var _isExecuting = false {
         willSet { willChangeValue(for: \.isExecuting) }
         didSet { didChangeValue(for: \.isExecuting) }
     }
     
+    // adding KVO compliance
     public final override var isFinished: Bool { _isFinished }
     private var _isFinished = false {
         willSet { willChangeValue(for: \.isFinished) }
         didSet { didChangeValue(for: \.isFinished) }
+    }
+    
+    // adding KVO compliance
+    @objc dynamic
+    public final override var qualityOfService: QualityOfService {
+        willSet { willChangeValue(for: \.qualityOfService) }
+        didSet { didChangeValue(for: \.qualityOfService) }
     }
     
     /// Returns true if operation should begin.
@@ -44,6 +53,7 @@ open class BasicOperation: Operation {
         
     }
     
+    /// Call this once all execution is complete in the operation.
     public final func completeOperation() {
         
         _isExecuting = false

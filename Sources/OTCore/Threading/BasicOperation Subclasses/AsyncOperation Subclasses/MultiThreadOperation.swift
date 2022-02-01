@@ -92,13 +92,6 @@ open class MultiThreadOperation<T>: AsyncOperation {
         operationQueue.isSuspended = false
     }
     
-    private var _qualityOfService: QualityOfService = .default
-    @objc dynamic
-    public final override var qualityOfService: QualityOfService {
-        willSet { willChangeValue(for: \.qualityOfService) }
-        didSet { didChangeValue(for: \.qualityOfService) }
-    }
-    
     // MARK: - KVO Observers
     
     /// Retain property observers. They will auto-release on deinit.

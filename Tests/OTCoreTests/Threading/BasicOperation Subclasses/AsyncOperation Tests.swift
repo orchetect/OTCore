@@ -6,7 +6,7 @@
 import OTCore
 import XCTest
 
-final class Threading_AsyncOperationTests: XCTestCase {
+final class Threading_AsyncOperation_Tests: XCTestCase {
     
     override func setUp() { super.setUp() }
     override func tearDown() { super.tearDown() }
@@ -36,7 +36,7 @@ final class Threading_AsyncOperationTests: XCTestCase {
     }
     
     /// Test as a standalone operation. Run it. Cancel before it finishes.
-    func testOpRun() {
+    func testOpRun_Cancel() {
         
         let op = TestOp()
         
@@ -52,14 +52,14 @@ final class Threading_AsyncOperationTests: XCTestCase {
         
         wait(for: [completionBlockExp], timeout: 0.5)
         
-        XCTAssertFalse(op.isCancelled)
+        XCTAssertTrue(op.isCancelled)
         XCTAssertFalse(op.isExecuting)
         XCTAssertTrue(op.isFinished)
         
     }
     
     /// Test in the context of an OperationQueue. Run is implicit. Cancel before it finishes.
-    func testQueue() {
+    func testQueue_Cancel() {
         
         let oq = OperationQueue()
         
@@ -81,7 +81,7 @@ final class Threading_AsyncOperationTests: XCTestCase {
         
         XCTAssertEqual(oq.operationCount, 0)
         
-        XCTAssertFalse(op.isCancelled)
+        XCTAssertTrue(op.isCancelled)
         XCTAssertFalse(op.isExecuting)
         XCTAssertTrue(op.isFinished)
         
