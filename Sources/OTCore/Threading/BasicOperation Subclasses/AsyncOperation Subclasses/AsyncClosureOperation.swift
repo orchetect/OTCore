@@ -34,7 +34,7 @@ public final class AsyncClosureOperation: AsyncOperation {
     
     public final var mainBlock: (_ operation: AsyncOperation) -> Void
     
-    public required init(
+    public init(
         _ mainBlock: @escaping (_ operation: AsyncOperation) -> Void
     ) {
         

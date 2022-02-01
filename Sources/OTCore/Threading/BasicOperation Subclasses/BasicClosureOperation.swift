@@ -21,7 +21,7 @@ public final class BasicClosureOperation: BasicOperation {
     
     public final var closure: () -> Void
     
-    public required init(_ closure: @escaping () -> Void) {
+    public init(_ closure: @escaping () -> Void) {
         
         self.closure = closure
         

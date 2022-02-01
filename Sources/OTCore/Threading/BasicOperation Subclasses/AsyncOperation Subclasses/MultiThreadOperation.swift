@@ -12,7 +12,7 @@ import Foundation
 ///
 /// **Setup**
 ///
-/// 1. Instantiate `MultiThreadOperation` with queue type and initial mutable value. If a shared mutable value is not required, nil can be passed as the initial value.
+/// 1. Instantiate `MultiThreadOperation` with queue type and initial mutable value. This value can be of any concrete type. If a shared mutable value is not required, an arbitrary value can be passed as the initial value such as 0.
 ///
 ///        let op = MultiThreadOperation(.serialFIFO, initialMutableValue: 0)
 ///
@@ -48,18 +48,19 @@ import Foundation
 /// - note: `MultiThreadOperation` inherits from both `AsyncOperation` and`BasicOperation`.
 open class MultiThreadOperation<T>: AsyncOperation {
     private let queueType: QueueType
-    private let operationQueue = OperationQueue()
-    private weak var lastAddedOperation: Operation? = nil
+    private let operationQueue: OperationQueue
+    private weak var lastAddedOperation: Operation?
     
     /// The thread-safe shared mutable value that all operation blocks operate upon.
     @Atomic public final var sharedMutableValue: T
     
     // MARK: - Init
     
-    required public init(_ queueType: QueueType,
-                         initialMutableValue: T) {
+    public init(_ queueType: MultiThreadOperation.QueueType,
+                initialMutableValue: T) {
         // assign properties
         self.queueType = queueType
+        self.operationQueue = OperationQueue()
         self.sharedMutableValue = initialMutableValue
         
         // super
