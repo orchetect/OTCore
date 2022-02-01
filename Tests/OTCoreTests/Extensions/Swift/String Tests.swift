@@ -104,18 +104,6 @@ class Extensions_Swift_String_Tests: XCTestCase {
         
     }
     
-    func testSplitEvery() {
-        
-        // .split(every:)
-        
-        let str = "1234567890"
-        
-        XCTAssertEqual(str.split(every: 2), ["12", "34", "56", "78", "90"])
-        XCTAssertEqual(str.split(every: 4), ["1234", "5678", "90"])
-        XCTAssertEqual(str.split(every: 4, backwards: true), ["12", "3456", "7890"])
-        
-    }
-    
     func testRemovingPrefix() {
         
         // .removingPrefix
