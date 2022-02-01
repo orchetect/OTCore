@@ -1060,14 +1060,14 @@ extension PartialRangeFrom where Bound.Stride: SignedInteger, Bound: Strideable 
 
 // MARK: - Split
 
-extension Range where Bound == Int {
+extension ClosedRange where Bound == Int {
     
     /// **OTCore:**
     /// Returns elements in groups of n number of elements.
     public func split(every: Int) -> [ClosedRange<Bound>] {
         
         if every < 1 {
-            return isEmpty ? [] : [lowerBound ... upperBound.advanced(by: -1)]
+            return isEmpty ? [] : [lowerBound ... upperBound]
         }
         
         if every == 1 {
@@ -1083,8 +1083,23 @@ extension Range where Bound == Int {
             let offset = batch * every
             base += offset ... offset
                 .advanced(by: every - 1)
-                .clamped(to: ...endIndex(offsetBy: -1))
+                .clamped(to: ...upperBound)
         }
+        
+    }
+    
+}
+
+extension Range where Bound == Int {
+    
+    /// **OTCore:**
+    /// Returns elements in groups of n number of elements.
+    public func split(every: Int) -> [ClosedRange<Bound>] {
+        
+        guard !isEmpty else { return [] }
+        
+        return (lowerBound...upperBound.advanced(by: -1))
+            .split(every: every)
         
     }
     
