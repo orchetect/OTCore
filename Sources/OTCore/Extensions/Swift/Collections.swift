@@ -658,7 +658,7 @@ extension Collection {
     }
     
     /// **OTCore:**
-    /// Returns an index that is the specified distance from the start index.
+    /// Returns an index that is the specified distance from the end index.
     public func endIndex(offsetBy distance: Int) -> Index {
         
         index(endIndex, offsetBy: distance)
