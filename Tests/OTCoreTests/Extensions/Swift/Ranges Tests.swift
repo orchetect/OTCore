@@ -1027,6 +1027,24 @@ class Extensions_Swift_Ranges_Tests: XCTestCase {
         
     }
     
+    func testSplitEvery() {
+        
+        XCTAssertEqual((0..<11).split(every: -1), [0...10])
+        XCTAssertEqual((0..<11).split(every:  0), [0...10])
+        XCTAssertEqual((0..<11).split(every:  1), [0...0, 1...1, 2...2, 3...3,
+                                                   4...4, 5...5, 6...6, 7...7,
+                                                   8...8, 9...9, 10...10])
+        XCTAssertEqual((0..<11).split(every:  2), [0...1, 2...3, 4...5, 6...7,
+                                                   8...9, 10...10])
+        XCTAssertEqual((0..<11).split(every:  3), [0...2, 3...5, 6...8, 9...10])
+        XCTAssertEqual((0..<11).split(every:  4), [0...3, 4...7, 8...10])
+        XCTAssertEqual((0..<11).split(every:  5), [0...4, 5...9, 10...10])
+        XCTAssertEqual((0..<11).split(every: 10), [0...9, 10...10])
+        XCTAssertEqual((0..<11).split(every: 11), [0...10])
+        XCTAssertEqual((0..<11).split(every: 12), [0...10])
+        
+    }
+    
     func testClampedPropertyWrapper_ClosedRange() {
         
         struct SomeStruct {

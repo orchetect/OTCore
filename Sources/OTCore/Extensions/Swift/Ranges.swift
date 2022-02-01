@@ -3,6 +3,8 @@
 //  OTCore • https://github.com/orchetect/OTCore
 //
 
+import Foundation
+
 // MARK: - Comparable .isContained
 
 extension Comparable {
@@ -1050,6 +1052,39 @@ extension PartialRangeFrom where Bound.Stride: SignedInteger, Bound: Strideable 
         if excluding.upperBound <= lowerBound { return lowerBound }
         
         return excluding.upperBound
+        
+    }
+    
+}
+
+
+// MARK: - Split
+
+extension Range where Bound == Int {
+    
+    /// **OTCore:**
+    /// Returns elements in groups of n number of elements.
+    public func split(every: Int) -> [ClosedRange<Bound>] {
+        
+        if every < 1 {
+            return isEmpty ? [] : [lowerBound ... upperBound.advanced(by: -1)]
+        }
+        
+        if every == 1 {
+            return map { $0...$0 }
+        }
+        
+        var batches = count / every
+        if count % every != 0 {
+            batches += 1
+        }
+        
+        return (0..<batches).reduce(into: [ClosedRange<Bound>]()) { base, batch in
+            let offset = batch * every
+            base += offset ... offset
+                .advanced(by: every - 1)
+                .clamped(to: ...endIndex(offsetBy: -1))
+        }
         
     }
     
