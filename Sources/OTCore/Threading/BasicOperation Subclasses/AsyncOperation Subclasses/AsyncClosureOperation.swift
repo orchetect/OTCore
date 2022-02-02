@@ -10,19 +10,23 @@ import Foundation
 /// **OTCore:**
 /// An `Operation` subclass that adds basic boilerplate for building an async operation by supplying a closure as a convenience when further subclassing is not necessary.
 ///
-/// You must call `completeOperation()` within the closure block once the async operation is fully finished its execution.
+/// There is no need to guard `mainStartOperation()` at the start of the block, as the initial check is done for you internally by using `AsyncClosureOperation`.
+///
+/// It is still best practise to periodically guard `mainShouldAbort()` if the operation may take more than a few seconds.
+///
+/// Finally, you must call `completeOperation()` within the closure block once the async operation is fully finished its execution.
 ///
 ///     let op = AsyncClosureOperation { operation in
 ///         DispatchQueue.global().async {
-///             /// do some work ...
+///             // do some work ...
 ///
-///             /// optionally: if the operation takes more
-///             /// than a few seconds on average,
-///             /// it's good practise to periodically
-///             /// check if operation is cancelled and return
+///             // optionally: if the operation takes more
+///             // than a few seconds on average,
+///             // it's good practise to periodically
+///             // check if operation is cancelled and return
 ///             if operation.mainShouldAbort() { return }
 ///
-///             /// finally call complete
+///             // finally call complete
 ///             operation.completeOperation()
 ///         }
 ///     }
@@ -46,7 +50,7 @@ public final class AsyncClosureOperation: AsyncOperation {
         
         guard mainStartOperation() else { return }
         mainBlock(self)
-        // completeOperation() must be
+        // completeOperation() must be called manually in the block since the block runs async
     }
     
 }
