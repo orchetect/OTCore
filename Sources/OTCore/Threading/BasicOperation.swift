@@ -25,14 +25,14 @@ open class BasicOperation: Operation {
     
     // adding KVO compliance
     public final override var isExecuting: Bool { _isExecuting }
-    private var _isExecuting = false {
+    @Atomic private var _isExecuting = false {
         willSet { willChangeValue(for: \.isExecuting) }
         didSet { didChangeValue(for: \.isExecuting) }
     }
     
     // adding KVO compliance
     public final override var isFinished: Bool { _isFinished }
-    private var _isFinished = false {
+    @Atomic private var _isFinished = false {
         willSet { willChangeValue(for: \.isFinished) }
         didSet { didChangeValue(for: \.isFinished) }
     }
