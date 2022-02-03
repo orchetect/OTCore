@@ -11,7 +11,7 @@ extension DispatchGroup {
     
     /// **OTCore:**
     /// A thin DispatchGroup wrapper that only publicly allows `leave()` to be called.
-    /// Not meant to be instanced directly. Use `DispatchGroup.sync { }` instead.
+    /// Not meant to be instanced directly. Use `DispatchGroup.sync{}` instead.
     public class ThinDispatchGroup {
         
         fileprivate var group = DispatchGroup()
@@ -93,7 +93,7 @@ extension DispatchGroup {
     
     /// **OTCore:**
     /// A thin DispatchGroup wrapper capable of returning a value, that only publicly allows `leave(withValue:)` to be called.
-    /// Not meant to be instanced directly. Use `DispatchGroup.sync { }` instead.
+    /// Not meant to be instanced directly. Use `DispatchGroup.sync{}` instead.
     public class ThinReturnValueDispatchGroup<ReturnValue> {
         
         fileprivate var group = DispatchGroup()

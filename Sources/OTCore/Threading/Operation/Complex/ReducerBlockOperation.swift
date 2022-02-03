@@ -1,5 +1,5 @@
 //
-//  MultiThreadOperation.swift
+//  ReducerBlockOperation.swift
 //  OTCore • https://github.com/orchetect/OTCore
 //
 
@@ -8,45 +8,52 @@
 import Foundation
 
 /// **OTCore:**
-/// An `Operation` subclass that adds structure to build an operation that a) contains an internal `OperationQueue` which can be serial or concurrent and b) in which operation blocks can operate upon a shared mutable variable passed into the blocks.
+/// An asynchronous `Operation` subclass that is similar to `BlockOperation` but whose internal queue can be serial or concurrent and where sub-operations can reduce upon a shared thread-safe variable passed into the operation closures.
 ///
 /// **Setup**
 ///
-/// 1. Instantiate `MultiThreadOperation` with queue type and initial mutable value. This value can be of any concrete type. If a shared mutable value is not required, an arbitrary value can be passed as the initial value such as 0.
+/// Instantiate `ReducerBlockOperation` with queue type and initial mutable value. This value can be of any concrete type. If a shared mutable value is not required, an arbitrary value can be passed as the initial value such as 0.
 ///
-///        let op = MultiThreadOperation(.serialFIFO, initialMutableValue: 0)
+/// The builder pattern can be used to add a setup block, one or more operations, and a completion block.
 ///
-/// 2. Add operation blocks. The passed-in variable is thread-safe to mutate.
+/// Any initial setup necessary can be done using `setSetupBlock{}`. Do not override `main()` or `start()`.
 ///
-///        .addOperation { sharedVar in
-///            sharedVar += 1
-///        }
+/// For completion, use `.setCompletionBlock{}`. Do not modify the underlying `.completionBlock` directly.
 ///
-/// 3. Any initial setup necessary can be done in the first operation block. Do not override `main()` or `start()`.
-/// 4. Add a completion handler that handles the final mutated variable. Use `.setCompletionBlock { }` and do not set `.completionBlock` directly.
+///     let op = ReducerBlockOperation(.serialFIFO,
+///                                    initialMutableValue: 2)
+///         .setSetupBlock { operation, sharedMutableValue in
+///             // do some setup
+///         }
+///         .addOperation { sharedMutableValue in
+///             sharedMutableValue += 1
+///         }
+///         .addOperation { sharedMutableValue in
+///             sharedMutableValue += 1
+///         }
+///         .addCancellableOperation { operation, sharedMutableValue in
+///             sharedMutableValue += 1
+///             if operation.mainShouldAbort() { return }
+///             sharedMutableValue += 1
+///         }
+///         .setCompletionBlock { sharedMutableValue in
+///             print(sharedMutableValue) // "6"
+///         }
 ///
-///        .setCompletionBlock { sharedVar in
-///            print(sharedVar)
-///        }
+/// Add the operation to an `OperationQueue` or start it manually if not being inserted into an OperationQueue.
 ///
-/// 5. Add the operation to an `OperationQueue` using `.addOperation()` or start the operation by calling `.start()` if it is not being inserted into an `OperationQueue`.
+///     // if inserting into an OperationQueue:
+///     let opQueue = OperationQueue()
+///     opQueue.addOperation(op)
 ///
-/// **When Subclassing**
+///     // if not inserting into an OperationQueue:
+///     op.start()
 ///
-/// For most use cases, subclassing is not necessary. In the event that subclassing is needed:
+/// - important: This object is not designed to be subclassed.
 ///
-/// 1. At the start of either your `main()` override or `start()` override, you call `startOperation()` and return early if it returns `false`.
-///
-///        guard mainStartOperation() else { return }
-///
-/// 2. If it is an operation that can take multiple seconds or minutes, ensure that you call `shouldAbort()` periodically and return early if it returns `true`.
-///
-///        if mainShouldAbort() { return }
-///
-/// 3. Finally, at the end of the operation you must call `completeOperation()`.
-///
-/// - note: `MultiThreadOperation` inherits from both `AsyncOperation` and`BasicOperation`.
-open class MultiThreadOperation<T>: AsyncOperation {
+/// - note: Inherits from both `BasicAsyncOperation` and `BasicOperation`.
+public final class ReducerBlockOperation<T>: BasicAsyncOperation {
+    
     private let queueType: QueueType
     private let operationQueue: OperationQueue
     private weak var lastAddedOperation: Operation?
@@ -54,10 +61,14 @@ open class MultiThreadOperation<T>: AsyncOperation {
     /// The thread-safe shared mutable value that all operation blocks operate upon.
     @Atomic public final var sharedMutableValue: T
     
+    private var setupBlock: ((_ operation: ReducerBlockOperation,
+                              _ sharedMutableValue: inout T) -> Void)?
+    
     // MARK: - Init
     
-    public init(_ queueType: MultiThreadOperation.QueueType,
+    public init(_ queueType: ReducerBlockOperation.QueueType,
                 initialMutableValue: T) {
+        
         // assign properties
         self.queueType = queueType
         self.operationQueue = OperationQueue()
@@ -84,13 +95,17 @@ open class MultiThreadOperation<T>: AsyncOperation {
         
         // set up observers
         addObservers()
+        
     }
     
     // MARK: - Overrides
     
     public final override func start() {
+        
         guard mainStartOperation() else { return }
+        setupBlock?(self, &sharedMutableValue)
         operationQueue.isSuspended = false
+        
     }
     
     // MARK: - KVO Observers
@@ -98,8 +113,10 @@ open class MultiThreadOperation<T>: AsyncOperation {
     /// Retain property observers. They will auto-release on deinit.
     private var observers: [NSKeyValueObservation] = []
     private func addObservers() {
+        
         let isCancelledRetain = observe(\.isCancelled,
-                                         options: [.new]) { [weak self] _, _ in
+                                         options: [.new])
+        { [weak self] _, _ in
             guard let self = self else { return }
             if self.isCancelled {
                 self.operationQueue.cancelAllOperations()
@@ -109,7 +126,8 @@ open class MultiThreadOperation<T>: AsyncOperation {
         observers.append(isCancelledRetain)
         
         let qosRetain = observe(\.qualityOfService,
-                                 options: [.new]) { [weak self] _, _ in
+                                 options: [.new])
+        { [weak self] _, _ in
             guard let self = self else { return }
             // propagate to operation queue
             self.operationQueue.qualityOfService = self.qualityOfService
@@ -118,27 +136,33 @@ open class MultiThreadOperation<T>: AsyncOperation {
         
         // can't use operationQueue.progress as it's macOS 10.15+ only
         let opCtRetain = operationQueue.observe(\.operationCount,
-                                                 options: [.new]) { [weak self] _, _ in
+                                                 options: [.new])
+        { [weak self] _, _ in
             guard let self = self else { return }
             if self.operationQueue.operationCount == 0 {
                 self.completeOperation()
             }
         }
         observers.append(opCtRetain)
+        
     }
+    
 }
 
 // MARK: - Wrapper methods
 
-extension MultiThreadOperation {
+extension ReducerBlockOperation {
+    
     /// Add an operation block operating on the shared mutable value.
+    @discardableResult
     public final func addOperation(
         _ block: @escaping (_ sharedMutableValue: inout T) -> Void
-    ) {
+    ) -> Self {
+        
         switch queueType {
         case .serialFIFO:
             // wrap in an Operation so we can track it
-            let op = BasicClosureOperation { [weak self] in
+            let op = ClosureOperation { [weak self] in
                 guard let self = self else { return }
                 block(&self.sharedMutableValue)
             }
@@ -152,9 +176,32 @@ extension MultiThreadOperation {
                 block(&self.sharedMutableValue)
             }
         }
+        
+        return self
+        
     }
     
-    public final func addOperation(_ op: Operation) {
+    /// Add an operation block operating on the shared mutable value.
+    /// `operation.mainShouldAbort()` can be periodically called and then early return if the operation may take more than a few seconds.
+    @discardableResult
+    public final func addCancellableOperation(
+        _ block: @escaping (_ operation: CancellableClosureOperation,
+                            _ sharedMutableValue: inout T) -> Void
+    ) -> Self {
+        
+        let op = CancellableClosureOperation { [weak self] operation in
+            guard let self = self else { return }
+            block(operation, &self.sharedMutableValue)
+        }
+        addOperation(op)
+        
+        return self
+        
+    }
+    
+    @discardableResult
+    public final func addOperation(_ op: Operation) -> Self {
+        
         switch queueType {
         case .serialFIFO:
             // to enforce a serial queue, we add the previous operation as a dependency to the new one if it still exists
@@ -170,9 +217,14 @@ extension MultiThreadOperation {
             // just add operation directly, don't bother tracking since we don't care about serial dependencies with concurrency
             operationQueue.addOperation(op)
         }
+        
+        return self
+        
     }
     
-    public final func addOperations(_ ops: [Operation]) {
+    @discardableResult
+    public final func addOperations(_ ops: [Operation]) -> Self {
+        
         switch queueType {
         case .serialFIFO:
             // feed into our custom addOperation since we need to add operation dependency information
@@ -183,33 +235,60 @@ extension MultiThreadOperation {
             // just use the native API since we don't care about serial dependencies with concurrency
             operationQueue.addOperations(ops, waitUntilFinished: false)
         }
+        
+        return self
+        
     }
     
     @available(macOS 10.15, iOS 13.0, tvOS 13, watchOS 6, *)
+    @discardableResult
     public final func addBarrierBlock(
         _ barrier: @escaping (_ sharedMutableValue: T) -> Void
-    ) {
+    ) -> Self {
+        
         operationQueue.addBarrierBlock { [weak self] in
             guard let self = self else { return }
             barrier(self.sharedMutableValue)
         }
+        
+        return self
+        
     }
     
+    @discardableResult
+    public final func setSetupBlock(
+        _ block: @escaping (_ operation: ReducerBlockOperation<T>,
+                            _ sharedMutableValue: inout T) -> Void
+    ) -> Self {
+        
+        self.setupBlock = block
+        
+        return self
+        
+    }
+    
+    @discardableResult
     public final func setCompletionBlock(
         _ block: @escaping (_ sharedMutableValue: T) -> Void
-    ) {
+    ) -> Self {
+        
         self.completionBlock = { [weak self] in
             guard let self = self else { return }
             block(self.sharedMutableValue)
         }
+        
+        return self
+        
     }
 }
 
 // MARK: - QueueType
 
-extension MultiThreadOperation {
+extension ReducerBlockOperation {
+    
     public enum QueueType {
-        /// Serial (one operation at a time), first-in-first-out.
+        
+        /// Serial (one operation at a time), FIFO (first-in-first-out).
         case serialFIFO
         
         /// Concurrent operations.
@@ -217,9 +296,10 @@ extension MultiThreadOperation {
         case concurrentAutomatic
         
         /// Concurrent operations.
-        /// Specifies the number of max concurrent operations.
-        case concurrent(maxConcurrentOperations: Int)
+        /// Specify the number of max concurrent operations.
+        case concurrent(max: Int)
     }
+    
 }
 
 #endif

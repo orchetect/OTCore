@@ -1,5 +1,5 @@
 //
-//  MultiThreadOperation Tests.swift
+//  ReducerBlockOperation Tests.swift
 //  OTCore • https://github.com/orchetect/OTCore
 //
 
@@ -8,12 +8,13 @@
 @testable import OTCore
 import XCTest
 
-final class Threading_MultiThreadOperation_Tests: XCTestCase {
+final class Threading_ReducerBlockOperation_Tests: XCTestCase {
     
     /// Standalone operation, serial FIFO queue mode. Run it.
     func testOp_serialFIFO_Run() {
         
-        let op = MultiThreadOperation(.serialFIFO, initialMutableValue: [Int]())
+        let op = ReducerBlockOperation(.serialFIFO,
+                                       initialMutableValue: [Int]())
         
         let completionBlockExp = expectation(description: "Completion Block Called")
         
@@ -42,7 +43,8 @@ final class Threading_MultiThreadOperation_Tests: XCTestCase {
     /// Standalone operation, concurrent threading queue mode. Run it.
     func testOp_concurrentAutomatic_Run() {
         
-        let op = MultiThreadOperation(.concurrentAutomatic, initialMutableValue: [Int]())
+        let op = ReducerBlockOperation(.concurrentAutomatic,
+                                       initialMutableValue: [Int]())
         
         let completionBlockExp = expectation(description: "Completion Block Called")
         
@@ -78,7 +80,8 @@ final class Threading_MultiThreadOperation_Tests: XCTestCase {
     /// Test as a standalone operation. Do not run it.
     func testOp_concurrentAutomatic_NotRun() {
         
-        let op = MultiThreadOperation(.concurrentAutomatic, initialMutableValue: [Int]())
+        let op = ReducerBlockOperation(.concurrentAutomatic,
+                                       initialMutableValue: [Int]())
         
         let completionBlockExp = expectation(description: "Completion Block Called")
         
@@ -111,8 +114,8 @@ final class Threading_MultiThreadOperation_Tests: XCTestCase {
     /// Standalone operation, concurrent threading queue mode. Run it.
     func testOp_concurrentSpecificMax_Run() {
         
-        let op = MultiThreadOperation(.concurrent(maxConcurrentOperations: 10),
-                                      initialMutableValue: [Int]())
+        let op = ReducerBlockOperation(.concurrent(max: 10),
+                                       initialMutableValue: [Int]())
         
         let completionBlockExp = expectation(description: "Completion Block Called")
         
@@ -150,7 +153,7 @@ final class Threading_MultiThreadOperation_Tests: XCTestCase {
         
         let oq = OperationQueue()
                 
-        let op = MultiThreadOperation(.concurrentAutomatic, initialMutableValue: [Int]())
+        let op = ReducerBlockOperation(.concurrentAutomatic, initialMutableValue: [Int]())
         
         // test default qualityOfService to check baseline state
         XCTAssertEqual(op.qualityOfService, .default)
@@ -161,7 +164,7 @@ final class Threading_MultiThreadOperation_Tests: XCTestCase {
         
         for val in 1...100 {
             op.addOperation { sharedMutableValue in
-                // QoS should be inherited from the MultiThreadOperation QoS
+                // QoS should be inherited from the ReducerBlockOperation QoS
                 XCTAssertEqual(Thread.current.qualityOfService, .utility)
                 
                 // add value to array

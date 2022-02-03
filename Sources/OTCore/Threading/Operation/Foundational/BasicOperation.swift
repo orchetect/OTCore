@@ -8,19 +8,39 @@
 import Foundation
 
 /// **OTCore:**
-/// An `Operation` subclass that adds basic boilerplate. `BasicOperation` is designed to be subclassed.
+/// A synchronous or asynchronous `Operation` subclass that provides essential boilerplate.
+/// `BasicOperation` is designed to be subclassed.
 ///
-/// **When Subclassing**
+/// By default this operation is synchronous. If the operation is run without being inserted into an `OperationQueue`, when you call the `start()` method the operation executes immediately in the current thread. By the time the `start()` method returns control, the operation is complete.
 ///
-/// 1. At the start of either your `main()` override or `start()` override, you call `mainStartOperation()` and return early if it returns `false`.
+/// If asynchronous behavior is required then use `BasicAsyncOperation` instead.
 ///
-///        guard mainStartOperation() else { return }
+/// **Usage**
 ///
-/// 2. If it is an operation that can take multiple seconds or minutes, ensure that you call `mainShouldAbort()` periodically and return early if it returns `true`.
+/// This object is designed to be subclassed.
 ///
-///        if mainShouldAbort() { return }
+/// Refer to the following example for calls that must be made within the main closure block:
 ///
-/// 3. Finally, at the end of the operation you must call `completeOperation()`.
+///     class MyOperation: BasicOperation {
+///         override func main() {
+///             // At the start, call this and conditionally return:
+///             guard mainStartOperation() else { return }
+///
+///             // ... do some work ...
+///
+///             // Optionally:
+///             // If the operation may take more than a few seconds,
+///             // periodically check and and return early:
+///             if mainShouldAbort() { return }
+///
+///             // ... do some work ...
+///
+///             // Finally, at the end of the operation call:
+///             completeOperation()
+///         }
+///     }
+///
+/// - important: This object is designed to be subclassed. See the Foundation documentation for `Operation` regarding overriding `start()` and be sure to follow the guidelines in these inline docs regarding `BasicOperation` specifically.
 open class BasicOperation: Operation {
     
     // adding KVO compliance

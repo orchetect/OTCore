@@ -13,7 +13,11 @@ final class Threading_BasicOperation_Tests: XCTestCase {
     override func setUp() { super.setUp() }
     override func tearDown() { super.tearDown() }
     
-    private class TestOp: BasicOperation {
+    // MARK: - Classes
+    
+    /// `BasicOperation` is designed to be subclassed.
+    /// This is a simple subclass to test.
+    private class TestBasicOperation: BasicOperation {
         
         override func main() {
             
@@ -22,7 +26,8 @@ final class Threading_BasicOperation_Tests: XCTestCase {
             
             XCTAssertTrue(isExecuting)
             
-            // would call this once ore more throughout the operation
+            // it's good to call this once or more throughout the operation
+            // but it does nothing here since we're not asking this class to cancel
             if mainShouldAbort() { return }
             
             completeOperation()
@@ -31,10 +36,12 @@ final class Threading_BasicOperation_Tests: XCTestCase {
         
     }
     
+    // MARK: - Tests
+    
     /// Test as a standalone operation. Run it.
     func testOpRun() {
         
-        let op = TestOp()
+        let op = TestBasicOperation()
         
         let completionBlockExp = expectation(description: "Completion Block Called")
         
@@ -55,7 +62,7 @@ final class Threading_BasicOperation_Tests: XCTestCase {
     /// Test as a standalone operation. Do not run it.
     func testOpNotRun() {
         
-        let op = TestOp()
+        let op = TestBasicOperation()
         
         let completionBlockExp = expectation(description: "Completion Block Called")
         completionBlockExp.isInverted = true
@@ -64,7 +71,7 @@ final class Threading_BasicOperation_Tests: XCTestCase {
             completionBlockExp.fulfill()
         }
         
-        wait(for: [completionBlockExp], timeout: 0.5)
+        wait(for: [completionBlockExp], timeout: 0.3)
         
         XCTAssertTrue(op.isReady)
         XCTAssertFalse(op.isCancelled)
@@ -78,7 +85,7 @@ final class Threading_BasicOperation_Tests: XCTestCase {
         
         let oq = OperationQueue()
         
-        let op = TestOp()
+        let op = TestBasicOperation()
         
         let completionBlockExp = expectation(description: "Completion Block Called")
         

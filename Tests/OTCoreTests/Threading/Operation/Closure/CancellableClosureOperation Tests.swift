@@ -1,5 +1,5 @@
 //
-//  BasicClosureOperation Tests.swift
+//  CancellableClosureOperation Tests.swift
 //  OTCore • https://github.com/orchetect/OTCore
 //
 
@@ -8,26 +8,19 @@
 import OTCore
 import XCTest
 
-final class Threading_BasicClosureOperation_Tests: XCTestCase {
-    
-    override func setUp() async throws {
-        mainCheck = { }
-    }
-    
-    private var mainCheck: () -> Void = { }
+final class Threading_CancellableClosureOperation_Tests: XCTestCase {
     
     func testOpRun() {
         
         let mainBlockExp = expectation(description: "Main Block Called")
         
-        let op = BasicClosureOperation {
-            self.mainCheck()
-        }
-         
-        // have to define this after BasicClosureOperation is initialized, since it can't reference itself in its own initializer closure
-        mainCheck = {
+        let op = CancellableClosureOperation { operation in
             mainBlockExp.fulfill()
-            XCTAssertTrue(op.isExecuting)
+            XCTAssertTrue(operation.isExecuting)
+            
+            // do some work...
+            if operation.mainShouldAbort() { return }
+            // do some work...
         }
         
         let completionBlockExp = expectation(description: "Completion Block Called")
@@ -51,14 +44,13 @@ final class Threading_BasicClosureOperation_Tests: XCTestCase {
         let mainBlockExp = expectation(description: "Main Block Called")
         mainBlockExp.isInverted = true
         
-        let op = BasicClosureOperation {
-            self.mainCheck()
-        }
-        
-        // have to define this after BasicClosureOperation is initialized, since it can't reference itself in its own initializer closure
-        mainCheck = {
+        let op = CancellableClosureOperation { operation in
             mainBlockExp.fulfill()
-            XCTAssertTrue(op.isExecuting)
+            XCTAssertTrue(operation.isExecuting)
+            
+            // do some work...
+            if operation.mainShouldAbort() { return }
+            // do some work...
         }
         
         let completionBlockExp = expectation(description: "Completion Block Called")
@@ -68,7 +60,7 @@ final class Threading_BasicClosureOperation_Tests: XCTestCase {
             completionBlockExp.fulfill()
         }
         
-        wait(for: [mainBlockExp, completionBlockExp], timeout: 0.5)
+        wait(for: [mainBlockExp, completionBlockExp], timeout: 0.3)
         
         XCTAssertTrue(op.isReady)
         XCTAssertFalse(op.isCancelled)
@@ -84,14 +76,13 @@ final class Threading_BasicClosureOperation_Tests: XCTestCase {
         
         let mainBlockExp = expectation(description: "Main Block Called")
         
-        let op = BasicClosureOperation {
-            self.mainCheck()
-        }
-        
-        // have to define this after BasicClosureOperation is initialized, since it can't reference itself in its own initializer closure
-        mainCheck = {
+        let op = CancellableClosureOperation { operation in
             mainBlockExp.fulfill()
-            XCTAssertTrue(op.isExecuting)
+            XCTAssertTrue(operation.isExecuting)
+            
+            // do some work...
+            if operation.mainShouldAbort() { return }
+            // do some work...
         }
         
         let completionBlockExp = expectation(description: "Completion Block Called")
