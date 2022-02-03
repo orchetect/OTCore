@@ -36,6 +36,38 @@ final class Threading_BasicOperation_Tests: XCTestCase {
         
     }
     
+    /// `BasicOperation` is designed to be subclassed.
+    /// This is a simple subclass to test.
+    private class TestDelayedMutatingBasicOperation: BasicOperation {
+        
+        public var val: Int
+        private var valChangeTo: Int
+        
+        public init(initial: Int, changeTo: Int) {
+            val = initial
+            valChangeTo = changeTo
+        }
+        
+        override func main() {
+            
+            print("Starting main()")
+            guard mainStartOperation() else { return }
+            
+            XCTAssertTrue(isExecuting)
+            
+            // it's good to call this once or more throughout the operation
+            // but it does nothing here since we're not asking this class to cancel
+            if mainShouldAbort() { return }
+            
+            usleep(500_000) // 500 milliseconds
+            val = valChangeTo
+            
+            completeOperation()
+            
+        }
+        
+    }
+    
     // MARK: - Tests
     
     /// Test as a standalone operation. Run it.
@@ -103,6 +135,30 @@ final class Threading_BasicOperation_Tests: XCTestCase {
         XCTAssertFalse(op.isCancelled)
         XCTAssertFalse(op.isExecuting)
         XCTAssertTrue(op.isFinished)
+        
+    }
+    
+    /// Test that start() runs synchronously. Run it.
+    func testOp_SynchronousTest_Run() {
+        
+        let completionBlockExp = expectation(description: "Completion Block Called")
+        
+        // after start(), will mutate self after 500ms then finish
+        let op = TestDelayedMutatingBasicOperation(initial: 0, changeTo: 1)
+        
+        op.completionBlock = {
+            completionBlockExp.fulfill()
+        }
+        
+        op.start()
+        
+        XCTAssertEqual(op.val, 1)
+        
+        XCTAssertFalse(op.isCancelled)
+        XCTAssertFalse(op.isExecuting)
+        XCTAssertTrue(op.isFinished)
+        
+        wait(for: [completionBlockExp], timeout: 2)
         
     }
     

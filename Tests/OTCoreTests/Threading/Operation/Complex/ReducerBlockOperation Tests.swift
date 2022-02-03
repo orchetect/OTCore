@@ -195,6 +195,71 @@ final class Threading_ReducerBlockOperation_Tests: XCTestCase {
         
     }
     
+    /// Standalone operation, serial FIFO queue mode. Test that start() runs synchronously. Run it.
+    func testOp_serialFIFO_SynchronousTest_Run() {
+        
+        let op = ReducerBlockOperation(.serialFIFO,
+                                       initialMutableValue: [Int]())
+        
+        let completionBlockExp = expectation(description: "Completion Block Called")
+        
+        for val in 1...100 { // will take 1 second to complete
+            op.addOperation { sharedMutableValue in
+                usleep(10_000) // milliseconds
+                sharedMutableValue.append(val)
+            }
+        }
+        
+        op.setCompletionBlock { sharedMutableValue in
+            completionBlockExp.fulfill()
+        }
+        
+        op.start()
+        
+        // check that all operations executed and they are in serial FIFO order
+        XCTAssertEqual(op.sharedMutableValue, Array(1...100))
+        
+        XCTAssertFalse(op.isCancelled)
+        XCTAssertFalse(op.isExecuting)
+        XCTAssertTrue(op.isFinished)
+        
+        wait(for: [completionBlockExp], timeout: 2)
+        
+    }
+    
+    @Atomic fileprivate var arr: [Int] = []
+    /// This does not test a feature of OTCore. Rather, it tests the behavior of Foundation's built-in `BlockOperation` object.
+    func testBlockOperation() {
+        
+        let op = BlockOperation()
+        
+        let completionBlockExp = expectation(description: "Completion Block Called")
+        
+        for val in 1...100 { // will multi-thread
+            op.addExecutionBlock {
+                usleep(100_000) // milliseconds
+                self.arr.append(val)
+            }
+        }
+        
+        op.completionBlock = {
+            completionBlockExp.fulfill()
+        }
+        
+        op.start()
+        
+        // check that all operations executed.
+        // sort them first because BlockOperation execution blocks run concurrently and may be out-of-seqeunce
+        XCTAssertEqual(arr.sorted(), Array(1...100))
+        
+        XCTAssertFalse(op.isCancelled)
+        XCTAssertFalse(op.isExecuting)
+        XCTAssertTrue(op.isFinished)
+        
+        wait(for: [completionBlockExp], timeout: 2)
+        
+    }
+    
 }
 
 #endif
