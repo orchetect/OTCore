@@ -108,7 +108,7 @@ class Extensions_Foundation_DispatchGroup_Tests: XCTestCase {
         
     }
     
-    func testNesting() {
+    func testNesting1() {
         
         let exp = expectation(description: "Inner sync reached")
         var result = 0
@@ -132,6 +132,25 @@ class Extensions_Foundation_DispatchGroup_Tests: XCTestCase {
         wait(for: [exp], timeout: 0.5)
         XCTAssertEqual(result, 2)
         
+    }
+    
+    func testNesting2() {
+        var val = 0
+        
+        var to1: DispatchTimeoutResult?
+        var to2: DispatchTimeoutResult?
+        
+        to1 = DispatchGroup.sync(timeout: .seconds(1)) { g in
+            to2 = DispatchGroup.sync(timeout: .milliseconds(500)) { g in
+                val = 1
+                g.leave()
+            }
+            g.leave()
+        }
+        
+        XCTAssertEqual(to1, .success)
+        XCTAssertEqual(to2, .success)
+        XCTAssertEqual(val, 1)
     }
     
 }
