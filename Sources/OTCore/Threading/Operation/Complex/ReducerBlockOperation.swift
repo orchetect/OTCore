@@ -49,10 +49,10 @@ import Foundation
 ///     // if not inserting into an OperationQueue:
 ///     op.start()
 ///
-/// - important: This object is not designed to be subclassed.
+/// - important: In most use cases, this object does not need to be subclassed.
 ///
 /// - note: Inherits from both `BasicAsyncOperation` and `BasicOperation`.
-public final class ReducerBlockOperation<T>: BasicOperation {
+open class ReducerBlockOperation<T>: BasicOperation {
     
     private let operationQueueType: OperationQueueType
     private let operationQueue: OperationQueue
