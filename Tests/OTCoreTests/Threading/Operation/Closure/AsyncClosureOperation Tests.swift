@@ -1,5 +1,5 @@
 //
-//  CancellableAsyncClosureOperation Tests.swift
+//  AsyncClosureOperation Tests.swift
 //  OTCore • https://github.com/orchetect/OTCore
 //
 
@@ -8,18 +8,20 @@
 import OTCore
 import XCTest
 
-final class Threading_CancellableAsyncClosureOperation_Tests: XCTestCase {
+final class Threading_AsyncClosureOperation_Tests: XCTestCase {
     
+    override func setUp() { super.setUp() }
+    override func tearDown() { super.tearDown() }
+    
+    /// Test as a standalone operation. Run it.
     func testOpRun() {
         
         let mainBlockExp = expectation(description: "Main Block Called")
         
         let completionBlockExp = expectation(description: "Completion Block Called")
         
-        let op = CancellableAsyncClosureOperation { operation in
+        let op = AsyncClosureOperation {
             mainBlockExp.fulfill()
-            XCTAssertTrue(operation.isExecuting)
-            operation.completeOperation()
         }
         
         op.completionBlock = {
@@ -36,6 +38,7 @@ final class Threading_CancellableAsyncClosureOperation_Tests: XCTestCase {
         
     }
     
+    /// Test as a standalone operation. Do not run it.
     func testOpNotRun() {
         
         let mainBlockExp = expectation(description: "Main Block Called")
@@ -44,10 +47,8 @@ final class Threading_CancellableAsyncClosureOperation_Tests: XCTestCase {
         let completionBlockExp = expectation(description: "Completion Block Called")
         completionBlockExp.isInverted = true
         
-        let op = CancellableAsyncClosureOperation { operation in
+        let op = AsyncClosureOperation {
             mainBlockExp.fulfill()
-            XCTAssertTrue(operation.isExecuting)
-            operation.completeOperation()
         }
         
         op.completionBlock = {
@@ -68,40 +69,35 @@ final class Threading_CancellableAsyncClosureOperation_Tests: XCTestCase {
         
         let mainBlockExp = expectation(description: "Main Block Called")
         
-        let completionBlockExp = expectation(description: "Completion Block Called")
+        // the operation's main block does finish eventually but won't finish in time for our timeout because there's no opportunity to return early from cancelling the operation
+        let mainBlockFinishedExp = expectation(description: "Main Block Finished")
+        mainBlockFinishedExp.isInverted = true
         
-        let op = CancellableAsyncClosureOperation(on: .global()) { operation in
+        // the operation's completion block does not fire in time because there's no opportunity to return early from cancelling the operation
+        let completionBlockExp = expectation(description: "Completion Block Called")
+        completionBlockExp.isInverted = true
+        
+        let op = AsyncClosureOperation(on: .global()) {
             mainBlockExp.fulfill()
-            XCTAssertTrue(operation.isExecuting)
-            
-            for _ in 1...100 { // finishes in 20 seconds
-                usleep(200_000) // 200 milliseconds
-                // would call this once ore more throughout the operation
-                if operation.mainShouldAbort() { return }
-            }
-            
-            operation.completeOperation()
+            sleep(4) // seconds
+            mainBlockFinishedExp.fulfill()
         }
         
         op.completionBlock = {
             completionBlockExp.fulfill()
         }
         
-        print("start() in:", Date())
         op.start()
-        print("start() out:", Date())
-        
         usleep(100_000) // 100 milliseconds
-        
-        print("cancel() in:", Date())
         op.cancel() // cancel the operation directly (since we are not using an OperationQueue)
-        print("cancel() out:", Date())
         
-        wait(for: [mainBlockExp, completionBlockExp], timeout: 0.5)
+        wait(for: [mainBlockExp, mainBlockFinishedExp, completionBlockExp], timeout: 0.5)
+        
+        usleep(200_000) // give a little time for cleanup
         
         XCTAssertTrue(op.isCancelled)
-        XCTAssertFalse(op.isExecuting)
-        XCTAssertTrue(op.isFinished)
+        XCTAssertTrue(op.isExecuting)
+        XCTAssertFalse(op.isFinished)
         
     }
     
@@ -114,10 +110,8 @@ final class Threading_CancellableAsyncClosureOperation_Tests: XCTestCase {
         
         let completionBlockExp = expectation(description: "Completion Block Called")
         
-        let op = CancellableAsyncClosureOperation { operation in
+        let op = AsyncClosureOperation {
             mainBlockExp.fulfill()
-            XCTAssertTrue(operation.isExecuting)
-            operation.completeOperation()
         }
         
         op.completionBlock = {
@@ -139,30 +133,23 @@ final class Threading_CancellableAsyncClosureOperation_Tests: XCTestCase {
     
     /// Test in the context of an OperationQueue. Run is implicit. Cancel before it finishes.
     func testQueue_Cancel() {
-        
+
         let oq = OperationQueue()
-        
+
         let mainBlockExp = expectation(description: "Main Block Called")
         
-        // main block does not finish because we return early from cancelling the operation
+        // the operation's main block does finish eventually but won't finish in time for our timeout because there's no opportunity to return early from cancelling the operation
         let mainBlockFinishedExp = expectation(description: "Main Block Finished")
         mainBlockFinishedExp.isInverted = true
         
-        // completion block still successfully fires because our early return from being cancelled marks the operation as isFinished == true
+        // the operation's completion block does not fire in time because there's no opportunity to return early from cancelling the operation
         let completionBlockExp = expectation(description: "Completion Block Called")
+        completionBlockExp.isInverted = true
         
-        let op = CancellableAsyncClosureOperation { operation in
+        let op = AsyncClosureOperation(on: .global()) {
             mainBlockExp.fulfill()
-            XCTAssertTrue(operation.isExecuting)
-            
-            for _ in 1...100 { // finishes in 20 seconds
-                usleep(200_000) // 200 milliseconds
-                // would call this once ore more throughout the operation
-                if operation.mainShouldAbort() { return }
-            }
-            
+            sleep(4) // seconds
             mainBlockFinishedExp.fulfill()
-            operation.completeOperation()
         }
         
         op.completionBlock = {
@@ -176,13 +163,16 @@ final class Threading_CancellableAsyncClosureOperation_Tests: XCTestCase {
         oq.cancelAllOperations() // cancel the queue, not the operation. it cancels its operations.
         
         wait(for: [mainBlockExp, mainBlockFinishedExp, completionBlockExp], timeout: 0.5)
+
+        usleep(200_000) // give a little time for cleanup
         
-        XCTAssertEqual(oq.operationCount, 0)
-        
+        // the operation is still running because it cannot return early from being cancelled
+        XCTAssertEqual(oq.operationCount, 1)
+
         XCTAssertTrue(op.isCancelled)
-        XCTAssertFalse(op.isExecuting)
-        XCTAssertTrue(op.isFinished)
-        
+        XCTAssertTrue(op.isExecuting) // still executing
+        XCTAssertFalse(op.isFinished) // not yet finished
+
     }
     
 }
