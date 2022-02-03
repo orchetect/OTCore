@@ -8,7 +8,7 @@
 import Foundation
 
 /// **OTCore:**
-/// An asynchronous `Operation` subclass that is similar to `BlockOperation` but whose internal queue can be serial or concurrent and where sub-operations can reduce upon a shared thread-safe variable passed into the operation closures.
+/// A synchronous `Operation` subclass that is similar to `BlockOperation` but whose internal queue can be serial or concurrent and where sub-operations can reduce upon a shared thread-safe variable passed into the operation closures.
 ///
 /// **Setup**
 ///
@@ -52,7 +52,7 @@ import Foundation
 /// - important: This object is not designed to be subclassed.
 ///
 /// - note: Inherits from both `BasicAsyncOperation` and `BasicOperation`.
-public final class ReducerBlockOperation<T>: BasicAsyncOperation {
+public final class ReducerBlockOperation<T>: BasicOperation {
     
     private let operationQueueType: OperationQueueType
     private let operationQueue: OperationQueue
@@ -100,11 +100,18 @@ public final class ReducerBlockOperation<T>: BasicAsyncOperation {
     
     // MARK: - Overrides
     
-    public final override func start() {
+    public final override func main() {
         
         guard mainStartOperation() else { return }
         setupBlock?(self, &sharedMutableValue)
         operationQueue.isSuspended = false
+        
+        // this ensures that the operation runs synchronously
+        // which mirrors the behavior of BlockOperation
+        while !isFinished {
+            //usleep(10_000) // 10 milliseconds
+            RunLoop.current.run(until: Date().addingTimeInterval(0.010))
+        }
         
     }
     
