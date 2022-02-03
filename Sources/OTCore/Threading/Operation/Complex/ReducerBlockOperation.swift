@@ -54,7 +54,7 @@ import Foundation
 /// - note: Inherits from both `BasicAsyncOperation` and `BasicOperation`.
 public final class ReducerBlockOperation<T>: BasicAsyncOperation {
     
-    private let queueType: QueueType
+    private let operationQueueType: OperationQueueType
     private let operationQueue: OperationQueue
     private weak var lastAddedOperation: Operation?
     
@@ -66,11 +66,11 @@ public final class ReducerBlockOperation<T>: BasicAsyncOperation {
     
     // MARK: - Init
     
-    public init(_ queueType: ReducerBlockOperation.QueueType,
+    public init(_ operationQueueType: OperationQueueType,
                 initialMutableValue: T) {
         
         // assign properties
-        self.queueType = queueType
+        self.operationQueueType = operationQueueType
         self.operationQueue = OperationQueue()
         self.sharedMutableValue = initialMutableValue
         
@@ -82,7 +82,7 @@ public final class ReducerBlockOperation<T>: BasicAsyncOperation {
         
         operationQueue.qualityOfService = qualityOfService
         
-        switch queueType {
+        switch operationQueueType {
         case .serialFIFO:
             operationQueue.maxConcurrentOperationCount = 1
             
@@ -159,7 +159,7 @@ extension ReducerBlockOperation {
         _ block: @escaping (_ sharedMutableValue: inout T) -> Void
     ) -> Self {
         
-        switch queueType {
+        switch operationQueueType {
         case .serialFIFO:
             // wrap in an Operation so we can track it
             let op = ClosureOperation { [weak self] in
@@ -202,7 +202,7 @@ extension ReducerBlockOperation {
     @discardableResult
     public final func addOperation(_ op: Operation) -> Self {
         
-        switch queueType {
+        switch operationQueueType {
         case .serialFIFO:
             // to enforce a serial queue, we add the previous operation as a dependency to the new one if it still exists
             if let lastOp = lastAddedOperation {
@@ -225,7 +225,7 @@ extension ReducerBlockOperation {
     @discardableResult
     public final func addOperations(_ ops: [Operation]) -> Self {
         
-        switch queueType {
+        switch operationQueueType {
         case .serialFIFO:
             // feed into our custom addOperation since we need to add operation dependency information
             ops.forEach { addOperation($0) }
@@ -280,26 +280,6 @@ extension ReducerBlockOperation {
         return self
         
     }
-}
-
-// MARK: - QueueType
-
-extension ReducerBlockOperation {
-    
-    public enum QueueType {
-        
-        /// Serial (one operation at a time), FIFO (first-in-first-out).
-        case serialFIFO
-        
-        /// Concurrent operations.
-        /// Max number of concurrent operations will be automatically determined by the system.
-        case concurrentAutomatic
-        
-        /// Concurrent operations.
-        /// Specify the number of max concurrent operations.
-        case concurrent(max: Int)
-    }
-    
 }
 
 #endif

@@ -43,11 +43,11 @@ extension Operation {
     /// Convenience static constructor for `ReducerBlockOperation`.
     /// Builder pattern can be used to add operations inline.
     public static func reducerBlock<T>(
-        _ queueType: ReducerBlockOperation<T>.QueueType,
+        _ operationQueueType: OperationQueueType,
         initialMutableValue: T
     ) -> ReducerBlockOperation<T> {
         
-        .init(queueType,
+        .init(operationQueueType,
               initialMutableValue: initialMutableValue)
         
     }
