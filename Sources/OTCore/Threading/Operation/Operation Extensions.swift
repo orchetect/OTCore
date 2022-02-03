@@ -32,10 +32,11 @@ extension Operation {
     /// **OTCore:**
     /// Convenience static constructor for `CancellableAsyncClosureOperation`.
     public static func cancellableAsync(
+        on queue: DispatchQueue? = nil,
         _ mainBlock: @escaping (_ operation: CancellableAsyncClosureOperation) -> Void
     ) -> CancellableAsyncClosureOperation {
         
-        .init(mainBlock)
+        .init(on: queue, mainBlock)
         
     }
     
