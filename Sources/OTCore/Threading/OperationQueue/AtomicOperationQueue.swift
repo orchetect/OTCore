@@ -115,26 +115,13 @@ open class AtomicOperationQueue<T>: BasicOperationQueue {
         
     }
     
-    /// Unused but may be useful in future
+    /// **OTCore:**
+    /// Mutate the shared atomic variable in a closure.
+    /// Unused but may be useful in future.
     private func mutate(_ block: (inout T) -> Void) {
         
         block(&sharedMutableValue)
         
-    }
-    
-}
-
-public class AtomicVariableAccess<T> {
-    
-    weak private var operationQueue: AtomicOperationQueue<T>?
-    
-    internal init(operationQueue: AtomicOperationQueue<T>) {
-        self.operationQueue = operationQueue
-    }
-    
-    public func mutate(_ block: (_ value: inout T) -> Void) {
-        guard let operationQueue = operationQueue else { return }
-        block(&operationQueue.sharedMutableValue)
     }
     
 }
