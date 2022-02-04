@@ -35,12 +35,13 @@ open class AtomicOperationQueue<T>: BasicOperationQueue {
     /// **OTCore:**
     /// Add an operation block operating on the shared mutable value.
     public final func addOperation(
-        _ block: @escaping (_ sharedMutableValue: inout T) -> Void
+        _ block: @escaping (_ atomicValue: AtomicVariableAccess<T>) -> Void
     ) {
         
         let op = ClosureOperation { [weak self] in
             guard let self = self else { return }
-            block(&self.sharedMutableValue)
+            let varAccess = AtomicVariableAccess(operationQueue: self)
+            block(varAccess)
         }
         addOperation(op)
         
@@ -51,12 +52,13 @@ open class AtomicOperationQueue<T>: BasicOperationQueue {
     /// `operation.mainShouldAbort()` can be periodically called and then early return if the operation may take more than a few seconds.
     public final func addCancellableOperation(
         _ block: @escaping (_ operation: CancellableClosureOperation,
-                            _ sharedMutableValue: inout T) -> Void
+                            _ atomicValue: AtomicVariableAccess<T>) -> Void
     ) {
         
         let op = CancellableClosureOperation { [weak self] operation in
             guard let self = self else { return }
-            block(operation, &self.sharedMutableValue)
+            let varAccess = AtomicVariableAccess(operationQueue: self)
+            block(operation, varAccess)
         }
         addOperation(op)
         
@@ -68,12 +70,13 @@ open class AtomicOperationQueue<T>: BasicOperationQueue {
     /// Invoked after all currently enqueued operations have finished. Operations you add after the barrier block don’t start until the block has completed.
     @available(macOS 10.15, iOS 13.0, tvOS 13, watchOS 6, *)
     public final func addBarrierBlock(
-        _ barrier: @escaping (_ sharedMutableValue: T) -> Void
+        _ barrier: @escaping (_ atomicValue: AtomicVariableAccess<T>) -> Void
     ) {
         
         addBarrierBlock { [weak self] in
             guard let self = self else { return }
-            barrier(self.sharedMutableValue)
+            let varAccess = AtomicVariableAccess(operationQueue: self)
+            barrier(varAccess)
         }
         
     }
@@ -84,12 +87,13 @@ open class AtomicOperationQueue<T>: BasicOperationQueue {
     /// Internal for debugging:
     /// Create an operation block operating on the shared mutable value.
     internal final func createOperation(
-        _ block: @escaping (_ sharedMutableValue: inout T) -> Void
+        _ block: @escaping (_ atomicValue: AtomicVariableAccess<T>) -> Void
     ) -> ClosureOperation {
         
         ClosureOperation { [weak self] in
             guard let self = self else { return }
-            block(&self.sharedMutableValue)
+            let varAccess = AtomicVariableAccess(operationQueue: self)
+            block(varAccess)
         }
         
     }
@@ -100,14 +104,37 @@ open class AtomicOperationQueue<T>: BasicOperationQueue {
     /// `operation.mainShouldAbort()` can be periodically called and then early return if the operation may take more than a few seconds.
     internal final func createCancellableOperation(
         _ block: @escaping (_ operation: CancellableClosureOperation,
-                            _ sharedMutableValue: inout T) -> Void
-    ) -> CancellableClosureOperation{
+                            _ atomicValue: AtomicVariableAccess<T>) -> Void
+    ) -> CancellableClosureOperation {
         
         CancellableClosureOperation { [weak self] operation in
             guard let self = self else { return }
-            block(operation, &self.sharedMutableValue)
+            let varAccess = AtomicVariableAccess(operationQueue: self)
+            block(operation, varAccess)
         }
         
+    }
+    
+    /// Unused but may be useful in future
+    private func mutate(_ block: (inout T) -> Void) {
+        
+        block(&sharedMutableValue)
+        
+    }
+    
+}
+
+public class AtomicVariableAccess<T> {
+    
+    weak private var operationQueue: AtomicOperationQueue<T>?
+    
+    internal init(operationQueue: AtomicOperationQueue<T>) {
+        self.operationQueue = operationQueue
+    }
+    
+    public func mutate(_ block: (_ value: inout T) -> Void) {
+        guard let operationQueue = operationQueue else { return }
+        block(&operationQueue.sharedMutableValue)
     }
     
 }

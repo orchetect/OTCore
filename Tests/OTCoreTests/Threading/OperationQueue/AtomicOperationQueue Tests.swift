@@ -17,9 +17,7 @@ final class Threading_AtomicOperationQueue_Tests: XCTestCase {
                                       initialMutableValue: [Int]())
         
         for val in 1...100 {
-            oq.addOperation { sharedMutableValue in
-                sharedMutableValue.append(val)
-            }
+            oq.addOperation { $0.mutate { $0.append(val) } }
         }
         
         let timeoutResult = oq.waitUntilAllOperationsAreFinished(timeout: .seconds(1))
@@ -35,49 +33,45 @@ final class Threading_AtomicOperationQueue_Tests: XCTestCase {
     
     /// Concurrent automatic threading. Run it.
     func testOp_concurrentAutomatic_Run() {
-
+        
         let oq = AtomicOperationQueue(type: .concurrentAutomatic,
                                       initialMutableValue: [Int]())
         
         for val in 1...100 {
-            oq.addOperation { sharedMutableValue in
-                sharedMutableValue.append(val)
-            }
+            oq.addOperation { $0.mutate { $0.append(val) } }
         }
         
         let timeoutResult = oq.waitUntilAllOperationsAreFinished(timeout: .seconds(1))
         XCTAssertEqual(timeoutResult, .success)
-
+        
         XCTAssertEqual(oq.sharedMutableValue.count, 100)
         // this happens to be in serial order even though we are using concurrent threads and no operation dependencies are being used
         XCTAssert(Array(1...100).allSatisfy(oq.sharedMutableValue.contains))
-
+        
         XCTAssertEqual(oq.operationCount, 0)
         XCTAssertFalse(oq.isSuspended)
-
+        
     }
-
+    
     /// Concurrent automatic threading. Do not run it.
     func testOp_concurrentAutomatic_NotRun() {
-
+        
         let oq = AtomicOperationQueue(type: .concurrentAutomatic,
                                       initialMutableValue: [Int]())
         
         oq.isSuspended = true
         
         for val in 1...100 {
-            oq.addOperation { sharedMutableValue in
-                sharedMutableValue.append(val)
-            }
+            oq.addOperation { $0.mutate { $0.append(val) } }
         }
         
         let timeoutResult = oq.waitUntilAllOperationsAreFinished(timeout: .seconds(1))
         XCTAssertEqual(timeoutResult, .timedOut)
-
+        
         XCTAssertEqual(oq.sharedMutableValue, [])
         XCTAssertEqual(oq.operationCount, 100)
         XCTAssertTrue(oq.isSuspended)
-
+        
     }
     
     /// Concurrent automatic threading. Run it.
@@ -87,9 +81,7 @@ final class Threading_AtomicOperationQueue_Tests: XCTestCase {
                                       initialMutableValue: [Int]())
         
         for val in 1...100 {
-            oq.addOperation { sharedMutableValue in
-                sharedMutableValue.append(val)
-            }
+            oq.addOperation { $0.mutate { $0.append(val) } }
         }
         
         let timeoutResult = oq.waitUntilAllOperationsAreFinished(timeout: .seconds(1))
@@ -114,14 +106,12 @@ final class Threading_AtomicOperationQueue_Tests: XCTestCase {
         
         // first generate operation objects
         for val in 1...50 {
-            let op = oq.createOperation { sharedMutableValue in
-                sharedMutableValue.append(val)
-            }
+            let op = oq.createOperation { $0.mutate { $0.append(val) } }
             ops.append(op)
         }
         for val in 51...100 {
-            let op = oq.createCancellableOperation { _, sharedMutableValue in
-                sharedMutableValue.append(val)
+            let op = oq.createCancellableOperation { _, v in
+                v.mutate { $0.append(val) }
             }
             ops.append(op)
         }

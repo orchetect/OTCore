@@ -21,23 +21,23 @@ import Foundation
 /// For completion, use `.setCompletionBlock{}`. Do not modify the underlying `.completionBlock` directly.
 ///
 ///     let op = AtomicBlockOperation(.serialFIFO,
-///                                    initialMutableValue: 2)
-///         .setSetupBlock { operation, sharedMutableValue in
+///                                   initialMutableValue: 2)
+///         .setSetupBlock { operation, atomicValue in
 ///             // do some setup
 ///         }
-///         .addOperation { sharedMutableValue in
-///             sharedMutableValue += 1
+///         .addOperation { atomicValue in
+///             atomicValue.mutate { $0 += 1 }
 ///         }
-///         .addOperation { sharedMutableValue in
-///             sharedMutableValue += 1
+///         .addOperation { atomicValue in
+///             atomicValue.mutate { $0 += 1 }
 ///         }
-///         .addCancellableOperation { operation, sharedMutableValue in
-///             sharedMutableValue += 1
+///         .addCancellableOperation { operation, atomicValue in
+///             atomicValue.mutate { $0 += 1 }
 ///             if operation.mainShouldAbort() { return }
-///             sharedMutableValue += 1
+///             atomicValue.mutate { $0 += 1 }
 ///         }
-///         .setCompletionBlock { sharedMutableValue in
-///             print(sharedMutableValue) // "6"
+///         .setCompletionBlock { atomicValue in
+///             print(atomicValue) // "6"
 ///         }
 ///
 /// Add the operation to an `OperationQueue` or start it manually if not being inserted into an OperationQueue.
@@ -70,7 +70,7 @@ open class AtomicBlockOperation<T>: BasicOperation {
     }
     
     private var setupBlock: ((_ operation: AtomicBlockOperation,
-                              _ sharedMutableValue: inout T) -> Void)?
+                              _ atomicValue: AtomicVariableAccess<T>) -> Void)?
     
     // MARK: - Init
     
@@ -112,7 +112,8 @@ open class AtomicBlockOperation<T>: BasicOperation {
     public final override func main() {
         
         guard mainStartOperation() else { return }
-        setupBlock?(self, &operationQueue.sharedMutableValue)
+        let varAccess = AtomicVariableAccess(operationQueue: self.operationQueue)
+        setupBlock?(self, varAccess)
         operationQueue.isSuspended = false
         
         // this ensures that the operation runs synchronously
@@ -174,7 +175,7 @@ extension AtomicBlockOperation {
     /// Add an operation block operating on the shared mutable value.
     @discardableResult
     public final func addOperation(
-        _ block: @escaping (_ sharedMutableValue: inout T) -> Void
+        _ block: @escaping (_ atomicValue: AtomicVariableAccess<T>) -> Void
     ) -> Self {
         
         operationQueue.addOperation(block)
@@ -189,7 +190,7 @@ extension AtomicBlockOperation {
     @discardableResult
     public final func addCancellableOperation(
         _ block: @escaping (_ operation: CancellableClosureOperation,
-                            _ sharedMutableValue: inout T) -> Void
+                            _ atomicValue: AtomicVariableAccess<T>) -> Void
     ) -> Self {
         
         operationQueue.addCancellableOperation(block)
@@ -227,7 +228,7 @@ extension AtomicBlockOperation {
     @available(macOS 10.15, iOS 13.0, tvOS 13, watchOS 6, *)
     @discardableResult
     public final func addBarrierBlock(
-        _ barrier: @escaping (_ sharedMutableValue: T) -> Void
+        _ barrier: @escaping (_ atomicValue: AtomicVariableAccess<T>) -> Void
     ) -> Self {
         
         operationQueue.addBarrierBlock(barrier)
@@ -258,7 +259,7 @@ extension AtomicBlockOperation {
     @discardableResult
     public final func setSetupBlock(
         _ block: @escaping (_ operation: AtomicBlockOperation<T>,
-                            _ sharedMutableValue: inout T) -> Void
+                            _ atomicValue: AtomicVariableAccess<T>) -> Void
     ) -> Self {
         
         self.setupBlock = block
@@ -271,12 +272,13 @@ extension AtomicBlockOperation {
     /// Add a completion block that runs when the `AtomicBlockOperation` completes all its operations.
     @discardableResult
     public final func setCompletionBlock(
-        _ block: @escaping (_ sharedMutableValue: T) -> Void
+        _ block: @escaping (_ atomicValue: AtomicVariableAccess<T>) -> Void
     ) -> Self {
         
         self.completionBlock = { [weak self] in
             guard let self = self else { return }
-            block(self.operationQueue.sharedMutableValue)
+            let varAccess = AtomicVariableAccess(operationQueue: self.operationQueue)
+            block(varAccess)
         }
         
         return self
