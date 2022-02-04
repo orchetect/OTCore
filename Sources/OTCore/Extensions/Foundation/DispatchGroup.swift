@@ -70,26 +70,60 @@ extension DispatchGroup {
         _ block: (ThinDispatchGroup) -> Void
     ) -> DispatchTimeoutResult {
         
+        let time = DispatchTime.now() + timeout
+        
         let g = ThinDispatchGroup()
         
         g.group.enter()
         block(g)
         
+        return g.group.wait(timeout: time)
+        
+    }
+    
+    /// **OTCore:**
+    /// Convenience DispatchGroup-wrapping method to run async code synchronously with a timeout period with the block being executed on the specified dispatch queue.
+    /// You must call `.leave()` once within the body of the closure.
+    ///
+    /// Example:
+    ///
+    ///     DispatchGroup.sync(on: .global(),
+    ///                        timeout: .seconds(10)) { g in
+    ///         someAsyncMethod {
+    ///             g.leave()
+    ///         }
+    ///     }
+    ///     print("someAsyncMethod is done or timed out.")
+    @discardableResult
+    public static func sync(
+        asyncOn dispatchQueue: DispatchQueue,
+        timeout: DispatchTimeInterval,
+        _ block: @escaping (ThinDispatchGroup) -> Void
+    ) -> DispatchTimeoutResult {
+        
         let time = DispatchTime.now() + timeout
+        
+        let g = ThinDispatchGroup()
+        
+        g.group.enter()
+        dispatchQueue.async {
+            block(g)
+        }
+        
         return g.group.wait(timeout: time)
         
     }
     
 }
 
-extension DispatchGroup {
+/// **OTCore:**
+/// A result value indicating whether a dispatch operation finished before a specified time. If the operation succeeded, an associated result value is returned.
+public enum DispatchSyncTimeoutResult<T> {
+    case success(T)
+    case timedOut
+}
     
-    /// **OTCore:**
-    /// A result value indicating whether a dispatch operation finished before a specified time. If the operation succeeded, an associated result value is returned.
-    public enum DispatchSyncTimeoutResult<T> {
-        case success(T)
-        case timedOut
-    }
+extension DispatchGroup {
     
     /// **OTCore:**
     /// A thin DispatchGroup wrapper capable of returning a value, that only publicly allows `leave(withValue:)` to be called.
@@ -160,12 +194,13 @@ extension DispatchGroup {
         _ block: (ThinReturnValueDispatchGroup<T>) -> Void
     ) -> DispatchSyncTimeoutResult<T> {
         
+        let time = DispatchTime.now() + timeout
+        
         let g = ThinReturnValueDispatchGroup<T>()
         
         g.group.enter()
         block(g)
         
-        let time = DispatchTime.now() + timeout
         switch g.group.wait(timeout: time) {
         case .success:
             return .success(g.returnValue)

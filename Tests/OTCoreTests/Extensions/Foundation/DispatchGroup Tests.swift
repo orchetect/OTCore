@@ -60,6 +60,37 @@ class Extensions_Foundation_DispatchGroup_Tests: XCTestCase {
         
     }
     
+    func testSyncOnQueueTimeout_timedOut() {
+        
+        var val = 0
+        
+        let result = DispatchGroup.sync(asyncOn: .global(),
+                                        timeout: .milliseconds(100)) { g in
+            sleep(1) // 1 second
+            val = 1
+            g.leave()
+        }
+        
+        XCTAssertEqual(val, 0)
+        XCTAssertEqual(result, .timedOut)
+        
+    }
+    
+    func testSyncOnQueueTimeout_success() {
+        
+        var val = 0
+        
+        let result = DispatchGroup.sync(asyncOn: .global(),
+                                        timeout: .seconds(1)) { g in
+            val = 1
+            g.leave()
+        }
+        
+        XCTAssertEqual(val, 1)
+        XCTAssertEqual(result, .success)
+        
+    }
+    
     func testSyncReturnValue() {
         
         let returnValue = DispatchGroup.sync { g in
