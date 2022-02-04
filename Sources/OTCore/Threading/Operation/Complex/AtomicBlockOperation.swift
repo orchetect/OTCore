@@ -14,31 +14,29 @@ import Foundation
 ///
 /// Instantiate `AtomicBlockOperation` with queue type and initial mutable value. This value can be of any concrete type. If a shared mutable value is not required, an arbitrary value can be passed as the initial value such as 0.
 ///
-/// The builder pattern can be used to add a setup block, one or more operations, and a completion block.
-///
 /// Any initial setup necessary can be done using `setSetupBlock{}`. Do not override `main()` or `start()`.
 ///
 /// For completion, use `.setCompletionBlock{}`. Do not modify the underlying `.completionBlock` directly.
 ///
 ///     let op = AtomicBlockOperation(.serialFIFO,
 ///                                   initialMutableValue: 2)
-///         .setSetupBlock { operation, atomicValue in
-///             // do some setup
-///         }
-///         .addOperation { atomicValue in
-///             atomicValue.mutate { $0 += 1 }
-///         }
-///         .addOperation { atomicValue in
-///             atomicValue.mutate { $0 += 1 }
-///         }
-///         .addCancellableOperation { operation, atomicValue in
-///             atomicValue.mutate { $0 += 1 }
-///             if operation.mainShouldAbort() { return }
-///             atomicValue.mutate { $0 += 1 }
-///         }
-///         .setCompletionBlock { atomicValue in
-///             print(atomicValue) // "6"
-///         }
+///     op.setSetupBlock { operation, atomicValue in
+///         // do some setup
+///     }
+///     op.addOperation { atomicValue in
+///         atomicValue.mutate { $0 += 1 }
+///     }
+///     op.addOperation { atomicValue in
+///         atomicValue.mutate { $0 += 1 }
+///     }
+///     op.addCancellableOperation { operation, atomicValue in
+///         atomicValue.mutate { $0 += 1 }
+///         if operation.mainShouldAbort() { return }
+///         atomicValue.mutate { $0 += 1 }
+///     }
+///     op.setCompletionBlock { atomicValue in
+///         print(atomicValue) // "6"
+///     }
 ///
 /// Add the operation to an `OperationQueue` or start it manually if not being inserted into an OperationQueue.
 ///
@@ -60,7 +58,7 @@ open class AtomicBlockOperation<T>: BasicOperation {
     
     private let operationQueue: AtomicOperationQueue<T>
     
-    private weak var lastAddedOperation: Operation? {
+    public weak var lastAddedOperation: Operation? {
         operationQueue.lastAddedOperation
     }
     
@@ -173,51 +171,47 @@ extension AtomicBlockOperation {
     
     /// **OTCore:**
     /// Add an operation block operating on the shared mutable value.
+    ///
+    /// - returns: The new operation.
     @discardableResult
     public final func addOperation(
         _ block: @escaping (_ atomicValue: AtomicVariableAccess<T>) -> Void
-    ) -> Self {
+    ) -> ClosureOperation {
         
         operationQueue.addOperation(block)
-        
-        return self
         
     }
     
     /// **OTCore:**
     /// Add an operation block operating on the shared mutable value.
     /// `operation.mainShouldAbort()` can be periodically called and then early return if the operation may take more than a few seconds.
+    ///
+    /// - returns: The new operation.
     @discardableResult
     public final func addCancellableOperation(
         _ block: @escaping (_ operation: CancellableClosureOperation,
                             _ atomicValue: AtomicVariableAccess<T>) -> Void
-    ) -> Self {
+    ) -> CancellableClosureOperation {
         
         operationQueue.addCancellableOperation(block)
-        
-        return self
         
     }
     
     /// **OTCore:**
     /// Add an operation to the operation queue.
-    @discardableResult
-    public final func addOperation(_ op: Operation) -> Self {
+    public final func addOperation(_ op: Operation){
         
         operationQueue.addOperation(op)
-        
-        return self
         
     }
     
     /// **OTCore:**
     /// Add operations to the operation queue.
-    @discardableResult
-    public final func addOperations(_ ops: [Operation]) -> Self {
+    public final func addOperations(_ ops: [Operation],
+                                    waitUntilFinished: Bool) {
         
-        operationQueue.addOperations(ops, waitUntilFinished: false)
-        
-        return self
+        operationQueue.addOperations(ops,
+                                     waitUntilFinished: waitUntilFinished)
         
     }
     
@@ -226,14 +220,11 @@ extension AtomicBlockOperation {
     ///
     /// Invoked after all currently enqueued operations have finished. Operations you add after the barrier block don’t start until the block has completed.
     @available(macOS 10.15, iOS 13.0, tvOS 13, watchOS 6, *)
-    @discardableResult
     public final func addBarrierBlock(
         _ barrier: @escaping (_ atomicValue: AtomicVariableAccess<T>) -> Void
-    ) -> Self {
+    ) {
         
         operationQueue.addBarrierBlock(barrier)
-        
-        return self
         
     }
     
@@ -256,32 +247,26 @@ extension AtomicBlockOperation {
     
     /// **OTCore:**
     /// Add a setup block that runs when the `AtomicBlockOperation` starts.
-    @discardableResult
     public final func setSetupBlock(
         _ block: @escaping (_ operation: AtomicBlockOperation<T>,
                             _ atomicValue: AtomicVariableAccess<T>) -> Void
-    ) -> Self {
+    ) {
         
-        self.setupBlock = block
-        
-        return self
+        setupBlock = block
         
     }
     
     /// **OTCore:**
     /// Add a completion block that runs when the `AtomicBlockOperation` completes all its operations.
-    @discardableResult
     public final func setCompletionBlock(
         _ block: @escaping (_ atomicValue: AtomicVariableAccess<T>) -> Void
-    ) -> Self {
+    ) {
         
-        self.completionBlock = { [weak self] in
+        completionBlock = { [weak self] in
             guard let self = self else { return }
             let varAccess = AtomicVariableAccess(operationQueue: self.operationQueue)
             block(varAccess)
         }
-        
-        return self
         
     }
     

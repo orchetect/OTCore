@@ -31,36 +31,34 @@ open class AtomicOperationQueue<T>: BasicOperationQueue {
     }
     
     // MARK: - Shared Mutable Value Methods
-    
     /// **OTCore:**
     /// Add an operation block operating on the shared mutable value.
+    ///
+    /// - returns: The new operation.
+    @discardableResult
     public final func addOperation(
         _ block: @escaping (_ atomicValue: AtomicVariableAccess<T>) -> Void
-    ) {
+    ) -> ClosureOperation {
         
-        let op = ClosureOperation { [weak self] in
-            guard let self = self else { return }
-            let varAccess = AtomicVariableAccess(operationQueue: self)
-            block(varAccess)
-        }
+        let op = createOperation(block)
         addOperation(op)
-        
+        return op
+            
     }
     
     /// **OTCore:**
     /// Add an operation block operating on the shared mutable value.
     /// `operation.mainShouldAbort()` can be periodically called and then early return if the operation may take more than a few seconds.
+    ///
+    /// - returns: The new operation.
     public final func addCancellableOperation(
         _ block: @escaping (_ operation: CancellableClosureOperation,
                             _ atomicValue: AtomicVariableAccess<T>) -> Void
-    ) {
+    ) -> CancellableClosureOperation {
         
-        let op = CancellableClosureOperation { [weak self] operation in
-            guard let self = self else { return }
-            let varAccess = AtomicVariableAccess(operationQueue: self)
-            block(operation, varAccess)
-        }
+        let op = createCancellableOperation(block)
         addOperation(op)
+        return op
         
     }
     
@@ -117,8 +115,7 @@ open class AtomicOperationQueue<T>: BasicOperationQueue {
     
     /// **OTCore:**
     /// Mutate the shared atomic variable in a closure.
-    /// Unused but may be useful in future.
-    private func mutate(_ block: (inout T) -> Void) {
+    public func mutateValue(_ block: (inout T) -> Void) {
         
         block(&sharedMutableValue)
         
