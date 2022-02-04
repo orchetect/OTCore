@@ -1,5 +1,5 @@
 //
-//  ReducerBlockOperation Tests.swift
+//  AtomicBlockOperation Tests.swift
 //  OTCore • https://github.com/orchetect/OTCore
 //
 
@@ -8,13 +8,13 @@
 @testable import OTCore
 import XCTest
 
-final class Threading_ReducerBlockOperation_Tests: XCTestCase {
+final class Threading_AtomicBlockOperation_Tests: XCTestCase {
     
     /// Standalone operation, serial FIFO queue mode. Run it.
     func testOp_serialFIFO_Run() {
         
-        let op = ReducerBlockOperation(.serialFIFO,
-                                       initialMutableValue: [Int]())
+        let op = AtomicBlockOperation(type: .serialFIFO,
+                                      initialMutableValue: [Int]())
         
         let completionBlockExp = expectation(description: "Completion Block Called")
         
@@ -43,8 +43,8 @@ final class Threading_ReducerBlockOperation_Tests: XCTestCase {
     /// Standalone operation, concurrent threading queue mode. Run it.
     func testOp_concurrentAutomatic_Run() {
         
-        let op = ReducerBlockOperation(.concurrentAutomatic,
-                                       initialMutableValue: [Int]())
+        let op = AtomicBlockOperation(type: .concurrentAutomatic,
+                                      initialMutableValue: [Int]())
         
         let completionBlockExp = expectation(description: "Completion Block Called")
         
@@ -68,8 +68,8 @@ final class Threading_ReducerBlockOperation_Tests: XCTestCase {
         
         wait(for: [completionBlockExp], timeout: 1)
         
-        XCTAssertEqual(op.sharedMutableValue.count, 100)
-        XCTAssert(Array(1...100).allSatisfy(op.sharedMutableValue.contains))
+        XCTAssertEqual(op.value.count, 100)
+        XCTAssert(Array(1...100).allSatisfy(op.value.contains))
         
         XCTAssertFalse(op.isCancelled)
         XCTAssertFalse(op.isExecuting)
@@ -80,8 +80,8 @@ final class Threading_ReducerBlockOperation_Tests: XCTestCase {
     /// Test as a standalone operation. Do not run it.
     func testOp_concurrentAutomatic_NotRun() {
         
-        let op = ReducerBlockOperation(.concurrentAutomatic,
-                                       initialMutableValue: [Int]())
+        let op = AtomicBlockOperation(type: .concurrentAutomatic,
+                                      initialMutableValue: [Int]())
         
         let completionBlockExp = expectation(description: "Completion Block Called")
         
@@ -114,8 +114,8 @@ final class Threading_ReducerBlockOperation_Tests: XCTestCase {
     /// Standalone operation, concurrent threading queue mode. Run it.
     func testOp_concurrentSpecificMax_Run() {
         
-        let op = ReducerBlockOperation(.concurrent(max: 10),
-                                       initialMutableValue: [Int]())
+        let op = AtomicBlockOperation(type: .concurrent(max: 10),
+                                      initialMutableValue: [Int]())
         
         let completionBlockExp = expectation(description: "Completion Block Called")
         
@@ -139,8 +139,8 @@ final class Threading_ReducerBlockOperation_Tests: XCTestCase {
         
         wait(for: [completionBlockExp], timeout: 1)
         
-        XCTAssertEqual(op.sharedMutableValue.count, 100)
-        XCTAssert(Array(1...100).allSatisfy(op.sharedMutableValue.contains))
+        XCTAssertEqual(op.value.count, 100)
+        XCTAssert(Array(1...100).allSatisfy(op.value.contains))
         
         XCTAssertFalse(op.isCancelled)
         XCTAssertFalse(op.isExecuting)
@@ -153,7 +153,8 @@ final class Threading_ReducerBlockOperation_Tests: XCTestCase {
         
         let oq = OperationQueue()
                 
-        let op = ReducerBlockOperation(.concurrentAutomatic, initialMutableValue: [Int]())
+        let op = AtomicBlockOperation(type: .concurrentAutomatic,
+                                      initialMutableValue: [Int]())
         
         // test default qualityOfService to check baseline state
         XCTAssertEqual(op.qualityOfService, .default)
@@ -164,7 +165,7 @@ final class Threading_ReducerBlockOperation_Tests: XCTestCase {
         
         for val in 1...100 {
             op.addOperation { sharedMutableValue in
-                // QoS should be inherited from the ReducerBlockOperation QoS
+                // QoS should be inherited from the AtomicBlockOperation QoS
                 XCTAssertEqual(Thread.current.qualityOfService, .utility)
                 
                 // add value to array
@@ -198,8 +199,8 @@ final class Threading_ReducerBlockOperation_Tests: XCTestCase {
     /// Standalone operation, serial FIFO queue mode. Test that start() runs synchronously. Run it.
     func testOp_serialFIFO_SynchronousTest_Run() {
         
-        let op = ReducerBlockOperation(.serialFIFO,
-                                       initialMutableValue: [Int]())
+        let op = AtomicBlockOperation(type: .serialFIFO,
+                                      initialMutableValue: [Int]())
         
         let completionBlockExp = expectation(description: "Completion Block Called")
         
@@ -217,40 +218,7 @@ final class Threading_ReducerBlockOperation_Tests: XCTestCase {
         op.start()
         
         // check that all operations executed and they are in serial FIFO order
-        XCTAssertEqual(op.sharedMutableValue, Array(1...100))
-        
-        XCTAssertFalse(op.isCancelled)
-        XCTAssertFalse(op.isExecuting)
-        XCTAssertTrue(op.isFinished)
-        
-        wait(for: [completionBlockExp], timeout: 2)
-        
-    }
-    
-    @Atomic fileprivate var arr: [Int] = []
-    /// This does not test a feature of OTCore. Rather, it tests the behavior of Foundation's built-in `BlockOperation` object.
-    func testBlockOperation() {
-        
-        let op = BlockOperation()
-        
-        let completionBlockExp = expectation(description: "Completion Block Called")
-        
-        for val in 1...100 { // will multi-thread
-            op.addExecutionBlock {
-                usleep(100_000) // milliseconds
-                self.arr.append(val)
-            }
-        }
-        
-        op.completionBlock = {
-            completionBlockExp.fulfill()
-        }
-        
-        op.start()
-        
-        // check that all operations executed.
-        // sort them first because BlockOperation execution blocks run concurrently and may be out-of-seqeunce
-        XCTAssertEqual(arr.sorted(), Array(1...100))
+        XCTAssertEqual(op.value, Array(1...100))
         
         XCTAssertFalse(op.isCancelled)
         XCTAssertFalse(op.isExecuting)

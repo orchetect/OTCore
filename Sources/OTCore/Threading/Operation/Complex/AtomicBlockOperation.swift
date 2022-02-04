@@ -1,5 +1,5 @@
 //
-//  ReducerBlockOperation.swift
+//  AtomicBlockOperation.swift
 //  OTCore • https://github.com/orchetect/OTCore
 //
 
@@ -12,7 +12,7 @@ import Foundation
 ///
 /// **Setup**
 ///
-/// Instantiate `ReducerBlockOperation` with queue type and initial mutable value. This value can be of any concrete type. If a shared mutable value is not required, an arbitrary value can be passed as the initial value such as 0.
+/// Instantiate `AtomicBlockOperation` with queue type and initial mutable value. This value can be of any concrete type. If a shared mutable value is not required, an arbitrary value can be passed as the initial value such as 0.
 ///
 /// The builder pattern can be used to add a setup block, one or more operations, and a completion block.
 ///
@@ -20,7 +20,7 @@ import Foundation
 ///
 /// For completion, use `.setCompletionBlock{}`. Do not modify the underlying `.completionBlock` directly.
 ///
-///     let op = ReducerBlockOperation(.serialFIFO,
+///     let op = AtomicBlockOperation(.serialFIFO,
 ///                                    initialMutableValue: 2)
 ///         .setSetupBlock { operation, sharedMutableValue in
 ///             // do some setup
@@ -52,27 +52,36 @@ import Foundation
 /// - important: In most use cases, this object does not need to be subclassed.
 ///
 /// - note: Inherits from both `BasicAsyncOperation` and `BasicOperation`.
-open class ReducerBlockOperation<T>: BasicOperation {
+open class AtomicBlockOperation<T>: BasicOperation {
     
-    private let operationQueueType: OperationQueueType
-    private let operationQueue: OperationQueue
-    private weak var lastAddedOperation: Operation?
+    private var operationQueueType: OperationQueueType {
+        operationQueue.operationQueueType
+    }
+    
+    private let operationQueue: AtomicOperationQueue<T>
+    
+    private weak var lastAddedOperation: Operation? {
+        operationQueue.lastAddedOperation
+    }
     
     /// The thread-safe shared mutable value that all operation blocks operate upon.
-    @Atomic public final var sharedMutableValue: T
+    public final var value: T {
+        operationQueue.sharedMutableValue
+    }
     
-    private var setupBlock: ((_ operation: ReducerBlockOperation,
+    private var setupBlock: ((_ operation: AtomicBlockOperation,
                               _ sharedMutableValue: inout T) -> Void)?
     
     // MARK: - Init
     
-    public init(_ operationQueueType: OperationQueueType,
+    public init(type operationQueueType: OperationQueueType,
                 initialMutableValue: T) {
         
         // assign properties
-        self.operationQueueType = operationQueueType
-        self.operationQueue = OperationQueue()
-        self.sharedMutableValue = initialMutableValue
+        self.operationQueue = AtomicOperationQueue(
+            type: operationQueueType,
+            initialMutableValue: initialMutableValue
+        )
         
         // super
         super.init()
@@ -103,7 +112,7 @@ open class ReducerBlockOperation<T>: BasicOperation {
     public final override func main() {
         
         guard mainStartOperation() else { return }
-        setupBlock?(self, &sharedMutableValue)
+        setupBlock?(self, &operationQueue.sharedMutableValue)
         operationQueue.isSuspended = false
         
         // this ensures that the operation runs synchronously
@@ -117,6 +126,7 @@ open class ReducerBlockOperation<T>: BasicOperation {
     
     // MARK: - KVO Observers
     
+    /// **OTCore:**
     /// Retain property observers. They will auto-release on deinit.
     private var observers: [NSKeyValueObservation] = []
     private func addObservers() {
@@ -156,38 +166,24 @@ open class ReducerBlockOperation<T>: BasicOperation {
     
 }
 
-// MARK: - Wrapper methods
+// MARK: - Proxy methods
 
-extension ReducerBlockOperation {
+extension AtomicBlockOperation {
     
+    /// **OTCore:**
     /// Add an operation block operating on the shared mutable value.
     @discardableResult
     public final func addOperation(
         _ block: @escaping (_ sharedMutableValue: inout T) -> Void
     ) -> Self {
         
-        switch operationQueueType {
-        case .serialFIFO:
-            // wrap in an Operation so we can track it
-            let op = ClosureOperation { [weak self] in
-                guard let self = self else { return }
-                block(&self.sharedMutableValue)
-            }
-            addOperation(op)
-            
-        case .concurrentAutomatic,
-             .concurrent:
-            // just add operation directly, don't bother tracking since we don't care about serial dependencies with concurrency
-            operationQueue.addOperation { [weak self] in
-                guard let self = self else { return }
-                block(&self.sharedMutableValue)
-            }
-        }
+        operationQueue.addOperation(block)
         
         return self
         
     }
     
+    /// **OTCore:**
     /// Add an operation block operating on the shared mutable value.
     /// `operation.mainShouldAbort()` can be periodically called and then early return if the operation may take more than a few seconds.
     @discardableResult
@@ -196,75 +192,72 @@ extension ReducerBlockOperation {
                             _ sharedMutableValue: inout T) -> Void
     ) -> Self {
         
-        let op = CancellableClosureOperation { [weak self] operation in
-            guard let self = self else { return }
-            block(operation, &self.sharedMutableValue)
-        }
-        addOperation(op)
+        operationQueue.addCancellableOperation(block)
         
         return self
         
     }
     
+    /// **OTCore:**
+    /// Add an operation to the operation queue.
     @discardableResult
     public final func addOperation(_ op: Operation) -> Self {
         
-        switch operationQueueType {
-        case .serialFIFO:
-            // to enforce a serial queue, we add the previous operation as a dependency to the new one if it still exists
-            if let lastOp = lastAddedOperation {
-                op.addDependency(lastOp)
-            }
-            
-            lastAddedOperation = op
-            operationQueue.addOperation(op)
-            
-        case .concurrentAutomatic,
-             .concurrent:
-            // just add operation directly, don't bother tracking since we don't care about serial dependencies with concurrency
-            operationQueue.addOperation(op)
-        }
+        operationQueue.addOperation(op)
         
         return self
         
     }
     
+    /// **OTCore:**
+    /// Add operations to the operation queue.
     @discardableResult
     public final func addOperations(_ ops: [Operation]) -> Self {
         
-        switch operationQueueType {
-        case .serialFIFO:
-            // feed into our custom addOperation since we need to add operation dependency information
-            ops.forEach { addOperation($0) }
-            
-        case .concurrentAutomatic,
-             .concurrent:
-            // just use the native API since we don't care about serial dependencies with concurrency
-            operationQueue.addOperations(ops, waitUntilFinished: false)
-        }
+        operationQueue.addOperations(ops, waitUntilFinished: false)
         
         return self
         
     }
     
+    /// **OTCore:**
+    /// Add a barrier block operation to the operation queue.
+    ///
+    /// Invoked after all currently enqueued operations have finished. Operations you add after the barrier block don’t start until the block has completed.
     @available(macOS 10.15, iOS 13.0, tvOS 13, watchOS 6, *)
     @discardableResult
     public final func addBarrierBlock(
         _ barrier: @escaping (_ sharedMutableValue: T) -> Void
     ) -> Self {
         
-        operationQueue.addBarrierBlock { [weak self] in
-            guard let self = self else { return }
-            barrier(self.sharedMutableValue)
-        }
+        operationQueue.addBarrierBlock(barrier)
         
         return self
         
     }
     
+    /// Blocks the current thread until all the receiver’s queued and executing operations finish executing.
+    public func waitUntilAllOperationsAreFinished(timeout: DispatchTimeInterval? = nil) {
+        
+        if let timeout = timeout {
+            operationQueue.waitUntilAllOperationsAreFinished(timeout: timeout)
+        } else {
+            operationQueue.waitUntilAllOperationsAreFinished()
+        }
+        
+    }
+    
+}
+
+// MARK: - Blocks
+
+extension AtomicBlockOperation {
+    
+    /// **OTCore:**
+    /// Add a setup block that runs when the `AtomicBlockOperation` starts.
     @discardableResult
     public final func setSetupBlock(
-        _ block: @escaping (_ operation: ReducerBlockOperation<T>,
+        _ block: @escaping (_ operation: AtomicBlockOperation<T>,
                             _ sharedMutableValue: inout T) -> Void
     ) -> Self {
         
@@ -274,6 +267,8 @@ extension ReducerBlockOperation {
         
     }
     
+    /// **OTCore:**
+    /// Add a completion block that runs when the `AtomicBlockOperation` completes all its operations.
     @discardableResult
     public final func setCompletionBlock(
         _ block: @escaping (_ sharedMutableValue: T) -> Void
@@ -281,12 +276,13 @@ extension ReducerBlockOperation {
         
         self.completionBlock = { [weak self] in
             guard let self = self else { return }
-            block(self.sharedMutableValue)
+            block(self.operationQueue.sharedMutableValue)
         }
         
         return self
         
     }
+    
 }
 
 #endif

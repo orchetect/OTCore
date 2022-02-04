@@ -41,14 +41,14 @@ extension Operation {
     }
     
     /// **OTCore:**
-    /// Convenience static constructor for `ReducerBlockOperation`.
+    /// Convenience static constructor for `AtomicBlockOperation`.
     /// Builder pattern can be used to add operations inline.
-    public static func reducerBlock<T>(
+    public static func atomicBlock<T>(
         _ operationQueueType: OperationQueueType,
         initialMutableValue: T
-    ) -> ReducerBlockOperation<T> {
+    ) -> AtomicBlockOperation<T> {
         
-        .init(operationQueueType,
+        .init(type: operationQueueType,
               initialMutableValue: initialMutableValue)
         
     }
