@@ -112,13 +112,18 @@ open class AtomicBlockOperation<T>: BasicOperation {
         guard mainStartOperation() else { return }
         let varAccess = AtomicVariableAccess(operationQueue: self.operationQueue)
         setupBlock?(self, varAccess)
+        
+        guard operationQueue.operationCount > 0 else {
+            return
+        }
+        
         operationQueue.isSuspended = false
         
         // this ensures that the operation runs synchronously
         // which mirrors the behavior of BlockOperation
         while !isFinished {
-            //usleep(10_000) // 10 milliseconds
-            RunLoop.current.run(until: Date().addingTimeInterval(0.010))
+            usleep(10_000) // 10 milliseconds
+            //RunLoop.current.run(until: Date().addingTimeInterval(0.010)) // DO NOT DO THIS!!!
         }
         
     }

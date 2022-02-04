@@ -10,6 +10,15 @@ import XCTest
 
 final class Threading_AtomicBlockOperation_Tests: XCTestCase {
     
+    func testEmpty() {
+        
+        let op = AtomicBlockOperation(type: .concurrentAutomatic,
+                                      initialMutableValue: [Int : [Int]]())
+        
+        op.start()
+        
+    }
+    
     /// Standalone operation, serial FIFO queue mode. Run it.
     func testOp_serialFIFO_Run() {
         
@@ -247,6 +256,54 @@ final class Threading_AtomicBlockOperation_Tests: XCTestCase {
         XCTAssertTrue(op.isFinished)
         
         wait(for: [completionBlockExp], timeout: 2)
+        
+    }
+    
+    /// Test a `AtomicBlockOperation` that enqueues multiple `AtomicBlockOperation`s and ensure data mutability works as expected.
+    func testNested() {
+        
+        let mainOp = AtomicBlockOperation(type: .concurrentAutomatic,
+                                          initialMutableValue: [Int : [Int]]())
+        
+        let completionBlockExp = expectation(description: "Completion Block Called")
+        
+        var mainVal: [Int : [Int]] = [:]
+        
+        for keyNum in 1...50 {
+            mainOp.addOperation { v in
+                let subOp = AtomicBlockOperation(type: .concurrentAutomatic,
+                                                 initialMutableValue: [Int]())
+                subOp.addOperation { v in
+                    v.mutate { value in
+                        for valueNum in 1...20 {
+                            value.append(valueNum)
+                        }
+                    }
+                }
+                
+                subOp.start()
+                
+                v.mutate { value in
+                    value[keyNum] = subOp.value
+                }
+            }
+        }
+        
+        mainOp.setCompletionBlock { v in
+            v.mutate { value in
+                mainVal = value
+            }
+            
+            completionBlockExp.fulfill()
+        }
+        
+        mainOp.start()
+        
+        wait(for: [completionBlockExp], timeout: 10)
+        
+        XCTAssertEqual(mainVal.count, 50)
+        XCTAssertEqual(mainVal.keys.sorted(), Array(1...50))
+        XCTAssert(mainVal.values.allSatisfy({ $0.sorted() == Array(1...20)}))
         
     }
     
