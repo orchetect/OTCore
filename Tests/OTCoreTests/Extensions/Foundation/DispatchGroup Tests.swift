@@ -28,6 +28,20 @@ class Extensions_Foundation_DispatchGroup_Tests: XCTestCase {
         
     }
     
+    func testSyncOnQueue() {
+        
+        var val = 0
+        
+        DispatchGroup.sync(asyncOn: .global()) { g in
+            usleep(100_000) // 100 milliseconds
+            val = 1
+            g.leave()
+        }
+        
+        XCTAssertEqual(val, 1)
+        
+    }
+    
     func testSyncTimeout_timedOut() {
         
         var val = 0

@@ -53,6 +53,33 @@ extension DispatchGroup {
     }
     
     /// **OTCore:**
+    /// Convenience DispatchGroup-wrapping method to run code synchronously with the block being executed on the specified dispatch queue.
+    /// You must call `.leave()` once within the body of the closure.
+    ///
+    /// Example:
+    ///
+    ///     DispatchGroup.sync(asyncOn: .global()) { g in
+    ///         someAsyncMethod {
+    ///             g.leave()
+    ///         }
+    ///     }
+    ///     print("someAsyncMethod is done.")
+    public static func sync(
+        asyncOn dispatchQueue: DispatchQueue,
+        _ block: @escaping (ThinDispatchGroup) -> Void
+    ) {
+        
+        let g = ThinDispatchGroup()
+        
+        g.group.enter()
+        dispatchQueue.async {
+            block(g)
+        }
+        g.group.wait()
+        
+    }
+    
+    /// **OTCore:**
     /// Convenience DispatchGroup-wrapping method to run async code synchronously with a timeout period.
     /// You must call `.leave()` once within the body of the closure.
     ///
@@ -87,7 +114,7 @@ extension DispatchGroup {
     ///
     /// Example:
     ///
-    ///     DispatchGroup.sync(on: .global(),
+    ///     DispatchGroup.sync(asyncOn: .global(),
     ///                        timeout: .seconds(10)) { g in
     ///         someAsyncMethod {
     ///             g.leave()
