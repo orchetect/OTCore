@@ -117,6 +117,17 @@ class Extensions_Foundation_DispatchGroup_Tests: XCTestCase {
         
     }
     
+    func testSyncReturnValueOnQueue() {
+        
+        let returnValue: Int = DispatchGroup.sync(asyncOn: .global()) { g in
+            usleep(100_000) // 100 milliseconds
+            g.leave(withValue: 1)
+        }
+        
+        XCTAssertEqual(returnValue, 1)
+        
+    }
+    
     func testSyncReturnValueTimeout_timedOut() {
         
         let result = DispatchGroup.sync(timeout: .milliseconds(100)) { g in
@@ -141,6 +152,43 @@ class Extensions_Foundation_DispatchGroup_Tests: XCTestCase {
             DispatchQueue.global().async() {
                 g.leave(withValue: 1)
             }
+        }
+        
+        switch result {
+        case .success(let value):
+            // correct
+            XCTAssertEqual(value, 1)
+        case .timedOut:
+            XCTFail()
+        }
+        
+    }
+    
+    func testSyncReturnValueOnQueueTimeout_timedOut() {
+        
+        let result: DispatchSyncTimeoutResult<Int> =
+        DispatchGroup.sync(asyncOn: .global(),
+                           timeout: .milliseconds(100)) { g in
+            sleep(1) // 1 second
+            g.leave(withValue: 1)
+        }
+        
+        switch result {
+        case .success(_):
+            XCTFail()
+        case .timedOut:
+            // correct
+            break
+        }
+        
+    }
+    
+    func testSyncReturnValueOnQueueTimeout_success() {
+        
+        let result: DispatchSyncTimeoutResult<Int> =
+        DispatchGroup.sync(asyncOn: .global(),
+                           timeout: .seconds(1)) { g in
+            g.leave(withValue: 1)
         }
         
         switch result {

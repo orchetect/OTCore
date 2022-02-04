@@ -199,6 +199,35 @@ extension DispatchGroup {
     }
     
     /// **OTCore:**
+    /// Convenience DispatchGroup-wrapping method to run async code synchronously and return a value with the block being executed on the specified dispatch queue.
+    /// You must call `.leave(withValue:)` once within the body of the closure.
+    ///
+    /// Example:
+    ///
+    ///     let returnValue = DispatchGroup.sync { g in
+    ///         someAsyncMethod { someValue in
+    ///             g.leave(withValue: someValue)
+    ///         }
+    ///     }
+    ///     print(returnValue) // prints contents of someValue
+    public static func sync<T>(
+        asyncOn dispatchQueue: DispatchQueue,
+        _ block: @escaping (ThinReturnValueDispatchGroup<T>) -> Void
+    ) -> T {
+        
+        let g = ThinReturnValueDispatchGroup<T>()
+        
+        g.group.enter()
+        dispatchQueue.async {
+            block(g)
+        }
+        g.group.wait()
+        
+        return g.returnValue! // value is guaranteed non-nil
+        
+    }
+    
+    /// **OTCore:**
     /// Convenience DispatchGroup-wrapping method to run async code synchronously and return a value with a timeout period.
     /// You must call `.leave(withValue:)` once within the body of the closure.
     ///
@@ -227,6 +256,47 @@ extension DispatchGroup {
         
         g.group.enter()
         block(g)
+        
+        switch g.group.wait(timeout: time) {
+        case .success:
+            return .success(g.returnValue)
+        case .timedOut:
+            return .timedOut
+        }
+        
+    }
+    
+    /// **OTCore:**
+    /// Convenience DispatchGroup-wrapping method to run async code synchronously and return a value with a timeout period with the block being executed on the specified dispatch queue.
+    /// You must call `.leave(withValue:)` once within the body of the closure.
+    ///
+    /// Example:
+    ///
+    ///     let returnValue = DispatchGroup.sync(asyncOn: .global(),
+    ///                                          timeout: .seconds: 10) { g in
+    ///         g.leave(withValue: someValue)
+    ///     }
+    ///     switch returnValue {
+    ///     case .success(value):
+    ///         print(returnValue) // prints contents of someValue
+    ///     case .timedOut:
+    ///         // operation timed out
+    ///     }
+    ///
+    public static func sync<T>(
+        asyncOn dispatchQueue: DispatchQueue,
+        timeout: DispatchTimeInterval,
+        _ block: @escaping (ThinReturnValueDispatchGroup<T>) -> Void
+    ) -> DispatchSyncTimeoutResult<T> {
+        
+        let time = DispatchTime.now() + timeout
+        
+        let g = ThinReturnValueDispatchGroup<T>()
+        
+        g.group.enter()
+        dispatchQueue.async {
+            block(g)
+        }
         
         switch g.group.wait(timeout: time) {
         case .success:
