@@ -3,8 +3,16 @@
 //  OTCore • https://github.com/orchetect/OTCore
 //
 
-#if !os(watchOS)
+#if shouldTestCurrentPlatform
 
+#if canImport(UIKit)
+import UIKit
+#endif
+
+#if canImport(WatchKit)
+import WatchKit
+#endif
+    
 import XCTest
 import OTCore
 
@@ -366,7 +374,7 @@ class Abstractions_Transformable_Tests: XCTestCase {
         
         XCTAssertEqual(nsButton.title, "new title")
         
-        #elseif canImport(UIKit)
+        #elseif canImport(UIKit) && !os(watchOS)
         
         let uiButton = UIButton() // root class: NSObject
         
@@ -382,6 +390,15 @@ class Abstractions_Transformable_Tests: XCTestCase {
             .transformed { $0.uppercased() }
         
         XCTAssertEqual(uiButtonTitle, "NEW TITLE")
+        
+        #elseif os(watchOS)
+        
+        let wkButton = WKImage(imageName: "")
+        _ = wkButton.transform {
+            _ = $0.imageName
+        }.transformed {
+            $0.imageName ?? "nil"
+        }
         
         #endif
         

@@ -3,8 +3,6 @@
 //  OTCore • https://github.com/orchetect/OTCore
 //
 
-// no meaningful tests can be devised here
-
 #if os(macOS)
 
 import XCTest

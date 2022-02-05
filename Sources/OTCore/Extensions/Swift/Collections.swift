@@ -101,7 +101,7 @@ extension MutableCollection {
     
 }
 
-extension MutableCollection where Element : OptionalType {
+extension MutableCollection where Element : OTCoreOptionalTyped {
     
     /// **OTCore:**
     /// Access collection indexes safely.
@@ -133,7 +133,7 @@ extension MutableCollection where Element : OptionalType {
             
             switch newValue {
             case .none:
-                self[index] = Element._none as! Element
+                self[index] = Element.noneValue as! Element
             case .some(let wrapped):
                 self[index] = wrapped
             }
@@ -152,7 +152,7 @@ extension MutableCollection where Element : OptionalType {
             
             switch valueForMutation {
             case .none:
-                self[index] = Element._none as! Element
+                self[index] = Element.noneValue as! Element
             case .some(let wrapped):
                 self[index] = wrapped
             }
@@ -387,7 +387,7 @@ extension MutableCollection {
     
 }
 
-extension MutableCollection where Element : OptionalType {
+extension MutableCollection where Element : OTCoreOptionalTyped {
     
     /// **OTCore:**
     /// Access collection indexes safely, referenced by position offset `0..<count`. (Same as `[position: Int]` but returns `nil` if out-of-bounds.
@@ -419,7 +419,7 @@ extension MutableCollection where Element : OptionalType {
             
             switch newValue {
             case .none:
-                self[idx] = Element._none as! Element
+                self[idx] = Element.noneValue as! Element
             case .some(let wrapped):
                 self[idx] = wrapped
             }
@@ -440,7 +440,7 @@ extension MutableCollection where Element : OptionalType {
             
             switch valueForMutation {
             case .none:
-                self[idx] = Element._none as! Element
+                self[idx] = Element.noneValue as! Element
             case .some(let wrapped):
                 self[idx] = wrapped
             }
@@ -658,7 +658,7 @@ extension Collection {
     }
     
     /// **OTCore:**
-    /// Returns an index that is the specified distance from the start index.
+    /// Returns an index that is the specified distance from the end index.
     public func endIndex(offsetBy distance: Int) -> Index {
         
         index(endIndex, offsetBy: distance)
@@ -908,6 +908,67 @@ extension Sequence {
     ) rethrows -> [Key : [Element]] {
         
         try Dictionary(grouping: self, by: keyForValue)
+        
+    }
+    
+}
+
+// MARK: - Split
+
+extension Collection {
+    
+    /// **OTCore:**
+    /// Splits a `Collection` or `String` into groups of `length` characters, grouping from left-to-right. If `backwards` is true, right-to-left.
+    public func split(every: Int,
+                      backwards: Bool = false) -> [SubSequence] {
+        
+        var result: [Self.SubSequence] = []
+        
+        for i in stride(from: 0, to: count, by: every) {
+            
+            switch backwards {
+            case true:
+                let offsetEndIndex = index(endIndex, offsetBy: -i)
+                let offsetStartIndex = index(offsetEndIndex,
+                                             offsetBy: -every,
+                                             limitedBy: startIndex)
+                ?? startIndex
+                
+                result.insert(self[offsetStartIndex..<offsetEndIndex], at: 0)
+                
+            case false:
+                let offsetStartIndex = index(startIndex, offsetBy: i)
+                let offsetEndIndex = index(offsetStartIndex,
+                                           offsetBy: every,
+                                           limitedBy: endIndex)
+                ?? endIndex
+                
+                result.append(self[offsetStartIndex..<offsetEndIndex])
+                
+            }
+            
+        }
+        
+        return result
+        
+    }
+    
+}
+
+extension Collection where Index == Int {
+    
+    /// **OTCore:**
+    /// Returns indices in groups of n number of indices.
+    public func indices(splitEvery: Int) -> [ClosedRange<Index>] {
+        
+        // this should work but doesn't
+        //return indices.split(every: splitEvery)
+        
+        // so we need a workaround. this is really stupid but it works.
+        // there is some compiler issue that reports type(of: indices) as `Range<Index>`
+        // but only works if you cast it as... itself (Range<Index>, effectively Range<Int>)
+        guard let i = indices as? Range<Index> else { return [] }
+        return i.split(every: splitEvery)
         
     }
     

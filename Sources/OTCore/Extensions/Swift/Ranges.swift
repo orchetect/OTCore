@@ -3,6 +3,8 @@
 //  OTCore • https://github.com/orchetect/OTCore
 //
 
+import Foundation
+
 // MARK: - Comparable .isContained
 
 extension Comparable {
@@ -1050,6 +1052,306 @@ extension PartialRangeFrom where Bound.Stride: SignedInteger, Bound: Strideable 
         if excluding.upperBound <= lowerBound { return lowerBound }
         
         return excluding.upperBound
+        
+    }
+    
+}
+
+
+// MARK: - Split
+
+extension ClosedRange where Bound == Int {
+    
+    /// **OTCore:**
+    /// Returns elements in groups of n number of elements.
+    public func split(every: Int) -> [ClosedRange<Bound>] {
+        
+        if every < 1 {
+            return isEmpty ? [] : [lowerBound ... upperBound]
+        }
+        
+        if every == 1 {
+            return map { $0...$0 }
+        }
+        
+        var batches = count / every
+        if count % every != 0 {
+            batches += 1
+        }
+        
+        return (0..<batches).reduce(into: [ClosedRange<Bound>]()) { base, batch in
+            let offset = batch * every
+            base += offset ... offset
+                .advanced(by: every - 1)
+                .clamped(to: ...upperBound)
+        }
+        
+    }
+    
+}
+
+extension Range where Bound == Int {
+    
+    /// **OTCore:**
+    /// Returns elements in groups of n number of elements.
+    public func split(every: Int) -> [ClosedRange<Bound>] {
+        
+        guard !isEmpty else { return [] }
+        
+        return (lowerBound...upperBound.advanced(by: -1))
+            .split(every: every)
+        
+    }
+    
+}
+
+
+// MARK: - @Clamped Property Wrapper
+
+extension RangeExpression {
+    
+    /// **OTCore:**
+    /// Returns the absolute bound values. Value(s) are `nil` when unbounded.
+    public func getAbsoluteBounds() -> (min: Bound?, max: Bound?) {
+        
+        switch self {
+        case let range as ClosedRange<Bound>:
+            return range.absoluteBounds
+            
+        //case let range as Range<Bound>:
+        //    return range.absoluteBounds
+            
+        case let range as PartialRangeFrom<Bound>:
+            return range.absoluteBounds
+            
+        //case let range as PartialRangeUpTo<Bound>:
+        //    return range.absoluteBounds
+            
+        case let range as PartialRangeThrough<Bound>:
+            return range.absoluteBounds
+            
+        default:
+            fatalError("Unexpected range type.")
+        }
+        
+    }
+    
+}
+
+extension RangeExpression where Bound : Strideable {
+    
+    /// **OTCore:**
+    /// Returns the absolute bound values. Value(s) are `nil` when unbounded.
+    public func getAbsoluteBounds() -> (min: Bound?, max: Bound?) {
+        
+        switch self {
+        case let range as ClosedRange<Bound>:
+            return range.absoluteBounds
+            
+        case let range as Range<Bound>:
+            return range.absoluteBounds
+            
+        case let range as PartialRangeFrom<Bound>:
+            return range.absoluteBounds
+            
+        case let range as PartialRangeUpTo<Bound>:
+            return range.absoluteBounds
+            
+        case let range as PartialRangeThrough<Bound>:
+            return range.absoluteBounds
+            
+        default:
+            fatalError("Unexpected range type.")
+        }
+        
+    }
+    
+}
+
+extension ClosedRange {
+    
+    /// **OTCore:**
+    /// Returns the absolute bound values. Value(s) are `nil` when unbounded.
+    public var absoluteBounds: (min: Bound, max: Bound) {
+        
+        (min: lowerBound, max: upperBound)
+        
+    }
+    
+}
+
+extension Range where Bound : Strideable {
+    
+    /// **OTCore:**
+    /// Returns the absolute bound values. Value(s) are `nil` when unbounded.
+    /// If range is empty, `min` and `max` will return `nil`.
+    public var absoluteBounds: (min: Bound?, max: Bound?) {
+        
+        var newMin: Bound?
+        var newMax: Bound?
+        
+        if lowerBound == upperBound {
+            newMin = nil
+            newMax = nil
+        } else {
+            let adjustedMin = lowerBound
+            let adjustedMax = upperBound.advanced(by: -1)
+            
+            if adjustedMax <= adjustedMin {
+                // invalid range
+                newMin = nil
+                newMax = nil
+            } else {
+                newMin = adjustedMin
+                newMax = adjustedMax
+            }
+        }
+        
+        return (min: newMin, max: newMax)
+        
+    }
+    
+}
+
+extension PartialRangeUpTo where Bound : Strideable {
+    
+    /// **OTCore:**
+    /// Returns the absolute bound values. Value(s) are `nil` when unbounded.
+    public var absoluteBounds: (min: Bound?, max: Bound) {
+        
+        (min: nil, max: upperBound.advanced(by: -1))
+        
+    }
+    
+}
+
+extension PartialRangeThrough {
+    
+    /// **OTCore:**
+    /// Returns the absolute bound values. Value(s) are `nil` when unbounded.
+    public var absoluteBounds: (min: Bound?, max: Bound) {
+        
+        (min: nil, max: upperBound)
+        
+    }
+    
+}
+
+extension PartialRangeFrom {
+    
+    /// **OTCore:**
+    /// Returns the absolute bound values. Value(s) are `nil` when unbounded.
+    public var absoluteBounds: (min: Bound, max: Bound?) {
+        
+        (min: lowerBound, max: nil)
+        
+    }
+    
+}
+
+/// **OTCore:**
+/// Property wrapper that clamps the wrapped value to a given range.
+@propertyWrapper
+public struct Clamped<Value> where Value : Comparable {
+    
+    var min: Value?
+    var max: Value?
+    private var value: Value
+    
+    public var wrappedValue: Value {
+        get {
+            value
+        }
+        set {
+            value = Self.clamping(newValue, min: min, max: max)
+        }
+    }
+    
+    internal static func clamping(_ value: Value,
+                                 min: Value?,
+                                 max: Value?) -> Value {
+        
+        if let min = min {
+            if let max = max {
+                return value.clamped(to: min...max)
+            } else {
+                return value.clamped(to: min...)
+            }
+        } else if let max = max {
+            return value.clamped(to: ...max)
+        } else {
+            return value
+        }
+        
+    }
+    
+    public init(wrappedValue defaultValue: Value,
+                to range: ClosedRange<Value>) {
+        
+        let formRange = range.absoluteBounds
+        
+        self.min = formRange.min
+        self.max = formRange.max
+        
+        self.value = Self.clamping(defaultValue,
+                                   min: formRange.min,
+                                   max: formRange.max)
+        
+    }
+    
+    public init(wrappedValue defaultValue: Value,
+                to range: Range<Value>) where Value : Strideable {
+        
+        let formRange = range.absoluteBounds
+        
+        self.min = formRange.min
+        self.max = formRange.max
+        
+        self.value = Self.clamping(defaultValue,
+                                   min: formRange.min,
+                                   max: formRange.max)
+        
+    }
+    
+    public init(wrappedValue defaultValue: Value,
+                to range: PartialRangeUpTo<Value>) where Value : Strideable {
+        
+        let formRange = range.absoluteBounds
+        
+        self.min = formRange.min
+        self.max = formRange.max
+        
+        self.value = Self.clamping(defaultValue,
+                                   min: formRange.min,
+                                   max: formRange.max)
+        
+    }
+    
+    public init(wrappedValue defaultValue: Value,
+                to range: PartialRangeThrough<Value>) {
+        
+        let formRange = range.absoluteBounds
+        
+        self.min = formRange.min
+        self.max = formRange.max
+        
+        self.value = Self.clamping(defaultValue,
+                                   min: formRange.min,
+                                   max: formRange.max)
+        
+    }
+    
+    public init(wrappedValue defaultValue: Value,
+                to range: PartialRangeFrom<Value>) {
+        
+        let formRange = range.absoluteBounds
+        
+        self.min = formRange.min
+        self.max = formRange.max
+        
+        self.value = Self.clamping(defaultValue,
+                                   min: formRange.min,
+                                   max: formRange.max)
         
     }
     

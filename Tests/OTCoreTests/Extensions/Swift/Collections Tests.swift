@@ -3,7 +3,7 @@
 //  OTCore • https://github.com/orchetect/OTCore
 //
 
-#if !os(watchOS)
+#if shouldTestCurrentPlatform
 
 import XCTest
 import OTCore
@@ -1287,6 +1287,42 @@ class Extensions_Swift_Collections_Tests: XCTestCase {
                 "K": ["Kevin"]
             ]
         )
+    }
+    
+    // MARK: - .split(every:backwards:)
+    
+    func testSplitEvery() {
+        
+        // .split(every:)
+        
+        let str = "1234567890"
+        
+        XCTAssertEqual(str.split(every: 2), ["12", "34", "56", "78", "90"])
+        XCTAssertEqual(str.split(every: 4), ["1234", "5678", "90"])
+        XCTAssertEqual(str.split(every: 4, backwards: true), ["12", "3456", "7890"])
+        
+    }
+    
+    // MARK: - .indices(splitEvery:)
+    
+    func testIndicesSplitEvery() {
+        
+        let arr = [0,1,2,3,4,5,6,7,8,9,10]
+        
+        XCTAssertEqual(arr.indices(splitEvery: -1), [0...10])
+        XCTAssertEqual(arr.indices(splitEvery:  0), [0...10])
+        XCTAssertEqual(arr.indices(splitEvery:  1), [0...0, 1...1, 2...2, 3...3,
+                                                     4...4, 5...5, 6...6, 7...7,
+                                                     8...8, 9...9, 10...10])
+        XCTAssertEqual(arr.indices(splitEvery:  2), [0...1, 2...3, 4...5, 6...7,
+                                                     8...9, 10...10])
+        XCTAssertEqual(arr.indices(splitEvery:  3), [0...2, 3...5, 6...8, 9...10])
+        XCTAssertEqual(arr.indices(splitEvery:  4), [0...3, 4...7, 8...10])
+        XCTAssertEqual(arr.indices(splitEvery:  5), [0...4, 5...9, 10...10])
+        XCTAssertEqual(arr.indices(splitEvery: 10), [0...9, 10...10])
+        XCTAssertEqual(arr.indices(splitEvery: 11), [0...10])
+        XCTAssertEqual(arr.indices(splitEvery: 12), [0...10])
+        
     }
     
     // MARK: - .mapKeys

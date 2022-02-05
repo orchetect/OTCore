@@ -33,6 +33,12 @@ public final class Atomic<T> {
             return self.value
         }
         
+        set {
+            self.lock.writeLock()
+            value = newValue
+            self.lock.unlock()
+        }
+        
         // _modify { } is an internal Swift computed setter, similar to set { }
         // however it gives in-place exclusive mutable access
         // which allows get-then-set operations such as collection subscripts

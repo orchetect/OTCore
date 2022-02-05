@@ -3,7 +3,7 @@
 //  OTCore • https://github.com/orchetect/OTCore
 //
 
-#if !os(watchOS)
+#if shouldTestCurrentPlatform
 
 import XCTest
 @testable import OTCore
@@ -13,13 +13,44 @@ class Extensions_Foundation_CharacterSet_Tests: XCTestCase {
     override func setUp() { super.setUp() }
     override func tearDown() { super.tearDown() }
     
+    func testInitCharactersArray() {
+        
+        let chars: [Character] = ["a", "á", "e", "ö", "1", "%", "😄", "👨‍👩‍👦"]
+        
+        let cs = CharacterSet(chars)
+        
+        XCTAssert(chars.allSatisfy(cs.contains))
+        
+        XCTAssertFalse(cs.contains(.init("é")))
+        XCTAssertFalse(cs.contains(.init("o")))
+        
+        XCTAssertEqual("ghijkl234567890âēAÁEÖ_a_á_e_ö_1_%_😄_👨‍👩‍👦".only(cs), "aáeö1%😄👨‍👩‍👦")
+        
+    }
+    
+    func testInitCharactersVariadic() {
+        
+        let chars: [Character] = ["a", "á", "e", "ö", "1", "%", "😄", "👨‍👩‍👦"]
+        
+        // variadic parameter
+        let cs = CharacterSet("a", "á", "e", "ö", "1", "%", "😄", "👨‍👩‍👦")
+        
+        XCTAssert(chars.allSatisfy(cs.contains))
+        
+        XCTAssertFalse(cs.contains(.init("é")))
+        XCTAssertFalse(cs.contains(.init("o")))
+        
+        XCTAssertEqual("ghijkl234567890âēAÁEÖ_a_á_e_ö_1_%_😄_👨‍👩‍👦".only(cs), "aáeö1%😄👨‍👩‍👦")
+        
+    }
+    
     func testContainsCharacter() {
         
         let charset = CharacterSet.alphanumerics
         
-        let a = Character("a")
-        let one = Character("1")
-        let ds = Character("$")
+        let a: Character = "a"
+        let one: Character = "1"
+        let ds: Character = "$"
         
         XCTAssertTrue(charset.contains(a))
         XCTAssertTrue(charset.contains(one))
