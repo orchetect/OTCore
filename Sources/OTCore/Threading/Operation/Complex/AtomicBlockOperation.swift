@@ -85,20 +85,10 @@ open class AtomicBlockOperation<T>: BasicOperation {
         super.init()
         
         // set up queue
+        
         operationQueue.isSuspended = true
         
         operationQueue.qualityOfService = qualityOfService
-        
-        switch operationQueueType {
-        case .serialFIFO:
-            operationQueue.maxConcurrentOperationCount = 1
-            
-        case .concurrentAutomatic:
-            operationQueue.maxConcurrentOperationCount = OperationQueue.defaultMaxConcurrentOperationCount
-            
-        case .concurrent(let maxConcurrentOperations):
-            operationQueue.maxConcurrentOperationCount = maxConcurrentOperations
-        }
         
         // set up observers
         addObservers()

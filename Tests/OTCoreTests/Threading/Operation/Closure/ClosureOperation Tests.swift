@@ -10,7 +10,7 @@ import XCTest
 
 final class Threading_ClosureOperation_Tests: XCTestCase {
     
-    override func setUp() async throws {
+    override func setUpWithError() throws {
         mainCheck = { }
     }
     
