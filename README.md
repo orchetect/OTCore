@@ -24,7 +24,7 @@ The library has full unit test coverage and is actively used in production.
 
    ```swift
    dependencies: [
-       .package(url: "https://github.com/orchetect/OTCore", from: "1.1.26")
+       .package(url: "https://github.com/orchetect/OTCore", from: "1.2.0")
    ],
    ```
    
