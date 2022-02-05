@@ -269,13 +269,13 @@ final class Threading_AtomicBlockOperation_Tests: XCTestCase {
         
         var mainVal: [Int : [Int]] = [:]
         
-        for keyNum in 1...50 {
+        for keyNum in 1...10 {
             mainOp.addOperation { v in
                 let subOp = AtomicBlockOperation(type: .concurrentAutomatic,
                                                  initialMutableValue: [Int]())
                 subOp.addOperation { v in
                     v.mutate { value in
-                        for valueNum in 1...20 {
+                        for valueNum in 1...200 {
                             value.append(valueNum)
                         }
                     }
@@ -301,9 +301,9 @@ final class Threading_AtomicBlockOperation_Tests: XCTestCase {
         
         wait(for: [completionBlockExp], timeout: 10)
         
-        XCTAssertEqual(mainVal.count, 50)
-        XCTAssertEqual(mainVal.keys.sorted(), Array(1...50))
-        XCTAssert(mainVal.values.allSatisfy({ $0.sorted() == Array(1...20)}))
+        XCTAssertEqual(mainVal.count, 10)
+        XCTAssertEqual(mainVal.keys.sorted(), Array(1...10))
+        XCTAssert(mainVal.values.allSatisfy({ $0.sorted() == Array(1...200)}))
         
     }
     

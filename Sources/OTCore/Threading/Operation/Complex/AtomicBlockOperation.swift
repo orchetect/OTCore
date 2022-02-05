@@ -121,7 +121,7 @@ open class AtomicBlockOperation<T>: BasicOperation {
     // MARK: - KVO Observers
     
     /// **OTCore:**
-    /// Retain property observers. They will auto-release on deinit.
+    /// Retain property observers. For safety, this array must be emptied on class deinit.
     private var observers: [NSKeyValueObservation] = []
     private func addObservers() {
         
@@ -156,6 +156,11 @@ open class AtomicBlockOperation<T>: BasicOperation {
         }
         observers.append(opCtRetain)
         
+    }
+    
+    deinit {
+        // this is very important or it may result in random crashes if the KVO observers aren't nuked at the appropriate time
+        observers.removeAll()
     }
     
 }
