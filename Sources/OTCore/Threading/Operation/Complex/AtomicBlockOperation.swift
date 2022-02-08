@@ -67,6 +67,14 @@ open class AtomicBlockOperation<T>: BasicOperation {
         operationQueue.sharedMutableValue
     }
     
+    /// **OTCore:**
+    /// Mutate the shared atomic variable in a closure.
+    public func mutateValue(_ block: (inout T) -> Void) {
+        
+        block(&operationQueue.sharedMutableValue)
+        
+    }
+    
     private var setupBlock: ((_ operation: AtomicBlockOperation,
                               _ atomicValue: AtomicVariableAccess<T>) -> Void)?
     
@@ -104,6 +112,7 @@ open class AtomicBlockOperation<T>: BasicOperation {
         setupBlock?(self, varAccess)
         
         guard operationQueue.operationCount > 0 else {
+            completeOperation()
             return
         }
         
@@ -159,6 +168,8 @@ open class AtomicBlockOperation<T>: BasicOperation {
     }
     
     deinit {
+        setupBlock = nil
+        
         // this is very important or it may result in random crashes if the KVO observers aren't nuked at the appropriate time
         observers.removeAll()
     }
@@ -175,10 +186,11 @@ extension AtomicBlockOperation {
     /// - returns: The new operation.
     @discardableResult
     public final func addOperation(
+        dependencies: [Operation] = [],
         _ block: @escaping (_ atomicValue: AtomicVariableAccess<T>) -> Void
     ) -> ClosureOperation {
         
-        operationQueue.addOperation(block)
+        operationQueue.addOperation(dependencies: dependencies, block)
         
     }
     
@@ -189,11 +201,12 @@ extension AtomicBlockOperation {
     /// - returns: The new operation.
     @discardableResult
     public final func addCancellableOperation(
+        dependencies: [Operation] = [],
         _ block: @escaping (_ operation: CancellableClosureOperation,
                             _ atomicValue: AtomicVariableAccess<T>) -> Void
     ) -> CancellableClosureOperation {
         
-        operationQueue.addCancellableOperation(block)
+        operationQueue.addCancellableOperation(dependencies: dependencies, block)
         
     }
     

@@ -37,10 +37,12 @@ open class AtomicOperationQueue<T>: BasicOperationQueue {
     /// - returns: The new operation.
     @discardableResult
     public final func addOperation(
+        dependencies: [Operation] = [],
         _ block: @escaping (_ atomicValue: AtomicVariableAccess<T>) -> Void
     ) -> ClosureOperation {
         
         let op = createOperation(block)
+        dependencies.forEach { op.addDependency($0) }
         addOperation(op)
         return op
             
@@ -51,12 +53,15 @@ open class AtomicOperationQueue<T>: BasicOperationQueue {
     /// `operation.mainShouldAbort()` can be periodically called and then early return if the operation may take more than a few seconds.
     ///
     /// - returns: The new operation.
+    @discardableResult
     public final func addCancellableOperation(
+        dependencies: [Operation] = [],
         _ block: @escaping (_ operation: CancellableClosureOperation,
                             _ atomicValue: AtomicVariableAccess<T>) -> Void
     ) -> CancellableClosureOperation {
         
         let op = createCancellableOperation(block)
+        dependencies.forEach { op.addDependency($0) }
         addOperation(op)
         return op
         
