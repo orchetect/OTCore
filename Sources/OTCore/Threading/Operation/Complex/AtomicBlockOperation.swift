@@ -67,6 +67,14 @@ open class AtomicBlockOperation<T>: BasicOperation {
         operationQueue.sharedMutableValue
     }
     
+    /// **OTCore:**
+    /// Mutate the shared atomic variable in a closure.
+    public func mutateValue(_ block: (inout T) -> Void) {
+        
+        block(&operationQueue.sharedMutableValue)
+        
+    }
+    
     private var setupBlock: ((_ operation: AtomicBlockOperation,
                               _ atomicValue: AtomicVariableAccess<T>) -> Void)?
     
