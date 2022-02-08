@@ -39,8 +39,11 @@ import Foundation
 ///     // which may be desirable especially when running
 ///     // the operation without adding it to an OperationQueue
 ///     // and the closure body does not contain any asynchronous code
-///     let op = CancellableAsyncClosureOperation(on: .global()) {
+///     let op = CancellableAsyncClosureOperation(on: .global()) { operation in
 ///         // ... do some work ...
+///
+///         // finally call complete
+///         operation.completeOperation()
 ///     }
 ///
 /// Add the operation to an `OperationQueue` or start it manually if not being inserted into an OperationQueue.
