@@ -183,10 +183,11 @@ extension AtomicBlockOperation {
     /// - returns: The new operation.
     @discardableResult
     public final func addOperation(
+        dependencies: [Operation] = [],
         _ block: @escaping (_ atomicValue: AtomicVariableAccess<T>) -> Void
     ) -> ClosureOperation {
         
-        operationQueue.addOperation(block)
+        operationQueue.addOperation(dependencies: dependencies, block)
         
     }
     
@@ -197,11 +198,12 @@ extension AtomicBlockOperation {
     /// - returns: The new operation.
     @discardableResult
     public final func addCancellableOperation(
+        dependencies: [Operation] = [],
         _ block: @escaping (_ operation: CancellableClosureOperation,
                             _ atomicValue: AtomicVariableAccess<T>) -> Void
     ) -> CancellableClosureOperation {
         
-        operationQueue.addCancellableOperation(block)
+        operationQueue.addCancellableOperation(dependencies: dependencies, block)
         
     }
     
