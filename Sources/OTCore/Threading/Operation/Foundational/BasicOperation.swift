@@ -67,9 +67,14 @@ open class BasicOperation: Operation {
     /// Returns true if operation should begin.
     public final func mainStartOperation() -> Bool {
         
-        let shouldStart = isExecuting == false
+        guard !isCancelled else {
+            completeOperation()
+            return false
+        }
+        
+        guard !isExecuting else { return false }
         _isExecuting = true
-        return shouldStart
+        return true
         
     }
     
