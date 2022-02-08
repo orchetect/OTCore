@@ -112,6 +112,7 @@ open class AtomicBlockOperation<T>: BasicOperation {
         setupBlock?(self, varAccess)
         
         guard operationQueue.operationCount > 0 else {
+            completeOperation()
             return
         }
         
@@ -167,6 +168,8 @@ open class AtomicBlockOperation<T>: BasicOperation {
     }
     
     deinit {
+        setupBlock = nil
+        
         // this is very important or it may result in random crashes if the KVO observers aren't nuked at the appropriate time
         observers.removeAll()
     }
