@@ -53,6 +53,7 @@ open class AtomicOperationQueue<T>: BasicOperationQueue {
     /// `operation.mainShouldAbort()` can be periodically called and then early return if the operation may take more than a few seconds.
     ///
     /// - returns: The new operation.
+    @discardableResult
     public final func addCancellableOperation(
         dependencies: [Operation] = [],
         _ block: @escaping (_ operation: CancellableClosureOperation,
