@@ -43,6 +43,8 @@ import Foundation
 /// - important: This object is designed to be subclassed. See the Foundation documentation for `Operation` regarding overriding `start()` and be sure to follow the guidelines in these inline docs regarding `BasicOperation` specifically.
 open class BasicOperation: Operation {
     
+    // MARK: - KVO
+    
     // adding KVO compliance
     public final override var isExecuting: Bool { _isExecuting }
     @Atomic private var _isExecuting = false {
@@ -63,6 +65,15 @@ open class BasicOperation: Operation {
         willSet { willChangeValue(for: \.qualityOfService) }
         didSet { didChangeValue(for: \.qualityOfService) }
     }
+    
+    // MARK: - Method Overrides
+    
+    public final override func start() {
+        if isCancelled { completeOperation() }
+        super.start()
+    }
+    
+    // MARK: - Methods
     
     /// Returns true if operation should begin.
     public final func mainStartOperation() -> Bool {

@@ -112,6 +112,29 @@ final class Threading_BasicOperation_Tests: XCTestCase {
         
     }
     
+    /// Test as a standalone operation. Do not run it. Cancel it before it runs.
+    func testOpNotRun_Cancel() {
+        
+        let op = TestBasicOperation()
+        
+        let completionBlockExp = expectation(description: "Completion Block Called")
+        
+        op.completionBlock = {
+            completionBlockExp.fulfill()
+        }
+        
+        op.cancel()
+        op.start() // in an OperationQueue, all operations must start even if they're already cancelled
+        
+        wait(for: [completionBlockExp], timeout: 0.3)
+        
+        XCTAssertTrue(op.isReady)
+        XCTAssertTrue(op.isCancelled)
+        XCTAssertFalse(op.isExecuting)
+        XCTAssertTrue(op.isFinished)
+        
+    }
+    
     /// Test in the context of an OperationQueue. Run is implicit.
     func testQueue() {
         

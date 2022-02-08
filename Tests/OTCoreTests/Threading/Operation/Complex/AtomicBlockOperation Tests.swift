@@ -17,6 +17,10 @@ final class Threading_AtomicBlockOperation_Tests: XCTestCase {
         
         op.start()
         
+        XCTAssertFalse(op.isCancelled)
+        XCTAssertFalse(op.isExecuting)
+        XCTAssertTrue(op.isFinished)
+        
     }
     
     /// Standalone operation, serial FIFO queue mode. Run it.
@@ -301,9 +305,78 @@ final class Threading_AtomicBlockOperation_Tests: XCTestCase {
         
         wait(for: [completionBlockExp], timeout: 10)
         
+        XCTAssertFalse(mainOp.isCancelled)
+        XCTAssertFalse(mainOp.isExecuting)
+        XCTAssertTrue(mainOp.isFinished)
+        
         XCTAssertEqual(mainVal.count, 10)
         XCTAssertEqual(mainVal.keys.sorted(), Array(1...10))
         XCTAssert(mainVal.values.allSatisfy({ $0.sorted() == Array(1...200)}))
+        
+    }
+    
+    func testNested_Cancel() {
+        
+        let mainOp = AtomicBlockOperation(type: .concurrentAutomatic,
+                                          initialMutableValue: [Int : [Int]]())
+        
+        let completionBlockExp = expectation(description: "Completion Block Called")
+        
+        var mainVal: [Int : [Int]] = [:]
+        
+        for keyNum in 1...10 {
+            let subOp = AtomicBlockOperation(type: .concurrentAutomatic,
+                                             initialMutableValue: [Int]())
+            var refs: [Operation] = []
+            for valueNum in 1...20 {
+                let ref = subOp.addCancellableOperation { op, v in
+                    if op.mainShouldAbort() { return }
+                    usleep(200_000)
+                    v.mutate { value in
+                        value.append(valueNum)
+                    }
+                }
+                refs.append(ref)
+            }
+            
+            subOp.addOperation { [weak mainOp] v in
+                var getVal: [Int] = []
+                v.mutate { value in
+                    getVal = value
+                }
+                mainOp?.mutateValue { mainValue in
+                    mainValue[keyNum] = getVal
+                }
+            }
+            
+            mainOp.addOperation(subOp)
+        }
+        
+        mainOp.setCompletionBlock { v in
+            v.mutate { value in
+                mainVal = value
+            }
+            
+            completionBlockExp.fulfill()
+        }
+        
+        DispatchQueue.global().async {
+            mainOp.start()
+        }
+        usleep(100_000) // 100 milliseconds
+        mainOp.cancel()
+        
+        wait(for: [completionBlockExp], timeout: 5)
+        
+        //XCTAssertEqual(mainOp.operationQueue.operationCount, 0)
+        
+        XCTAssertTrue(mainOp.isCancelled)
+        XCTAssertFalse(mainOp.isExecuting)
+        XCTAssertTrue(mainOp.isFinished)
+        
+        XCTAssert(!mainVal.values.allSatisfy({ $0.sorted() == Array(1...200)}))
+        
+        dump(mainOp)
         
     }
     
