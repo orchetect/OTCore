@@ -17,9 +17,9 @@ final class Threading_AtomicBlockOperation_Tests: XCTestCase {
         
         op.start()
         
+        XCTAssertTrue(op.isFinished)
         XCTAssertFalse(op.isCancelled)
         XCTAssertFalse(op.isExecuting)
-        XCTAssertTrue(op.isFinished)
         
     }
     
@@ -51,9 +51,9 @@ final class Threading_AtomicBlockOperation_Tests: XCTestCase {
         
         wait(for: [completionBlockExp, dataVerificationExp], timeout: 1)
         
+        XCTAssertTrue(op.isFinished)
         XCTAssertFalse(op.isCancelled)
         XCTAssertFalse(op.isExecuting)
-        XCTAssertTrue(op.isFinished)
         
     }
     
@@ -92,9 +92,9 @@ final class Threading_AtomicBlockOperation_Tests: XCTestCase {
         XCTAssertEqual(op.value.count, 100)
         XCTAssert(Array(1...100).allSatisfy(op.value.contains))
         
+        XCTAssertTrue(op.isFinished)
         XCTAssertFalse(op.isCancelled)
         XCTAssertFalse(op.isExecuting)
-        XCTAssertTrue(op.isFinished)
         
     }
     
@@ -105,8 +105,10 @@ final class Threading_AtomicBlockOperation_Tests: XCTestCase {
                                       initialMutableValue: [Int]())
         
         let completionBlockExp = expectation(description: "Completion Block Called")
+        completionBlockExp.isInverted = true
         
         let dataVerificationExp = expectation(description: "Data Verification")
+        dataVerificationExp.isInverted = true
         
         for val in 1...100 {
             op.addOperation { $0.mutate { $0.append(val) } }
@@ -126,13 +128,12 @@ final class Threading_AtomicBlockOperation_Tests: XCTestCase {
             }
         }
         
-        op.start()
-        
         wait(for: [completionBlockExp, dataVerificationExp], timeout: 1)
         
+        // state
+        XCTAssertFalse(op.isFinished)
         XCTAssertFalse(op.isCancelled)
         XCTAssertFalse(op.isExecuting)
-        XCTAssertTrue(op.isFinished)
         
     }
     
@@ -146,6 +147,8 @@ final class Threading_AtomicBlockOperation_Tests: XCTestCase {
         
         let dataVerificationExp = expectation(description: "Data Verification")
         
+        let atomicBlockCompletedExp = expectation(description: "AtomicBlockOperation Completed")
+        
         for val in 1...100 {
             op.addOperation { $0.mutate { $0.append(val) } }
         }
@@ -164,23 +167,26 @@ final class Threading_AtomicBlockOperation_Tests: XCTestCase {
             }
         }
         
-        op.start()
+        DispatchQueue.global().async {
+            op.start()
+            atomicBlockCompletedExp.fulfill()
+        }
         
-        wait(for: [completionBlockExp, dataVerificationExp], timeout: 1)
+        wait(for: [completionBlockExp, dataVerificationExp, atomicBlockCompletedExp], timeout: 1)
         
         XCTAssertEqual(op.value.count, 100)
         XCTAssert(Array(1...100).allSatisfy(op.value.contains))
         
+        XCTAssertTrue(op.isFinished)
         XCTAssertFalse(op.isCancelled)
         XCTAssertFalse(op.isExecuting)
-        XCTAssertTrue(op.isFinished)
         
     }
     
     /// Test in the context of an OperationQueue. Run is implicit.
     func testOp_concurrentAutomatic_Queue() {
         
-        let oq = OperationQueue()
+        let opQ = OperationQueue()
                 
         let op = AtomicBlockOperation(type: .concurrentAutomatic,
                                       initialMutableValue: [Int]())
@@ -188,7 +194,7 @@ final class Threading_AtomicBlockOperation_Tests: XCTestCase {
         // test default qualityOfService to check baseline state
         XCTAssertEqual(op.qualityOfService, .default)
         
-        op.qualityOfService = .utility
+        op.qualityOfService = .userInitiated
         
         let completionBlockExp = expectation(description: "Completion Block Called")
         
@@ -197,7 +203,7 @@ final class Threading_AtomicBlockOperation_Tests: XCTestCase {
         for val in 1...100 {
             op.addOperation { v in
                 // QoS should be inherited from the AtomicBlockOperation QoS
-                XCTAssertEqual(Thread.current.qualityOfService, .utility)
+                XCTAssertEqual(Thread.current.qualityOfService, .userInitiated)
                 
                 // add value to array
                 v.mutate { $0.append(val) }
@@ -218,16 +224,18 @@ final class Threading_AtomicBlockOperation_Tests: XCTestCase {
             }
         }
         
+        // must manually increment for OperationQueue
+        opQ.progress.totalUnitCount += 1
         // queue automatically starts the operation once it's added
-        oq.addOperation(op)
+        opQ.addOperation(op)
         
         wait(for: [completionBlockExp, dataVerificationExp], timeout: 1)
         
-        XCTAssertEqual(oq.operationCount, 0)
-        
+        // state
+        XCTAssertEqual(opQ.operationCount, 0)
+        XCTAssertTrue(op.isFinished)
         XCTAssertFalse(op.isCancelled)
         XCTAssertFalse(op.isExecuting)
-        XCTAssertTrue(op.isFinished)
         
     }
     
@@ -255,9 +263,10 @@ final class Threading_AtomicBlockOperation_Tests: XCTestCase {
         // check that all operations executed and they are in serial FIFO order
         XCTAssertEqual(op.value, Array(1...100))
         
+        // state
+        XCTAssertTrue(op.isFinished)
         XCTAssertFalse(op.isCancelled)
         XCTAssertFalse(op.isExecuting)
-        XCTAssertTrue(op.isFinished)
         
         wait(for: [completionBlockExp], timeout: 2)
         
@@ -303,11 +312,12 @@ final class Threading_AtomicBlockOperation_Tests: XCTestCase {
         
         mainOp.start()
         
-        wait(for: [completionBlockExp], timeout: 10)
+        wait(for: [completionBlockExp], timeout: 5)
         
+        // state
+        XCTAssertTrue(mainOp.isFinished)
         XCTAssertFalse(mainOp.isCancelled)
         XCTAssertFalse(mainOp.isExecuting)
-        XCTAssertTrue(mainOp.isFinished)
         
         XCTAssertEqual(mainVal.count, 10)
         XCTAssertEqual(mainVal.keys.sorted(), Array(1...10))
@@ -329,7 +339,7 @@ final class Threading_AtomicBlockOperation_Tests: XCTestCase {
                                              initialMutableValue: [Int]())
             var refs: [Operation] = []
             for valueNum in 1...20 {
-                let ref = subOp.addCancellableOperation { op, v in
+                let ref = subOp.addInteractiveOperation { op, v in
                     if op.mainShouldAbort() { return }
                     usleep(200_000)
                     v.mutate { value in
@@ -360,23 +370,28 @@ final class Threading_AtomicBlockOperation_Tests: XCTestCase {
             completionBlockExp.fulfill()
         }
         
+        // must run start() async in order to cancel it, since
+        // the operation is synchronous and will complete before we
+        // can call cancel() if start() is run in-thread
         DispatchQueue.global().async {
             mainOp.start()
         }
         usleep(100_000) // 100 milliseconds
         mainOp.cancel()
         
-        wait(for: [completionBlockExp], timeout: 5)
+        wait(for: [completionBlockExp], timeout: 1)
         
         //XCTAssertEqual(mainOp.operationQueue.operationCount, 0)
         
-        XCTAssertTrue(mainOp.isCancelled)
-        XCTAssertFalse(mainOp.isExecuting)
+        // state
         XCTAssertTrue(mainOp.isFinished)
+        XCTAssertTrue(mainOp.isCancelled)
+        XCTAssertFalse(mainOp.isExecuting) // TODO: technically this should be true, but it gets set to false when the completion method gets called even if async code is still running
         
-        XCTAssert(!mainVal.values.allSatisfy({ $0.sorted() == Array(1...200)}))
-        
-        dump(mainOp)
+        let expectedArray = (1...10).reduce(into: [Int: [Int]]()) {
+            $0[$1] = Array(1...200)
+        }
+        XCTAssertNotEqual(mainVal, expectedArray)
         
     }
     

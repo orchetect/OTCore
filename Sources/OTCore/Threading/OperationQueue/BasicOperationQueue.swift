@@ -12,6 +12,10 @@ import Foundation
 open class BasicOperationQueue: OperationQueue {
     
     /// **OTCore:**
+    /// Any time the queue completes all of its operations and returns to an empty queue, reset the progress object's total unit count to 0.
+    public final var resetProgressWhenFinished: Bool
+    
+    /// **OTCore:**
     /// A reference to the `Operation` that was last added to the queue. Returns `nil` if the operation finished and no longer exists.
     public final weak var lastAddedOperation: Operation?
     
@@ -38,13 +42,41 @@ open class BasicOperationQueue: OperationQueue {
         
     }
     
+    // MARK: - Status
+    
+    public internal(set) var status: OperationQueueStatus = .idle {
+        didSet {
+            if status != oldValue {
+                statusHandler?(status, oldValue)
+            }
+        }
+    }
+    
+    public typealias StatusHandler = (_ newStatus: OperationQueueStatus,
+                                      _ oldStatus: OperationQueueStatus) -> Void
+    
+    /// **OTCore:**
+    /// Handler called any time the `status` property changes.
+    public final var statusHandler: StatusHandler?
+    
+    // MARK: - Progress Back-Porting
+    
+    @Atomic private var _progress: Progress = .init()
+    
+    @available(macOS 10.9, iOS 7.0, tvOS 9.0, watchOS 2.0, *)
+    public override final var progress: Progress { _progress }
+    
     // MARK: - Init
     
     /// **OTCore:**
     /// Set max concurrent operation count.
-    public init(type operationQueueType: OperationQueueType) {
+    public init(type operationQueueType: OperationQueueType,
+                resetProgressWhenFinished: Bool = false,
+                statusHandler: StatusHandler? = nil) {
         
         self.operationQueueType = operationQueueType
+        self.resetProgressWhenFinished = resetProgressWhenFinished
+        self.statusHandler = statusHandler
         
         super.init()
         
@@ -68,6 +100,14 @@ open class BasicOperationQueue: OperationQueue {
             }
         default:
             break
+        }
+        
+        // update progress
+        progress.totalUnitCount += 1
+        if let basicOp = op as? BasicOperation {
+            // OperationQueue considers each operation to be 1 unit of progress in the overall queue progress, regardless of how the child operation progress decides to set up its total unit count
+            progress.addChild(basicOp.progress,
+                              withPendingUnitCount: 1)
         }
         
         lastAddedOperation = op
@@ -113,10 +153,87 @@ open class BasicOperationQueue: OperationQueue {
             break
         }
         
-        lastAddedOperation = ops.last
+        // update progress
+        progress.totalUnitCount += Int64(ops.count)
+        for op in ops {
+            if let basicOp = op as? BasicOperation {
+                // OperationQueue considers each operation to be 1 unit of progress in the overall queue progress, regardless of how the child operation progress decides to set up its total unit count
+                progress.addChild(basicOp.progress,
+                                  withPendingUnitCount: 1)
+            }
+        }
         
+        lastAddedOperation = ops.last
         super.addOperations(ops, waitUntilFinished: wait)
         
+    }
+    
+    // MARK: - KVO Observers
+    
+    /// **OTCore:**
+    /// Retain property observers. For safety, this array must be emptied on class deinit.
+    private var observers: [NSKeyValueObservation] = []
+    private func addObservers() {
+        
+        // self.progress.isFinished
+        
+        observers.append(
+            progress.observe(\.isFinished, options: [.new])
+            { [weak self] _, change in
+                guard let self = self else { return }
+                guard let newValue = change.newValue else { return }
+                
+                if newValue {
+                    if self.resetProgressWhenFinished {
+                        self.progress.totalUnitCount = 0
+                    }
+                    self.status = .idle
+                }
+            }
+        )
+        
+        // self.progress.fractionCompleted
+        
+        observers.append(
+            progress.observe(\.fractionCompleted, options: [.new])
+            { [weak self] _, change in
+                guard let self = self else { return }
+                guard let newValue = change.newValue else { return }
+                
+                guard !self.progress.isFinished else { return }
+                self.status = .inProgress(fractionCompleted: newValue,
+                                          message: self.progress.localizedDescription)
+            }
+        )
+        
+        // self.isSuspended
+        
+        observers.append(
+            observe(\.isSuspended, options: [.new])
+            { [weak self] _, change in
+                guard let self = self else { return }
+                guard let newValue = change.newValue else { return }
+                
+                if newValue {
+                    self.status = .paused
+                } else {
+                    if self.operationCount > 0 {
+                        self.status = .inProgress(
+                            fractionCompleted: self.progress.fractionCompleted,
+                            message: self.progress.localizedDescription
+                        )
+                    } else {
+                        self.status = .idle
+                    }
+                }
+            }
+        )
+        
+    }
+    
+    deinit {
+        // this is very important or it may result in random crashes if the KVO observers aren't nuked at the appropriate time
+        observers.removeAll()
     }
     
 }

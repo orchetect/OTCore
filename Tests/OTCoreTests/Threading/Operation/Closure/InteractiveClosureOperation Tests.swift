@@ -1,5 +1,5 @@
 //
-//  CancellableClosureOperation Tests.swift
+//  InteractiveClosureOperation Tests.swift
 //  OTCore • https://github.com/orchetect/OTCore
 //
 
@@ -8,13 +8,13 @@
 import OTCore
 import XCTest
 
-final class Threading_CancellableClosureOperation_Tests: XCTestCase {
+final class Threading_InteractiveClosureOperation_Tests: XCTestCase {
     
     func testOpRun() {
         
         let mainBlockExp = expectation(description: "Main Block Called")
         
-        let op = CancellableClosureOperation { operation in
+        let op = InteractiveClosureOperation { operation in
             mainBlockExp.fulfill()
             XCTAssertTrue(operation.isExecuting)
             
@@ -44,7 +44,7 @@ final class Threading_CancellableClosureOperation_Tests: XCTestCase {
         let mainBlockExp = expectation(description: "Main Block Called")
         mainBlockExp.isInverted = true
         
-        let op = CancellableClosureOperation { operation in
+        let op = InteractiveClosureOperation { operation in
             mainBlockExp.fulfill()
             XCTAssertTrue(operation.isExecuting)
             
@@ -72,11 +72,11 @@ final class Threading_CancellableClosureOperation_Tests: XCTestCase {
     /// Test in the context of an OperationQueue. Run is implicit.
     func testQueue() {
         
-        let oq = OperationQueue()
+        let opQ = OperationQueue()
         
         let mainBlockExp = expectation(description: "Main Block Called")
         
-        let op = CancellableClosureOperation { operation in
+        let op = InteractiveClosureOperation { operation in
             mainBlockExp.fulfill()
             XCTAssertTrue(operation.isExecuting)
             
@@ -92,11 +92,11 @@ final class Threading_CancellableClosureOperation_Tests: XCTestCase {
         }
         
         // queue automatically starts the operation once it's added
-        oq.addOperation(op)
+        opQ.addOperation(op)
         
         wait(for: [mainBlockExp, completionBlockExp], timeout: 0.5)
         
-        XCTAssertEqual(oq.operationCount, 0)
+        XCTAssertEqual(opQ.operationCount, 0)
         
         XCTAssertFalse(op.isCancelled)
         XCTAssertFalse(op.isExecuting)
@@ -113,7 +113,7 @@ final class Threading_CancellableClosureOperation_Tests: XCTestCase {
         
         var val = 0
         
-        let op = CancellableClosureOperation { operation in
+        let op = InteractiveClosureOperation { operation in
             mainBlockExp.fulfill()
             XCTAssertTrue(operation.isExecuting)
             usleep(500_000) // 500 milliseconds

@@ -21,12 +21,16 @@ open class AtomicOperationQueue<T>: BasicOperationQueue {
     
     public init(
         type operationQueueType: OperationQueueType = .concurrentAutomatic,
-        initialMutableValue: T
+        initialMutableValue: T,
+        resetProgressWhenFinished: Bool = false,
+        statusHandler: BasicOperationQueue.StatusHandler? = nil
     ) {
         
         self.sharedMutableValue = initialMutableValue
         
-        super.init(type: operationQueueType)
+        super.init(type: operationQueueType,
+                   resetProgressWhenFinished: resetProgressWhenFinished,
+                   statusHandler: statusHandler)
         
     }
     
@@ -54,13 +58,13 @@ open class AtomicOperationQueue<T>: BasicOperationQueue {
     ///
     /// - returns: The new operation.
     @discardableResult
-    public final func addCancellableOperation(
+    public final func addInteractiveOperation(
         dependencies: [Operation] = [],
-        _ block: @escaping (_ operation: CancellableClosureOperation,
+        _ block: @escaping (_ operation: InteractiveClosureOperation,
                             _ atomicValue: AtomicVariableAccess<T>) -> Void
-    ) -> CancellableClosureOperation {
+    ) -> InteractiveClosureOperation {
         
-        let op = createCancellableOperation(block)
+        let op = createInteractiveOperation(block)
         dependencies.forEach { op.addDependency($0) }
         addOperation(op)
         return op
@@ -105,12 +109,12 @@ open class AtomicOperationQueue<T>: BasicOperationQueue {
     /// Internal for debugging:
     /// Create an operation block operating on the shared mutable value.
     /// `operation.mainShouldAbort()` can be periodically called and then early return if the operation may take more than a few seconds.
-    internal final func createCancellableOperation(
-        _ block: @escaping (_ operation: CancellableClosureOperation,
+    internal final func createInteractiveOperation(
+        _ block: @escaping (_ operation: InteractiveClosureOperation,
                             _ atomicValue: AtomicVariableAccess<T>) -> Void
-    ) -> CancellableClosureOperation {
+    ) -> InteractiveClosureOperation {
         
-        CancellableClosureOperation { [weak self] operation in
+        InteractiveClosureOperation { [weak self] operation in
             guard let self = self else { return }
             let varAccess = AtomicVariableAccess(operationQueue: self)
             block(operation, varAccess)

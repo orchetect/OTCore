@@ -20,23 +20,24 @@ extension Operation {
     }
     
     /// **OTCore:**
-    /// Convenience static constructor for `CancellableClosureOperation`.
-    public static func cancellable(
-        _ mainBlock: @escaping (_ operation: CancellableClosureOperation) -> Void
-    ) -> CancellableClosureOperation {
+    /// Convenience static constructor for `InteractiveClosureOperation`.
+    public static func interactive(
+        _ mainBlock: @escaping (_ operation: InteractiveClosureOperation) -> Void
+    ) -> InteractiveClosureOperation {
         
         .init(mainBlock)
         
     }
     
     /// **OTCore:**
-    /// Convenience static constructor for `CancellableAsyncClosureOperation`.
-    public static func cancellableAsync(
+    /// Convenience static constructor for `InteractiveAsyncClosureOperation`.
+    public static func interactiveAsync(
         on queue: DispatchQueue? = nil,
-        _ mainBlock: @escaping (_ operation: CancellableAsyncClosureOperation) -> Void
-    ) -> CancellableAsyncClosureOperation {
+        _ mainBlock: @escaping (_ operation: InteractiveAsyncClosureOperation) -> Void
+    ) -> InteractiveAsyncClosureOperation {
         
-        .init(on: queue, mainBlock)
+        .init(on: queue,
+              mainBlock)
         
     }
     

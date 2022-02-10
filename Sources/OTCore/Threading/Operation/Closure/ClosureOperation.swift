@@ -16,10 +16,13 @@ import Foundation
 ///
 /// No special method calls are required in the main block.
 ///
-/// This closure is not cancellable once it is started. If you want to allow cancellation (early return partway through operation execution) use `CancellableClosureOperation` instead.
+/// This closure is not cancellable once it is started, and does not offer a reference to update progress information. If you want to allow cancellation (early return partway through operation execution) or progress updating, use `InteractiveClosureOperation` instead.
 ///
 ///     let op = ClosureOperation {
 ///         // ... do some work ...
+///
+///         // operation completes & cleans up automatically
+///         // after closure finishes
 ///     }
 ///
 /// Add the operation to an `OperationQueue` or start it manually if not being inserted into an OperationQueue.
@@ -40,7 +43,9 @@ public final class ClosureOperation: BasicOperation {
     
     public final var mainBlock: () -> Void
     
-    public init(_ mainBlock: @escaping () -> Void) {
+    public init(
+        _ mainBlock: @escaping () -> Void
+    ) {
         
         self.mainBlock = mainBlock
         
@@ -48,7 +53,7 @@ public final class ClosureOperation: BasicOperation {
     
     override public func main() {
         
-        guard mainStartOperation() else { return }
+        guard mainShouldStart() else { return }
         mainBlock()
         completeOperation()
         

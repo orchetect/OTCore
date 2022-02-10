@@ -32,9 +32,15 @@ final class Threading_AsyncClosureOperation_Tests: XCTestCase {
         
         wait(for: [mainBlockExp, completionBlockExp], timeout: 0.5)
         
+        // state
+        XCTAssertTrue(op.isFinished)
         XCTAssertFalse(op.isCancelled)
         XCTAssertFalse(op.isExecuting)
-        XCTAssertTrue(op.isFinished)
+        // progress
+        XCTAssertTrue(op.progress.isFinished)
+        XCTAssertFalse(op.progress.isCancelled)
+        XCTAssertEqual(op.progress.fractionCompleted, 1.0)
+        XCTAssertFalse(op.progress.isIndeterminate)
         
     }
     
@@ -57,10 +63,16 @@ final class Threading_AsyncClosureOperation_Tests: XCTestCase {
         
         wait(for: [mainBlockExp, completionBlockExp], timeout: 0.3)
         
+        // state
         XCTAssertTrue(op.isReady)
+        XCTAssertFalse(op.isFinished)
         XCTAssertFalse(op.isCancelled)
         XCTAssertFalse(op.isExecuting)
-        XCTAssertFalse(op.isFinished)
+        // progress
+        XCTAssertFalse(op.progress.isFinished)
+        XCTAssertFalse(op.progress.isCancelled)
+        XCTAssertEqual(op.progress.fractionCompleted, 0.0)
+        XCTAssertFalse(op.progress.isIndeterminate)
         
     }
     
@@ -95,16 +107,23 @@ final class Threading_AsyncClosureOperation_Tests: XCTestCase {
         
         usleep(200_000) // give a little time for cleanup
         
+        // state
+        XCTAssertFalse(op.isFinished)
         XCTAssertTrue(op.isCancelled)
         XCTAssertTrue(op.isExecuting)
-        XCTAssertFalse(op.isFinished)
+        // progress
+        XCTAssertFalse(op.progress.isFinished)
+        XCTAssertTrue(op.progress.isCancelled)
+        XCTAssertEqual(op.progress.fractionCompleted, 0.0)
+        XCTAssertLessThan(op.progress.fractionCompleted, 1.0)
+        XCTAssertFalse(op.progress.isIndeterminate)
         
     }
     
     /// Test in the context of an OperationQueue. Run is implicit.
     func testQueue() {
         
-        let oq = OperationQueue()
+        let opQ = OperationQueue()
         
         let mainBlockExp = expectation(description: "Main Block Called")
         
@@ -118,29 +137,40 @@ final class Threading_AsyncClosureOperation_Tests: XCTestCase {
             completionBlockExp.fulfill()
         }
         
+        // must manually increment for OperationQueue
+        opQ.progress.totalUnitCount += 1
         // queue automatically starts the operation once it's added
-        oq.addOperation(op)
+        opQ.addOperation(op)
         
         wait(for: [mainBlockExp, completionBlockExp], timeout: 0.5)
         
-        XCTAssertEqual(oq.operationCount, 0)
-        
+        // state
+        XCTAssertEqual(opQ.operationCount, 0)
+        XCTAssertTrue(op.isFinished)
         XCTAssertFalse(op.isCancelled)
         XCTAssertFalse(op.isExecuting)
-        XCTAssertTrue(op.isFinished)
+        // progress - operation
+        XCTAssertTrue(op.progress.isFinished)
+        XCTAssertFalse(op.progress.isCancelled)
+        XCTAssertEqual(op.progress.fractionCompleted, 1.0)
+        XCTAssertFalse(op.progress.isIndeterminate)
+        // progress - queue
+        XCTAssertTrue(opQ.progress.isFinished)
+        XCTAssertFalse(opQ.progress.isCancelled)
+        XCTAssertEqual(opQ.progress.fractionCompleted, 1.0)
+        XCTAssertFalse(opQ.progress.isIndeterminate)
         
     }
     
     /// Test in the context of an OperationQueue. Run is implicit. Cancel before it finishes.
     func testQueue_Cancel() {
 
-        let oq = OperationQueue()
+        let opQ = OperationQueue()
 
         let mainBlockExp = expectation(description: "Main Block Called")
         
         // the operation's main block does finish eventually but won't finish in time for our timeout because there's no opportunity to return early from cancelling the operation
         let mainBlockFinishedExp = expectation(description: "Main Block Finished")
-        mainBlockFinishedExp.isInverted = true
         
         // the operation's completion block does not fire in time because there's no opportunity to return early from cancelling the operation
         let completionBlockExp = expectation(description: "Completion Block Called")
@@ -148,7 +178,7 @@ final class Threading_AsyncClosureOperation_Tests: XCTestCase {
         
         let op = AsyncClosureOperation(on: .global()) {
             mainBlockExp.fulfill()
-            sleep(4) // seconds
+            sleep(1) // seconds
             mainBlockFinishedExp.fulfill()
         }
         
@@ -156,23 +186,56 @@ final class Threading_AsyncClosureOperation_Tests: XCTestCase {
             completionBlockExp.fulfill()
         }
         
+        // must manually increment for OperationQueue
+        opQ.progress.totalUnitCount += 1
+        
+        XCTAssertEqual(op.progress.totalUnitCount, 1)
+        XCTAssertEqual(opQ.progress.totalUnitCount, 1)
+        
         // queue automatically starts the operation once it's added
-        oq.addOperation(op)
+        opQ.addOperation(op)
         
         usleep(100_000) // 100 milliseconds
-        oq.cancelAllOperations() // cancel the queue, not the operation. it cancels its operations.
+        opQ.cancelAllOperations() // cancel the queue, not the operation. it cancels its operations.
         
-        wait(for: [mainBlockExp, mainBlockFinishedExp, completionBlockExp], timeout: 0.5)
-
-        usleep(200_000) // give a little time for cleanup
+        wait(for: [mainBlockExp, completionBlockExp], timeout: 0.4)
         
+        // state
         // the operation is still running because it cannot return early from being cancelled
-        XCTAssertEqual(oq.operationCount, 1)
-
+        XCTAssertEqual(opQ.operationCount, 1)
+        XCTAssertFalse(op.isFinished)
         XCTAssertTrue(op.isCancelled)
         XCTAssertTrue(op.isExecuting) // still executing
-        XCTAssertFalse(op.isFinished) // not yet finished
-
+        // progress - operation
+        XCTAssertFalse(op.progress.isFinished)
+        XCTAssertTrue(op.progress.isCancelled)
+        XCTAssertEqual(op.progress.fractionCompleted, 0.0)
+        XCTAssertFalse(op.progress.isIndeterminate)
+        // progress - queue
+        XCTAssertTrue(opQ.progress.isFinished) // even if the async op is still running, this will be true now
+        XCTAssertFalse(opQ.progress.isCancelled)
+        XCTAssertEqual(opQ.progress.fractionCompleted, 1.0)
+        XCTAssertFalse(opQ.progress.isIndeterminate)
+        
+        wait(for: [mainBlockFinishedExp], timeout: 0.7)
+        usleep(100_000) // 100 milliseconds
+        
+        // state
+        XCTAssertEqual(opQ.operationCount, 0)
+        XCTAssertTrue(op.isFinished)
+        XCTAssertTrue(op.isCancelled)
+        XCTAssertFalse(op.isExecuting)
+        // progress - operation
+        XCTAssertFalse(op.progress.isFinished)
+        XCTAssertTrue(op.progress.isCancelled)
+        XCTAssertEqual(op.progress.fractionCompleted, 0.0)
+        XCTAssertFalse(op.progress.isIndeterminate)
+        // progress - queue
+        XCTAssertTrue(opQ.progress.isFinished)
+        XCTAssertFalse(opQ.progress.isCancelled)
+        XCTAssertEqual(opQ.progress.fractionCompleted, 1.0)
+        XCTAssertFalse(opQ.progress.isIndeterminate)
+        
     }
     
 }

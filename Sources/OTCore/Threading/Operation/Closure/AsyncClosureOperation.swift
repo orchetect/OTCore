@@ -16,7 +16,7 @@ import Foundation
 ///
 /// No special method calls are required in the main block.
 ///
-/// This closure is not cancellable once it is started. If you want to allow cancellation (early return partway through operation execution) use `CancellableAsyncClosureOperation` instead.
+/// This closure is not cancellable once it is started, and does not offer a reference to update progress information. If you want to allow cancellation (early return partway through operation execution) or progress updating, use `InteractiveAsyncClosureOperation` instead.
 ///
 ///     // if not specifying a dispatch queue, the operation will
 ///     // run on the current thread if started manually,
@@ -24,14 +24,19 @@ import Foundation
 ///     // will be automatically managed
 ///     let op = AsyncClosureOperation {
 ///         // ... do some work ...
+///
+///         // operation completes & cleans up automatically
+///         // after closure finishes
 ///     }
+///
+/// Execution on a target thread:
 ///
 ///     // force the operation to execute on a dispatch queue,
 ///     // which may be desirable especially when running
 ///     // the operation without adding it to an OperationQueue
 ///     // and the closure body does not contain any asynchronous code
 ///     let op = AsyncClosureOperation(on: .global()) {
-///         // ... do some work ...
+///
 ///     }
 ///
 /// Add the operation to an `OperationQueue` or start it manually if not being inserted into an OperationQueue.
@@ -65,7 +70,7 @@ public final class AsyncClosureOperation: BasicOperation {
     
     override public final func main() {
         
-        guard mainStartOperation() else { return }
+        guard mainShouldStart() else { return }
         
         if let queue = queue {
             queue.async { [weak self] in

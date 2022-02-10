@@ -29,7 +29,7 @@ import Foundation
 ///     op.addOperation { atomicValue in
 ///         atomicValue.mutate { $0 += 1 }
 ///     }
-///     op.addCancellableOperation { operation, atomicValue in
+///     op.addInteractiveOperation { operation, atomicValue in
 ///         atomicValue.mutate { $0 += 1 }
 ///         if operation.mainShouldAbort() { return }
 ///         atomicValue.mutate { $0 += 1 }
@@ -58,10 +58,13 @@ open class AtomicBlockOperation<T>: BasicOperation {
     
     private let operationQueue: AtomicOperationQueue<T>
     
+    /// **OTCore:**
+    /// Stores a weak reference to the last `Operation` added to the internal operation queue. If the operation is complete and the queue is empty, this may return `nil`.
     public weak var lastAddedOperation: Operation? {
         operationQueue.lastAddedOperation
     }
     
+    /// **OTCore:**
     /// The thread-safe shared mutable value that all operation blocks operate upon.
     public final var value: T {
         operationQueue.sharedMutableValue
@@ -75,18 +78,33 @@ open class AtomicBlockOperation<T>: BasicOperation {
         
     }
     
+    /// **OTCore:**
+    /// Handler called any time the `status` property changes.
+    public final var statusHandler: BasicOperationQueue.StatusHandler? {
+        get {
+            operationQueue.statusHandler
+        }
+        set {
+            operationQueue.statusHandler = newValue
+        }
+    }
+    
     private var setupBlock: ((_ operation: AtomicBlockOperation,
                               _ atomicValue: AtomicVariableAccess<T>) -> Void)?
     
     // MARK: - Init
     
     public init(type operationQueueType: OperationQueueType,
-                initialMutableValue: T) {
+                initialMutableValue: T,
+                resetProgressWhenFinished: Bool = false,
+                statusHandler: BasicOperationQueue.StatusHandler? = nil) {
         
         // assign properties
-        self.operationQueue = AtomicOperationQueue(
+        operationQueue = AtomicOperationQueue(
             type: operationQueueType,
-            initialMutableValue: initialMutableValue
+            initialMutableValue: initialMutableValue,
+            resetProgressWhenFinished: resetProgressWhenFinished,
+            statusHandler: statusHandler
         )
         
         // super
@@ -107,7 +125,7 @@ open class AtomicBlockOperation<T>: BasicOperation {
     
     public final override func main() {
         
-        guard mainStartOperation() else { return }
+        guard mainShouldStart() else { return }
         let varAccess = AtomicVariableAccess(operationQueue: self.operationQueue)
         setupBlock?(self, varAccess)
         
@@ -122,7 +140,10 @@ open class AtomicBlockOperation<T>: BasicOperation {
         // which mirrors the behavior of BlockOperation
         while !isFinished {
             usleep(10_000) // 10 milliseconds
-            //RunLoop.current.run(until: Date().addingTimeInterval(0.010)) // DO NOT DO THIS!!!
+            
+            //Thread.sleep(forTimeInterval: 0.010) // 10 milliseconds
+            
+            //RunLoop.current.run(until: Date().addingTimeInterval(0.010)) // 10 milliseconds
         }
         
     }
@@ -134,36 +155,63 @@ open class AtomicBlockOperation<T>: BasicOperation {
     private var observers: [NSKeyValueObservation] = []
     private func addObservers() {
         
-        let isCancelledRetain = observe(\.isCancelled,
-                                         options: [.new])
-        { [weak self] _, _ in
-            guard let self = self else { return }
-            if self.isCancelled {
-                self.operationQueue.cancelAllOperations()
-                self.completeOperation()
-            }
-        }
-        observers.append(isCancelledRetain)
+        // self.isCancelled
         
-        let qosRetain = observe(\.qualityOfService,
-                                 options: [.new])
-        { [weak self] _, _ in
-            guard let self = self else { return }
-            // propagate to operation queue
-            self.operationQueue.qualityOfService = self.qualityOfService
-        }
-        observers.append(qosRetain)
-        
-        // can't use operationQueue.progress as it's macOS 10.15+ only
-        let opCtRetain = operationQueue.observe(\.operationCount,
-                                                 options: [.new])
-        { [weak self] _, _ in
-            guard let self = self else { return }
-            if self.operationQueue.operationCount == 0 {
-                self.completeOperation()
+        observers.append(
+            observe(\.isCancelled, options: [.new])
+            { [weak self] _, change in
+                guard let self = self else { return }
+                guard let newValue = change.newValue else { return }
+                
+                if newValue {
+                    self.operationQueue.cancelAllOperations()
+                    self.completeOperation(dueToCancellation: true)
+                }
             }
-        }
-        observers.append(opCtRetain)
+        )
+        
+        // self.operationQueue.operationCount
+        
+        observers.append(
+            operationQueue.observe(\.operationCount, options: [.new])
+            { [weak self] _, change in
+                guard let self = self else { return }
+                guard let newValue = change.newValue else { return }
+                
+                if newValue == 0 {
+                    self.completeOperation()
+                }
+            }
+        )
+        
+        // self.qualityOfService
+        
+        observers.append(
+            observe(\.qualityOfService, options: [.new])
+            { [weak self] _, change in
+                guard let self = self else { return }
+                
+                // for some reason, change.newValue is nil here. so just read from the property directly.
+                // guard let newValue = change.newValue else { return }
+                
+                // propagate to operation queue
+                self.operationQueue.qualityOfService = self.qualityOfService
+            }
+        )
+        
+        // self.operationQueue.progress.isFinished
+        
+        observers.append(
+            operationQueue.progress.observe(\.isFinished, options: [.new])
+            { [weak self] _, change in
+                guard let self = self else { return }
+                guard let newValue = change.newValue else { return }
+                
+                if newValue {
+                    self.completeOperation()
+                }
+            }
+        )
         
     }
     
@@ -200,13 +248,13 @@ extension AtomicBlockOperation {
     ///
     /// - returns: The new operation.
     @discardableResult
-    public final func addCancellableOperation(
+    public final func addInteractiveOperation(
         dependencies: [Operation] = [],
-        _ block: @escaping (_ operation: CancellableClosureOperation,
+        _ block: @escaping (_ operation: InteractiveClosureOperation,
                             _ atomicValue: AtomicVariableAccess<T>) -> Void
-    ) -> CancellableClosureOperation {
+    ) -> InteractiveClosureOperation {
         
-        operationQueue.addCancellableOperation(dependencies: dependencies, block)
+        operationQueue.addInteractiveOperation(dependencies: dependencies, block)
         
     }
     
@@ -241,6 +289,7 @@ extension AtomicBlockOperation {
         
     }
     
+    /// **OTCore:**
     /// Blocks the current thread until all the receiver’s queued and executing operations finish executing.
     public func waitUntilAllOperationsAreFinished(timeout: DispatchTimeInterval? = nil) {
         

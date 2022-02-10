@@ -22,7 +22,7 @@ final class Threading_BasicAsyncOperation_Tests: XCTestCase {
         override func main() {
             
             print("Starting main()")
-            guard mainStartOperation() else { return }
+            guard mainShouldStart() else { return }
             
             XCTAssertTrue(isExecuting)
             
@@ -44,21 +44,33 @@ final class Threading_BasicAsyncOperation_Tests: XCTestCase {
     /// This is a simple subclass to test.
     private class TestLongRunningBasicAsyncOperation: BasicAsyncOperation {
         
+        private let totalOpCount = 100
+        
+        override init() {
+            super.init()   
+            progress.totalUnitCount = Int64(totalOpCount)
+        }
+        
         override func main() {
             
             print("Starting main()")
-            guard mainStartOperation() else { return }
+            guard mainShouldStart() else { return }
             
             XCTAssertTrue(isExecuting)
             
             // run a simple non-blocking loop that can frequently check for cancellation
             
-            DispatchQueue.global().async {
-                for _ in 1...100 { // finishes in 20 seconds
-                    usleep(200_000) // 200 milliseconds
+            DispatchQueue.global().async { [weak self] in
+                guard let self = self else { return }
+                
+                for opNum in 1...self.totalOpCount { // finishes in 20 seconds
                     // it's good to call this once or more throughout the operation
                     // so we can return early if the operation is cancelled
                     if self.mainShouldAbort() { return }
+                    
+                    self.progress.completedUnitCount = Int64(opNum)
+                    
+                    usleep(200_000) // 200 milliseconds
                 }
                 
                 self.completeOperation()
@@ -85,9 +97,15 @@ final class Threading_BasicAsyncOperation_Tests: XCTestCase {
         
         wait(for: [completionBlockExp], timeout: 0.5)
         
+        // state
+        XCTAssertTrue(op.isFinished)
         XCTAssertFalse(op.isCancelled)
         XCTAssertFalse(op.isExecuting)
-        XCTAssertTrue(op.isFinished)
+        // progress
+        XCTAssertTrue(op.progress.isFinished)
+        XCTAssertFalse(op.progress.isCancelled)
+        XCTAssertEqual(op.progress.fractionCompleted, 1.0)
+        XCTAssertFalse(op.progress.isIndeterminate)
         
     }
     
@@ -105,10 +123,16 @@ final class Threading_BasicAsyncOperation_Tests: XCTestCase {
         
         wait(for: [completionBlockExp], timeout: 0.3)
         
+        // state
         XCTAssertTrue(op.isReady)
+        XCTAssertFalse(op.isFinished)
         XCTAssertFalse(op.isCancelled)
         XCTAssertFalse(op.isExecuting)
-        XCTAssertFalse(op.isFinished)
+        // progress
+        XCTAssertFalse(op.progress.isFinished)
+        XCTAssertFalse(op.progress.isCancelled)
+        XCTAssertEqual(op.progress.fractionCompleted, 0.0)
+        XCTAssertFalse(op.progress.isIndeterminate)
         
     }
     
@@ -129,16 +153,23 @@ final class Threading_BasicAsyncOperation_Tests: XCTestCase {
         
         wait(for: [completionBlockExp], timeout: 0.5)
         
+        // state
+        XCTAssertTrue(op.isFinished)
         XCTAssertTrue(op.isCancelled)
         XCTAssertFalse(op.isExecuting)
-        XCTAssertTrue(op.isFinished)
+        // progress
+        XCTAssertFalse(op.progress.isFinished)
+        XCTAssertTrue(op.progress.isCancelled)
+        XCTAssertGreaterThan(op.progress.fractionCompleted, 0.0)
+        XCTAssertLessThan(op.progress.fractionCompleted, 1.0)
+        XCTAssertFalse(op.progress.isIndeterminate)
         
     }
     
     /// Test in the context of an OperationQueue. Run is implicit.
     func testQueue() {
         
-        let oq = OperationQueue()
+        let opQ = OperationQueue()
         
         let op = TestBasicAsyncOperation()
         
@@ -148,23 +179,35 @@ final class Threading_BasicAsyncOperation_Tests: XCTestCase {
             completionBlockExp.fulfill()
         }
         
+        // must manually increment for OperationQueue
+        opQ.progress.totalUnitCount += 1
         // queue automatically starts the operation once it's added
-        oq.addOperation(op)
+        opQ.addOperation(op)
         
         wait(for: [completionBlockExp], timeout: 0.5)
         
-        XCTAssertEqual(oq.operationCount, 0)
-        
+        // state
+        XCTAssertEqual(opQ.operationCount, 0)
+        XCTAssertTrue(op.isFinished)
         XCTAssertFalse(op.isCancelled)
         XCTAssertFalse(op.isExecuting)
-        XCTAssertTrue(op.isFinished)
+        // progress - operation
+        XCTAssertTrue(op.progress.isFinished)
+        XCTAssertFalse(op.progress.isCancelled)
+        XCTAssertEqual(op.progress.fractionCompleted, 1.0)
+        XCTAssertFalse(op.progress.isIndeterminate)
+        // progress - queue
+        XCTAssertTrue(opQ.progress.isFinished)
+        XCTAssertFalse(opQ.progress.isCancelled)
+        XCTAssertEqual(opQ.progress.fractionCompleted, 1.0)
+        XCTAssertFalse(opQ.progress.isIndeterminate)
         
     }
     
     /// Test in the context of an OperationQueue. Run is implicit. Cancel before it finishes.
     func testQueue_Cancel() {
         
-        let oq = OperationQueue()
+        let opQ = OperationQueue()
         
         let op = TestLongRunningBasicAsyncOperation()
         
@@ -174,19 +217,32 @@ final class Threading_BasicAsyncOperation_Tests: XCTestCase {
             completionBlockExp.fulfill()
         }
         
+        // must manually increment for OperationQueue
+        opQ.progress.totalUnitCount += 1
         // queue automatically starts the operation once it's added
-        oq.addOperation(op)
+        opQ.addOperation(op)
         
         usleep(100_000) // 100 milliseconds
-        oq.cancelAllOperations() // cancel the queue, not the operation. it cancels its operations.
+        opQ.cancelAllOperations() // cancel the queue, not the operation. it cancels its operations.
         
         wait(for: [completionBlockExp], timeout: 0.5)
         
-        XCTAssertEqual(oq.operationCount, 0)
-        
+        // state
+        XCTAssertEqual(opQ.operationCount, 0)
+        XCTAssertTrue(op.isFinished)
         XCTAssertTrue(op.isCancelled)
         XCTAssertFalse(op.isExecuting)
-        XCTAssertTrue(op.isFinished)
+        // progress - operation
+        XCTAssertFalse(op.progress.isFinished)
+        XCTAssertTrue(op.progress.isCancelled)
+        XCTAssertGreaterThan(op.progress.fractionCompleted, 0.0)
+        XCTAssertLessThan(op.progress.fractionCompleted, 1.0)
+        XCTAssertFalse(op.progress.isIndeterminate)
+        // progress - queue
+        XCTAssertTrue(opQ.progress.isFinished)
+        XCTAssertFalse(opQ.progress.isCancelled)
+        XCTAssertEqual(opQ.progress.fractionCompleted, 1.0)
+        XCTAssertFalse(opQ.progress.isIndeterminate)
         
     }
     

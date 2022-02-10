@@ -110,7 +110,7 @@ final class Threading_AtomicOperationQueue_Tests: XCTestCase {
             ops.append(op)
         }
         for val in 51...100 {
-            let op = oq.createCancellableOperation { _, v in
+            let op = oq.createInteractiveOperation { _, v in
                 v.mutate { $0.append(val) }
             }
             ops.append(op)

@@ -24,7 +24,7 @@ import Foundation
 ///     class MyOperation: BasicOperation {
 ///         override func main() {
 ///             // At the start, call this and conditionally return:
-///             guard mainStartOperation() else { return }
+///             guard mainShouldStart() else { return }
 ///
 ///             // ... do some work ...
 ///
@@ -41,7 +41,13 @@ import Foundation
 ///     }
 ///
 /// - important: This object is designed to be subclassed. See the Foundation documentation for `Operation` regarding overriding `start()` and be sure to follow the guidelines in these inline docs regarding `BasicOperation` specifically.
-open class BasicOperation: Operation {
+open class BasicOperation: Operation, ProgressReporting {
+    
+    // MARK: - Progress
+    
+    /// **OTCore:**
+    /// Progress object representing progress of the operation.
+    @Atomic public var progress: Progress = .init(totalUnitCount: 1)
     
     // MARK: - KVO
     
@@ -62,6 +68,10 @@ open class BasicOperation: Operation {
     // adding KVO compliance
     @objc dynamic
     public final override var qualityOfService: QualityOfService {
+        get { _qualityOfService }
+        set { _qualityOfService = newValue }
+    }
+    private var _qualityOfService: QualityOfService = .default {
         willSet { willChangeValue(for: \.qualityOfService) }
         didSet { didChangeValue(for: \.qualityOfService) }
     }
@@ -69,17 +79,23 @@ open class BasicOperation: Operation {
     // MARK: - Method Overrides
     
     public final override func start() {
-        if isCancelled { completeOperation() }
+        if isCancelled { completeOperation(dueToCancellation: true) }
         super.start()
+    }
+    
+    public final override func cancel() {
+        super.cancel()
+        progress.cancel()
     }
     
     // MARK: - Methods
     
+    /// **OTCore:**
     /// Returns true if operation should begin.
-    public final func mainStartOperation() -> Bool {
+    public final func mainShouldStart() -> Bool {
         
         guard !isCancelled else {
-            completeOperation()
+            completeOperation(dueToCancellation: true)
             return false
         }
         
@@ -89,20 +105,29 @@ open class BasicOperation: Operation {
         
     }
     
+    /// **OTCore:**
     /// Call this once all execution is complete in the operation.
-    public final func completeOperation() {
+    /// If returning early from the operation due to `isCancelled` being true, call this with the `dueToCancellation` flag set to `true` to update this operation's progress as cancelled.
+    public final func completeOperation(dueToCancellation: Bool = false) {
+        
+        if isCancelled || dueToCancellation {
+            progress.cancel()
+        } else {
+            progress.completedUnitCount = progress.totalUnitCount
+        }
         
         _isExecuting = false
         _isFinished = true
         
     }
     
+    /// **OTCore:**
     /// Checks if `isCancelled` is true, and calls `completedOperation()` if so.
     /// Returns `isCancelled`.
     public final func mainShouldAbort() -> Bool {
         
         if isCancelled {
-            completeOperation()
+            completeOperation(dueToCancellation: true)
         }
         return isCancelled
         

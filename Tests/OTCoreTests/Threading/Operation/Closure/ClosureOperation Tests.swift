@@ -40,9 +40,14 @@ final class Threading_ClosureOperation_Tests: XCTestCase {
         
         wait(for: [mainBlockExp, completionBlockExp], timeout: 0.5)
         
+        // state
+        XCTAssertTrue(op.isFinished)
         XCTAssertFalse(op.isCancelled)
         XCTAssertFalse(op.isExecuting)
-        XCTAssertTrue(op.isFinished)
+        // progress
+        XCTAssertFalse(op.progress.isCancelled)
+        XCTAssertEqual(op.progress.fractionCompleted, 1.0)
+        XCTAssertFalse(op.progress.isIndeterminate)
         
     }
     
@@ -70,17 +75,61 @@ final class Threading_ClosureOperation_Tests: XCTestCase {
         
         wait(for: [mainBlockExp, completionBlockExp], timeout: 0.3)
         
+        // state
         XCTAssertTrue(op.isReady)
+        XCTAssertFalse(op.isFinished)
         XCTAssertFalse(op.isCancelled)
         XCTAssertFalse(op.isExecuting)
-        XCTAssertFalse(op.isFinished)
+        // progress
+        XCTAssertFalse(op.progress.isCancelled)
+        XCTAssertEqual(op.progress.fractionCompleted, 0.0)
+        XCTAssertFalse(op.progress.isIndeterminate)
+        
+    }
+    
+    /// Test as a standalone operation. Cancel it before it runs.
+    func testOpCancelBeforeRun() {
+        
+        let mainBlockExp = expectation(description: "Main Block Called")
+        mainBlockExp.isInverted = true
+        
+        let op = ClosureOperation {
+            self.mainCheck()
+        }
+        
+        // have to define this after ClosureOperation is initialized, since it can't reference itself in its own initializer closure
+        mainCheck = {
+            mainBlockExp.fulfill()
+            XCTAssertTrue(op.isExecuting)
+        }
+        
+        let completionBlockExp = expectation(description: "Completion Block Called")
+        
+        op.completionBlock = {
+            completionBlockExp.fulfill()
+        }
+        
+        op.cancel()
+        op.start() // in an OperationQueue, all operations must start even if they're already cancelled
+        
+        wait(for: [mainBlockExp, completionBlockExp], timeout: 0.3)
+        
+        // state
+        XCTAssertTrue(op.isReady)
+        XCTAssertTrue(op.isFinished)
+        XCTAssertTrue(op.isCancelled)
+        XCTAssertFalse(op.isExecuting)
+        // progress
+        XCTAssertTrue(op.progress.isCancelled)
+        XCTAssertEqual(op.progress.fractionCompleted, 0.0)
+        XCTAssertFalse(op.progress.isIndeterminate)
         
     }
     
     /// Test in the context of an OperationQueue. Run is implicit.
     func testQueue() {
         
-        let oq = OperationQueue()
+        let opQ = OperationQueue()
         
         let mainBlockExp = expectation(description: "Main Block Called")
         
@@ -100,16 +149,27 @@ final class Threading_ClosureOperation_Tests: XCTestCase {
             completionBlockExp.fulfill()
         }
         
+        // must manually increment for OperationQueue
+        opQ.progress.totalUnitCount += 1
         // queue automatically starts the operation once it's added
-        oq.addOperation(op)
+        opQ.addOperation(op)
         
         wait(for: [mainBlockExp, completionBlockExp], timeout: 0.5)
         
-        XCTAssertEqual(oq.operationCount, 0)
-        
+        // state
+        XCTAssertEqual(opQ.operationCount, 0)
+        XCTAssertTrue(op.isFinished)
         XCTAssertFalse(op.isCancelled)
         XCTAssertFalse(op.isExecuting)
-        XCTAssertTrue(op.isFinished)
+        // progress - operation
+        XCTAssertFalse(op.progress.isCancelled)
+        XCTAssertEqual(op.progress.fractionCompleted, 1.0)
+        XCTAssertFalse(op.progress.isIndeterminate)
+        // progress - queue
+        XCTAssertTrue(opQ.progress.isFinished)
+        XCTAssertFalse(opQ.progress.isCancelled)
+        XCTAssertEqual(opQ.progress.fractionCompleted, 1.0)
+        XCTAssertFalse(opQ.progress.isIndeterminate)
         
     }
     
@@ -140,11 +200,15 @@ final class Threading_ClosureOperation_Tests: XCTestCase {
         
         op.start()
         
+        // state
         XCTAssertEqual(val, 1)
-        
+        XCTAssertTrue(op.isFinished)
         XCTAssertFalse(op.isCancelled)
         XCTAssertFalse(op.isExecuting)
-        XCTAssertTrue(op.isFinished)
+        // progress
+        XCTAssertFalse(op.progress.isCancelled)
+        XCTAssertEqual(op.progress.fractionCompleted, 1.0)
+        XCTAssertFalse(op.progress.isIndeterminate)
         
         wait(for: [mainBlockExp, completionBlockExp], timeout: 2)
         

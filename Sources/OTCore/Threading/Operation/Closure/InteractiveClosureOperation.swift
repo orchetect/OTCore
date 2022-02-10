@@ -1,5 +1,5 @@
 //
-//  CancellableClosureOperation.swift
+//  InteractiveClosureOperation.swift
 //  OTCore • https://github.com/orchetect/OTCore
 //
 
@@ -16,8 +16,16 @@ import Foundation
 ///
 /// No specific calls are required to be made within the main block, however it is best practise to periodically check if the operation is cancelled and return early if the operation may take more than a few seconds.
 ///
-///     let op = CancellableClosureOperation { operation in
+/// If progress information is available, set `operation.progress.totalUnitCount` and periodically update `operation.progress.completedUnitCount` through the operation. Cleanup will automatically finish the progress and set it to 100% once the block finishes.
+///
+///     let op = InteractiveClosureOperation { operation in
+///         // optionally: set progress info
+///         operation.progress.totalUnitCount = 100
+///
 ///         // ... do some work ...
+///
+///         // optionally: update progress periodically
+///         operation.progress.completedUnitCount = 50
 ///
 ///         // optionally: if the operation takes more
 ///         // than a few seconds on average,
@@ -40,13 +48,15 @@ import Foundation
 /// - important: This object is not intended to be subclassed. Rather, it is a simple convenience wrapper when a closure is needed to be wrapped in an `Operation` for when you require a reference to the operation which would not otherwise be available if `.addOperation{}` was called directly on an `OperationQueue`.
 ///
 /// - note: Inherits from `BasicOperation`.
-public final class CancellableClosureOperation: BasicOperation {
+public final class InteractiveClosureOperation: BasicOperation {
     
     public final override var isAsynchronous: Bool { false }
     
-    public final var mainBlock: (_ operation: CancellableClosureOperation) -> Void
+    public final var mainBlock: (_ operation: InteractiveClosureOperation) -> Void
     
-    public init(_ mainBlock: @escaping (_ operation: CancellableClosureOperation) -> Void) {
+    public init(
+        _ mainBlock: @escaping (_ operation: InteractiveClosureOperation) -> Void
+    ) {
         
         self.mainBlock = mainBlock
         
@@ -54,7 +64,7 @@ public final class CancellableClosureOperation: BasicOperation {
     
     override public func main() {
         
-        guard mainStartOperation() else { return }
+        guard mainShouldStart() else { return }
         mainBlock(self)
         completeOperation()
         
