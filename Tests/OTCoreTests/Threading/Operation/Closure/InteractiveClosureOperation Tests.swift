@@ -32,10 +32,11 @@ final class Threading_InteractiveClosureOperation_Tests: XCTestCase {
         op.start()
         
         wait(for: [mainBlockExp, completionBlockExp], timeout: 0.5)
-        
+
+        // state
+        XCTAssertTrue(op.isFinished)
         XCTAssertFalse(op.isCancelled)
         XCTAssertFalse(op.isExecuting)
-        XCTAssertTrue(op.isFinished)
         
     }
     
@@ -61,11 +62,12 @@ final class Threading_InteractiveClosureOperation_Tests: XCTestCase {
         }
         
         wait(for: [mainBlockExp, completionBlockExp], timeout: 0.3)
-        
+
+        // state
         XCTAssertTrue(op.isReady)
+        XCTAssertFalse(op.isFinished)
         XCTAssertFalse(op.isCancelled)
         XCTAssertFalse(op.isExecuting)
-        XCTAssertFalse(op.isFinished)
         
     }
     
@@ -97,10 +99,11 @@ final class Threading_InteractiveClosureOperation_Tests: XCTestCase {
         wait(for: [mainBlockExp, completionBlockExp], timeout: 0.5)
         
         XCTAssertEqual(opQ.operationCount, 0)
-        
+
+        // state
+        XCTAssertTrue(op.isFinished)
         XCTAssertFalse(op.isCancelled)
         XCTAssertFalse(op.isExecuting)
-        XCTAssertTrue(op.isFinished)
         
     }
     
@@ -128,9 +131,10 @@ final class Threading_InteractiveClosureOperation_Tests: XCTestCase {
         
         XCTAssertEqual(val, 1)
         
+        // state
+        XCTAssertTrue(op.isFinished)
         XCTAssertFalse(op.isCancelled)
         XCTAssertFalse(op.isExecuting)
-        XCTAssertTrue(op.isFinished)
         
         wait(for: [mainBlockExp, completionBlockExp], timeout: 2)
         

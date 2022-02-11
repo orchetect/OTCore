@@ -51,6 +51,7 @@ final class Threading_AtomicBlockOperation_Tests: XCTestCase {
         
         wait(for: [completionBlockExp, dataVerificationExp], timeout: 1)
         
+        // state
         XCTAssertTrue(op.isFinished)
         XCTAssertFalse(op.isCancelled)
         XCTAssertFalse(op.isExecuting)
@@ -92,6 +93,7 @@ final class Threading_AtomicBlockOperation_Tests: XCTestCase {
         XCTAssertEqual(op.value.count, 100)
         XCTAssert(Array(1...100).allSatisfy(op.value.contains))
         
+        // state
         XCTAssertTrue(op.isFinished)
         XCTAssertFalse(op.isCancelled)
         XCTAssertFalse(op.isExecuting)
@@ -177,6 +179,7 @@ final class Threading_AtomicBlockOperation_Tests: XCTestCase {
         XCTAssertEqual(op.value.count, 100)
         XCTAssert(Array(1...100).allSatisfy(op.value.contains))
         
+        // state
         XCTAssertTrue(op.isFinished)
         XCTAssertFalse(op.isCancelled)
         XCTAssertFalse(op.isExecuting)

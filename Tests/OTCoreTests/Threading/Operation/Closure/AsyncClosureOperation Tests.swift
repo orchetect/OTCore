@@ -218,7 +218,7 @@ final class Threading_AsyncClosureOperation_Tests: XCTestCase {
         XCTAssertFalse(opQ.progress.isIndeterminate)
         
         wait(for: [mainBlockFinishedExp], timeout: 0.7)
-        sleep(0.1)
+        wait(for: opQ.operationCount == 0, timeout: 0.5)
         
         // state
         XCTAssertEqual(opQ.operationCount, 0)

@@ -211,7 +211,6 @@ final class Threading_InteractiveAsyncClosureOperation_Tests: XCTestCase {
         opQ.progress.totalUnitCount += 1
         // queue automatically starts the operation once it's added
         opQ.addOperation(op)
-        
         sleep(0.1)
         opQ.cancelAllOperations() // cancel the queue, not the operation. it cancels its operations.
         
