@@ -116,7 +116,7 @@ final class Threading_InteractiveClosureOperation_Tests: XCTestCase {
         let op = InteractiveClosureOperation { operation in
             mainBlockExp.fulfill()
             XCTAssertTrue(operation.isExecuting)
-            usleep(500_000) // 500 milliseconds
+            sleep(0.5)
             val = 1
         }
         

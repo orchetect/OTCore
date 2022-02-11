@@ -91,7 +91,7 @@ final class Threading_InteractiveAsyncClosureOperation_Tests: XCTestCase {
             for i in 1...100 { // finishes in 20 seconds
                 operation.progress.completedUnitCount = Int64(i)
                 
-                usleep(200_000) // 200 milliseconds
+                sleep(0.2)
                 
                 // would call this once ore more throughout the operation
                 if operation.mainShouldAbort() { return }
@@ -105,7 +105,7 @@ final class Threading_InteractiveAsyncClosureOperation_Tests: XCTestCase {
         }
         
         op.start()
-        usleep(100_000) // 100 milliseconds
+        sleep(0.1)
         op.cancel() // cancel the operation directly (since we are not using an OperationQueue)
         
         wait(for: [mainBlockExp, completionBlockExp], timeout: 0.5)
@@ -194,7 +194,7 @@ final class Threading_InteractiveAsyncClosureOperation_Tests: XCTestCase {
             for i in 1...100 { // finishes in 20 seconds
                 operation.progress.completedUnitCount = Int64(i)
                 
-                usleep(200_000) // 200 milliseconds
+                sleep(0.2)
                 
                 // would call this once ore more throughout the operation
                 if operation.mainShouldAbort() { return }
@@ -212,7 +212,7 @@ final class Threading_InteractiveAsyncClosureOperation_Tests: XCTestCase {
         // queue automatically starts the operation once it's added
         opQ.addOperation(op)
         
-        usleep(100_000) // 100 milliseconds
+        sleep(0.1)
         opQ.cancelAllOperations() // cancel the queue, not the operation. it cancels its operations.
         
         wait(for: [mainBlockExp, mainBlockFinishedExp, completionBlockExp], timeout: 0.5)

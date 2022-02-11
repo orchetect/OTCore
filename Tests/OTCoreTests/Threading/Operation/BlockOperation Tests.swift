@@ -21,7 +21,7 @@ final class BlockOperation_Tests: XCTestCase {
         
         for val in 1...100 { // will multi-thread
             op.addExecutionBlock {
-                usleep(100_000) // milliseconds
+                sleep(0.1)
                 self.arr.append(val)
             }
         }

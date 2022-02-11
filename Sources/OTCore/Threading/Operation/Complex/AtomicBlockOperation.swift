@@ -139,11 +139,11 @@ open class AtomicBlockOperation<T>: BasicOperation {
         // this ensures that the operation runs synchronously
         // which mirrors the behavior of BlockOperation
         while !isFinished {
-            usleep(10_000) // 10 milliseconds
+            sleep(0.010) // 10ms
             
-            //Thread.sleep(forTimeInterval: 0.010) // 10 milliseconds
+            //Thread.sleep(forTimeInterval: 0.010)
             
-            //RunLoop.current.run(until: Date().addingTimeInterval(0.010)) // 10 milliseconds
+            //RunLoop.current.run(until: Date().addingTimeInterval(0.010))
         }
         
     }

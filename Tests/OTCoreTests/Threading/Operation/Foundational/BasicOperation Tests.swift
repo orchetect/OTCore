@@ -63,7 +63,7 @@ final class Threading_BasicOperation_Tests: XCTestCase {
             // but it does nothing here since we're not asking this class to cancel
             if mainShouldAbort() { return }
             
-            usleep(500_000) // 500 milliseconds
+            sleep(0.5)
             val = valChangeTo
             
             completeOperation()

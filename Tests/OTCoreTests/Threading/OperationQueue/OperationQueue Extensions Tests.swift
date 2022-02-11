@@ -22,7 +22,7 @@ final class Threading_OperationQueueExtensions_Tests: XCTestCase {
         var val = 0
         
         opQ.addOperation {
-            usleep(100_000) // 100 milliseconds
+            sleep(0.1)
             val = 1
         }
         

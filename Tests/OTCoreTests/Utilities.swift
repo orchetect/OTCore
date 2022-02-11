@@ -6,6 +6,7 @@
 #if shouldTestCurrentPlatform
 
 import XCTest
+import OTCore
 
 extension XCTestCase {
     
@@ -68,7 +69,7 @@ class Utilities_WaitForConditionTests: XCTestCase {
         var someString = "default string"
         
         DispatchQueue.global().async {
-            usleep(20_000) // 20 milliseconds
+            sleep(0.02)
             someString = "new string"
         }
         
