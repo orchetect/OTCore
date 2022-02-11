@@ -57,12 +57,16 @@ class Utilities_WaitForConditionTests: XCTestCase {
         
     }
     
+    #if swift(>=5.4)
+    /// `XCTExpectFailure()` is only available in Xcode 12.5 or later. Swift 5.4 shipped in Xcode 12.5.
     func testWaitForCondition_False() {
         
         XCTExpectFailure()
+        
         wait(for: false, timeout: 0.1)
         
     }
+    #endif
     
     func testWaitForCondition() {
         
