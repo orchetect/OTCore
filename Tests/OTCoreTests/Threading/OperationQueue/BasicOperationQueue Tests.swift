@@ -87,7 +87,7 @@ final class Threading_BasicOperationQueue_Tests: XCTestCase {
         
         wait(for: opQ.status == .idle, timeout: 0.2)
         
-        wait(for: opQ.progress.totalUnitCount == 0, timeout: 0.2)
+        wait(for: opQ.progress.totalUnitCount == 0, timeout: 0.5)
         XCTAssertEqual(opQ.progress.totalUnitCount, 0)
         
     }

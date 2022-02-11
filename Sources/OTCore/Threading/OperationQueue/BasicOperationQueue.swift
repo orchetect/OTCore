@@ -46,7 +46,7 @@ open class BasicOperationQueue: OperationQueue {
     
     /// Operation queue status.
     /// To observe changes to this value, supply a closure to the `statusHandler` property.
-    public internal(set) var status: OperationQueueStatus = .idle {
+    @Atomic public internal(set) var status: OperationQueueStatus = .idle {
         didSet {
             if status != oldValue {
                 statusHandler?(status, oldValue)
