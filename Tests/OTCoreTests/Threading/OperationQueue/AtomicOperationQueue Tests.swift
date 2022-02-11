@@ -13,86 +13,108 @@ final class Threading_AtomicOperationQueue_Tests: XCTestCase {
     /// Serial FIFO queue.
     func testOp_serialFIFO_Run() {
         
-        let oq = AtomicOperationQueue(type: .serialFIFO,
-                                      initialMutableValue: [Int]())
+        let opQ = AtomicOperationQueue(type: .serialFIFO,
+                                       initialMutableValue: [Int]())
         
         for val in 1...100 {
-            oq.addOperation { $0.mutate { $0.append(val) } }
+            opQ.addOperation { $0.mutate { $0.append(val) } }
         }
         
-        let timeoutResult = oq.waitUntilAllOperationsAreFinished(timeout: .seconds(1))
-        XCTAssertEqual(timeoutResult, .success)
+        wait(for: opQ.status == .idle, timeout: 0.5)
+        //let timeoutResult = opQ.waitUntilAllOperationsAreFinished(timeout: .seconds(1))
+        //XCTAssertEqual(timeoutResult, .success)
         
-        XCTAssertEqual(oq.sharedMutableValue.count, 100)
-        XCTAssert(Array(1...100).allSatisfy(oq.sharedMutableValue.contains))
+        XCTAssertEqual(opQ.sharedMutableValue.count, 100)
+        XCTAssert(Array(1...100).allSatisfy(opQ.sharedMutableValue.contains))
         
-        XCTAssertEqual(oq.operationCount, 0)
-        XCTAssertFalse(oq.isSuspended)
+        XCTAssertEqual(opQ.operationCount, 0)
+        XCTAssertFalse(opQ.isSuspended)
+        XCTAssertEqual(opQ.status, .idle)
         
     }
     
     /// Concurrent automatic threading. Run it.
     func testOp_concurrentAutomatic_Run() {
         
-        let oq = AtomicOperationQueue(type: .concurrentAutomatic,
-                                      initialMutableValue: [Int]())
+        let opQ = AtomicOperationQueue(type: .concurrentAutomatic,
+                                       initialMutableValue: [Int]())
         
         for val in 1...100 {
-            oq.addOperation { $0.mutate { $0.append(val) } }
+            opQ.addOperation { $0.mutate { $0.append(val) } }
         }
         
-        let timeoutResult = oq.waitUntilAllOperationsAreFinished(timeout: .seconds(1))
-        XCTAssertEqual(timeoutResult, .success)
+        wait(for: opQ.status == .idle, timeout: 0.5)
+        //let timeoutResult = opQ.waitUntilAllOperationsAreFinished(timeout: .seconds(1))
+        //XCTAssertEqual(timeoutResult, .success)
         
-        XCTAssertEqual(oq.sharedMutableValue.count, 100)
+        XCTAssertEqual(opQ.sharedMutableValue.count, 100)
         // this happens to be in serial order even though we are using concurrent threads and no operation dependencies are being used
-        XCTAssert(Array(1...100).allSatisfy(oq.sharedMutableValue.contains))
+        XCTAssert(Array(1...100).allSatisfy(opQ.sharedMutableValue.contains))
         
-        XCTAssertEqual(oq.operationCount, 0)
-        XCTAssertFalse(oq.isSuspended)
+        XCTAssertEqual(opQ.operationCount, 0)
+        XCTAssertFalse(opQ.isSuspended)
+        XCTAssertEqual(opQ.status, .idle)
         
     }
     
-    /// Concurrent automatic threading. Do not run it.
+    /// Concurrent automatic threading. Do not run it. Check status. Run it. Check status.
     func testOp_concurrentAutomatic_NotRun() {
         
-        let oq = AtomicOperationQueue(type: .concurrentAutomatic,
-                                      initialMutableValue: [Int]())
+        let opQ = AtomicOperationQueue(type: .concurrentAutomatic,
+                                       initialMutableValue: [Int]())
         
-        oq.isSuspended = true
+        opQ.isSuspended = true
+        
+        XCTAssertEqual(opQ.status, .paused)
         
         for val in 1...100 {
-            oq.addOperation { $0.mutate { $0.append(val) } }
+            opQ.addOperation { $0.mutate { $0.append(val) } }
         }
         
-        let timeoutResult = oq.waitUntilAllOperationsAreFinished(timeout: .seconds(1))
+        XCTAssertEqual(opQ.status, .paused)
+        
+        let timeoutResult = opQ.waitUntilAllOperationsAreFinished(timeout: .milliseconds(200))
         XCTAssertEqual(timeoutResult, .timedOut)
         
-        XCTAssertEqual(oq.sharedMutableValue, [])
-        XCTAssertEqual(oq.operationCount, 100)
-        XCTAssertTrue(oq.isSuspended)
+        XCTAssertEqual(opQ.sharedMutableValue, [])
+        XCTAssertEqual(opQ.operationCount, 100)
+        XCTAssertTrue(opQ.isSuspended)
+        
+        wait(for: opQ.status == .paused, timeout: 0.1)
+        XCTAssertEqual(opQ.status, .paused)
+        
+        opQ.isSuspended = false
+        
+        wait(for: opQ.status == .idle, timeout: 0.5)
+        XCTAssertEqual(opQ.status, .idle)
+        
+        XCTAssertEqual(opQ.sharedMutableValue.count, 100)
+        // this happens to be in serial order even though we are using concurrent threads and no operation dependencies are being used
+        XCTAssert(Array(1...100).allSatisfy(opQ.sharedMutableValue.contains))
         
     }
     
     /// Concurrent automatic threading. Run it.
     func testOp_concurrentSpecific_Run() {
         
-        let oq = AtomicOperationQueue(type: .concurrent(max: 10),
-                                      initialMutableValue: [Int]())
+        let opQ = AtomicOperationQueue(type: .concurrent(max: 10),
+                                       initialMutableValue: [Int]())
         
         for val in 1...100 {
-            oq.addOperation { $0.mutate { $0.append(val) } }
+            opQ.addOperation { $0.mutate { $0.append(val) } }
         }
         
-        let timeoutResult = oq.waitUntilAllOperationsAreFinished(timeout: .seconds(1))
-        XCTAssertEqual(timeoutResult, .success)
+        wait(for: opQ.status == .idle, timeout: 0.5)
+        //let timeoutResult = opQ.waitUntilAllOperationsAreFinished(timeout: .seconds(1))
+        //XCTAssertEqual(timeoutResult, .success)
         
-        XCTAssertEqual(oq.sharedMutableValue.count, 100)
+        XCTAssertEqual(opQ.sharedMutableValue.count, 100)
         // this happens to be in serial order even though we are using concurrent threads and no operation dependencies are being used
-        XCTAssert(Array(1...100).allSatisfy(oq.sharedMutableValue.contains))
+        XCTAssert(Array(1...100).allSatisfy(opQ.sharedMutableValue.contains))
         
-        XCTAssertEqual(oq.operationCount, 0)
-        XCTAssertFalse(oq.isSuspended)
+        XCTAssertEqual(opQ.operationCount, 0)
+        XCTAssertFalse(opQ.isSuspended)
+        XCTAssertEqual(opQ.status, .idle)
         
     }
     
@@ -100,33 +122,34 @@ final class Threading_AtomicOperationQueue_Tests: XCTestCase {
     /// Test the behavior of `addOperations()`. It should add operations in array order.
     func testOp_serialFIFO_AddOperations_Run() {
         
-        let oq = AtomicOperationQueue(type: .serialFIFO,
-                                      initialMutableValue: [Int]())
+        let opQ = AtomicOperationQueue(type: .serialFIFO,
+                                       initialMutableValue: [Int]())
         var ops: [Operation] = []
         
         // first generate operation objects
         for val in 1...50 {
-            let op = oq.createOperation { $0.mutate { $0.append(val) } }
+            let op = opQ.createOperation { $0.mutate { $0.append(val) } }
             ops.append(op)
         }
         for val in 51...100 {
-            let op = oq.createInteractiveOperation { _, v in
+            let op = opQ.createInteractiveOperation { _, v in
                 v.mutate { $0.append(val) }
             }
             ops.append(op)
         }
         
         // then addOperations() with all 100 operations
-        oq.addOperations(ops, waitUntilFinished: false)
+        opQ.addOperations(ops, waitUntilFinished: false)
         
-        let timeoutResult = oq.waitUntilAllOperationsAreFinished(timeout: .seconds(1))
+        let timeoutResult = opQ.waitUntilAllOperationsAreFinished(timeout: .seconds(1))
         XCTAssertEqual(timeoutResult, .success)
         
-        XCTAssertEqual(oq.sharedMutableValue.count, 100)
-        XCTAssert(Array(1...100).allSatisfy(oq.sharedMutableValue.contains))
+        XCTAssertEqual(opQ.sharedMutableValue.count, 100)
+        XCTAssert(Array(1...100).allSatisfy(opQ.sharedMutableValue.contains))
         
-        XCTAssertEqual(oq.operationCount, 0)
-        XCTAssertFalse(oq.isSuspended)
+        XCTAssertEqual(opQ.operationCount, 0)
+        XCTAssertFalse(opQ.isSuspended)
+        XCTAssertEqual(opQ.status, .idle)
         
     }
     

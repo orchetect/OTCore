@@ -197,7 +197,7 @@ open class BasicOperationQueue: OperationQueue {
             }
         )
         
-        // self.progress.fractionCompleted
+        // self.operationCount
         
         observers.append(
             observe(\.operationCount, options: [.new])
@@ -205,9 +205,14 @@ open class BasicOperationQueue: OperationQueue {
                 guard let self = self else { return }
                 //guard let newValue = change.newValue else { return }
                 
+                guard !self.isSuspended else { return }
                 guard !self.progress.isFinished else { return }
-                self.status = .inProgress(fractionCompleted: self.progress.fractionCompleted,
-                                          message: self.progress.localizedDescription)
+                if self.operationCount > 0 {
+                    self.status = .inProgress(fractionCompleted: self.progress.fractionCompleted,
+                                              message: self.progress.localizedDescription)
+                } else {
+                    self.status = .idle
+                }
             }
         )
         
@@ -220,7 +225,12 @@ open class BasicOperationQueue: OperationQueue {
                 guard let self = self else { return }
                 //guard let newValue = change.newValue else { return }
                 
-                guard !self.progress.isFinished else { return }
+                guard !self.isSuspended else { return }
+                guard !self.progress.isFinished,
+                      self.operationCount > 0 else {
+                          self.status = .idle
+                          return
+                      }
                 self.status = .inProgress(fractionCompleted: self.progress.fractionCompleted,
                                           message: self.progress.localizedDescription)
             }
@@ -232,9 +242,9 @@ open class BasicOperationQueue: OperationQueue {
             observe(\.isSuspended, options: [.new])
             { [weak self] _, change in
                 guard let self = self else { return }
-                guard let newValue = change.newValue else { return }
+                //guard let newValue = change.newValue else { return }
                 
-                if newValue {
+                if self.isSuspended {
                     self.status = .paused
                 } else {
                     if self.operationCount > 0 {
