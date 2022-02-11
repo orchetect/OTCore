@@ -210,7 +210,7 @@ class Extensions_Foundation_DispatchGroup_Tests: XCTestCase {
         DispatchGroup.sync { g1 in
             DispatchQueue.global().async {
                 DispatchGroup.sync { g2 in
-                    DispatchQueue.global().asyncAfter(deadline: .now() + .milliseconds(100)) {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(100)) {
                         result = DispatchGroup.sync { g3 in
                             sleep(0.1)
                             exp.fulfill()
