@@ -215,11 +215,19 @@ open class AtomicBlockOperation<T>: BasicOperation {
         
     }
     
+    private func removeObservers() {
+        
+        observers.removeAll()
+        
+    }
+    
     deinit {
+        
         setupBlock = nil
         
         // this is very important or it may result in random crashes if the KVO observers aren't nuked at the appropriate time
-        observers.removeAll()
+        removeObservers()
+        
     }
     
 }

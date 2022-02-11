@@ -44,6 +44,8 @@ open class BasicOperationQueue: OperationQueue {
     
     // MARK: - Status
     
+    /// Operation queue status.
+    /// To observe changes to this value, supply a closure to the `statusHandler` property.
     public internal(set) var status: OperationQueueStatus = .idle {
         didSet {
             if status != oldValue {
@@ -81,6 +83,8 @@ open class BasicOperationQueue: OperationQueue {
         super.init()
         
         updateFromOperationQueueType()
+        
+        addObservers()
         
     }
     
@@ -173,6 +177,7 @@ open class BasicOperationQueue: OperationQueue {
     /// **OTCore:**
     /// Retain property observers. For safety, this array must be emptied on class deinit.
     private var observers: [NSKeyValueObservation] = []
+    
     private func addObservers() {
         
         // self.progress.isFinished
@@ -181,9 +186,9 @@ open class BasicOperationQueue: OperationQueue {
             progress.observe(\.isFinished, options: [.new])
             { [weak self] _, change in
                 guard let self = self else { return }
-                guard let newValue = change.newValue else { return }
+                //guard let newValue = change.newValue else { return }
                 
-                if newValue {
+                if self.progress.isFinished {
                     if self.resetProgressWhenFinished {
                         self.progress.totalUnitCount = 0
                     }
@@ -195,13 +200,28 @@ open class BasicOperationQueue: OperationQueue {
         // self.progress.fractionCompleted
         
         observers.append(
+            observe(\.operationCount, options: [.new])
+            { [weak self] _, change in
+                guard let self = self else { return }
+                //guard let newValue = change.newValue else { return }
+                
+                guard !self.progress.isFinished else { return }
+                self.status = .inProgress(fractionCompleted: self.progress.fractionCompleted,
+                                          message: self.progress.localizedDescription)
+            }
+        )
+        
+        
+        // self.progress.fractionCompleted
+        
+        observers.append(
             progress.observe(\.fractionCompleted, options: [.new])
             { [weak self] _, change in
                 guard let self = self else { return }
-                guard let newValue = change.newValue else { return }
+                //guard let newValue = change.newValue else { return }
                 
                 guard !self.progress.isFinished else { return }
-                self.status = .inProgress(fractionCompleted: newValue,
+                self.status = .inProgress(fractionCompleted: self.progress.fractionCompleted,
                                           message: self.progress.localizedDescription)
             }
         )
@@ -231,9 +251,17 @@ open class BasicOperationQueue: OperationQueue {
         
     }
     
-    deinit {
-        // this is very important or it may result in random crashes if the KVO observers aren't nuked at the appropriate time
+    private func removeObservers() {
+        
         observers.removeAll()
+        
+    }
+    
+    deinit {
+        
+        // this is very important or it may result in random crashes if the KVO observers aren't nuked at the appropriate time
+        removeObservers()
+        
     }
     
 }
