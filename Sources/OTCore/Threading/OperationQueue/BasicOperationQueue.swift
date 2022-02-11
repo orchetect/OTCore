@@ -180,68 +180,12 @@ open class BasicOperationQueue: OperationQueue {
     
     private func addObservers() {
         
-        // self.progress.isFinished
-        
-        observers.append(
-            progress.observe(\.isFinished, options: [.new])
-            { [weak self] _, change in
-                guard let self = self else { return }
-                //guard let newValue = change.newValue else { return }
-                
-                if self.progress.isFinished {
-                    if self.resetProgressWhenFinished {
-                        self.progress.totalUnitCount = 0
-                    }
-                    self.status = .idle
-                }
-            }
-        )
-        
-        // self.operationCount
-        
-        observers.append(
-            observe(\.operationCount, options: [.new])
-            { [weak self] _, change in
-                guard let self = self else { return }
-                //guard let newValue = change.newValue else { return }
-                
-                guard !self.isSuspended else { return }
-                guard !self.progress.isFinished else { return }
-                if self.operationCount > 0 {
-                    self.status = .inProgress(fractionCompleted: self.progress.fractionCompleted,
-                                              message: self.progress.localizedDescription)
-                } else {
-                    self.status = .idle
-                }
-            }
-        )
-        
-        // self.progress.fractionCompleted
-        
-        observers.append(
-            progress.observe(\.fractionCompleted, options: [.new])
-            { [weak self] _, change in
-                guard let self = self else { return }
-                //guard let newValue = change.newValue else { return }
-                
-                guard !self.isSuspended else { return }
-                guard !self.progress.isFinished,
-                      self.operationCount > 0 else {
-                          self.status = .idle
-                          return
-                      }
-                self.status = .inProgress(fractionCompleted: self.progress.fractionCompleted,
-                                          message: self.progress.localizedDescription)
-            }
-        )
-        
         // self.isSuspended
         
         observers.append(
             observe(\.isSuspended, options: [.new])
-            { [weak self] _, change in
+            { [weak self] _, _ in
                 guard let self = self else { return }
-                //guard let newValue = change.newValue else { return }
                 
                 if self.isSuspended {
                     self.status = .paused
@@ -258,10 +202,63 @@ open class BasicOperationQueue: OperationQueue {
             }
         )
         
+        // self.progress.isFinished
+        
+        observers.append(
+            progress.observe(\.isFinished, options: [.new])
+            { [weak self] _, _ in
+                guard let self = self else { return }
+                
+                if self.progress.isFinished {
+                    if self.resetProgressWhenFinished {
+                        self.progress.totalUnitCount = 0
+                    }
+                    self.status = .idle
+                }
+            }
+        )
+        
+        // self.operationCount
+        
+        observers.append(
+            observe(\.operationCount, options: [.new])
+            { [weak self] _, _ in
+                guard let self = self else { return }
+                
+                guard !self.isSuspended else { return }
+                guard !self.progress.isFinished else { return }
+                if self.operationCount > 0 {
+                    self.status = .inProgress(fractionCompleted: self.progress.fractionCompleted,
+                                              message: self.progress.localizedDescription)
+                } else {
+                    self.status = .idle
+                }
+            }
+        )
+        
+        // self.progress.fractionCompleted
+        
+        observers.append(
+            progress.observe(\.fractionCompleted, options: [.new])
+            { [weak self] _, _ in
+                guard let self = self else { return }
+                
+                guard !self.isSuspended else { return }
+                guard !self.progress.isFinished,
+                      self.operationCount > 0 else {
+                          self.status = .idle
+                          return
+                      }
+                self.status = .inProgress(fractionCompleted: self.progress.fractionCompleted,
+                                          message: self.progress.localizedDescription)
+            }
+        )
+        
     }
     
     private func removeObservers() {
         
+        observers.forEach { $0.invalidate() } // for extra safety, invalidate them first
         observers.removeAll()
         
     }

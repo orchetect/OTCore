@@ -159,27 +159,12 @@ open class AtomicBlockOperation<T>: BasicOperation {
         
         observers.append(
             observe(\.isCancelled, options: [.new])
-            { [weak self] _, change in
+            { [weak self] _, _ in
                 guard let self = self else { return }
-                guard let newValue = change.newValue else { return }
                 
-                if newValue {
+                if self.isCancelled {
                     self.operationQueue.cancelAllOperations()
                     self.completeOperation(dueToCancellation: true)
-                }
-            }
-        )
-        
-        // self.operationQueue.operationCount
-        
-        observers.append(
-            operationQueue.observe(\.operationCount, options: [.new])
-            { [weak self] _, change in
-                guard let self = self else { return }
-                guard let newValue = change.newValue else { return }
-                
-                if newValue == 0 {
-                    self.completeOperation()
                 }
             }
         )
@@ -188,7 +173,7 @@ open class AtomicBlockOperation<T>: BasicOperation {
         
         observers.append(
             observe(\.qualityOfService, options: [.new])
-            { [weak self] _, change in
+            { [weak self] _, _ in
                 guard let self = self else { return }
                 
                 // for some reason, change.newValue is nil here. so just read from the property directly.
@@ -199,15 +184,27 @@ open class AtomicBlockOperation<T>: BasicOperation {
             }
         )
         
+        // self.operationQueue.operationCount
+        
+        observers.append(
+            operationQueue.observe(\.operationCount, options: [.new])
+            { [weak self] _, _ in
+                guard let self = self else { return }
+                
+                if self.operationQueue.operationCount == 0 {
+                    self.completeOperation()
+                }
+            }
+        )
+        
         // self.operationQueue.progress.isFinished
         
         observers.append(
             operationQueue.progress.observe(\.isFinished, options: [.new])
-            { [weak self] _, change in
+            { [weak self] _, _ in
                 guard let self = self else { return }
-                guard let newValue = change.newValue else { return }
                 
-                if newValue {
+                if self.operationQueue.progress.isFinished {
                     self.completeOperation()
                 }
             }
@@ -217,8 +214,8 @@ open class AtomicBlockOperation<T>: BasicOperation {
     
     private func removeObservers() {
         
+        observers.forEach { $0.invalidate() } // for extra safety, invalidate them first
         observers.removeAll()
-        
     }
     
     deinit {
