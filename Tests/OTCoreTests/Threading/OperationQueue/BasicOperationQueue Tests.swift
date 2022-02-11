@@ -60,6 +60,38 @@ final class Threading_BasicOperationQueue_Tests: XCTestCase {
         
     }
     
+    func testResetProgressWhenFinished_False() {
+        
+        let opQ = BasicOperationQueue(type: .serialFIFO,
+                                      resetProgressWhenFinished: false)
+        
+        for _ in 1...10 {
+            opQ.addOperation { }
+        }
+        
+        wait(for: opQ.status == .idle, timeout: 0.2)
+        wait(for: opQ.operationCount == 0, timeout: 0.2)
+        
+        XCTAssertEqual(opQ.progress.totalUnitCount, 10)
+        
+    }
+    
+    func testResetProgressWhenFinished_True() {
+        
+        let opQ = BasicOperationQueue(type: .serialFIFO,
+                                      resetProgressWhenFinished: true)
+        
+        for _ in 1...10 {
+            opQ.addOperation { }
+        }
+        
+        wait(for: opQ.status == .idle, timeout: 0.2)
+        
+        wait(for: opQ.progress.totalUnitCount == 0, timeout: 0.2)
+        XCTAssertEqual(opQ.progress.totalUnitCount, 0)
+        
+    }
+    
     func testStatus() {
         
         let opQ = BasicOperationQueue(type: .serialFIFO)
