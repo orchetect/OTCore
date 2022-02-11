@@ -216,7 +216,6 @@ open class BasicOperationQueue: OperationQueue {
             }
         )
         
-        
         // self.progress.fractionCompleted
         
         observers.append(
