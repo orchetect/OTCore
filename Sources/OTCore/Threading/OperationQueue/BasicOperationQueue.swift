@@ -66,6 +66,7 @@ open class BasicOperationQueue: OperationQueue {
     @Atomic private var _progress: Progress = .init()
     
     @available(macOS 10.9, iOS 7.0, tvOS 9.0, watchOS 2.0, *)
+    @objc dynamic
     public override final var progress: Progress { _progress }
     
     // MARK: - Init
@@ -184,16 +185,16 @@ open class BasicOperationQueue: OperationQueue {
         
         observers.append(
             observe(\.isSuspended, options: [.new])
-            { [weak self] _, _ in
-                guard let self = self else { return }
+            { [self, progress] _, _ in
+                // !!! DO NOT USE [weak self] HERE. MUST BE STRONG SELF !!!
                 
                 if self.isSuspended {
                     self.status = .paused
                 } else {
                     if self.operationCount > 0 {
                         self.status = .inProgress(
-                            fractionCompleted: self.progress.fractionCompleted,
-                            message: self.progress.localizedDescription
+                            fractionCompleted: progress.fractionCompleted,
+                            message: progress.localizedDescription
                         )
                     } else {
                         self.status = .idle
@@ -202,34 +203,18 @@ open class BasicOperationQueue: OperationQueue {
             }
         )
         
-        // self.progress.isFinished
-        
-        observers.append(
-            progress.observe(\.isFinished, options: [.new])
-            { [weak self] _, _ in
-                guard let self = self else { return }
-                
-                if self.progress.isFinished {
-                    if self.resetProgressWhenFinished {
-                        self.progress.totalUnitCount = 0
-                    }
-                    self.status = .idle
-                }
-            }
-        )
-        
         // self.operationCount
         
         observers.append(
             observe(\.operationCount, options: [.new])
-            { [weak self] _, _ in
-                guard let self = self else { return }
+            { [self, progress] _, _ in
+                // !!! DO NOT USE [weak self] HERE. MUST BE STRONG SELF !!!
                 
                 guard !self.isSuspended else { return }
-                guard !self.progress.isFinished else { return }
+                guard !progress.isFinished else { return }
                 if self.operationCount > 0 {
-                    self.status = .inProgress(fractionCompleted: self.progress.fractionCompleted,
-                                              message: self.progress.localizedDescription)
+                    self.status = .inProgress(fractionCompleted: progress.fractionCompleted,
+                                              message: progress.localizedDescription)
                 } else {
                     self.status = .idle
                 }
@@ -237,20 +222,38 @@ open class BasicOperationQueue: OperationQueue {
         )
         
         // self.progress.fractionCompleted
+        // (NSProgress docs state that fractionCompleted is KVO-observable)
         
         observers.append(
             progress.observe(\.fractionCompleted, options: [.new])
-            { [weak self] _, _ in
-                guard let self = self else { return }
+            { [self, progress] _, _ in
+                // !!! DO NOT USE [weak self] HERE. MUST BE STRONG SELF !!!
                 
                 guard !self.isSuspended else { return }
-                guard !self.progress.isFinished,
+                guard !progress.isFinished,
                       self.operationCount > 0 else {
                           self.status = .idle
                           return
                       }
-                self.status = .inProgress(fractionCompleted: self.progress.fractionCompleted,
-                                          message: self.progress.localizedDescription)
+                self.status = .inProgress(fractionCompleted: progress.fractionCompleted,
+                                          message: progress.localizedDescription)
+            }
+        )
+        
+        // self.progress.isFinished
+        // (NSProgress docs state that isFinished is KVO-observable)
+        
+        observers.append(
+            progress.observe(\.isFinished, options: [.new])
+            { [self, progress] _, _ in
+                // !!! DO NOT USE [weak self] HERE. MUST BE STRONG SELF !!!
+                
+                if progress.isFinished {
+                    if self.resetProgressWhenFinished {
+                        progress.totalUnitCount = 0
+                    }
+                    self.status = .idle
+                }
             }
         )
         

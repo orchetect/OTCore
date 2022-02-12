@@ -47,11 +47,12 @@ open class BasicOperation: Operation, ProgressReporting {
     
     /// **OTCore:**
     /// Progress object representing progress of the operation.
-    @Atomic public var progress: Progress = .init(totalUnitCount: 1)
+    public private(set) var progress: Progress = .init(totalUnitCount: 1)
     
     // MARK: - KVO
     
     // adding KVO compliance
+    @objc dynamic
     public final override var isExecuting: Bool { _isExecuting }
     @Atomic private var _isExecuting = false {
         willSet { willChangeValue(for: \.isExecuting) }
@@ -59,6 +60,7 @@ open class BasicOperation: Operation, ProgressReporting {
     }
     
     // adding KVO compliance
+    @objc dynamic
     public final override var isFinished: Bool { _isFinished }
     @Atomic private var _isFinished = false {
         willSet { willChangeValue(for: \.isFinished) }

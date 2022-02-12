@@ -56,7 +56,7 @@ open class AtomicBlockOperation<T>: BasicOperation {
         operationQueue.operationQueueType
     }
     
-    private let operationQueue: AtomicOperationQueue<T>
+    private let operationQueue: AtomicOperationQueue<T>!
     
     /// **OTCore:**
     /// Stores a weak reference to the last `Operation` added to the internal operation queue. If the operation is complete and the queue is empty, this may return `nil`.
@@ -96,25 +96,27 @@ open class AtomicBlockOperation<T>: BasicOperation {
     
     public init(type operationQueueType: OperationQueueType,
                 initialMutableValue: T,
+                qualityOfService: QualityOfService? = nil,
                 resetProgressWhenFinished: Bool = false,
                 statusHandler: BasicOperationQueue.StatusHandler? = nil) {
         
         // assign properties
         operationQueue = AtomicOperationQueue(
             type: operationQueueType,
-            initialMutableValue: initialMutableValue,
+            qualityOfService: qualityOfService,
+            initiallySuspended: true,
             resetProgressWhenFinished: resetProgressWhenFinished,
+            initialMutableValue: initialMutableValue,
             statusHandler: statusHandler
         )
         
         // super
         super.init()
         
-        // set up queue
-        
-        operationQueue.isSuspended = true
-        
-        operationQueue.qualityOfService = qualityOfService
+        if let qualityOfService = qualityOfService {
+            self.qualityOfService = qualityOfService
+            self.operationQueue.qualityOfService = qualityOfService
+        }
         
         // set up observers
         addObservers()
@@ -159,11 +161,11 @@ open class AtomicBlockOperation<T>: BasicOperation {
         
         observers.append(
             observe(\.isCancelled, options: [.new])
-            { [weak self] _, _ in
-                guard let self = self else { return }
+            { [self, operationQueue] _, _ in
+                // !!! DO NOT USE [weak self] HERE. MUST BE STRONG SELF !!!
                 
                 if self.isCancelled {
-                    self.operationQueue.cancelAllOperations()
+                    operationQueue?.cancelAllOperations()
                     self.completeOperation(dueToCancellation: true)
                 }
             }
@@ -173,14 +175,14 @@ open class AtomicBlockOperation<T>: BasicOperation {
         
         observers.append(
             observe(\.qualityOfService, options: [.new])
-            { [weak self] _, _ in
-                guard let self = self else { return }
+            { [self, operationQueue] _, _ in
+                // !!! DO NOT USE [weak self] HERE. MUST BE STRONG SELF !!!
                 
                 // for some reason, change.newValue is nil here. so just read from the property directly.
                 // guard let newValue = change.newValue else { return }
                 
                 // propagate to operation queue
-                self.operationQueue.qualityOfService = self.qualityOfService
+                operationQueue?.qualityOfService = self.qualityOfService
             }
         )
         
@@ -188,23 +190,24 @@ open class AtomicBlockOperation<T>: BasicOperation {
         
         observers.append(
             operationQueue.observe(\.operationCount, options: [.new])
-            { [weak self] _, _ in
-                guard let self = self else { return }
+            { [self, operationQueue] _, _ in
+                // !!! DO NOT USE [weak self] HERE. MUST BE STRONG SELF !!!
                 
-                if self.operationQueue.operationCount == 0 {
+                if operationQueue?.operationCount == 0 {
                     self.completeOperation()
                 }
             }
         )
         
         // self.operationQueue.progress.isFinished
+        // (NSProgress docs state that isFinished is KVO-observable)
         
         observers.append(
             operationQueue.progress.observe(\.isFinished, options: [.new])
-            { [weak self] _, _ in
-                guard let self = self else { return }
+            { [self, operationQueue] _, _ in
+                // !!! DO NOT USE [weak self] HERE. MUST BE STRONG SELF !!!
                 
-                if self.operationQueue.progress.isFinished {
+                if operationQueue?.progress.isFinished == true {
                     self.completeOperation()
                 }
             }

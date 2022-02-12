@@ -21,8 +21,10 @@ open class AtomicOperationQueue<T>: BasicOperationQueue {
     
     public init(
         type operationQueueType: OperationQueueType = .concurrentAutomatic,
-        initialMutableValue: T,
+        qualityOfService: QualityOfService? = nil,
+        initiallySuspended: Bool = false,
         resetProgressWhenFinished: Bool = false,
+        initialMutableValue: T,
         statusHandler: BasicOperationQueue.StatusHandler? = nil
     ) {
         
@@ -31,6 +33,14 @@ open class AtomicOperationQueue<T>: BasicOperationQueue {
         super.init(type: operationQueueType,
                    resetProgressWhenFinished: resetProgressWhenFinished,
                    statusHandler: statusHandler)
+        
+        if let qualityOfService = qualityOfService {
+            self.qualityOfService = qualityOfService
+        }
+        
+        if initiallySuspended {
+            isSuspended = true
+        }
         
     }
     
