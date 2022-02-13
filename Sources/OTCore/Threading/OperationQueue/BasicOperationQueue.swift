@@ -123,9 +123,10 @@ open class BasicOperationQueue: OperationQueue {
         // update progress
         progress.totalUnitCount += 1
         if let basicOp = op as? BasicOperation {
-            // OperationQueue considers each operation to be 1 unit of progress in the overall queue progress, regardless of how the child operation progress decides to set up its total unit count
+            progress.totalUnitCount += 99 // addOperation() will add 1 more
+            // give 100 units of progress in case child progress reports fractional progress
             progress.addChild(basicOp.progress,
-                              withPendingUnitCount: 1)
+                              withPendingUnitCount: 100)
         }
         
         lastAddedOperation = op
@@ -177,9 +178,10 @@ open class BasicOperationQueue: OperationQueue {
         progress.totalUnitCount += Int64(ops.count)
         for op in ops {
             if let basicOp = op as? BasicOperation {
-                // OperationQueue considers each operation to be 1 unit of progress in the overall queue progress, regardless of how the child operation progress decides to set up its total unit count
+                progress.totalUnitCount += 99 // addOperation() will add 1 more
+                // give 100 units of progress in case child progress reports fractional progress
                 progress.addChild(basicOp.progress,
-                                  withPendingUnitCount: 1)
+                                  withPendingUnitCount: 100)
             }
         }
         
@@ -211,7 +213,6 @@ open class BasicOperationQueue: OperationQueue {
                     if done {
                         setStatusIdle(resetProgress: resetProgressWhenFinished)
                     } else {
-if progress.fractionCompleted == 0.0 { print("ZERO from .isSuspended KVO") }
                         status = .inProgress(
                             fractionCompleted: progress.fractionCompleted,
                             message: progress.localizedDescription
@@ -235,7 +236,6 @@ if progress.fractionCompleted == 0.0 { print("ZERO from .isSuspended KVO") }
                    !progress.isFinished,
                    operationCount > 0
                 {
-if progress.fractionCompleted == 0.0 { print("ZERO from .operationCount KVO") }
                     status = .inProgress(fractionCompleted: progress.fractionCompleted,
                                          message: progress.localizedDescription)
                 } else {
@@ -261,7 +261,6 @@ if progress.fractionCompleted == 0.0 { print("ZERO from .operationCount KVO") }
                 {
                     setStatusIdle(resetProgress: resetProgressWhenFinished)
                 } else {
-if progress.fractionCompleted == 0.0 { print("ZERO from .progress.fractionCompleted KVO. progress.isFinished:", progress.isFinished, "operationCount:", operationCount) }
                     status = .inProgress(fractionCompleted: progress.fractionCompleted,
                                          message: progress.localizedDescription)
                 }

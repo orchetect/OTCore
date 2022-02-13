@@ -72,7 +72,7 @@ final class Threading_BasicOperationQueue_Tests: XCTestCase {
         wait(for: opQ.status == .idle, timeout: 0.5)
         wait(for: opQ.operationCount == 0, timeout: 0.5)
         
-        XCTAssertEqual(opQ.progress.totalUnitCount, 10)
+        XCTAssertEqual(opQ.progress.totalUnitCount, 10 * 100)
         
     }
     
@@ -104,7 +104,7 @@ final class Threading_BasicOperationQueue_Tests: XCTestCase {
                 ppQProgressTest.opQ.addOperation { sleep(0.1) }
             }
             
-            XCTAssertEqual(ppQProgressTest.opQ.progress.totalUnitCount, 10)
+            XCTAssertEqual(ppQProgressTest.opQ.progress.totalUnitCount, 10 * 100)
             
             switch ppQProgressTest.opQ.status {
             case .inProgress(fractionCompleted: _, message: _):

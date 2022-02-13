@@ -165,7 +165,7 @@ final class Threading_AtomicOperationQueue_Tests: XCTestCase {
             opQ.addInteractiveOperation { _,_ in sleep(0.1) }
         }
         
-        XCTAssertEqual(opQ.progress.totalUnitCount, 10)
+        XCTAssertEqual(opQ.progress.totalUnitCount, 10 * 100)
         
         switch opQ.status {
         case .inProgress(fractionCompleted: _, message: _):
