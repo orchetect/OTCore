@@ -153,6 +153,33 @@ final class Threading_AtomicOperationQueue_Tests: XCTestCase {
         
     }
     
+    /// NOTE: this test similar to one in: BasicOperationQueue Tests.swift
+    func testResetProgressWhenFinished_True() {
+        
+        let opQ = AtomicOperationQueue(type: .serialFIFO,
+                                       resetProgressWhenFinished: true,
+                                       initialMutableValue: 0) // value doesn't matter
+        
+        for _ in 1...10 {
+            opQ.addInteractiveOperation { _,_ in sleep(0.1) }
+        }
+        
+        XCTAssertEqual(opQ.progress.totalUnitCount, 10)
+        
+        switch opQ.status {
+        case .inProgress(fractionCompleted: _, message: _):
+            break // correct
+        default:
+            XCTFail()
+        }
+        
+        wait(for: opQ.status == .idle, timeout: 1.5)
+        
+        wait(for: opQ.progress.totalUnitCount == 0, timeout: 0.5)
+        XCTAssertEqual(opQ.progress.totalUnitCount, 0)
+        
+    }
+    
 }
 
 #endif
