@@ -188,16 +188,16 @@ open class BasicOperationQueue: OperationQueue {
             { [self, progress] _, _ in
                 // !!! DO NOT USE [weak self] HERE. MUST BE STRONG SELF !!!
                 
-                if self.isSuspended {
-                    self.status = .paused
+                if isSuspended {
+                    status = .paused
                 } else {
-                    if self.operationCount > 0 {
-                        self.status = .inProgress(
+                    if operationCount > 0 {
+                        status = .inProgress(
                             fractionCompleted: progress.fractionCompleted,
                             message: progress.localizedDescription
                         )
                     } else {
-                        self.status = .idle
+                        setStatusIdle()
                     }
                 }
             }
@@ -210,13 +210,13 @@ open class BasicOperationQueue: OperationQueue {
             { [self, progress] _, _ in
                 // !!! DO NOT USE [weak self] HERE. MUST BE STRONG SELF !!!
                 
-                guard !self.isSuspended else { return }
+                guard !isSuspended else { return }
                 guard !progress.isFinished else { return }
                 if self.operationCount > 0 {
-                    self.status = .inProgress(fractionCompleted: progress.fractionCompleted,
-                                              message: progress.localizedDescription)
+                    status = .inProgress(fractionCompleted: progress.fractionCompleted,
+                                         message: progress.localizedDescription)
                 } else {
-                    self.status = .idle
+                    setStatusIdle()
                 }
             }
         )
@@ -229,14 +229,14 @@ open class BasicOperationQueue: OperationQueue {
             { [self, progress] _, _ in
                 // !!! DO NOT USE [weak self] HERE. MUST BE STRONG SELF !!!
                 
-                guard !self.isSuspended else { return }
+                guard !isSuspended else { return }
                 guard !progress.isFinished,
-                      self.operationCount > 0 else {
-                          self.status = .idle
+                      operationCount > 0 else {
+                          setStatusIdle()
                           return
                       }
-                self.status = .inProgress(fractionCompleted: progress.fractionCompleted,
-                                          message: progress.localizedDescription)
+                status = .inProgress(fractionCompleted: progress.fractionCompleted,
+                                     message: progress.localizedDescription)
             }
         )
         
@@ -249,10 +249,7 @@ open class BasicOperationQueue: OperationQueue {
                 // !!! DO NOT USE [weak self] HERE. MUST BE STRONG SELF !!!
                 
                 if progress.isFinished {
-                    if self.resetProgressWhenFinished {
-                        progress.totalUnitCount = 0
-                    }
-                    self.status = .idle
+                    setStatusIdle()
                 }
             }
         )
@@ -264,6 +261,14 @@ open class BasicOperationQueue: OperationQueue {
         observers.forEach { $0.invalidate() } // for extra safety, invalidate them first
         observers.removeAll()
         
+    }
+    
+    /// Only call as a result of the queue emptying
+    private func setStatusIdle() {
+        if resetProgressWhenFinished {
+            progress.totalUnitCount = 0
+        }
+        status = .idle
     }
     
     deinit {

@@ -164,9 +164,9 @@ open class AtomicBlockOperation<T>: BasicOperation {
             { [self, operationQueue] _, _ in
                 // !!! DO NOT USE [weak self] HERE. MUST BE STRONG SELF !!!
                 
-                if self.isCancelled {
+                if isCancelled {
                     operationQueue?.cancelAllOperations()
-                    self.completeOperation(dueToCancellation: true)
+                    completeOperation(dueToCancellation: true)
                 }
             }
         )
@@ -182,7 +182,7 @@ open class AtomicBlockOperation<T>: BasicOperation {
                 // guard let newValue = change.newValue else { return }
                 
                 // propagate to operation queue
-                operationQueue?.qualityOfService = self.qualityOfService
+                operationQueue?.qualityOfService = qualityOfService
             }
         )
         
@@ -194,7 +194,7 @@ open class AtomicBlockOperation<T>: BasicOperation {
                 // !!! DO NOT USE [weak self] HERE. MUST BE STRONG SELF !!!
                 
                 if operationQueue?.operationCount == 0 {
-                    self.completeOperation()
+                    completeOperation()
                 }
             }
         )
@@ -208,7 +208,7 @@ open class AtomicBlockOperation<T>: BasicOperation {
                 // !!! DO NOT USE [weak self] HERE. MUST BE STRONG SELF !!!
                 
                 if operationQueue?.progress.isFinished == true {
-                    self.completeOperation()
+                    completeOperation()
                 }
             }
         )
