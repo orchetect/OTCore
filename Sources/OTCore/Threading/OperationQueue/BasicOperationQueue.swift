@@ -73,7 +73,7 @@ open class BasicOperationQueue: OperationQueue {
     
     // MARK: - Progress Back-Porting
     
-    @Atomic private var _progress: Progress = .init()
+    private var _progress: Progress = .init()
     
     @available(macOS 10.9, iOS 7.0, tvOS 9.0, watchOS 2.0, *)
     @objc dynamic
@@ -208,7 +208,7 @@ open class BasicOperationQueue: OperationQueue {
                             message: progress.localizedDescription
                         )
                     } else {
-                        setStatusIdle()
+                        setStatusIdle(resetProgress: resetProgressWhenFinished)
                     }
                 }
             }
@@ -222,12 +222,14 @@ open class BasicOperationQueue: OperationQueue {
                 // !!! DO NOT USE [weak self] HERE. MUST BE STRONG SELF !!!
                 
                 guard !isSuspended else { return }
-                guard !progress.isFinished else { return }
-                if self.operationCount > 0 {
+                
+                if !progress.isFinished,
+                   operationCount > 0
+                {
                     status = .inProgress(fractionCompleted: progress.fractionCompleted,
                                          message: progress.localizedDescription)
                 } else {
-                    setStatusIdle()
+                    setStatusIdle(resetProgress: resetProgressWhenFinished)
                 }
             }
         )
@@ -241,11 +243,11 @@ open class BasicOperationQueue: OperationQueue {
                 // !!! DO NOT USE [weak self] HERE. MUST BE STRONG SELF !!!
                 
                 guard !isSuspended else { return }
-                guard !progress.isFinished,
-                      operationCount > 0 else {
-                          setStatusIdle()
-                          return
-                      }
+                
+                if progress.isFinished || operationCount == 0 {
+                    setStatusIdle(resetProgress: resetProgressWhenFinished)
+                    return
+                }
                 status = .inProgress(fractionCompleted: progress.fractionCompleted,
                                      message: progress.localizedDescription)
             }
@@ -260,7 +262,7 @@ open class BasicOperationQueue: OperationQueue {
                 // !!! DO NOT USE [weak self] HERE. MUST BE STRONG SELF !!!
                 
                 if progress.isFinished {
-                    setStatusIdle()
+                    setStatusIdle(resetProgress: resetProgressWhenFinished)
                 }
             }
         )
@@ -275,8 +277,9 @@ open class BasicOperationQueue: OperationQueue {
     }
     
     /// Only call as a result of the queue emptying
-    private func setStatusIdle() {
-        if resetProgressWhenFinished {
+    private func setStatusIdle(resetProgress: Bool) {
+        if resetProgress,
+           progress.totalUnitCount != 0 {
             progress.totalUnitCount = 0
         }
         status = .idle

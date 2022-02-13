@@ -58,7 +58,7 @@ final class Threading_AtomicOperationQueue_Tests: XCTestCase {
     }
     
     /// Concurrent automatic threading. Do not run it. Check status. Run it. Check status.
-    func testOp_concurrentAutomatic_NotRun() {
+    func testOp_concurrentAutomatic_Pause_Run() {
         
         let opQ = AtomicOperationQueue(type: .concurrentAutomatic,
                                        initialMutableValue: [Int]())
@@ -84,6 +84,7 @@ final class Threading_AtomicOperationQueue_Tests: XCTestCase {
         XCTAssertEqual(opQ.status, .paused)
         
         opQ.isSuspended = false
+        wait(for: (opQ.status != .paused && opQ.status != .idle), timeout: 0.2)
         
         wait(for: opQ.status == .idle, timeout: 2.0)
         XCTAssertEqual(opQ.status, .idle)
