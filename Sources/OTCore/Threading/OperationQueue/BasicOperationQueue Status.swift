@@ -6,6 +6,7 @@
 #if canImport(Foundation)
 
 import Foundation
+import CloudKit
 
 /// **OTCore:**
 /// Operation queue status.
@@ -24,6 +25,25 @@ public enum OperationQueueStatus: Equatable, Hashable {
     /// Operation queue is paused.
     /// There may or may not be operations in the queue.
     case paused
+    
+}
+
+extension OperationQueueStatus: CustomStringConvertible {
+    
+    public var description: String {
+        
+        switch self {
+        case .idle:
+            return "idle"
+            
+        case .inProgress(let fractionCompleted, let message):
+            return "\(fractionCompleted) \(message.quoted)"
+            
+        case .paused:
+            return "paused"
+        }
+        
+    }
     
 }
 

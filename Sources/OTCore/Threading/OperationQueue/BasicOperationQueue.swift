@@ -42,6 +42,8 @@ open class BasicOperationQueue: OperationQueue {
         
     }
     
+    private var done = true
+    
     // MARK: - Status
     
     @Atomic private var _status: OperationQueueStatus = .idle
@@ -127,6 +129,8 @@ open class BasicOperationQueue: OperationQueue {
         }
         
         lastAddedOperation = op
+        
+        done = false
         super.addOperation(op)
         
     }
@@ -180,6 +184,8 @@ open class BasicOperationQueue: OperationQueue {
         }
         
         lastAddedOperation = ops.last
+        
+        done = false
         super.addOperations(ops, waitUntilFinished: wait)
         
     }
@@ -202,13 +208,15 @@ open class BasicOperationQueue: OperationQueue {
                 if isSuspended {
                     status = .paused
                 } else {
-                    if operationCount > 0 {
+                    if done {
+                        setStatusIdle(resetProgress: resetProgressWhenFinished)
+                    } else {
+if progress.fractionCompleted == 0.0 { print("ZERO from .isSuspended KVO") }
                         status = .inProgress(
                             fractionCompleted: progress.fractionCompleted,
                             message: progress.localizedDescription
                         )
-                    } else {
-                        setStatusIdle(resetProgress: resetProgressWhenFinished)
+                        
                     }
                 }
             }
@@ -223,9 +231,11 @@ open class BasicOperationQueue: OperationQueue {
                 
                 guard !isSuspended else { return }
                 
-                if !progress.isFinished,
+                if !done,
+                   !progress.isFinished,
                    operationCount > 0
                 {
+if progress.fractionCompleted == 0.0 { print("ZERO from .operationCount KVO") }
                     status = .inProgress(fractionCompleted: progress.fractionCompleted,
                                          message: progress.localizedDescription)
                 } else {
@@ -244,12 +254,17 @@ open class BasicOperationQueue: OperationQueue {
                 
                 guard !isSuspended else { return }
                 
-                if progress.isFinished || operationCount == 0 {
+                if done ||
+                    progress.isFinished ||
+                    progress.completedUnitCount == progress.totalUnitCount ||
+                    operationCount == 0
+                {
                     setStatusIdle(resetProgress: resetProgressWhenFinished)
-                    return
+                } else {
+if progress.fractionCompleted == 0.0 { print("ZERO from .progress.fractionCompleted KVO. progress.isFinished:", progress.isFinished, "operationCount:", operationCount) }
+                    status = .inProgress(fractionCompleted: progress.fractionCompleted,
+                                         message: progress.localizedDescription)
                 }
-                status = .inProgress(fractionCompleted: progress.fractionCompleted,
-                                     message: progress.localizedDescription)
             }
         )
         
@@ -279,9 +294,14 @@ open class BasicOperationQueue: OperationQueue {
     /// Only call as a result of the queue emptying
     private func setStatusIdle(resetProgress: Bool) {
         if resetProgress,
-           progress.totalUnitCount != 0 {
+           progress.totalUnitCount != 0,
+           progress.completedUnitCount != 0
+        {
             progress.totalUnitCount = 0
+            progress.completedUnitCount = 0
         }
+        
+        done = true
         status = .idle
     }
     

@@ -78,26 +78,82 @@ final class Threading_BasicOperationQueue_Tests: XCTestCase {
     
     func testResetProgressWhenFinished_True() {
         
-        let opQ = BasicOperationQueue(type: .serialFIFO,
-                                      resetProgressWhenFinished: true)
-        
-        for _ in 1...10 {
-            opQ.addOperation { sleep(0.1) }
+        class OpQProgressTest {
+            var statuses: [OperationQueueStatus] = []
+            
+            let opQ = BasicOperationQueue(type: .serialFIFO,
+                                          resetProgressWhenFinished: true)
+            
+            init() {
+                opQ.statusHandler = { newStatus, oldStatus in
+                    if self.statuses.isEmpty {
+                        self.statuses.append(oldStatus)
+                        print("-", oldStatus)
+                    }
+                    self.statuses.append(newStatus)
+                    print("-", newStatus)
+                }
+            }
         }
         
-        XCTAssertEqual(opQ.progress.totalUnitCount, 10)
+        let ppQProgressTest = OpQProgressTest()
         
-        switch opQ.status {
-        case .inProgress(fractionCompleted: _, message: _):
-            break // correct
-        default:
-            XCTFail()
+        func runTen() {
+            print("Running 10 operations...")
+            for _ in 1...10 {
+                ppQProgressTest.opQ.addOperation { sleep(0.1) }
+            }
+            
+            XCTAssertEqual(ppQProgressTest.opQ.progress.totalUnitCount, 10)
+            
+            switch ppQProgressTest.opQ.status {
+            case .inProgress(fractionCompleted: _, message: _):
+                break // correct
+            default:
+                XCTFail()
+            }
+            
+            wait(for: ppQProgressTest.opQ.status == .idle, timeout: 1.5)
+            
+            wait(for: ppQProgressTest.opQ.progress.totalUnitCount == 0, timeout: 0.5)
+            XCTAssertEqual(ppQProgressTest.opQ.progress.completedUnitCount, 0)
+            XCTAssertEqual(ppQProgressTest.opQ.progress.totalUnitCount, 0)
         }
         
-        wait(for: opQ.status == .idle, timeout: 1.5)
+        // run this global async, since the statusHandler gets called on main
+        let runExp = expectation(description: "Test Run")
+        DispatchQueue.global().async {
+            runTen()
+            runTen()
+            runExp.fulfill()
+        }
+        wait(for: [runExp], timeout: 5.0)
         
-        wait(for: opQ.progress.totalUnitCount == 0, timeout: 0.5)
-        XCTAssertEqual(opQ.progress.totalUnitCount, 0)
+        XCTAssertEqual(ppQProgressTest.statuses, [
+            .idle,
+            .inProgress(fractionCompleted: 0.0, message: "0% completed"),
+            .inProgress(fractionCompleted: 0.1, message: "10% completed"),
+            .inProgress(fractionCompleted: 0.2, message: "20% completed"),
+            .inProgress(fractionCompleted: 0.3, message: "30% completed"),
+            .inProgress(fractionCompleted: 0.4, message: "40% completed"),
+            .inProgress(fractionCompleted: 0.5, message: "50% completed"),
+            .inProgress(fractionCompleted: 0.6, message: "60% completed"),
+            .inProgress(fractionCompleted: 0.7, message: "70% completed"),
+            .inProgress(fractionCompleted: 0.8, message: "80% completed"),
+            .inProgress(fractionCompleted: 0.9, message: "90% completed"),
+            .idle,
+            .inProgress(fractionCompleted: 0.0, message: "0% completed"),
+            .inProgress(fractionCompleted: 0.1, message: "10% completed"),
+            .inProgress(fractionCompleted: 0.2, message: "20% completed"),
+            .inProgress(fractionCompleted: 0.3, message: "30% completed"),
+            .inProgress(fractionCompleted: 0.4, message: "40% completed"),
+            .inProgress(fractionCompleted: 0.5, message: "50% completed"),
+            .inProgress(fractionCompleted: 0.6, message: "60% completed"),
+            .inProgress(fractionCompleted: 0.7, message: "70% completed"),
+            .inProgress(fractionCompleted: 0.8, message: "80% completed"),
+            .inProgress(fractionCompleted: 0.9, message: "90% completed"),
+            .idle
+        ])
         
     }
     
