@@ -52,29 +52,56 @@ import Foundation
 /// - note: Inherits from both `BasicAsyncOperation` and `BasicOperation`.
 open class AtomicBlockOperation<T>: BasicOperation {
     
+    // MARK: - Operations
+    
     private var operationQueueType: OperationQueueType {
+        
         operationQueue.operationQueueType
+        
     }
     
     private let operationQueue: AtomicOperationQueue<T>!
     
     /// **OTCore:**
     /// Stores a weak reference to the last `Operation` added to the internal operation queue. If the operation is complete and the queue is empty, this may return `nil`.
-    public weak var lastAddedOperation: Operation? {
+    public final weak var lastAddedOperation: Operation? {
+        
         operationQueue.lastAddedOperation
+        
     }
+    
+    public override var progress: Progress {
+        
+        operationQueue.progress
+        
+    }
+    
+    // MARK: - Shared Mutable Value
     
     /// **OTCore:**
     /// The thread-safe shared mutable value that all operation blocks operate upon.
     public final var value: T {
+        
         operationQueue.sharedMutableValue
+        
     }
     
     /// **OTCore:**
     /// Mutate the shared atomic variable in a closure.
-    public func mutateValue(_ block: (inout T) -> Void) {
+    public final func mutateValue(_ block: (inout T) -> Void) {
         
         block(&operationQueue.sharedMutableValue)
+        
+    }
+    
+    // MARK: - Status
+    
+    /// **OTCore:**
+    /// Operation queue status.
+    /// To observe changes to this value, supply a closure to the `statusHandler` property.
+    public final var status: OperationQueueStatus {
+        
+        operationQueue.status
         
     }
     

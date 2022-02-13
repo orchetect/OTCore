@@ -47,6 +47,7 @@ open class BasicOperationQueue: OperationQueue {
     // MARK: - Status
     
     @Atomic private var _status: OperationQueueStatus = .idle
+    /// **OTCore:**
     /// Operation queue status.
     /// To observe changes to this value, supply a closure to the `statusHandler` property.
     public internal(set) var status: OperationQueueStatus {
@@ -121,12 +122,13 @@ open class BasicOperationQueue: OperationQueue {
         }
         
         // update progress
-        progress.totalUnitCount += 1
         if let basicOp = op as? BasicOperation {
-            progress.totalUnitCount += 99 // addOperation() will add 1 more
+            progress.totalUnitCount += 100
             // give 100 units of progress in case child progress reports fractional progress
             progress.addChild(basicOp.progress,
                               withPendingUnitCount: 100)
+        } else {
+            progress.totalUnitCount += 1
         }
         
         lastAddedOperation = op
@@ -175,13 +177,14 @@ open class BasicOperationQueue: OperationQueue {
         }
         
         // update progress
-        progress.totalUnitCount += Int64(ops.count)
         for op in ops {
             if let basicOp = op as? BasicOperation {
-                progress.totalUnitCount += 99 // addOperation() will add 1 more
+                progress.totalUnitCount += 100
                 // give 100 units of progress in case child progress reports fractional progress
                 progress.addChild(basicOp.progress,
                                   withPendingUnitCount: 100)
+            } else {
+                progress.totalUnitCount += 1
             }
         }
         

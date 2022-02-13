@@ -399,6 +399,91 @@ final class Threading_AtomicBlockOperation_Tests: XCTestCase {
         
     }
     
+    /// Ensure that nested progress objects successfully result in the topmost queue calling statusHandler at every increment of all progress children at every level.
+    func testProgress() {
+        
+        class OpQProgressTest {
+            var statuses: [OperationQueueStatus] = []
+            
+            let mainOp = AtomicOperationQueue(type: .serialFIFO,
+                                              qualityOfService: .default,
+                                              initiallySuspended: true,
+                                              resetProgressWhenFinished: true,
+                                              initialMutableValue: 0)
+            
+            init() {
+                mainOp.statusHandler = { newStatus, oldStatus in
+                    if self.statuses.isEmpty {
+                        self.statuses.append(oldStatus)
+                        print("-", oldStatus)
+                    }
+                    self.statuses.append(newStatus)
+                    print("-", newStatus)
+                }
+            }
+        }
+        
+        let ppQProgressTest = OpQProgressTest()
+        
+        func runTest() {
+            // 5 ops, each with 2 ops, each with 2 units of progress.
+            // should equate to 20 total main progress updates 5% apart
+            for _ in 1...5 {
+                let subOp = AtomicBlockOperation(type: .serialFIFO,
+                                                 initialMutableValue: 0)
+                
+                for _ in 1...2 {
+                    subOp.addInteractiveOperation { operation, atomicValue in
+                        operation.progress.totalUnitCount = 2
+                        
+                        operation.progress.completedUnitCount = 1
+                        operation.progress.completedUnitCount = 2
+                    }
+                }
+                
+                ppQProgressTest.mainOp.addOperation(subOp)
+            }
+            
+            ppQProgressTest.mainOp.isSuspended = false
+            
+            wait(for: ppQProgressTest.mainOp.status == .idle, timeout: 2.0)
+        }
+        
+        let runExp = expectation(description: "Test Run")
+        DispatchQueue.global().async {
+            runTest()
+            runExp.fulfill()
+        }
+        wait(for: [runExp], timeout: 5.0)
+        
+        XCTAssertEqual(ppQProgressTest.statuses, [
+            .idle,
+            .paused,
+            .inProgress(fractionCompleted: 0.00, message: "0% completed"),
+            .inProgress(fractionCompleted: 0.05, message: "5% completed"),
+            .inProgress(fractionCompleted: 0.10, message: "10% completed"),
+            .inProgress(fractionCompleted: 0.15, message: "15% completed"),
+            .inProgress(fractionCompleted: 0.20, message: "20% completed"),
+            .inProgress(fractionCompleted: 0.25, message: "25% completed"),
+            .inProgress(fractionCompleted: 0.30, message: "30% completed"),
+            .inProgress(fractionCompleted: 0.35, message: "35% completed"),
+            .inProgress(fractionCompleted: 0.40, message: "40% completed"),
+            .inProgress(fractionCompleted: 0.45, message: "45% completed"),
+            .inProgress(fractionCompleted: 0.50, message: "50% completed"),
+            .inProgress(fractionCompleted: 0.55, message: "55% completed"),
+            .inProgress(fractionCompleted: 0.60, message: "60% completed"),
+            .inProgress(fractionCompleted: 0.65, message: "65% completed"),
+            .inProgress(fractionCompleted: 0.70, message: "70% completed"),
+            .inProgress(fractionCompleted: 0.75, message: "75% completed"),
+            .inProgress(fractionCompleted: 0.80, message: "80% completed"),
+            .inProgress(fractionCompleted: 0.85, message: "85% completed"),
+            .inProgress(fractionCompleted: 0.90, message: "90% completed"),
+            .inProgress(fractionCompleted: 0.95, message: "95% completed"),
+            .idle
+        ])
+        
+    }
+    
 }
 
 #endif
