@@ -44,12 +44,21 @@ open class BasicOperationQueue: OperationQueue {
     
     // MARK: - Status
     
+    @Atomic private var _status: OperationQueueStatus = .idle
     /// Operation queue status.
     /// To observe changes to this value, supply a closure to the `statusHandler` property.
-    @Atomic public internal(set) var status: OperationQueueStatus = .idle {
-        didSet {
-            if status != oldValue {
-                statusHandler?(status, oldValue)
+    public internal(set) var status: OperationQueueStatus {
+        get {
+            _status
+        }
+        set {
+            let oldValue = _status
+            _status = newValue
+            
+            if newValue != oldValue {
+                DispatchQueue.main.async {
+                    self.statusHandler?(newValue, oldValue)
+                }
             }
         }
     }
@@ -59,6 +68,7 @@ open class BasicOperationQueue: OperationQueue {
     
     /// **OTCore:**
     /// Handler called any time the `status` property changes.
+    /// Handler is called async on the main thread.
     public final var statusHandler: StatusHandler?
     
     // MARK: - Progress Back-Porting
@@ -73,6 +83,7 @@ open class BasicOperationQueue: OperationQueue {
     
     /// **OTCore:**
     /// Set max concurrent operation count.
+    /// Status handler is called async on the main thread.
     public init(type operationQueueType: OperationQueueType,
                 resetProgressWhenFinished: Bool = false,
                 statusHandler: StatusHandler? = nil) {

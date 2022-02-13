@@ -85,7 +85,7 @@ final class Threading_AtomicOperationQueue_Tests: XCTestCase {
         
         opQ.isSuspended = false
         
-        wait(for: opQ.status == .idle, timeout: 1.0)
+        wait(for: opQ.status == .idle, timeout: 2.0)
         XCTAssertEqual(opQ.status, .idle)
         
         XCTAssertEqual(opQ.sharedMutableValue.count, 100)
