@@ -82,12 +82,21 @@ final class Threading_BasicOperationQueue_Tests: XCTestCase {
                                       resetProgressWhenFinished: true)
         
         for _ in 1...10 {
-            opQ.addOperation { }
+            opQ.addOperation { sleep(0.1) }
         }
         
-        wait(for: opQ.status == .idle, timeout: 0.5)
+        XCTAssertEqual(opQ.progress.totalUnitCount, 10)
         
-        wait(for: opQ.progress.totalUnitCount == 0, timeout: 1.0)
+        switch opQ.status {
+        case .inProgress(fractionCompleted: _, message: _):
+            break // correct
+        default:
+            XCTFail()
+        }
+        
+        wait(for: opQ.status == .idle, timeout: 1.5)
+        
+        wait(for: opQ.progress.totalUnitCount == 0, timeout: 0.5)
         XCTAssertEqual(opQ.progress.totalUnitCount, 0)
         
     }
