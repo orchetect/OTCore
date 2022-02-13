@@ -56,7 +56,7 @@ final class Threading_BasicOperationQueue_Tests: XCTestCase {
         
         op = nil
         opQ.isSuspended = false
-        wait(for: opQ.lastAddedOperation == nil, timeout: 0.2)
+        wait(for: opQ.lastAddedOperation == nil, timeout: 0.5)
         
     }
     
@@ -69,8 +69,8 @@ final class Threading_BasicOperationQueue_Tests: XCTestCase {
             opQ.addOperation { }
         }
         
-        wait(for: opQ.status == .idle, timeout: 0.2)
-        wait(for: opQ.operationCount == 0, timeout: 0.2)
+        wait(for: opQ.status == .idle, timeout: 0.5)
+        wait(for: opQ.operationCount == 0, timeout: 0.5)
         
         XCTAssertEqual(opQ.progress.totalUnitCount, 10)
         
@@ -85,9 +85,9 @@ final class Threading_BasicOperationQueue_Tests: XCTestCase {
             opQ.addOperation { }
         }
         
-        wait(for: opQ.status == .idle, timeout: 0.2)
+        wait(for: opQ.status == .idle, timeout: 0.5)
         
-        wait(for: opQ.progress.totalUnitCount == 0, timeout: 0.5)
+        wait(for: opQ.progress.totalUnitCount == 0, timeout: 1.0)
         XCTAssertEqual(opQ.progress.totalUnitCount, 0)
         
     }
@@ -117,9 +117,9 @@ final class Threading_BasicOperationQueue_Tests: XCTestCase {
             XCTFail()
         }
         
-        wait(for: [completionBlockExp], timeout: 0.3)
-        wait(for: opQ.operationCount == 0, timeout: 0.1)
-        wait(for: opQ.progress.isFinished, timeout: 0.1)
+        wait(for: [completionBlockExp], timeout: 0.5)
+        wait(for: opQ.operationCount == 0, timeout: 0.5)
+        wait(for: opQ.progress.isFinished, timeout: 0.5)
         
         XCTAssertEqual(opQ.status, .idle)
         

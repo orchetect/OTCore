@@ -77,7 +77,7 @@ class Utilities_WaitForConditionTests: XCTestCase {
             someString = "new string"
         }
         
-        wait(for: someString == "new string", timeout: 0.1) // 100ms
+        wait(for: someString == "new string", timeout: 0.3)
         
     }
     
