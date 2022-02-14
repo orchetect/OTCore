@@ -33,7 +33,8 @@ class Extensions_Foundation_DispatchGroup_Tests: XCTestCase {
         var val = 0
         
         DispatchGroup.sync(asyncOn: .global()) { g in
-            usleep(100_000) // 100 milliseconds
+            sleep(0.1)
+            
             val = 1
             g.leave()
         }
@@ -120,7 +121,7 @@ class Extensions_Foundation_DispatchGroup_Tests: XCTestCase {
     func testSyncReturnValueOnQueue() {
         
         let returnValue: Int = DispatchGroup.sync(asyncOn: .global()) { g in
-            usleep(100_000) // 100 milliseconds
+            sleep(0.1)
             g.leave(withValue: 1)
         }
         
@@ -209,9 +210,9 @@ class Extensions_Foundation_DispatchGroup_Tests: XCTestCase {
         DispatchGroup.sync { g1 in
             DispatchQueue.global().async {
                 DispatchGroup.sync { g2 in
-                    DispatchQueue.global().asyncAfter(deadline: .now() + .milliseconds(100)) {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(100)) {
                         result = DispatchGroup.sync { g3 in
-                            usleep(100_000) // 100 milliseconds
+                            sleep(0.1)
                             exp.fulfill()
                             g3.leave(withValue: 2)
                         }
