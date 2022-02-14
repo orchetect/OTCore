@@ -21,8 +21,6 @@ let package = Package(
     ],
     
     dependencies: [
-        .package(url: "https://github.com/orchetect/OTAtomics", from: "1.0.0"),
-        
         // testing-only dependency
         .package(url: "https://github.com/orchetect/SegmentedProgress", from: "1.0.1")
     ],
@@ -30,11 +28,11 @@ let package = Package(
     targets: [
         .target(
             name: "OTCore",
-            dependencies: ["OTAtomics"]),
+            dependencies: []),
         
         .testTarget(
             name: "OTCoreTests",
-            dependencies: ["OTCore", "OTAtomics", "SegmentedProgress"])
+            dependencies: ["OTCore", "SegmentedProgress"])
     ]
     
 )
