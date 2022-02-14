@@ -6,6 +6,7 @@
 #if canImport(Foundation)
 
 import Foundation
+import OTAtomics
 
 /// **OTCore:**
 /// An `OperationQueue` subclass that passes shared thread-safe variable into operation closures.
@@ -15,7 +16,7 @@ import Foundation
 open class AtomicOperationQueue<T>: BasicOperationQueue {
     
     /// The thread-safe shared mutable value that all operation blocks operate upon.
-    @Atomic public final var sharedMutableValue: T
+    @OTAtomicsThreadSafe public final var sharedMutableValue: T
     
     // MARK: - Init
     

@@ -1,5 +1,4 @@
 // swift-tools-version:5.3
-// The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
 
@@ -22,18 +21,20 @@ let package = Package(
     ],
     
     dependencies: [
+        .package(url: "https://github.com/orchetect/OTAtomics", from: "1.0.0"),
+        
         // testing-only dependency
-        .package(url: "https://github.com/orchetect/SegmentedProgress", from: "1.0.1"),
+        .package(url: "https://github.com/orchetect/SegmentedProgress", from: "1.0.1")
     ],
     
     targets: [
         .target(
             name: "OTCore",
-            dependencies: []),
+            dependencies: ["OTAtomics"]),
         
         .testTarget(
             name: "OTCoreTests",
-            dependencies: ["OTCore", "SegmentedProgress"])
+            dependencies: ["OTCore", "OTAtomics", "SegmentedProgress"])
     ]
     
 )

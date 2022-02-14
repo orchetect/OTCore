@@ -6,6 +6,7 @@
 #if canImport(Foundation)
 
 import Foundation
+import OTAtomics
 
 /// **OTCore:**
 /// An `OperationQueue` subclass with useful additions.
@@ -46,7 +47,7 @@ open class BasicOperationQueue: OperationQueue {
     
     // MARK: - Status
     
-    @Atomic private var _status: OperationQueueStatus = .idle
+    @OTAtomicsThreadSafe private var _status: OperationQueueStatus = .idle
     /// **OTCore:**
     /// Operation queue status.
     /// To observe changes to this value, supply a closure to the `statusHandler` property.

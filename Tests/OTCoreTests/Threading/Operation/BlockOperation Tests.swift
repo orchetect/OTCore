@@ -5,12 +5,13 @@
 
 #if shouldTestCurrentPlatform
 
-@testable import OTCore
 import XCTest
+@testable import OTCore
+import OTAtomics
 
 final class BlockOperation_Tests: XCTestCase {
     
-    @Atomic fileprivate var arr: [Int] = []
+    @OTAtomicsThreadSafe fileprivate var arr: [Int] = []
     
     /// This does not test a feature of OTCore. Rather, it tests the behavior of Foundation's built-in `BlockOperation` object.
     func testBlockOperation() {

@@ -6,6 +6,7 @@
 #if canImport(Foundation)
 
 import Foundation
+import OTAtomics
 
 /// **OTCore:**
 /// A synchronous or asynchronous `Operation` subclass that provides essential boilerplate.
@@ -54,7 +55,7 @@ open class BasicOperation: Operation, ProgressReporting {
     // adding KVO compliance
     @objc dynamic
     public final override var isExecuting: Bool { _isExecuting }
-    @Atomic private var _isExecuting = false {
+    @OTAtomicsThreadSafe private var _isExecuting = false {
         willSet { willChangeValue(for: \.isExecuting) }
         didSet { didChangeValue(for: \.isExecuting) }
     }
@@ -62,7 +63,7 @@ open class BasicOperation: Operation, ProgressReporting {
     // adding KVO compliance
     @objc dynamic
     public final override var isFinished: Bool { _isFinished }
-    @Atomic private var _isFinished = false {
+    @OTAtomicsThreadSafe private var _isFinished = false {
         willSet { willChangeValue(for: \.isFinished) }
         didSet { didChangeValue(for: \.isFinished) }
     }

@@ -5,15 +5,16 @@
 
 #if shouldTestCurrentPlatform
 
-import OTCore
 import XCTest
+import OTCore
+import OTAtomics
 
 final class Threading_OperationQueueExtensions_Success_Tests: XCTestCase {
     
     override func setUp() { super.setUp() }
     override func tearDown() { super.tearDown() }
     
-    @Atomic fileprivate var val = 0
+    @OTAtomicsThreadSafe fileprivate var val = 0
     
     func testWaitUntilAllOperationsAreFinished_Timeout_Success() {
         
@@ -44,7 +45,7 @@ final class Threading_OperationQueueExtensions_TimedOut_Tests: XCTestCase {
     override func setUp() { super.setUp() }
     override func tearDown() { super.tearDown() }
     
-    @Atomic fileprivate var val = 0
+    @OTAtomicsThreadSafe fileprivate var val = 0
     
     func testWaitUntilAllOperationsAreFinished_Timeout_TimedOut() {
         
