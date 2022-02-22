@@ -455,7 +455,7 @@ extension Data {
     /// Internal use.
     internal func toNumber<T: FixedWidthInteger>(from endianness: NumberEndianness = .platformDefault, toType: T.Type) -> T? {
         
-        guard self.count == MemoryLayout<T>.size else { return nil }
+        guard count == MemoryLayout<T>.size else { return nil }
         
         // define conversion
         

@@ -82,7 +82,7 @@ extension StringProtocol {
         // --------
         guard let range = range(of: prefix,
                                 options: [.caseInsensitive, .anchored]) else { return false }
-        return range.lowerBound == self.startIndex
+        return range.lowerBound == startIndex
         
     }
     
@@ -108,8 +108,12 @@ extension StringProtocol {
     public func hasSuffix<T: StringProtocol>(caseInsensitive prefix: T) -> Bool {
         
         guard let range = range(of: prefix,
-                                options: [.caseInsensitive, .anchored, .backwards]) else { return false }
-        return range.upperBound == self.endIndex
+                                options: [.caseInsensitive,
+                                          .anchored,
+                                          .backwards])
+        else { return false }
+        
+        return range.upperBound == endIndex
         
     }
     

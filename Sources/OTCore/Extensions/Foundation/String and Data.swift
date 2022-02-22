@@ -15,7 +15,7 @@ extension StringProtocol {
     /// Encode a utf8 String to Base64
     @inlinable public var base64EncodedString: String {
         
-        Data(self.utf8).base64EncodedString()
+        Data(utf8).base64EncodedString()
         
     }
     

@@ -597,14 +597,18 @@ extension OSLogger {
     /// **OTCore:**
     /// Initialize a new instance while modifying the logger configuration in a closure.
     public convenience init(_ configuration: (inout Config) -> Void) {
+        
         self.init()
         configuration(&self.config)
+        
     }
     
     /// **OTCore:**
     /// Modify logger configuration within a closure.
     public func configure(_ block: (inout Config) -> Void) {
+        
         block(&self.config)
+        
     }
     
 }
@@ -615,25 +619,32 @@ extension OSLogger.LogTemplate {
     /// **OTCore:**
     /// Default log template (message only).
     public static func `default`() -> Self {
+        
         [.message]
+        
     }
     
     /// **OTCore:**
     /// Message only.
     public static func minimal() -> Self {
+        
         [.message]
+        
     }
     
     /// **OTCore:**
     /// Message, prefixed by log level emoji.
     public static func withEmoji() -> Self {
+        
         [.emoji(padding: .trailing), .message]
+        
     }
     
     /// **OTCore:**
     /// All meta fields are used to provide as much information as possible.
     /// (emoji, message, file name, function name, line/column numbers)
     public static func verbose() -> Self {
+        
         [.emoji(padding: .trailing), .message,
          .space,
          .string("("),
@@ -642,6 +653,7 @@ extension OSLogger.LogTemplate {
          .line, .string(":"), .column,
          .string(")")
         ]
+        
     }
     
 }
