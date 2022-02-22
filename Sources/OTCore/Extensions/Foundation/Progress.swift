@@ -14,10 +14,12 @@ extension Progress {
     @_disfavoredOverload
     public var parent: Progress? {
         
-        // keyPath "_parent" also works
-        let getParent = value(forKeyPath: "parent")
-        let typedParent = getParent as? Progress
-        return typedParent
+        autoreleasepool {
+            // keyPath "_parent" also works
+            let getParent = value(forKeyPath: "parent")
+            let typedParent = getParent as? Progress
+            return typedParent
+        }
         
     }
     
@@ -26,12 +28,14 @@ extension Progress {
     @_disfavoredOverload
     public var children: Set<Progress> {
         
-        // keyPath "_children" also works
-        let getChildren = value(forKeyPath: "children")
-        guard let nsSet = getChildren as? NSSet else { return [] }
-        let mappedChildren = nsSet.compactMap { $0 as? Progress }
-        let mappedSet = Set(mappedChildren)
-        return mappedSet
+        autoreleasepool {
+            // keyPath "_children" also works
+            let getChildren = value(forKeyPath: "children")
+            guard let nsSet = getChildren as? NSSet else { return [] }
+            let mappedChildren = nsSet.compactMap { $0 as? Progress }
+            let mappedSet = Set(mappedChildren)
+            return mappedSet
+        }
         
     }
     
