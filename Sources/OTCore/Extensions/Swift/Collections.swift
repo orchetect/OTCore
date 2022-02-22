@@ -922,7 +922,7 @@ extension Collection {
     public func split(every: Int,
                       backwards: Bool = false) -> [SubSequence] {
         
-        var result: [Self.SubSequence] = []
+        var result: [SubSequence] = []
         
         for i in stride(from: 0, to: count, by: every) {
             
