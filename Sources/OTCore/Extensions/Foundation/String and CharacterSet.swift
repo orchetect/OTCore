@@ -169,7 +169,8 @@ extension StringProtocol {
     
     /// **OTCore:**
     /// Returns true if the string is entirely comprised of ASCII characters (0-127).
-    @inlinable public var isASCII: Bool {
+    @inlinable
+    public var isASCII: Bool {
         
         allSatisfy(\.isASCII)
         

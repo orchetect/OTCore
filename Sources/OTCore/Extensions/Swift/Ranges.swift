@@ -27,8 +27,8 @@ extension Comparable {
     ///     // or
     ///     5.isContained(in: 1...4).toggled() // == true
     ///
-    @inlinable public
-    func isContained<R: RangeExpression>(in range: R) -> Bool
+    @inlinable
+    public func isContained<R: RangeExpression>(in range: R) -> Bool
     where Self == R.Bound {
         
         range.contains(self)
@@ -58,9 +58,11 @@ extension Comparable {
     ///         return p * 2
     ///     }
     ///
-    @inlinable public
-    func ifContained<R: RangeExpression>(in range: R,
-                                         then newValue: @autoclosure () throws -> R.Bound) rethrows -> R.Bound
+    @inlinable
+    public func ifContained<R: RangeExpression>(
+        in range: R,
+        then newValue: @autoclosure () throws -> R.Bound
+    ) rethrows -> R.Bound
     where Self == R.Bound {
         
         try range.contains(self) ? newValue() : self
@@ -83,9 +85,11 @@ extension Comparable {
     ///         return $0 + p
     ///     } // 700
     ///
-    @inlinable public
-    func ifContained<R: RangeExpression>(in range: R,
-                                         then newValue: (Self) throws -> R.Bound) rethrows -> R.Bound
+    @inlinable
+    public func ifContained<R: RangeExpression>(
+        in range: R,
+        then newValue: (Self) throws -> R.Bound
+    ) rethrows -> R.Bound
     where Self == R.Bound {
         
         try range.contains(self) ? newValue(self) : self
@@ -110,9 +114,11 @@ extension Comparable {
     ///         return String(source) + " " + s
     ///     } nil
     ///
-    @inlinable public
-    func ifContained<R: RangeExpression, U>(in range: R,
-                                            then newValue: (Self) throws -> U) rethrows -> U?
+    @inlinable
+    public func ifContained<R: RangeExpression, U>(
+        in range: R,
+        then newValue: (Self) throws -> U
+    ) rethrows -> U?
     where Self == R.Bound {
         
         try range.contains(self) ? newValue(self) : nil
@@ -142,9 +148,11 @@ extension Comparable {
     ///         return p * 2
     ///     }
     ///
-    @inlinable public
-    func ifNotContained<R: RangeExpression>(in range: R,
-                                            then newValue: @autoclosure () throws -> R.Bound) rethrows -> R.Bound
+    @inlinable
+    public func ifNotContained<R: RangeExpression>(
+        in range: R,
+        then newValue: @autoclosure () throws -> R.Bound
+    ) rethrows -> R.Bound
     where Self == R.Bound {
         
         try range.contains(self) ? self : newValue()
@@ -167,9 +175,11 @@ extension Comparable {
     ///         return $0 + p
     ///     } // 705
     ///
-    @inlinable public
-    func ifNotContained<R: RangeExpression>(in range: R,
-                                            then newValue: (Self) throws -> R.Bound) rethrows -> R.Bound
+    @inlinable
+    public func ifNotContained<R: RangeExpression>(
+        in range: R,
+        then newValue: (Self) throws -> R.Bound
+    ) rethrows -> R.Bound
     where Self == R.Bound {
         
         try range.contains(self) ? self : newValue(self)
@@ -194,9 +204,11 @@ extension Comparable {
     ///         return String(source) + " " + s
     ///     } // Optional("700 not in range")
     ///
-    @inlinable public
-    func ifNotContained<R: RangeExpression, U>(in range: R,
-                                               then newValue: (Self) throws -> U) rethrows -> U?
+    @inlinable
+    public func ifNotContained<R: RangeExpression, U>(
+        in range: R,
+        then newValue: (Self) throws -> U
+    ) rethrows -> U?
     where Self == R.Bound {
         
         try range.contains(self) ? nil : newValue(self)
@@ -217,8 +229,8 @@ extension ClosedRange {
     
     /// **OTCore:**
     /// Returns `true` if base range contains the given range.
-    @inlinable public
-    func contains(_ other: ClosedRange<Bound>) -> Bool {
+    @inlinable
+    public func contains(_ other: ClosedRange<Bound>) -> Bool {
         
         other.lowerBound >= lowerBound &&
         other.upperBound <= upperBound
@@ -232,15 +244,15 @@ extension ClosedRange where Bound : Strideable,
     
     /// **OTCore:**
     /// Returns `true` if base range contains the given range.
-    @inlinable public
-    func contains(_ other: Range<Bound>) -> Bool {
+    @inlinable
+    public func contains(_ other: Range<Bound>) -> Bool {
         
         guard let unwrappedMax = self.max() else { return false }
         
         guard !other.isEmpty else { return false }
         
         return other.lowerBound >= lowerBound &&
-            other.upperBound.advanced(by: -1) <= unwrappedMax
+        other.upperBound.advanced(by: -1) <= unwrappedMax
         
     }
     
@@ -258,8 +270,8 @@ extension Range {
     
     /// **OTCore:**
     /// Returns `true` if base range contains the given range.
-    @inlinable public
-    func contains(_ other: ClosedRange<Bound>) -> Bool {
+    @inlinable
+    public func contains(_ other: ClosedRange<Bound>) -> Bool {
         
         other.lowerBound >= lowerBound &&
         other.upperBound < upperBound
@@ -273,8 +285,8 @@ extension Range where Bound : Strideable,
     
     /// **OTCore:**
     /// Returns `true` if base range contains the given range.
-    @inlinable public
-    func contains(_ other: Range<Bound>) -> Bool {
+    @inlinable
+    public func contains(_ other: Range<Bound>) -> Bool {
         
         other.lowerBound >= lowerBound &&
         other.upperBound <= upperBound
@@ -294,8 +306,8 @@ extension PartialRangeFrom {
     
     /// **OTCore:**
     /// Returns `true` if base range contains the given range.
-    @inlinable public
-    func contains(_ other: ClosedRange<Bound>) -> Bool {
+    @inlinable
+    public func contains(_ other: ClosedRange<Bound>) -> Bool {
         
         other.lowerBound >= lowerBound
         
@@ -303,8 +315,8 @@ extension PartialRangeFrom {
     
     /// **OTCore:**
     /// Returns `true` if base range contains the given range.
-    @inlinable public
-    func contains(_ other: Range<Bound>) -> Bool {
+    @inlinable
+    public func contains(_ other: Range<Bound>) -> Bool {
         
         other.lowerBound >= lowerBound
         
@@ -312,8 +324,8 @@ extension PartialRangeFrom {
     
     /// **OTCore:**
     /// Returns `true` if base range contains the given range.
-    @inlinable public
-    func contains(_ other: PartialRangeFrom<Bound>) -> Bool {
+    @inlinable
+    public func contains(_ other: PartialRangeFrom<Bound>) -> Bool {
         
         other.lowerBound >= lowerBound
         
@@ -331,8 +343,8 @@ extension PartialRangeThrough {
     
     /// **OTCore:**
     /// Returns `true` if base range contains the given range.
-    @inlinable public
-    func contains(_ other: ClosedRange<Bound>) -> Bool {
+    @inlinable
+    public func contains(_ other: ClosedRange<Bound>) -> Bool {
         
         other.upperBound <= upperBound
         
@@ -344,8 +356,8 @@ extension PartialRangeThrough where Bound : BinaryInteger,
     
     /// **OTCore:**
     /// Returns `true` if base range contains the given range.
-    @inlinable public
-    func contains(_ other: Range<Bound>) -> Bool {
+    @inlinable
+    public func contains(_ other: Range<Bound>) -> Bool {
         
         guard other.upperBound > Bound.Stride.min else { return false }
         
@@ -359,8 +371,8 @@ extension PartialRangeThrough {
     
     /// **OTCore:**
     /// Returns `true` if base range contains the given range.
-    @inlinable public
-    func contains(_ other: PartialRangeThrough<Bound>) -> Bool {
+    @inlinable
+    public func contains(_ other: PartialRangeThrough<Bound>) -> Bool {
         
         other.upperBound <= upperBound
         
@@ -368,8 +380,8 @@ extension PartialRangeThrough {
     
     /// **OTCore:**
     /// Returns `true` if base range contains the given range.
-    @inlinable public
-    func contains(_ other: PartialRangeUpTo<Bound>) -> Bool {
+    @inlinable
+    public func contains(_ other: PartialRangeUpTo<Bound>) -> Bool {
         
         other.upperBound < upperBound
         
@@ -386,8 +398,8 @@ extension PartialRangeUpTo {
     
     /// **OTCore:**
     /// Returns `true` if base range contains the given range.
-    @inlinable public
-    func contains(_ other: ClosedRange<Bound>) -> Bool {
+    @inlinable
+    public func contains(_ other: ClosedRange<Bound>) -> Bool {
         
         other.upperBound < upperBound
         
@@ -395,8 +407,8 @@ extension PartialRangeUpTo {
     
     /// **OTCore:**
     /// Returns `true` if base range contains the given range.
-    @inlinable public
-    func contains(_ other: Range<Bound>) -> Bool {
+    @inlinable
+    public func contains(_ other: Range<Bound>) -> Bool {
         
         other.upperBound <= upperBound
         
@@ -404,8 +416,8 @@ extension PartialRangeUpTo {
     
     /// **OTCore:**
     /// Returns `true` if base range contains the given range.
-    @inlinable public
-    func contains(_ other: PartialRangeThrough<Bound>) -> Bool {
+    @inlinable
+    public func contains(_ other: PartialRangeThrough<Bound>) -> Bool {
         
         other.upperBound < upperBound
         
@@ -413,8 +425,8 @@ extension PartialRangeUpTo {
     
     /// **OTCore:**
     /// Returns `true` if base range contains the given range.
-    @inlinable public
-    func contains(_ other: PartialRangeUpTo<Bound>) -> Bool {
+    @inlinable
+    public func contains(_ other: PartialRangeUpTo<Bound>) -> Bool {
         
         other.upperBound <= upperBound
         
@@ -432,8 +444,8 @@ extension Comparable {
     // ie: "a".clamped(to: "b"..."h")
     /// **OTCore:**
     /// Returns the value clamped to the passed range.
-    @inlinable public
-    func clamped(to limits: ClosedRange<Self>) -> Self {
+    @inlinable
+    public func clamped(to limits: ClosedRange<Self>) -> Self {
         
         min(max(self, limits.lowerBound), limits.upperBound)
         
@@ -444,7 +456,8 @@ extension Comparable {
     // ie: "a".clamped(to: "b"...)
     /// **OTCore:**
     /// Returns the value clamped to the passed range.
-    @inlinable public func clamped(to limits: PartialRangeFrom<Self>) -> Self {
+    @inlinable
+    public func clamped(to limits: PartialRangeFrom<Self>) -> Self {
         
         max(self, limits.lowerBound)
         
@@ -455,7 +468,8 @@ extension Comparable {
     // ie: "k".clamped(to: ..."h")
     /// **OTCore:**
     /// Returns the value clamped to the passed range.
-    @inlinable public func clamped(to limits: PartialRangeThrough<Self>) -> Self {
+    @inlinable
+    public func clamped(to limits: PartialRangeThrough<Self>) -> Self {
         
         min(self, limits.upperBound)
         
@@ -474,7 +488,8 @@ extension Strideable {
     // won't work for String
     /// **OTCore:**
     /// Returns the value clamped to the passed range.
-    @inlinable public func clamped(to limits: PartialRangeUpTo<Self>) -> Self {
+    @inlinable
+    public func clamped(to limits: PartialRangeUpTo<Self>) -> Self {
         
         // advanced(by:) requires Strideable, not available on just Comparable
         min(self, limits.upperBound.advanced(by: -1))
@@ -489,10 +504,12 @@ extension Strideable where Self.Stride: SignedInteger {
     // won't work for String
     /// **OTCore:**
     /// Returns the value clamped to the passed range.
-    @inlinable public func clamped(to limits: Range<Self>) -> Self {
+    @inlinable
+    public func clamped(to limits: Range<Self>) -> Self {
         
         // index(before:) only available on SignedInteger
-        min(max(self, limits.lowerBound), limits.index(before: limits.upperBound))
+        min(max(self, limits.lowerBound),
+            limits.index(before: limits.upperBound))
         
     }
     
@@ -501,7 +518,8 @@ extension Strideable where Self.Stride: SignedInteger {
 
 // MARK: - .first(excluding:) ClosedRange
 
-extension ClosedRange where Bound: SignedInteger, Bound.Stride: SignedInteger {
+extension ClosedRange where Bound: SignedInteger,
+                            Bound.Stride: SignedInteger {
     
     /// **OTCore:**
     /// Returns the first element of the range that does not match any of the `excluding` values. If there are no available elements, nil is returned.
@@ -573,8 +591,8 @@ extension ClosedRange where Bound: SignedInteger, Bound.Stride: SignedInteger {
         }
         
         return trimmedSortedExcluding != nil
-            ? first(excluding: trimmedSortedExcluding!)
-            : first(excluding: presortedExcluding)
+        ? first(excluding: trimmedSortedExcluding!)
+        : first(excluding: presortedExcluding)
         
     }
     
@@ -624,7 +642,8 @@ extension ClosedRange where Bound: SignedInteger, Bound.Stride: SignedInteger {
     
 }
 
-extension ClosedRange where Bound.Stride: SignedInteger, Bound: Strideable {
+extension ClosedRange where Bound.Stride: SignedInteger,
+                            Bound: Strideable {
     
     /// **OTCore:**
     /// Returns the first element of the range that does not match any of the `excluding` values.
@@ -711,7 +730,8 @@ extension ClosedRange where Bound.Stride: SignedInteger, Bound: Strideable {
 
 // MARK: - .first(excluding:) Range
 
-extension Range where Bound: SignedInteger, Bound.Stride: SignedInteger {
+extension Range where Bound: SignedInteger,
+                      Bound.Stride: SignedInteger {
     
     /// **OTCore:**
     /// Returns the first element of the range that does not match any of the `excluding` values.
@@ -814,7 +834,8 @@ extension Range where Bound: SignedInteger, Bound.Stride: SignedInteger {
     
 }
 
-extension Range where Bound : Strideable, Bound.Stride : SignedInteger {
+extension Range where Bound : Strideable,
+                      Bound.Stride : SignedInteger {
     
     /// **OTCore:**
     /// Returns the first element of the range that does not match any of the `excluding` values. If there are no available elements, nil is returned.
@@ -898,7 +919,8 @@ extension Range where Bound : Strideable, Bound.Stride : SignedInteger {
 
 // MARK: - .first(excluding:) PartialRangeFrom
 
-extension PartialRangeFrom where Bound.Stride: SignedInteger, Bound: Strideable {
+extension PartialRangeFrom where Bound.Stride: SignedInteger,
+                                 Bound: Strideable {
     
     /// **OTCore:**
     /// Returns the first element of the range that does not match any of the `excluding` values. This method is only typically useful with an exclusion array of that has been `.sorted()` first.
@@ -910,7 +932,7 @@ extension PartialRangeFrom where Bound.Stride: SignedInteger, Bound: Strideable 
         // however, we provide a fallback
         
         first(where: { !excluding.contains($0) } )
-            ?? lowerBound
+        ?? lowerBound
         
     }
     
@@ -938,7 +960,7 @@ extension PartialRangeFrom where Bound.Stride: SignedInteger, Bound: Strideable 
         
         return presortedExcluding
             .firstGapValue(after: lowerBound.advanced(by: -1))
-            ?? presortedExcluding.last!.advanced(by: 1)
+        ?? presortedExcluding.last!.advanced(by: 1)
         
     }
     
@@ -970,7 +992,7 @@ extension PartialRangeFrom where Bound.Stride: SignedInteger, Bound: Strideable 
         
         return sortedExcluding
             .firstGapValue(after: lowerBound.advanced(by: -1))
-            ?? sortedExcluding.last!.advanced(by: 1)
+        ?? sortedExcluding.last!.advanced(by: 1)
         
     }
     
@@ -988,7 +1010,9 @@ extension PartialRangeFrom where Bound.Stride: SignedInteger, Bound: Strideable 
     
 }
 
-extension PartialRangeFrom where Bound.Stride: SignedInteger, Bound: Strideable {
+extension PartialRangeFrom where Bound.Stride: SignedInteger,
+                                 Bound: Strideable {
+    
     /// **OTCore:**
     /// Returns the first element of the range that does not match any of the `excluding` values.
     /// If there are no available elements, nil is returned.
@@ -1118,14 +1142,14 @@ extension RangeExpression {
         case let range as ClosedRange<Bound>:
             return range.absoluteBounds
             
-        //case let range as Range<Bound>:
-        //    return range.absoluteBounds
+            //case let range as Range<Bound>:
+            //    return range.absoluteBounds
             
         case let range as PartialRangeFrom<Bound>:
             return range.absoluteBounds
             
-        //case let range as PartialRangeUpTo<Bound>:
-        //    return range.absoluteBounds
+            //case let range as PartialRangeUpTo<Bound>:
+            //    return range.absoluteBounds
             
         case let range as PartialRangeThrough<Bound>:
             return range.absoluteBounds
@@ -1268,8 +1292,8 @@ public struct Clamped<Value> where Value : Comparable {
     }
     
     internal static func clamping(_ value: Value,
-                                 min: Value?,
-                                 max: Value?) -> Value {
+                                  min: Value?,
+                                  max: Value?) -> Value {
         
         if let min = min {
             if let max = max {

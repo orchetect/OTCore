@@ -33,7 +33,6 @@ extension ArraySlice where Element: Comparable {
         var searchRange = startIndex...endIndex-1
         
         while searchRange.count > 2 {
-            
             let midIndex = searchRange.lowerBound + (searchRange.count / 2)
             
             let midElement = self[midIndex]

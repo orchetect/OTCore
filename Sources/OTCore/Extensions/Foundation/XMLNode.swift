@@ -29,7 +29,8 @@ extension Collection where Element : XMLNode {
     
     /// **OTCore:**
     /// Filters by the given XML element name
-    @inlinable public func filter(elementName: String) -> [XMLNode] {
+    @inlinable
+    public func filter(elementName: String) -> [XMLNode] {
         
         filter { $0.name == elementName }
         
@@ -37,8 +38,9 @@ extension Collection where Element : XMLNode {
     
     /// **OTCore:**
     /// Filters by the given `attribute` with matching `value`
-    @inlinable public func filter(attribute: String,
-                                  value: String) -> [XMLNode] {
+    @inlinable
+    public func filter(attribute: String,
+                       value: String) -> [XMLNode] {
         
         filter {
             $0.asElement?
@@ -50,8 +52,9 @@ extension Collection where Element : XMLNode {
     
     /// **OTCore:**
     /// Filters by the given `attribute` with values that satisfy the given predicate
-    @inlinable public func filter(attribute: String,
-                                  _ isIncluded: (String) throws -> Bool) rethrows -> [XMLNode] {
+    @inlinable
+    public func filter(attribute: String,
+                       _ isIncluded: (String) throws -> Bool) rethrows -> [XMLNode] {
         
         try filter {
             let filtered = try [$0.attributeStringValue(forName: attribute)]

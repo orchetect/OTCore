@@ -10,10 +10,11 @@
 public protocol OTCoreOptionalTyped {
     
     associatedtype Wrapped
-
+    
     /// **OTCore:**
     /// Semantic workaround used to enable extensions on types such as `Type<T>?
-    @inlinable var optional: Wrapped? { get }
+    @inlinable
+    var optional: Wrapped? { get }
     
 }
 
@@ -22,13 +23,18 @@ extension OTCoreOptionalTyped {
     /// **OTCore:**
     /// Same as `Wrapped?.none`.
     @inlinable
-    public static var noneValue: Optional<Wrapped> { .none }
+    public static var noneValue: Optional<Wrapped> {
+        
+        .none
+        
+    }
     
 }
 
 extension Optional: OTCoreOptionalTyped {
     
-    @inlinable public var optional: Wrapped? {
+    @inlinable
+    public var optional: Wrapped? {
         
         self
         
@@ -105,17 +111,25 @@ protocol OTCoreOptional {
 }
 
 extension Optional: OTCoreOptional {
+    
     public func asAny() -> Any? {
+        
         self as Any?
+        
     }
     
     public func wrappedType() -> Any.Type {
+        
         Wrapped.self
+        
     }
     
     public var isNone: Bool {
+        
         self == nil
+        
     }
+    
 }
 
 // MARK: - .ifNil(_:)
@@ -125,7 +139,8 @@ extension Optional {
     /// **OTCore:**
     /// Same as `self ?? defaultValue`
     /// (Functional convenience method)
-    @inlinable public func ifNil(_ defaultValue: Wrapped) -> Wrapped {
+    @inlinable
+    public func ifNil(_ defaultValue: Wrapped) -> Wrapped {
         
         self ?? defaultValue
         

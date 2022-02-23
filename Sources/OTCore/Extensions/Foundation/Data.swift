@@ -6,7 +6,7 @@
 // Endianness: All Apple platforms are currently little-endian
 
 // Floating endianness:
-/* On some machines, while integers were represented in little-endian form, floating point numbers were represented in big-endian form. Because there are many floating point formats, and a lack of a standard "network" representation, no standard for transferring floating point values has been made. This means that floating point data written on one machine may not be readable on another, and this is the case even if both use IEEE 754 floating point arithmetic since the endianness of the memory representation is not part of the IEEE specification. */
+// On some machines, while integers were represented in little-endian form, floating point numbers were represented in big-endian form. Because there are many floating point formats, and a lack of a standard "network" representation, no standard for transferring floating point values has been made. This means that floating point data written on one machine may not be readable on another, and this is the case even if both use IEEE 754 floating point arithmetic since the endianness of the memory representation is not part of the IEEE specification.
 
 // int32
 //   32-bit big-endian two's complement integer
@@ -453,7 +453,10 @@ extension FixedWidthInteger {
 extension Data {
     
     /// Internal use.
-    internal func toNumber<T: FixedWidthInteger>(from endianness: NumberEndianness = .platformDefault, toType: T.Type) -> T? {
+    internal func toNumber<T: FixedWidthInteger>(
+        from endianness: NumberEndianness = .platformDefault,
+        toType: T.Type
+    ) -> T? {
         
         guard count == MemoryLayout<T>.size else { return nil }
         

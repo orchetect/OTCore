@@ -86,23 +86,6 @@ extension StringProtocol {
         
     }
     
-    // DEPRECATION
-    @available(*, unavailable, renamed: "hasPrefix(caseInsensitive:)")
-    public func starts<T: StringProtocol>(withCaseInsensitive possiblePrefix: T) -> Bool {
-        
-        hasPrefix(caseInsensitive: possiblePrefix)
-        
-    }
-    
-    // DEPRECATION
-    @available(*, unavailable, renamed: "hasPrefix(caseInsensitive:)")
-    public func startsWith(_ string: String,
-                           options: NSString.CompareOptions = [.anchored, .caseInsensitive]) -> Bool {
-        
-        hasPrefix(caseInsensitive: string)
-        
-    }
-    
     /// **OTCore:**
     /// Convenience method: returns `true` if ends with the specified string. Case-insensitive, non-localized.
     public func hasSuffix<T: StringProtocol>(caseInsensitive prefix: T) -> Bool {

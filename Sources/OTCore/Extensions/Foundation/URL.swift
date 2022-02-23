@@ -61,48 +61,48 @@ extension URL {
         // platform-specific logic
         
         #if os(macOS) || targetEnvironment(macCatalyst) || os(iOS)
-        
-        if #available(macOS 10.8, iOS 11.0, *) {
             
-            // move file to trash
-            
-            var resultingURL: NSURL? = nil
-            
-            do {
-                try FileManager.default.trashItem(at: self, resultingItemURL: &resultingURL)
-            } catch {
-                #if os(macOS)
-                throw error
-                #else
-                // .trashItem has permissions issues on iOS; ignore and return without throwing
+            if #available(macOS 10.8, iOS 11.0, *) {
+                
+                // move file to trash
+                
+                var resultingURL: NSURL? = nil
+                
+                do {
+                    try FileManager.default.trashItem(at: self, resultingItemURL: &resultingURL)
+                } catch {
+                    #if os(macOS)
+                        throw error
+                    #else
+                        // .trashItem has permissions issues on iOS; ignore and return without throwing
+                        return nil
+                    #endif
+                }
+                
+                return resultingURL?.absoluteURL
+                
+            } else {
+                
+                // OS version requirements not met - delete file as a fallback
+                
+                try __delFile(url: self)
                 return nil
-                #endif
+                
             }
-            
-            return resultingURL?.absoluteURL
-            
-        } else {
-            
-            // OS version requirements not met - delete file as a fallback
-            
-            try __delFile(url: self)
-            return nil
-            
-        }
         
         #elseif os(tvOS)
         
-        // tvOS has no Trash - just delete the file
-        
-        try __delFile(url: self)
-        return nil
+            // tvOS has no Trash - just delete the file
+            
+            try __delFile(url: self)
+            return nil
         
         #elseif os(watchOS)
         
-        // watchOS has no Trash - just delete the file
-        
-        try __delFile(url: self)
-        return nil
+            // watchOS has no Trash - just delete the file
+            
+            try __delFile(url: self)
+            return nil
         
         #endif
         

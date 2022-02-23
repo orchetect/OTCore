@@ -106,7 +106,8 @@ extension Decimal {
     
     /// **OTCore:**
     /// Returns true if > 0.0
-    @inlinable public var boolValue: Bool { self > 0.0 }
+    @inlinable
+    public var boolValue: Bool { self > 0.0 }
     
 }
 
@@ -120,7 +121,8 @@ extension Decimal {
     /// **OTCore:**
     /// Same as `pow()`
     /// (Functional convenience method)
-    @inlinable public func power(_ exponent: Int) -> Decimal {
+    @inlinable
+    public func power(_ exponent: Int) -> Decimal {
         
         pow(self, exponent)
         
@@ -136,7 +138,8 @@ extension Decimal { // already conforms to CustomStringConvertible
     /// **OTCore:**
     /// Returns a string representation of a Decimal number.
     /// (Functional convenience method)
-    @inlinable public var string: String {
+    @inlinable
+    public var string: String {
         
         String(describing: self)
         
@@ -278,7 +281,8 @@ extension Decimal {
     /// Returns both integral part and fractional part.
     ///
     /// - Note: This method is more computationally efficient than calling both `.integral` and .`fraction` properties separately unless you only require one or the other.
-    @inlinable public var integralAndFraction: (integral: Self, fraction: Self) {
+    @inlinable
+    public var integralAndFraction: (integral: Self, fraction: Self) {
         
         let integral = truncated(decimalPlaces: 0)
         let fraction = self - integral
@@ -288,7 +292,8 @@ extension Decimal {
     
     /// **OTCore:**
     /// Returns the integral part (digits before the decimal point)
-    @inlinable public var integral: Self {
+    @inlinable
+    public var integral: Self {
         
         integralAndFraction.integral
         
@@ -298,7 +303,8 @@ extension Decimal {
     /// Returns the fractional part (digits after the decimal point)
     ///
     /// Note: this can result in a non-trivial loss of precision for the fractional part.
-    @inlinable public var fraction: Self {
+    @inlinable
+    public var fraction: Self {
         
         integralAndFraction.fraction
         

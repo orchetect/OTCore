@@ -429,6 +429,7 @@ public class OSLogger {
         case .trailing: return "\(charString) "
         case .leadingAndTrailing: return " \(charString) "
         }
+        
     }
     
     /// Internal util.
@@ -444,6 +445,7 @@ public class OSLogger {
         case .trailing: return "\(unwrappedString) "
         case .leadingAndTrailing: return " \(unwrappedString) "
         }
+        
     }
     
 }
@@ -458,6 +460,7 @@ extension OSLogger {
     /// **OTCore:**
     /// Log tokens for assembling log messages.
     public enum LogToken {
+        
         case message
         case emoji(padding: OptionalPadding)
         
@@ -476,6 +479,7 @@ extension OSLogger {
             case trailing
             case leadingAndTrailing
         }
+        
     }
     
 }
@@ -507,6 +511,7 @@ extension OSLogger {
         // MARK: Level Settings
         
         public struct LevelSettings {
+            
             /// **OTCore:**
             /// Set the emoji used for the `.emoji` LogToken.
             @inline(__always)
@@ -517,6 +522,7 @@ extension OSLogger {
             /// If `nil`, the `.defaultLog` Config property will be used.
             @inline(__always)
             public var log: OSLog?
+            
         }
         
         /// **OTCore:**
