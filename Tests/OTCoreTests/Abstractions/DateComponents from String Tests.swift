@@ -28,7 +28,7 @@ class Abstractions_DateComponentsFromString_Tests: XCTestCase {
         parsed = "March 26, 2019".dateComponents
         XCTAssertEqual(parsed?.year,    2019)
         XCTAssertEqual(parsed?.month,   3   )
-        XCTAssertEqual(parsed?.day,      26  )
+        XCTAssertEqual(parsed?.day,     26  )
         
         parsed = "Mar-26-2019".dateComponents
         XCTAssertEqual(parsed?.year,    2019)
@@ -136,12 +136,12 @@ class Abstractions_DateComponentsFromString_Tests: XCTestCase {
         XCTAssertEqual(parsed?.month,   10  )
         XCTAssertEqual(parsed?.day,     3   )
         
-        parsed = "99-10-03".dateComponents              // first component is > 31 so it's taken as the year
+        parsed = "99-10-03".dateComponents      // first component is > 31 so it's taken as the year
         XCTAssertEqual(parsed?.year,    1999)
         XCTAssertEqual(parsed?.month,   10  )
         XCTAssertEqual(parsed?.day,     3   )
         
-        parsed = "05-10-03".dateComponents              // defaults to assuming 3rd component is the year
+        parsed = "05-10-03".dateComponents      // defaults to assuming 3rd component is the year
         XCTAssertEqual(parsed?.year,    2003)
         XCTAssertEqual(parsed?.month,   5   )
         XCTAssertEqual(parsed?.day,     10  )
@@ -162,42 +162,42 @@ class Abstractions_DateComponentsFromString_Tests: XCTestCase {
         
         parsed = "Mar-10".dateComponents
         XCTAssertEqual(parsed?.year,    currentYear)
-        XCTAssertEqual(parsed?.month,   3          )
-        XCTAssertEqual(parsed?.day,             10 )
+        XCTAssertEqual(parsed?.month,   3)
+        XCTAssertEqual(parsed?.day,     10)
         
         parsed = "March 10".dateComponents
         XCTAssertEqual(parsed?.year,    currentYear)
-        XCTAssertEqual(parsed?.month,   3          )
-        XCTAssertEqual(parsed?.day,             10 )
+        XCTAssertEqual(parsed?.month,   3)
+        XCTAssertEqual(parsed?.day,     10)
         
         parsed = "10 Mar".dateComponents
         XCTAssertEqual(parsed?.year,    currentYear)
-        XCTAssertEqual(parsed?.month,   3          )
-        XCTAssertEqual(parsed?.day,             10 )
+        XCTAssertEqual(parsed?.month,   3)
+        XCTAssertEqual(parsed?.day,     10)
         
         // string without separators
         
         parsed = "10Mar2019".dateComponents
         XCTAssertEqual(parsed?.year,    2019)
-        XCTAssertEqual(parsed?.month,   3   )
-        XCTAssertEqual(parsed?.day,             10 )
+        XCTAssertEqual(parsed?.month,   3)
+        XCTAssertEqual(parsed?.day,     10)
         
         parsed = "2019Mar10".dateComponents
         XCTAssertEqual(parsed?.year,    2019)
-        XCTAssertEqual(parsed?.month,   3   )
-        XCTAssertEqual(parsed?.day,             10 )
+        XCTAssertEqual(parsed?.month,   3)
+        XCTAssertEqual(parsed?.day,     10)
         
         parsed = " 2019March10 ".dateComponents
         XCTAssertEqual(parsed?.year,    2019)
-        XCTAssertEqual(parsed?.month,   3   )
-        XCTAssertEqual(parsed?.day,             10 )
+        XCTAssertEqual(parsed?.month,   3)
+        XCTAssertEqual(parsed?.day,     10)
         
         // failures
         
         parsed = "Notamonth 10, 2019".dateComponents    // invalid month
         XCTAssertNil(parsed)
         
-        parsed = "March 32, 2019".dateComponents                // invalid day
+        parsed = "March 32, 2019".dateComponents        // invalid day
         XCTAssertNil(parsed)
         
     }
