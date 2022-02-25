@@ -73,38 +73,6 @@ extension Bool {
         
     }
     
-    /// **OTCore:**
-    /// Ternary operation.
-    /// If true, `trueValue` is returned. If false, `falseValue` is returned.
-    /// (Functional convenience method)
-    @inlinable @_disfavoredOverload
-    public func ifTrue<T>(_ trueValue: @autoclosure () throws -> T,
-                          else falseValue: @autoclosure () throws -> T) rethrows -> T {
-        
-        try self ? trueValue() : falseValue()
-        
-    }
-    
-    /// **OTCore:**
-    /// /// Boolean logic: passes value if true, nil if false.
-    /// (Functional convenience method)
-    @inlinable @_disfavoredOverload
-    public func ifTrue<T>(_ value: @autoclosure () throws -> T) rethrows -> T? {
-        
-        try self ? value() : nil
-        
-    }
-    
-    /// **OTCore:**
-    /// Boolean logic: passes value if false, nil if true.
-    /// (Functional convenience method)
-    @inlinable @_disfavoredOverload
-    public func ifFalse<T>(_ value: @autoclosure () throws -> T) rethrows -> T? {
-        
-        try self ? nil : value()
-        
-    }
-    
 }
 
 
