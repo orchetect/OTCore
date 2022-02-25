@@ -19,12 +19,14 @@ extension BinaryInteger {
     /// **OTCore:**
     /// Same as `CGFloat()`
     /// (Functional convenience method)
-    @inlinable public var cgFloat: CGFloat { CGFloat(self) }
+    @inlinable @_disfavoredOverload
+    public var cgFloat: CGFloat { CGFloat(self) }
     
     /// **OTCore:**
     /// Same as `CGFloat(exactly:)`
     /// (Functional convenience method)
-    @inlinable public var cgFloatExactly: CGFloat? { CGFloat(exactly: self) }
+    @inlinable @_disfavoredOverload
+    public var cgFloatExactly: CGFloat? { CGFloat(exactly: self) }
     
 }
 
@@ -33,12 +35,14 @@ extension BinaryFloatingPoint {
     /// **OTCore:**
     /// Same as `CGFloat()`
     /// (Functional convenience method)
-    @inlinable public var cgFloat: CGFloat { CGFloat(self) }
+    @inlinable @_disfavoredOverload
+    public var cgFloat: CGFloat { CGFloat(self) }
     
     /// **OTCore:**
     /// Same as `CGFloat(exactly:)`
     /// (Functional convenience method)
-    @inlinable public var cgFloatExactly: CGFloat? { CGFloat(exactly: self) }
+    @inlinable @_disfavoredOverload
+    public var cgFloatExactly: CGFloat? { CGFloat(exactly: self) }
     
 }
 
@@ -51,7 +55,8 @@ extension CGFloat: FloatingPointPowerComputable {
     /// **OTCore:**
     /// Same as `pow()`
     /// (Functional convenience method)
-    @inlinable public func power(_ exponent: CGFloat) -> CGFloat {
+    @inlinable @_disfavoredOverload
+    public func power(_ exponent: CGFloat) -> CGFloat {
         
         pow(self, exponent)
         
@@ -66,7 +71,8 @@ extension StringProtocol {
     /// **OTCore:**
     /// Constructs `CGFloat` from a `String` by converting to `Double` as intermediary.
     /// (Functional convenience method)
-    @inlinable public var cgFloat: CGFloat? {
+    @inlinable @_disfavoredOverload
+    public var cgFloat: CGFloat? {
         
         guard let doubleValue = Double(self) else { return nil }
         return CGFloat(doubleValue)

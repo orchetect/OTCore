@@ -10,52 +10,62 @@ extension BinaryInteger {
     /// **OTCore:**
     /// Same as `Int`
     /// (Functional convenience method)
-    @inlinable public var int: Int { Int(self) }
+    @inlinable @_disfavoredOverload
+    public var int: Int { Int(self) }
     
     /// **OTCore:**
     /// Same as `UInt`
     /// (Functional convenience method)
-    @inlinable public var uInt: UInt { UInt(self) }
+    @inlinable @_disfavoredOverload
+    public var uInt: UInt { UInt(self) }
     
     /// **OTCore:**
     /// Same as `Int8`
     /// (Functional convenience method)
-    @inlinable public var int8: Int8 { Int8(self) }
+    @inlinable @_disfavoredOverload
+    public var int8: Int8 { Int8(self) }
     
     /// **OTCore:**
     /// Same as `UInt8`
     /// (Functional convenience method)
-    @inlinable public var uInt8: UInt8 { UInt8(self) }
+    @inlinable @_disfavoredOverload
+    public var uInt8: UInt8 { UInt8(self) }
     
     /// **OTCore:**
     /// Same as `Int16`
     /// (Functional convenience method)
-    @inlinable public var int16: Int16 { Int16(self) }
+    @inlinable @_disfavoredOverload
+    public var int16: Int16 { Int16(self) }
     
     /// **OTCore:**
     /// Same as `UInt16`
     /// (Functional convenience method)
-    @inlinable public var uInt16: UInt16 { UInt16(self) }
+    @inlinable @_disfavoredOverload
+    public var uInt16: UInt16 { UInt16(self) }
     
     /// **OTCore:**
     /// Same as `Int32`
     /// (Functional convenience method)
-    @inlinable public var int32: Int32 { Int32(self) }
+    @inlinable @_disfavoredOverload
+    public var int32: Int32 { Int32(self) }
     
     /// **OTCore:**
     /// Same as `UInt32`
     /// (Functional convenience method)
-    @inlinable public var uInt32: UInt32 { UInt32(self) }
+    @inlinable @_disfavoredOverload
+    public var uInt32: UInt32 { UInt32(self) }
     
     /// **OTCore:**
     /// Same as `Int64`
     /// (Functional convenience method)
-    @inlinable public var int64: Int64 { Int64(self) }
+    @inlinable @_disfavoredOverload
+    public var int64: Int64 { Int64(self) }
     
     /// **OTCore:**
     /// Same as `UInt64`
     /// (Functional convenience method)
-    @inlinable public var uInt64: UInt64 { UInt64(self) }
+    @inlinable @_disfavoredOverload
+    public var uInt64: UInt64 { UInt64(self) }
     
 }
 
@@ -64,52 +74,62 @@ extension BinaryInteger {
     /// **OTCore:**
     /// Same as `Int(exactly:)`
     /// (Functional convenience method)
-    @inlinable public var intExactly: Int? { Int(exactly: self) }
+    @inlinable @_disfavoredOverload
+    public var intExactly: Int? { Int(exactly: self) }
     
     /// **OTCore:**
     /// Same as `UInt(exactly:)`
     /// (Functional convenience method)
-    @inlinable public var uIntExactly: UInt? { UInt(exactly: self) }
+    @inlinable @_disfavoredOverload
+    public var uIntExactly: UInt? { UInt(exactly: self) }
     
     /// **OTCore:**
     /// Same as `Int8(exactly:)`
     /// (Functional convenience method)
-    @inlinable public var int8Exactly: Int8? { Int8(exactly: self) }
+    @inlinable @_disfavoredOverload
+    public var int8Exactly: Int8? { Int8(exactly: self) }
     
     /// **OTCore:**
     /// Same as `UInt8(exactly:)`
     /// (Functional convenience method)
-    @inlinable public var uInt8Exactly: UInt8? { UInt8(exactly: self) }
+    @inlinable @_disfavoredOverload
+    public var uInt8Exactly: UInt8? { UInt8(exactly: self) }
     
     /// **OTCore:**
     /// Same as `Int16(exactly:)`
     /// (Functional convenience method)
-    @inlinable public var int16Exactly: Int16? { Int16(exactly: self) }
+    @inlinable @_disfavoredOverload
+    public var int16Exactly: Int16? { Int16(exactly: self) }
     
     /// **OTCore:**
     /// Same as `UInt16(exactly:)`
     /// (Functional convenience method)
-    @inlinable public var uInt16Exactly: UInt16? { UInt16(exactly: self) }
+    @inlinable @_disfavoredOverload
+    public var uInt16Exactly: UInt16? { UInt16(exactly: self) }
     
     /// **OTCore:**
     /// Same as `Int32(exactly:)`
     /// (Functional convenience method)
-    @inlinable public var int32Exactly: Int32? { Int32(exactly: self) }
+    @inlinable @_disfavoredOverload
+    public var int32Exactly: Int32? { Int32(exactly: self) }
     
     /// **OTCore:**
     /// Same as `UInt32(exactly:)`
     /// (Functional convenience method)
-    @inlinable public var uInt32Exactly: UInt32? { UInt32(exactly: self) }
+    @inlinable @_disfavoredOverload
+    public var uInt32Exactly: UInt32? { UInt32(exactly: self) }
     
     /// **OTCore:**
     /// Same as `Int64(exactly:)`
     /// (Functional convenience method)
-    @inlinable public var int64Exactly: Int64? { Int64(exactly: self) }
+    @inlinable @_disfavoredOverload
+    public var int64Exactly: Int64? { Int64(exactly: self) }
     
     /// **OTCore:**
     /// Same as `UInt64(exactly:)`
     /// (Functional convenience method)
-    @inlinable public var uInt64Exactly: UInt64? { UInt64(exactly: self) }
+    @inlinable @_disfavoredOverload
+    public var uInt64Exactly: UInt64? { UInt64(exactly: self) }
     
 }
 
@@ -118,33 +138,39 @@ extension BinaryInteger {
     /// **OTCore:**
     /// Same as `Double()`
     /// (Functional convenience method)
-    @inlinable public var double: Double { Double(self) }
+    @inlinable @_disfavoredOverload
+    public var double: Double { Double(self) }
     
     /// **OTCore:**
     /// Same as `Double(exactly:)`
     /// (Functional convenience method)
-    @inlinable public var doubleExactly: Double? { Double(exactly: self) }
+    @inlinable @_disfavoredOverload
+    public var doubleExactly: Double? { Double(exactly: self) }
     
     /// **OTCore:**
     /// Same as `Float()`
     /// (Functional convenience method)
-    @inlinable public var float: Float { Float(self) }
+    @inlinable @_disfavoredOverload
+    public var float: Float { Float(self) }
     
     /// **OTCore:**
     /// Same as `Float(exactly:)`
     /// (Functional convenience method)
-    @inlinable public var floatExactly: Float? { Float(exactly: self) }
+    @inlinable @_disfavoredOverload
+    public var floatExactly: Float? { Float(exactly: self) }
     
     /// **OTCore:**
     /// Same as `Float32()`
     /// (Functional convenience method)
-    @inlinable public var float32: Float32 { Float32(self) }
+    @inlinable @_disfavoredOverload
+    public var float32: Float32 { Float32(self) }
     
     #if !(arch(arm64) || arch(arm) || os(watchOS)) // Float80 is now removed for ARM
     /// **OTCore:**
     /// Same as `Float80()`
     /// (Functional convenience method)
-    @inlinable public var float80: Float80 { Float80(self) }
+    @inlinable @_disfavoredOverload
+    public var float80: Float80 { Float80(self) }
     #endif
     
 }
@@ -154,52 +180,62 @@ extension StringProtocol {
     /// **OTCore:**
     /// Same as `Int()`
     /// (Functional convenience method)
-    @inlinable public var int: Int? { Int(self) }
+    @inlinable @_disfavoredOverload
+    public var int: Int? { Int(self) }
     
     /// **OTCore:**
     /// Same as `Int()`
     /// (Functional convenience method)
-    @inlinable public var uInt: UInt? { UInt(self) }
+    @inlinable @_disfavoredOverload
+    public var uInt: UInt? { UInt(self) }
     
     /// **OTCore:**
     /// Same as `Int8()`
     /// (Functional convenience method)
-    @inlinable public var int8: Int8? { Int8(self) }
+    @inlinable @_disfavoredOverload
+    public var int8: Int8? { Int8(self) }
     
     /// **OTCore:**
     /// Same as `UInt8()`
     /// (Functional convenience method)
-    @inlinable public var uInt8: UInt8? { UInt8(self) }
+    @inlinable @_disfavoredOverload
+    public var uInt8: UInt8? { UInt8(self) }
     
     /// **OTCore:**
     /// Same as `Int16()`
     /// (Functional convenience method)
-    @inlinable public var int16: Int16? { Int16(self) }
+    @inlinable @_disfavoredOverload
+    public var int16: Int16? { Int16(self) }
     
     /// **OTCore:**
     /// Same as `UInt16()`
     /// (Functional convenience method)
-    @inlinable public var uInt16: UInt16? { UInt16(self) }
+    @inlinable @_disfavoredOverload
+    public var uInt16: UInt16? { UInt16(self) }
     
     /// **OTCore:**
     /// Same as `Int32()`
     /// (Functional convenience method)
-    @inlinable public var int32: Int32? { Int32(self) }
+    @inlinable @_disfavoredOverload
+    public var int32: Int32? { Int32(self) }
     
     /// **OTCore:**
     /// Same as `UInt32()`
     /// (Functional convenience method)
-    @inlinable public var uInt32: UInt32? { UInt32(self) }
+    @inlinable @_disfavoredOverload
+    public var uInt32: UInt32? { UInt32(self) }
     
     /// **OTCore:**
     /// Same as `Int64()`
     /// (Functional convenience method)
-    @inlinable public var int64: Int64? { Int64(self) }
+    @inlinable @_disfavoredOverload
+    public var int64: Int64? { Int64(self) }
     
     /// **OTCore:**
     /// Same as `UInt64()`
     /// (Functional convenience method)
-    @inlinable public var uInt64: UInt64? { UInt64(self) }
+    @inlinable @_disfavoredOverload
+    public var uInt64: UInt64? { UInt64(self) }
     
 }
 
@@ -211,11 +247,13 @@ extension BinaryInteger {
     /// **OTCore:**
     /// Same as `String(describing: self)`
     /// (Functional convenience method)
-    @inlinable public var string: String { String(describing: self) }
+    @inlinable @_disfavoredOverload
+    public var string: String { String(describing: self) }
     
     /// **OTCore:**
     /// Convenience method to return a String, padded to `paddedTo` number of leading zeros
-    @inlinable public func string(paddedTo: Int) -> String {
+    @inlinable @_disfavoredOverload
+    public func string(paddedTo: Int) -> String {
         
         if let cVarArg = self as? CVarArg {
             return String(format: "%0\(paddedTo)d", cVarArg)
@@ -244,7 +282,8 @@ extension BinaryInteger {
     ///        5.roundedAwayFromZero(toMultiplesOf: 4) // 8
     ///     (-1).roundedAwayFromZero(toMultiplesOf: 2) // -2
     ///
-    @inlinable public func roundedAwayFromZero(toMultiplesOf: Self) -> Self {
+    @inlinable @_disfavoredOverload
+    public func roundedAwayFromZero(toMultiplesOf: Self) -> Self {
         
         let source: Self = self >= 0 ? self : 0 - self
         let isNegative: Bool = self < 0
@@ -264,7 +303,8 @@ extension BinaryInteger {
     ///        5.roundedUp(toMultiplesOf: 4) // 8
     ///     (-3).roundedUp(toMultiplesOf: 2) // -2
     ///
-    @inlinable public func roundedUp(toMultiplesOf: Self) -> Self {
+    @inlinable @_disfavoredOverload
+    public func roundedUp(toMultiplesOf: Self) -> Self {
         
         if toMultiplesOf < 1 { return self }
         
@@ -287,7 +327,8 @@ extension BinaryInteger {
     ///        5.roundedDown(toMultiplesOf: 4) // 4
     ///     (-1).roundedDown(toMultiplesOf: 4) // -4
     ///
-    @inlinable public func roundedDown(toMultiplesOf: Self) -> Self {
+    @inlinable @_disfavoredOverload
+    public func roundedDown(toMultiplesOf: Self) -> Self {
         
         let source: Self = self >= 0 ? self : 0 - self
         let isNegative: Bool = self < 0
@@ -307,7 +348,8 @@ extension UnsignedInteger {
     
     /// **OTCore:**
     /// Access binary bits, zero-based from right-to-left
-    @inlinable public func bit(_ position: Int) -> Int {
+    @inlinable @_disfavoredOverload
+    public func bit(_ position: Int) -> Int {
         
         Int((self & (0b1 << position)) >> position)
         
@@ -319,7 +361,8 @@ extension Int8 {
     
     /// **OTCore:**
     /// Returns a two's complement bit format of an `Int8` so it can be stored as a byte (`UInt8`)
-    @inlinable public var twosComplement: UInt8 {
+    @inlinable @_disfavoredOverload
+    public var twosComplement: UInt8 {
         
         UInt8(bitPattern: self)
         
@@ -339,8 +382,9 @@ extension RangeReplaceableCollection where Element : FixedWidthInteger {
     ///
     ///     [UInt8](randomValuesBetween: 0...255, count: 4)
     ///
-    @inlinable public init(randomValuesBetween: ClosedRange<Element>,
-                           count: Int) {
+    @inlinable @_disfavoredOverload
+    public init(randomValuesBetween: ClosedRange<Element>,
+                count: Int) {
         
         self.init()
         reserveCapacity(count)
@@ -379,7 +423,8 @@ extension BinaryInteger {
     ///        9.wrapped(around: -1...3) // -1
     ///
     /// - parameter range: integer range, allowing negative and positive bounds.
-    @inlinable public func wrapped(around range: ClosedRange<Self>) -> Self {
+    @inlinable @_disfavoredOverload
+    public func wrapped(around range: ClosedRange<Self>) -> Self {
         
         let min = range.lowerBound
         let max = range.upperBound + 1
@@ -398,7 +443,8 @@ extension BinaryInteger {
     /// Returns a number that has been wrapped around a range.
     /// If the number already falls within the range, the number is returned as-is.
     /// If the number underflows or overflows the range, it is wrapped around the range's bounds continuously.
-    @inlinable public func wrapped(around range: Range<Self>) -> Self {
+    @inlinable @_disfavoredOverload
+    public func wrapped(around range: Range<Self>) -> Self {
         
         let min = range.lowerBound
         var max = range.upperBound - 1
@@ -424,7 +470,8 @@ extension BinaryInteger {
     /// - for the integer 5, this would return 1
     /// - for the integer 10, this would return 2
     /// - for the integer 250, this would return 3
-    @inlinable public var numberOfDigits: Int {
+    @inlinable @_disfavoredOverload
+    public var numberOfDigits: Int {
         
         if self < 10 && self >= 0 || self > -10 && self < 0 {
             return 1

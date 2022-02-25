@@ -39,6 +39,7 @@ extension DispatchGroup {
     ///         }
     ///     }
     ///     print("someAsyncMethod is done.")
+    @_disfavoredOverload
     public static func sync(
         _ block: (ThinDispatchGroup) -> Void
     ) {
@@ -64,6 +65,7 @@ extension DispatchGroup {
     ///         }
     ///     }
     ///     print("someAsyncMethod is done.")
+    @_disfavoredOverload
     public static func sync(
         asyncOn dispatchQueue: DispatchQueue,
         _ block: @escaping (ThinDispatchGroup) -> Void
@@ -91,7 +93,7 @@ extension DispatchGroup {
     ///         }
     ///     }
     ///     print("someAsyncMethod is done or timed out.")
-    @discardableResult
+    @discardableResult @_disfavoredOverload
     public static func sync(
         timeout: DispatchTimeInterval,
         _ block: (ThinDispatchGroup) -> Void
@@ -121,7 +123,7 @@ extension DispatchGroup {
     ///         }
     ///     }
     ///     print("someAsyncMethod is done or timed out.")
-    @discardableResult
+    @discardableResult @_disfavoredOverload
     public static func sync(
         asyncOn dispatchQueue: DispatchQueue,
         timeout: DispatchTimeInterval,
@@ -146,8 +148,10 @@ extension DispatchGroup {
 /// **OTCore:**
 /// A result value indicating whether a dispatch operation finished before a specified time. If the operation succeeded, an associated result value is returned.
 public enum DispatchSyncTimeoutResult<T> {
+    
     case success(T)
     case timedOut
+    
 }
     
 extension DispatchGroup {
@@ -184,6 +188,7 @@ extension DispatchGroup {
     ///         }
     ///     }
     ///     print(returnValue) // prints contents of someValue
+    @_disfavoredOverload
     public static func sync<T>(
         _ block: (ThinReturnValueDispatchGroup<T>) -> Void
     ) -> T {
@@ -210,6 +215,7 @@ extension DispatchGroup {
     ///         }
     ///     }
     ///     print(returnValue) // prints contents of someValue
+    @_disfavoredOverload
     public static func sync<T>(
         asyncOn dispatchQueue: DispatchQueue,
         _ block: @escaping (ThinReturnValueDispatchGroup<T>) -> Void
@@ -245,6 +251,7 @@ extension DispatchGroup {
     ///         // operation timed out
     ///     }
     ///
+    @_disfavoredOverload
     public static func sync<T>(
         timeout: DispatchTimeInterval,
         _ block: (ThinReturnValueDispatchGroup<T>) -> Void
@@ -283,6 +290,7 @@ extension DispatchGroup {
     ///         // operation timed out
     ///     }
     ///
+    @_disfavoredOverload
     public static func sync<T>(
         asyncOn dispatchQueue: DispatchQueue,
         timeout: DispatchTimeInterval,

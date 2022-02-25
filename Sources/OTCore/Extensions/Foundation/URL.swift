@@ -17,6 +17,7 @@ extension URL {
     ///
     /// - Will return `false` if used on a symlink and the symlink's original file does not exist.
     /// - Will still return `true` if used on an alias and the alias' original file does not exist.
+    @_disfavoredOverload
     public var fileExists: Bool {
         
         FileManager.default.fileExists(atPath: path)
@@ -27,9 +28,10 @@ extension URL {
     /// Convenience method to test if a file URL is a symbolic link and not an actual file/folder.
     ///
     /// - Will return `nil` if the URL is not a properly formatted file URL, or there was a problem querying the URL's file system attributes.
+    @_disfavoredOverload
     public var isFolder: Bool? {
         
-        try? resourceValues(forKeys: Set([URLResourceKey.isDirectoryKey]))
+        try? resourceValues(forKeys: [URLResourceKey.isDirectoryKey])
             .isDirectory
         
     }
@@ -49,7 +51,7 @@ extension URL {
     /// If the file was deleted, `nil` is returned.
     ///
     /// If both operations were unsuccessful, an error is thrown.
-    @discardableResult
+    @discardableResult @_disfavoredOverload
     public func trashOrDelete() throws -> URL? {
         
         // funcs
@@ -61,48 +63,48 @@ extension URL {
         // platform-specific logic
         
         #if os(macOS) || targetEnvironment(macCatalyst) || os(iOS)
-        
-        if #available(macOS 10.8, iOS 11.0, *) {
             
-            // move file to trash
-            
-            var resultingURL: NSURL? = nil
-            
-            do {
-                try FileManager.default.trashItem(at: self, resultingItemURL: &resultingURL)
-            } catch {
-                #if os(macOS)
-                throw error
-                #else
-                // .trashItem has permissions issues on iOS; ignore and return without throwing
+            if #available(macOS 10.8, iOS 11.0, *) {
+                
+                // move file to trash
+                
+                var resultingURL: NSURL? = nil
+                
+                do {
+                    try FileManager.default.trashItem(at: self, resultingItemURL: &resultingURL)
+                } catch {
+                    #if os(macOS)
+                        throw error
+                    #else
+                        // .trashItem has permissions issues on iOS; ignore and return without throwing
+                        return nil
+                    #endif
+                }
+                
+                return resultingURL?.absoluteURL
+                
+            } else {
+                
+                // OS version requirements not met - delete file as a fallback
+                
+                try __delFile(url: self)
                 return nil
-                #endif
+                
             }
-            
-            return resultingURL?.absoluteURL
-            
-        } else {
-            
-            // OS version requirements not met - delete file as a fallback
-            
-            try __delFile(url: self)
-            return nil
-            
-        }
         
         #elseif os(tvOS)
         
-        // tvOS has no Trash - just delete the file
-        
-        try __delFile(url: self)
-        return nil
+            // tvOS has no Trash - just delete the file
+            
+            try __delFile(url: self)
+            return nil
         
         #elseif os(watchOS)
         
-        // watchOS has no Trash - just delete the file
-        
-        try __delFile(url: self)
-        return nil
+            // watchOS has no Trash - just delete the file
+            
+            try __delFile(url: self)
+            return nil
         
         #endif
         
@@ -116,6 +118,7 @@ extension URL {
     
     /// **OTCore:**
     /// Convenience method to test if a file URL is a Finder alias.
+    @_disfavoredOverload
     public var isFinderAlias: Bool {
         
         guard isFileURL else { return false }
@@ -126,6 +129,7 @@ extension URL {
     
     /// **OTCore:**
     /// Creates an alias of the base URL file or folder `at` the supplied target location. Will override existing path if it exists.
+    @_disfavoredOverload
     public func createFinderAlias(at url: URL) throws {
         
         let data = try
@@ -146,6 +150,7 @@ extension URL {
     /// - is not a Finder alias or does not exist, or
     /// - is a symbolic link or a hard link and not a Finder alias, or
     /// - does not exist.
+    @_disfavoredOverload
     public var resolvedFinderAlias: URL? {
         
         guard isFileURL else { return nil }
@@ -174,6 +179,7 @@ extension URL {
     /// Convenience method to test if a file URL is a symbolic link and not an actual file/folder.
     ///
     /// - Returns `nil` if the URL is not a properly formatted file URL, or there was a problem querying the URL's file system attributes.
+    @_disfavoredOverload
     public var isSymLink: Bool? {
         
         guard isFileURL
@@ -195,6 +201,7 @@ extension URL {
     ///
     /// - Returns `true` even if original file does not exist.
     /// - Returns `nil` if the URL is not a properly formatted file URL.
+    @_disfavoredOverload
     public func isSymLinkOf(file: URL) -> Bool? {
         
         guard file.isFileURL
@@ -209,6 +216,7 @@ extension URL {
     ///
     /// - Returns `true` even if original file does not exist.
     /// - Returns `nil` if the URL is not a properly formatted file URL.
+    @_disfavoredOverload
     public func isSymLinkOf(file: String) -> Bool? {
         
         guard isFileURL
@@ -228,6 +236,7 @@ extension URL {
     ///
     /// Returns `true` if new symlink gets created.
     /// Returns `false` if destination already exists or if the symlink already exists.
+    @_disfavoredOverload
     public func createSymLink(at url: URL) throws {
         
         try FileManager.default
@@ -246,6 +255,7 @@ extension FileManager {
     
     /// **OTCore:**
     /// Backwards compatible method for retrieving the current user's home directory, using the most recent API where possible.
+    @_disfavoredOverload
     public static var homeDirectoryForCurrentUserCompat: URL {
         
         if #available(OSX 10.12, *) {
@@ -262,6 +272,7 @@ extension FileManager {
     
     /// **OTCore:**
     /// Backwards compatible method for retrieving a temporary folder from the system.
+    @_disfavoredOverload
     public static var temporaryDirectoryCompat: URL {
         
         if #available(OSX 10.12, iOS 10.0, tvOS 10.0, watchOS 3.0, *) {

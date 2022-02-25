@@ -102,8 +102,10 @@ extension Transformable {
     ///     int!.transformed { $0 * 2 } // 246
     ///     int.transformedOptional { $0! * 2 } // 246
     ///
-    @inlinable public
-    func transformed<T>(_ transform: (Self) throws -> T) rethrows -> T {
+    @inlinable @_disfavoredOverload
+    public func transformed<T>(
+        _ transform: (Self) throws -> T
+    ) rethrows -> T {
         
         try transform(self)
         
@@ -112,8 +114,10 @@ extension Transformable {
     /// **OTCore:**
     /// Mutate a value in place and also return it in order to continue chaining methods.
     /// (Functional convenience method)
-    @inlinable @discardableResult public
-    mutating func transform(_ transform: (inout Self) throws -> Void) rethrows -> Self {
+    @inlinable @discardableResult @_disfavoredOverload
+    public mutating func transform(
+        _ transform: (inout Self) throws -> Void
+    ) rethrows -> Self {
         
         try transform(&self)
         
@@ -132,8 +136,10 @@ extension Transformable where Self : AnyObject {
     /// **OTCore:**
     /// Mutate a value in place and also return it in order to continue chaining methods.
     /// (Functional convenience method)
-    @inlinable @discardableResult public
-    func transform(_ transform: (Self) throws -> Void) rethrows -> Self {
+    @inlinable @discardableResult @_disfavoredOverload
+    public func transform(
+        _ transform: (Self) throws -> Void
+    ) rethrows -> Self {
         
         try transform(self)
         
@@ -151,8 +157,10 @@ extension Optional: Transformable {
     /// **OTCore:**
     /// Returns the result of transforming a wrapped Optional using a closure.
     /// (Functional convenience method)
-    @inlinable public
-    func transformedOptional<T>(_ transform: (Self) throws -> T) rethrows -> T {
+    @inlinable @_disfavoredOverload
+    public func transformedOptional<T>(
+        _ transform: (Self) throws -> T
+    ) rethrows -> T {
         
         try transform(self)
         
@@ -161,8 +169,10 @@ extension Optional: Transformable {
     /// **OTCore:**
     /// Mutate a wrapped Optional in place and also return it in order to continue chaining methods.
     /// (Functional convenience method)
-    @inlinable @discardableResult public
-    mutating func transformOptional(_ transform: (inout Self) throws -> Void) rethrows -> Self {
+    @inlinable @discardableResult @_disfavoredOverload
+    public mutating func transformOptional(
+        _ transform: (inout Self) throws -> Void
+    ) rethrows -> Self {
         
         try transform(&self)
         
@@ -181,8 +191,10 @@ extension Optional where Wrapped : AnyObject {
     /// **OTCore:**
     /// Mutate a value in place and also return it in order to continue chaining methods.
     /// (Functional convenience method)
-    @inlinable @discardableResult public
-    func transform(_ transform: (Self) throws -> Void) rethrows -> Self {
+    @inlinable @discardableResult @_disfavoredOverload
+    public func transform(
+        _ transform: (Self) throws -> Void
+    ) rethrows -> Self {
         
         try transform(self)
         
@@ -232,8 +244,10 @@ extension Equatable {
     ///     int!.transformed { $0 * 2 } // 246
     ///     int.transformedOptional { $0! * 2 } // 246
     ///
-    @inlinable public
-    func transformed<T>(_ transform: (Self) throws -> T) rethrows -> T {
+    @inlinable @_disfavoredOverload
+    public func transformed<T>(
+        _ transform: (Self) throws -> T
+    ) rethrows -> T {
         
         try transform(self)
         
@@ -242,8 +256,10 @@ extension Equatable {
     /// **OTCore:**
     /// Mutate a value in place and also return it in order to continue chaining methods.
     /// (Functional convenience method)
-    @inlinable @discardableResult public
-    mutating func transform(_ transform: (inout Self) throws -> Void) rethrows -> Self {
+    @inlinable @discardableResult @_disfavoredOverload
+    public mutating func transform(
+        _ transform: (inout Self) throws -> Void
+    ) rethrows -> Self {
         
         try transform(&self)
         
@@ -262,8 +278,10 @@ extension Equatable where Self : AnyObject {
     /// **OTCore:**
     /// Mutate a value in place and also return it in order to continue chaining methods.
     /// (Functional convenience method)
-    @inlinable @discardableResult public
-    func transform(_ transform: (Self) throws -> Void) rethrows -> Self {
+    @inlinable @discardableResult @_disfavoredOverload
+    public func transform(
+        _ transform: (Self) throws -> Void
+    ) rethrows -> Self {
         
         try transform(self)
         

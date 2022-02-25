@@ -17,7 +17,6 @@ class Extensions_Foundation_DispatchAndFoundation_Tests: XCTestCase {
     
     func testDispatchTimeInterval_timeInterval() {
         
-        
         XCTAssertEqual(DispatchTimeInterval.seconds(2).timeInterval, 2.0)
         
         XCTAssertEqual(DispatchTimeInterval.milliseconds(250).timeInterval, 0.250)

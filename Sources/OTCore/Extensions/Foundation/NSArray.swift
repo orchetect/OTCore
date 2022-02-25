@@ -19,6 +19,7 @@ extension NSArray {
     ///     arr[safe: 0] // Optional(1)
     ///     arr[safe: 9] // nil
     ///
+    @_disfavoredOverload
     open subscript(safe index: Int) -> Any? {
         
         (0..<count).contains(index) ? self[index] : nil
@@ -43,6 +44,7 @@ extension NSMutableArray {
     ///     arr[safeMutable: 0] // Optional(1)
     ///     arr[safeMutable: 9] // nil
     ///
+    @_disfavoredOverload
     open subscript(safeMutable index: Int) -> Any? {
         
         get {

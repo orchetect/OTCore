@@ -30,6 +30,7 @@ extension String {
     /// (English localization only at this time.)
     ///
     @available(macOS 10.11, *)
+    @_disfavoredOverload
     public var titleCased: String {
         
         var words =

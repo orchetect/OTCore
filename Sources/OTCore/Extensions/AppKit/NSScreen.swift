@@ -11,6 +11,7 @@ extension NSScreen {
     
     /// **OTCore:**
     /// Returns the screen that currently contains the user's mouse pointer.
+    @_disfavoredOverload
     public static var screenWithMouseCursor: NSScreen {
         
         NSScreen.screens
@@ -23,6 +24,7 @@ extension NSScreen {
     
     /// **OTCore:**
     /// Returns `true` if the screen currently contains the user's mouse pointer.
+    @_disfavoredOverload
     public var containsMouseCursor: Bool {
         
         Self.screenWithMouseCursor == self

@@ -12,6 +12,7 @@ import Foundation // imports Dispatch
 extension QualityOfService {
     
     /// Returns the Dispatch framework `DispatchQoS.QoSClass` equivalent.
+    @_disfavoredOverload
     public var dispatchQoSClass: DispatchQoS.QoSClass {
         
         switch self {
@@ -41,6 +42,7 @@ extension QualityOfService {
 extension DispatchQoS.QoSClass {
     
     /// Returns the Foundation framework `QualityOfService` equivalent.
+    @_disfavoredOverload
     public var qualityOfService: QualityOfService {
         
         switch self {
@@ -76,6 +78,7 @@ extension DispatchTimeInterval {
     
     /// **OTCore:**
     /// Return the interval as a `TimeInterval` (floating-point seconds).
+    @_disfavoredOverload
     public var timeInterval: TimeInterval? {
         
         switch self {

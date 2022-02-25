@@ -13,9 +13,10 @@ extension StringProtocol {
     
     /// **OTCore:**
     /// Encode a utf8 String to Base64
-    @inlinable public var base64EncodedString: String {
+    @inlinable @_disfavoredOverload
+    public var base64EncodedString: String {
         
-        Data(self.utf8).base64EncodedString()
+        Data(utf8).base64EncodedString()
         
     }
     
@@ -25,7 +26,8 @@ extension String {
     
     /// **OTCore:**
     /// Decode a utf8 String from Base64. Returns `nil` if unsuccessful.
-    @inlinable public var base64DecodedString: String? {
+    @inlinable @_disfavoredOverload
+    public var base64DecodedString: String? {
         
         guard let data = Data(base64Encoded: self) else { return nil }
         
@@ -39,7 +41,8 @@ extension Substring {
     
     /// **OTCore:**
     /// Decode a utf8 String from Base64. Returns `nil` if unsuccessful.
-    @inlinable public var base64DecodedString: String? {
+    @inlinable @_disfavoredOverload
+    public var base64DecodedString: String? {
         
         guard let data = Data(base64Encoded: String(self)) else { return nil }
         

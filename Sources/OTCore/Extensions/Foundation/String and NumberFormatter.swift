@@ -23,6 +23,7 @@ extension DefaultStringInterpolation {
     ///     // == "There are three apples"
     ///
     /// - warning: This may not be thread-safe if called from more than one thread simultaneously.
+    @_disfavoredOverload
     public mutating func appendInterpolation(_ value: Int,
                                              format style: NumberFormatter.Style) {
         

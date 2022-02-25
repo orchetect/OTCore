@@ -25,6 +25,7 @@ extension FloatingPoint where Self : CVarArg,
     
     /// **OTCore:**
     /// Returns a string representation of a floating-point number, with maximum 100 decimal places of precision.
+    @_disfavoredOverload
     public var stringValueHighPrecision: String {
         
         var formatted = String(format: "%.100f", self)
@@ -45,6 +46,7 @@ extension Float80 {
     
     /// **OTCore:**
     /// Returns a string representation of a floating-point number, with maximum 100 decimal places of precision.
+    @_disfavoredOverload
     public var stringValueHighPrecision: String {
         
         // String(format:) does not work with Float80

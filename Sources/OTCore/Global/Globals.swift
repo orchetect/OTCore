@@ -73,9 +73,9 @@ extension Globals {
         public static var userName: String {
             
             #if os(macOS)
-            return ProcessInfo.processInfo.fullUserName
+                return ProcessInfo.processInfo.fullUserName
             #else
-            fatalError("Not implemented on this platform yet.")
+                fatalError("Not implemented on this platform yet.")
             #endif
             
         }
@@ -86,9 +86,9 @@ extension Globals {
         public static var fullUserName: String {
             
             #if os(macOS)
-            return ProcessInfo.processInfo.userName
+                return ProcessInfo.processInfo.userName
             #else
-            fatalError("Not implemented on this platform yet.")
+                fatalError("Not implemented on this platform yet.")
             #endif
             
         }
@@ -108,11 +108,11 @@ extension Globals {
         public static var name: String {
             
             #if os(macOS)
-            return Host.current().localizedName ?? ""
+                return Host.current().localizedName ?? ""
             #elseif os(iOS) || os(tvOS)
-            return UIDevice.current.name
+                return UIDevice.current.name
             #else
-            fatalError("Not implemented on this platform yet.")
+                fatalError("Not implemented on this platform yet.")
             #endif
             
         }

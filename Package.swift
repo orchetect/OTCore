@@ -22,6 +22,7 @@ let package = Package(
     
     dependencies: [
         // testing-only dependency
+        .package(url: "https://github.com/orchetect/XCTestUtils", from: "1.0.0"),
         .package(url: "https://github.com/orchetect/SegmentedProgress", from: "1.0.1")
     ],
     
@@ -32,7 +33,7 @@ let package = Package(
         
         .testTarget(
             name: "OTCoreTests",
-            dependencies: ["OTCore", "SegmentedProgress"])
+            dependencies: ["OTCore", "XCTestUtils", "SegmentedProgress"])
     ]
     
 )

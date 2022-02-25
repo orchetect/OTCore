@@ -15,6 +15,7 @@ extension NSAttributedString {
     
     /// **OTCore:**
     /// Convenience. Returns a new `NSAttributedString` with the attribute applied to the entire string.
+    @_disfavoredOverload
     public func addingAttribute(alignment: NSTextAlignment) -> NSAttributedString {
         
         let paragraph = NSMutableParagraphStyle()
@@ -39,6 +40,7 @@ extension NSMutableAttributedString {
     
     /// **OTCore:**
     /// Convenience. Adds the attribute applied to the entire string.
+    @_disfavoredOverload
     public func addAttribute(alignment: NSTextAlignment) {
         
         let paragraph = NSMutableParagraphStyle()

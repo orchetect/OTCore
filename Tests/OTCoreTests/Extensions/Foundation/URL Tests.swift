@@ -76,14 +76,14 @@ class Extensions_Foundation_URL_Tests: XCTestCase {
         // result test
         
         #if os(macOS) || targetEnvironment(macCatalyst)
-        XCTAssertNotNil(result)
+            XCTAssertNotNil(result)
         #elseif os(iOS)
-        XCTAssertNil(result)
+            XCTAssertNil(result)
         #elseif os(tvOS)
-        XCTAssertNil(result)
+            XCTAssertNil(result)
         #elseif os(watchOS)
-        // watchOS can't run XCTest unit tests, but we'll put the expected result here any way:
-        XCTAssertNil(result)
+            // watchOS can't run XCTest unit tests, but we'll put the expected result here any way:
+            XCTAssertNil(result)
         #endif
         
         // clean up

@@ -11,7 +11,8 @@ extension TimeInterval {
     
     /// **OTCore:**
     /// Convenience constructor from `timespec`
-    @inlinable public init(_ time: timespec) {
+    @inlinable @_disfavoredOverload
+    public init(_ time: timespec) {
         
         self = time.doubleValue
         

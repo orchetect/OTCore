@@ -527,7 +527,15 @@ class Extensions_Foundation_Data_Tests: XCTestCase {
         
         let sourceString = "This is a test string"
         
-        let expectedBytes: [UInt8] = [0x54, 0x68, 0x69, 0x73, 0x20, 0x69, 0x73, 0x20, 0x61, 0x20, 0x74, 0x65, 0x73, 0x74, 0x20, 0x73, 0x74, 0x72, 0x69, 0x6E, 0x67]
+        let expectedBytes: [UInt8] = [0x54, 0x68, 0x69, 0x73,
+                                      0x20,
+                                      0x69, 0x73,
+                                      0x20,
+                                      0x61,
+                                      0x20,
+                                      0x74, 0x65, 0x73, 0x74,
+                                      0x20,
+                                      0x73, 0x74, 0x72, 0x69, 0x6E, 0x67]
         
         XCTAssertEqual(sourceString.toData(using: .utf8)!, Data(expectedBytes))
         

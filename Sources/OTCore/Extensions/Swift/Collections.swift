@@ -10,7 +10,8 @@ extension Collection where Self: RangeReplaceableCollection,
     
     /// **OTCore:**
     /// Syntactic sugar: Append an element to an array.
-    @inlinable static public func += (lhs: inout Self, rhs: Element) {
+    @inlinable @_disfavoredOverload
+    static public func += (lhs: inout Self, rhs: Element) {
         
         lhs.append(rhs)
         
@@ -46,7 +47,8 @@ extension MutableCollection {
     ///     arrSlice[safe: 2] // Optional(3)
     ///     arrSlice[safe: 3] // nil
     ///
-    @inlinable public subscript(safe index: Index) -> Element? {
+    @inlinable @_disfavoredOverload
+    public subscript(safe index: Index) -> Element? {
         
         get {
             indices.contains(index) ? self[index] : nil
@@ -80,7 +82,7 @@ extension MutableCollection {
             
             var valueForMutation: Element? = self[index]
             yield &valueForMutation
-
+            
             // subscript getter and setter must be of the same type
             // (get is `Element?` so the set must also be `Element?`)
             
@@ -123,7 +125,8 @@ extension MutableCollection where Element : OTCoreOptionalTyped {
     ///     arrSlice[safe: 2] // Optional(3)
     ///     arrSlice[safe: 3] // nil
     ///
-    @inlinable public subscript(safe index: Index) -> Element? {
+    @inlinable @_disfavoredOverload
+    public subscript(safe index: Index) -> Element? {
         
         get {
             indices.contains(index) ? self[index] : nil
@@ -188,8 +191,8 @@ extension Collection {
     ///     arrSlice[safe: 2] // Optional(3)
     ///     arrSlice[safe: 3] // nil
     ///
-    @_disfavoredOverload
-    @inlinable public subscript(safe index: Index) -> Element? {
+    @inlinable @_disfavoredOverload
+    public subscript(safe index: Index) -> Element? {
         
         indices.contains(index) ? self[index] : nil
         
@@ -198,8 +201,8 @@ extension Collection {
     /// **OTCore:**
     /// Access collection indexes safely.
     /// If index does not exist (out-of-bounds), `defaultValue` is returned.
-    @_disfavoredOverload
-    @inlinable public subscript(
+    @inlinable @_disfavoredOverload
+    public subscript(
         safe index: Index,
         default defaultValue: @autoclosure () -> Element
     ) -> Element {
@@ -232,7 +235,8 @@ extension Collection where Index == Int {
     ///     arrSlice[safe: 2] // Optional(3)
     ///     arrSlice[safe: 3] // nil
     ///
-    @inlinable public subscript(safe index: Int) -> Element? {
+    @inlinable @_disfavoredOverload
+    public subscript(safe index: Int) -> Element? {
         
         indices.contains(index) ? self[index] : nil
         
@@ -247,7 +251,8 @@ extension Collection {
     /// **OTCore:**
     /// Access collection indexes safely.
     /// If index range is not fully contained within the collection's indices, `nil` is returned.
-    @inlinable public subscript(safe range: ClosedRange<Index>) -> SubSequence? {
+    @inlinable @_disfavoredOverload
+    public subscript(safe range: ClosedRange<Index>) -> SubSequence? {
         
         guard range.lowerBound >= startIndex,
               range.upperBound < endIndex else { return nil }
@@ -259,7 +264,8 @@ extension Collection {
     /// **OTCore:**
     /// Access collection indexes safely.
     /// If index range is not fully contained within the collection's indices, `nil` is returned.
-    @inlinable public subscript(safe range: Range<Index>) -> SubSequence? {
+    @inlinable @_disfavoredOverload
+    public subscript(safe range: Range<Index>) -> SubSequence? {
         
         guard range.lowerBound >= startIndex,
               range.upperBound <= endIndex else { return nil }
@@ -271,7 +277,8 @@ extension Collection {
     /// **OTCore:**
     /// Access collection indexes safely.
     /// If index range is not fully contained within the collection's indices, `nil` is returned.
-    @inlinable public subscript(safe range: PartialRangeFrom<Index>) -> SubSequence? {
+    @inlinable @_disfavoredOverload
+    public subscript(safe range: PartialRangeFrom<Index>) -> SubSequence? {
         
         guard range.lowerBound >= startIndex,
               range.lowerBound <= endIndex else { return nil }
@@ -283,7 +290,8 @@ extension Collection {
     /// **OTCore:**
     /// Access collection indexes safely.
     /// If index range is not fully contained within the collection's indices, `nil` is returned.
-    @inlinable public subscript(safe range: PartialRangeThrough<Index>) -> SubSequence? {
+    @inlinable @_disfavoredOverload
+    public subscript(safe range: PartialRangeThrough<Index>) -> SubSequence? {
         
         guard range.upperBound >= startIndex,
               range.upperBound < endIndex else { return nil }
@@ -295,7 +303,8 @@ extension Collection {
     /// **OTCore:**
     /// Access collection indexes safely.
     /// If index range is not fully contained within the collection's indices, `nil` is returned.
-    @inlinable public subscript(safe range: PartialRangeUpTo<Index>) -> SubSequence? {
+    @inlinable @_disfavoredOverload
+    public subscript(safe range: PartialRangeUpTo<Index>) -> SubSequence? {
         
         guard range.upperBound >= startIndex,
               range.upperBound <= endIndex else { return nil }
@@ -327,7 +336,8 @@ extension MutableCollection {
     ///     arrSlice[safePosition: 0] // Optional(2)
     ///     arrSlice[safePosition: 2] // nil
     ///
-    @inlinable public subscript(safePosition indexOffset: Int) -> Element? {
+    @inlinable @_disfavoredOverload
+    public subscript(safePosition indexOffset: Int) -> Element? {
         
         get {
             guard indexOffset >= 0, indexOffset < count else { return nil }
@@ -406,7 +416,8 @@ extension MutableCollection where Element : OTCoreOptionalTyped {
     ///     arrSlice[safePosition: 0] // Optional(2)
     ///     arrSlice[safePosition: 2] // nil
     ///
-    @inlinable public subscript(safePosition indexOffset: Int) -> Element? {
+    @inlinable @_disfavoredOverload
+    public subscript(safePosition indexOffset: Int) -> Element? {
         
         get {
             guard indexOffset >= 0, indexOffset < count else { return nil }
@@ -470,7 +481,8 @@ extension Collection where Index == Int {
     ///     arrSlice[safePosition: 0] // Optional(2)
     ///     arrSlice[safePosition: 2] // nil
     ///
-    @inlinable public subscript(safePosition index: Int) -> Element? {
+    @inlinable @_disfavoredOverload
+    public subscript(safePosition index: Int) -> Element? {
         
         guard count > 0,
               (0..<count).contains(index) else { return nil }
@@ -495,7 +507,8 @@ extension Collection where Index == Int {
     ///     arrSlice[safe: 2, default: 99] // 3
     ///     arrSlice[safe: 3, default: 99] // 99
     ///
-    @inlinable public subscript(
+    @inlinable @_disfavoredOverload
+    public subscript(
         safe index: Int,
         default defaultValue: @autoclosure () -> Element
     ) -> Element {
@@ -519,7 +532,8 @@ extension Collection where Index == Int {
     ///     arrSlice[safePosition: 1, default: 99] // 3
     ///     arrSlice[safePosition: 2, default: 99] // 99
     ///
-    @inlinable public subscript(
+    @inlinable @_disfavoredOverload
+    public subscript(
         safePosition index: Int,
         default defaultValue: @autoclosure () -> Element
     ) -> Element {
@@ -541,7 +555,8 @@ extension Collection where Index == Int {
     
     /// **OTCore:**
     /// Access collection indexes safely, referenced by position offset `0..<count`. (Same as `[Int]` but if position range is not fully contained within the collection's element position offsets, `nil` is returned.
-    @inlinable public subscript(safePosition range: ClosedRange<Int>) -> SubSequence? {
+    @inlinable @_disfavoredOverload
+    public subscript(safePosition range: ClosedRange<Int>) -> SubSequence? {
         
         guard range.lowerBound >= 0,
               range.upperBound < count else { return nil }
@@ -555,7 +570,8 @@ extension Collection where Index == Int {
     
     /// **OTCore:**
     /// Access collection indexes safely, referenced by position offset `0..<count`. (Same as `[Int]` but if position range is not fully contained within the collection's element position offsets, `nil` is returned.
-    @inlinable public subscript(safePosition range: Range<Int>) -> SubSequence? {
+    @inlinable @_disfavoredOverload
+    public subscript(safePosition range: Range<Int>) -> SubSequence? {
         
         guard range.lowerBound >= 0,
               range.upperBound <= count else { return nil }
@@ -569,7 +585,8 @@ extension Collection where Index == Int {
     
     /// **OTCore:**
     /// Access collection indexes safely, referenced by position offset `0..<count`. (Same as `[Int]` but if position range is not fully contained within the collection's element position offsets, `nil` is returned.
-    @inlinable public subscript(safePosition range: PartialRangeFrom<Int>) -> SubSequence? {
+    @inlinable @_disfavoredOverload
+    public subscript(safePosition range: PartialRangeFrom<Int>) -> SubSequence? {
         
         let fromIndex = index(startIndex, offsetBy: range.lowerBound)
         
@@ -582,7 +599,8 @@ extension Collection where Index == Int {
     
     /// **OTCore:**
     /// Access collection indexes safely, referenced by position offset `0..<count`. (Same as `[Int]` but if position range is not fully contained within the collection's element position offsets, `nil` is returned.
-    @inlinable public subscript(safePosition range: PartialRangeThrough<Int>) -> SubSequence? {
+    @inlinable @_disfavoredOverload
+    public subscript(safePosition range: PartialRangeThrough<Int>) -> SubSequence? {
         
         let toIndex = index(startIndex, offsetBy: range.upperBound)
         
@@ -595,7 +613,8 @@ extension Collection where Index == Int {
     
     /// **OTCore:**
     /// Access collection indexes safely, referenced by position offset `0..<count`. (Same as `[Int]` but if position range is not fully contained within the collection's element position offsets, `nil` is returned.
-    @inlinable public subscript(safePosition range: PartialRangeUpTo<Int>) -> SubSequence? {
+    @inlinable @_disfavoredOverload
+    public subscript(safePosition range: PartialRangeUpTo<Int>) -> SubSequence? {
         
         let toIndex = index(startIndex, offsetBy: range.upperBound)
         
@@ -615,8 +634,8 @@ extension RangeReplaceableCollection {
     
     /// **OTCore:**
     /// Same as `.remove(at:)` but returns an optional instead of throwing an exception if the index does not exist
-    @discardableResult
-    @inlinable public mutating func remove(safeAt index: Index) -> Element? {
+    @inlinable @discardableResult @_disfavoredOverload
+    public mutating func remove(safeAt index: Index) -> Element? {
         
         if indices.contains(index) {
             return remove(at: index)
@@ -633,8 +652,8 @@ extension RangeReplaceableCollection where Index == Int {
     /// **OTCore:**
     /// Same as `.remove(at:)` but returns an optional instead of throwing an exception if the element at the given offset position does not exist.
     /// References index as an offset from `startIndex` and does not reference indexes directly.
-    @discardableResult
-    @inlinable public mutating func remove(safePositionAt indexOffset: Int) -> Element? {
+    @inlinable @discardableResult @_disfavoredOverload
+    public mutating func remove(safePositionAt indexOffset: Int) -> Element? {
         
         guard indexOffset >= 0, indexOffset < count else { return nil }
         let idx = index(startIndex, offsetBy: indexOffset)
@@ -651,6 +670,7 @@ extension Collection {
     
     /// **OTCore:**
     /// Returns an index that is the specified distance from the start index.
+    @_disfavoredOverload
     public func startIndex(offsetBy distance: Int) -> Index {
         
         index(startIndex, offsetBy: distance)
@@ -659,6 +679,7 @@ extension Collection {
     
     /// **OTCore:**
     /// Returns an index that is the specified distance from the end index.
+    @_disfavoredOverload
     public func endIndex(offsetBy distance: Int) -> Index {
         
         index(endIndex, offsetBy: distance)
@@ -671,6 +692,7 @@ extension Collection {
     
     /// **OTCore:**
     /// Returns the character at the given character position (offset from the start index).
+    @_disfavoredOverload
     public subscript(position offsetIndex: Int) -> Element {
         
         let fromIndex = index(startIndex, offsetBy: offsetIndex)
@@ -680,6 +702,7 @@ extension Collection {
     
     /// **OTCore:**
     /// Returns the substring in the given range of character positions (offsets from the start index).
+    @_disfavoredOverload
     public subscript(position offsetRange: ClosedRange<Int>) -> SubSequence {
         
         let fromIndex = index(startIndex, offsetBy: offsetRange.lowerBound)
@@ -690,6 +713,7 @@ extension Collection {
     
     /// **OTCore:**
     /// Returns the substring in the given range of character positions (offsets from the start index).
+    @_disfavoredOverload
     public subscript(position offsetRange: Range<Int>) -> SubSequence {
         
         let fromIndex = index(startIndex, offsetBy: offsetRange.lowerBound)
@@ -700,6 +724,7 @@ extension Collection {
     
     /// **OTCore:**
     /// Returns the substring in the given range of character positions (offsets from the start index).
+    @_disfavoredOverload
     public subscript(position offsetRange: PartialRangeFrom<Int>) -> SubSequence {
         
         let fromIndex = index(startIndex, offsetBy: offsetRange.lowerBound)
@@ -709,6 +734,7 @@ extension Collection {
     
     /// **OTCore:**
     /// Returns the substring in the given range of character positions (offsets from the start index).
+    @_disfavoredOverload
     public subscript(position offsetRange: PartialRangeThrough<Int>) -> SubSequence {
         
         let toIndex = index(startIndex, offsetBy: offsetRange.upperBound)
@@ -718,6 +744,7 @@ extension Collection {
     
     /// **OTCore:**
     /// Returns the substring in the given range of character positions (offsets from the start index).
+    @_disfavoredOverload
     public subscript(position offsetRange: PartialRangeUpTo<Int>) -> SubSequence {
         
         let toIndex = index(startIndex, offsetBy: offsetRange.upperBound)
@@ -748,7 +775,8 @@ extension Array {
     ///     x[wrapping: -5] // "0"
     ///     x[wrapping: -6] // "4"
     ///
-    @inlinable public subscript(wrapping index: Index) -> Iterator.Element {
+    @inlinable @_disfavoredOverload
+    public subscript(wrapping index: Index) -> Iterator.Element {
         
         let max = count
         var newIndex: Int
@@ -774,7 +802,8 @@ extension Collection where Element : Hashable {
     /// **OTCore:**
     /// Counts number of occurrences of the given element
     /// - complexity: O(*n*)
-    @inlinable public func count(of element: Element) -> Int {
+    @inlinable @_disfavoredOverload
+    public func count(of element: Element) -> Int {
         
         filter{$0 == element}.count
         
@@ -789,7 +818,8 @@ extension Collection where Element: BinaryInteger {
     
     /// **OTCore:**
     /// Returns a string of integer literals, useful for generating Swift array declarations when debugging.
-    @inlinable public var stringValueArrayLiteral: String {
+    @inlinable @_disfavoredOverload
+    public var stringValueArrayLiteral: String {
         
         map { "\($0)" }
             .joined(separator: ", ")
@@ -827,7 +857,8 @@ extension Collection where Element: Strideable,
     ///     [1,3,5,7,9].firstGapValue(after: 2) // 4
     ///
     /// - complexity: O(*n*), where *n* represents index of first gap in the array
-    @inlinable public func firstGapValue(after: Element? = nil) -> Element? {
+    @inlinable @_disfavoredOverload
+    public func firstGapValue(after: Element? = nil) -> Element? {
         
         guard count > 0 else { return nil }
         
@@ -857,8 +888,11 @@ extension Set {
     
     /// **OTCore:**
     /// Same as `.union()` but replaces existing values with new values instead of `.union()`'s behavior of retaining existing hash-equivalent values.
-    @inlinable public func union<S>(updating other: S) -> Set<Set<Element>.Element>
-    where Element == S.Element, S : Sequence {
+    @inlinable @_disfavoredOverload
+    public func union<S>(updating other: S) -> Set<Set<Element>.Element>
+    where Element == S.Element,
+          S : Sequence
+    {
         
         var newSet = self
         
@@ -872,8 +906,10 @@ extension Set {
     
     /// **OTCore:**
     /// Same as `.formUnion()` but replaces existing values with new values instead of `.formUnion()`'s behavior of retaining existing hash-equivalent values.
-    @inlinable public mutating func formUnion<S>(updating other: S)
-    where Element == S.Element, S : Sequence {
+    @inlinable @_disfavoredOverload
+    public mutating func formUnion<S>(updating other: S)
+    where Element == S.Element,
+          S : Sequence {
         
         self = union(updating: other)
         
@@ -888,7 +924,8 @@ extension ArraySlice {
     /// **OTCore:**
     /// Same as `Array(self)`, to return the `ArraySlice` as a concrete Array.
     /// (Functional convenience method)
-    @inlinable public var array: [Element] {
+    @inlinable @_disfavoredOverload
+    public var array: [Element] {
         
         Array(self)
         
@@ -903,7 +940,8 @@ extension Sequence {
     /// **OTCore:**
     /// Same as `Dictionary(grouping: self, by:)`.
     /// (Functional convenience method)
-    @inlinable public func grouping<Key: Hashable>(
+    @inlinable @_disfavoredOverload
+    public func grouping<Key: Hashable>(
         by keyForValue: (Element) throws -> Key
     ) rethrows -> [Key : [Element]] {
         
@@ -919,10 +957,11 @@ extension Collection {
     
     /// **OTCore:**
     /// Splits a `Collection` or `String` into groups of `length` characters, grouping from left-to-right. If `backwards` is true, right-to-left.
+    @_disfavoredOverload
     public func split(every: Int,
                       backwards: Bool = false) -> [SubSequence] {
         
-        var result: [Self.SubSequence] = []
+        var result: [SubSequence] = []
         
         for i in stride(from: 0, to: count, by: every) {
             
@@ -959,6 +998,7 @@ extension Collection where Index == Int {
     
     /// **OTCore:**
     /// Returns indices in groups of n number of indices.
+    @_disfavoredOverload
     public func indices(splitEvery: Int) -> [ClosedRange<Index>] {
         
         // this should work but doesn't
@@ -983,7 +1023,8 @@ extension Dictionary {
     
     /// **OTCore:**
     /// Returns a new dictionary containing the values of this dictionary with the keys transformed by the given closure.
-    @inlinable public func mapKeys<K: Hashable>(
+    @inlinable @_disfavoredOverload
+    public func mapKeys<K: Hashable>(
         _ transform: (Key) throws -> K
     ) rethrows -> Dictionary<K, Value> {
         
@@ -997,7 +1038,8 @@ extension Dictionary {
     /// **OTCore:**
     /// Returns a new dictionary with key/value pairs transformed by the given closure.
     /// Analogous to Swift's standard `.map` method.
-    @inlinable public func mapDictionary<K: Hashable, V: Any>(
+    @inlinable @_disfavoredOverload
+    public func mapDictionary<K: Hashable, V: Any>(
         _ transform: (Key, Value) throws -> (K, V)
     ) rethrows -> Dictionary<K, V> {
         
@@ -1011,7 +1053,8 @@ extension Dictionary {
     /// **OTCore:**
     /// Returns a new dictionary with key/value pairs transformed by the given closure.
     /// Analogous to Swift's standard `.compactMap` method.
-    @inlinable public func compactMapDictionary<K: Hashable, V: Any>(
+    @inlinable @_disfavoredOverload
+    public func compactMapDictionary<K: Hashable, V: Any>(
         _ transform: (Key, Value) throws -> (K, V)?
     ) rethrows -> Dictionary<K, V> {
         

@@ -6,7 +6,7 @@
 // Endianness: All Apple platforms are currently little-endian
 
 // Floating endianness:
-/* On some machines, while integers were represented in little-endian form, floating point numbers were represented in big-endian form. Because there are many floating point formats, and a lack of a standard "network" representation, no standard for transferring floating point values has been made. This means that floating point data written on one machine may not be readable on another, and this is the case even if both use IEEE 754 floating point arithmetic since the endianness of the memory representation is not part of the IEEE specification. */
+// On some machines, while integers were represented in little-endian form, floating point numbers were represented in big-endian form. Because there are many floating point formats, and a lack of a standard "network" representation, no standard for transferring floating point values has been made. This means that floating point data written on one machine may not be readable on another, and this is the case even if both use IEEE 754 floating point arithmetic since the endianness of the memory representation is not part of the IEEE specification.
 
 // int32
 //   32-bit big-endian two's complement integer
@@ -27,6 +27,7 @@ extension Data {
     /// **OTCore:**
     /// Returns an Int64 value from Data
     /// Returns nil if Data is not the correct length.
+    @_disfavoredOverload
     public func toInt(from endianness: NumberEndianness = .platformDefault) -> Int? {
         
         toNumber(from: endianness, toType: Int.self)
@@ -43,6 +44,7 @@ extension Data {
     /// **OTCore:**
     /// Returns a Int8 value from Data (stored as two's complement).
     /// Returns nil if Data is not the correct length.
+    @_disfavoredOverload
     public func toInt8() -> Int8? {
         
         guard count == 1 else { return nil }
@@ -65,6 +67,7 @@ extension Data {
     /// **OTCore:**
     /// Returns an Int16 value from Data
     /// Returns nil if Data is not the correct length.
+    @_disfavoredOverload
     public func toInt16(from endianness: NumberEndianness = .platformDefault) -> Int16? {
         
         toNumber(from: endianness, toType: Int16.self)
@@ -81,6 +84,7 @@ extension Data {
     /// **OTCore:**
     /// Returns an Int32 value from Data
     /// Returns nil if Data is not the correct length.
+    @_disfavoredOverload
     public func toInt32(from endianness: NumberEndianness = .platformDefault) -> Int32? {
         
         toNumber(from: endianness, toType: Int32.self)
@@ -97,6 +101,7 @@ extension Data {
     /// **OTCore:**
     /// Returns an Int64 value from Data
     /// Returns nil if Data is not the correct length.
+    @_disfavoredOverload
     public func toInt64(from endianness: NumberEndianness = .platformDefault) -> Int64? {
         
         toNumber(from: endianness, toType: Int64.self)
@@ -113,6 +118,7 @@ extension Data {
     /// **OTCore:**
     /// Returns a UInt value from Data.
     /// Returns nil if Data is not the correct length.
+    @_disfavoredOverload
     public func toUInt(from endianness: NumberEndianness = .platformDefault) -> UInt? {
         
         toNumber(from: endianness, toType: UInt.self)
@@ -129,6 +135,7 @@ extension Data {
     /// **OTCore:**
     /// Returns a UInt8 value from Data.
     /// Returns nil if Data is not the correct length.
+    @_disfavoredOverload
     public func toUInt8() -> UInt8? {
         
         guard count == 1 else { return nil }
@@ -146,6 +153,7 @@ extension Data {
     /// **OTCore:**
     /// Returns a UInt16 value from Data.
     /// Returns nil if Data is not the correct length.
+    @_disfavoredOverload
     public func toUInt16(from endianness: NumberEndianness = .platformDefault) -> UInt16? {
         
         toNumber(from: endianness, toType: UInt16.self)
@@ -162,6 +170,7 @@ extension Data {
     /// **OTCore:**
     /// Returns a UInt32 value from Data.
     /// Returns nil if Data is not the correct length.
+    @_disfavoredOverload
     public func toUInt32(from endianness: NumberEndianness = .platformDefault) -> UInt32? {
         
         toNumber(from: endianness, toType: UInt32.self)
@@ -178,6 +187,7 @@ extension Data {
     /// **OTCore:**
     /// Returns a UInt64 value from Data.
     /// Returns nil if Data is not the correct length.
+    @_disfavoredOverload
     public func toUInt64(from endianness: NumberEndianness = .platformDefault) -> UInt64? {
         
         toNumber(from: endianness, toType: UInt64.self)
@@ -193,6 +203,7 @@ extension Float32 {
     
     /// **OTCore:**
     /// Returns Data representation of a Float32 value.
+    @_disfavoredOverload
     public func toData(_ endianness: NumberEndianness = .platformDefault) -> Data {
         
         var number = self
@@ -241,6 +252,7 @@ extension Data {
     /// **OTCore:**
     /// Returns a Float32 value from Data
     /// Returns nil if Data is != 4 bytes.
+    @_disfavoredOverload
     public func toFloat32(from endianness: NumberEndianness = .platformDefault) -> Float32? {
         
         guard count == 4 else { return nil }
@@ -309,6 +321,7 @@ extension Double {
     
     /// **OTCore:**
     /// Returns Data representation of a Double value.
+    @_disfavoredOverload
     public func toData(_ endianness: NumberEndianness = .platformDefault) -> Data {
         
         var number = self
@@ -357,6 +370,7 @@ extension Data {
     /// **OTCore:**
     /// Returns a Double value from Data
     /// Returns nil if Data is != 8 bytes.
+    @_disfavoredOverload
     public func toDouble(from endianness: NumberEndianness = .platformDefault) -> Double? {
         
         guard count == 8 else { return nil }
@@ -425,6 +439,7 @@ extension FixedWidthInteger {
     
     /// **OTCore:**
     /// Returns Data representation of an integer. (Endianness has no effect on single-byte integers.)
+    @_disfavoredOverload
     public func toData(_ endianness: NumberEndianness = .platformDefault) -> Data {
         
         var int: Self
@@ -453,9 +468,12 @@ extension FixedWidthInteger {
 extension Data {
     
     /// Internal use.
-    internal func toNumber<T: FixedWidthInteger>(from endianness: NumberEndianness = .platformDefault, toType: T.Type) -> T? {
+    internal func toNumber<T: FixedWidthInteger>(
+        from endianness: NumberEndianness = .platformDefault,
+        toType: T.Type
+    ) -> T? {
         
-        guard self.count == MemoryLayout<T>.size else { return nil }
+        guard count == MemoryLayout<T>.size else { return nil }
         
         // define conversion
         
@@ -508,6 +526,7 @@ extension String {
     
     /// **OTCore:**
     /// Returns a Data representation of a String, defaulting to utf8 encoding.
+    @_disfavoredOverload
     public func toData(using encoding: String.Encoding = .utf8) -> Data? {
         
         data(using: encoding)
@@ -520,6 +539,7 @@ extension Data {
     
     /// **OTCore:**
     /// Returns a String converted from Data. Optionally pass an encoding type.
+    @_disfavoredOverload
     public func toString(using encoding: String.Encoding = .utf8) -> String? {
         
         String(data: self, encoding: encoding)
@@ -536,6 +556,7 @@ extension Collection where Element == UInt8 {
     /// **OTCore:**
     /// Same as `Data(self)`
     /// Returns a Data object using the array as bytes.
+    @_disfavoredOverload
     public var data: Data {
         
         Data(self)
@@ -548,6 +569,7 @@ extension Data {
     /// **OTCore:**
     /// Returns an array of bytes.
     /// Same as `[UInt8](self)`
+    @_disfavoredOverload
     public var bytes: [UInt8] {
         
         [UInt8](self)

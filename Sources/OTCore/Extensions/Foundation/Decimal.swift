@@ -14,6 +14,7 @@ extension Int {
     /// **OTCore:**
     /// Same as `Decimal()`
     /// (Functional convenience method)
+    @_disfavoredOverload
     public var decimal: Decimal { Decimal(self) }
     
 }
@@ -23,6 +24,7 @@ extension UInt {
     /// **OTCore:**
     /// Same as `Decimal()`
     /// (Functional convenience method)
+    @_disfavoredOverload
     public var decimal: Decimal { Decimal(self) }
     
 }
@@ -32,6 +34,7 @@ extension Int8 {
     /// **OTCore:**
     /// Same as `Decimal()`
     /// (Functional convenience method)
+    @_disfavoredOverload
     public var decimal: Decimal { Decimal(self) }
     
 }
@@ -41,6 +44,7 @@ extension UInt8 {
     /// **OTCore:**
     /// Same as `Decimal()`
     /// (Functional convenience method)
+    @_disfavoredOverload
     public var decimal: Decimal { Decimal(self) }
     
 }
@@ -50,6 +54,7 @@ extension Int16 {
     /// **OTCore:**
     /// Same as `Decimal()`
     /// (Functional convenience method)
+    @_disfavoredOverload
     public var decimal: Decimal { Decimal(self) }
     
 }
@@ -59,6 +64,7 @@ extension UInt16 {
     /// **OTCore:**
     /// Same as `Decimal()`
     /// (Functional convenience method)
+    @_disfavoredOverload
     public var decimal: Decimal { Decimal(self) }
     
 }
@@ -68,6 +74,7 @@ extension Int32 {
     /// **OTCore:**
     /// Same as `Decimal()`
     /// (Functional convenience method)
+    @_disfavoredOverload
     public var decimal: Decimal { Decimal(self) }
     
 }
@@ -77,6 +84,7 @@ extension UInt32 {
     /// **OTCore:**
     /// Same as `Decimal()`
     /// (Functional convenience method)
+    @_disfavoredOverload
     public var decimal: Decimal { Decimal(self) }
     
 }
@@ -86,6 +94,7 @@ extension Int64 {
     /// **OTCore:**
     /// Same as `Decimal()`
     /// (Functional convenience method)
+    @_disfavoredOverload
     public var decimal: Decimal { Decimal(self) }
     
 }
@@ -95,6 +104,7 @@ extension UInt64 {
     /// **OTCore:**
     /// Same as `Decimal()`
     /// (Functional convenience method)
+    @_disfavoredOverload
     public var decimal: Decimal { Decimal(self) }
     
 }
@@ -106,7 +116,8 @@ extension Decimal {
     
     /// **OTCore:**
     /// Returns true if > 0.0
-    @inlinable public var boolValue: Bool { self > 0.0 }
+    @inlinable @_disfavoredOverload
+    public var boolValue: Bool { self > 0.0 }
     
 }
 
@@ -120,7 +131,8 @@ extension Decimal {
     /// **OTCore:**
     /// Same as `pow()`
     /// (Functional convenience method)
-    @inlinable public func power(_ exponent: Int) -> Decimal {
+    @inlinable @_disfavoredOverload
+    public func power(_ exponent: Int) -> Decimal {
         
         pow(self, exponent)
         
@@ -136,7 +148,8 @@ extension Decimal { // already conforms to CustomStringConvertible
     /// **OTCore:**
     /// Returns a string representation of a Decimal number.
     /// (Functional convenience method)
-    @inlinable public var string: String {
+    @inlinable @_disfavoredOverload
+    public var string: String {
         
         String(describing: self)
         
@@ -153,6 +166,7 @@ extension String {
     /// Same as `Decimal(string:)` with default locale.
     /// Returns nil if unsuccessful.
     /// (Functional convenience method)
+    @_disfavoredOverload
     public var decimal: Decimal? {
         
         Decimal(string: self)
@@ -162,6 +176,7 @@ extension String {
     /// **OTCore:**
     /// Same as `Decimal(string:, locale:)`.
     /// (Functional convenience method)
+    @_disfavoredOverload
     public func decimal(locale: Locale?) -> Decimal? {
         
         Decimal(string: self, locale: locale)
@@ -176,6 +191,7 @@ extension Substring {
     /// Same as `Decimal(string:)` with default locale.
     /// Returns nil if unsuccessful.
     /// (Functional convenience method)
+    @_disfavoredOverload
     public var decimal: Decimal? {
         
         Decimal(string: String(self))
@@ -185,6 +201,7 @@ extension Substring {
     /// **OTCore:**
     /// Same as `Decimal(string:, locale:)`.
     /// (Functional convenience method)
+    @_disfavoredOverload
     public func decimal(locale: Locale?) -> Decimal? {
         
         Decimal(string: String(self), locale: locale)
@@ -199,6 +216,7 @@ extension Decimal {
     
     /// **OTCore:**
     /// Rounds to `decimalPlaces` number of decimal places using rounding `rule`.
+    @_disfavoredOverload
     public func rounded(_ rule: NSDecimalNumber.RoundingMode = .plain,
                         decimalPlaces: Int) -> Self {
         
@@ -214,6 +232,7 @@ extension Decimal {
     
     /// **OTCore:**
     /// Replaces this value by rounding it to `decimalPlaces` number of decimal places using rounding `rule`.
+    @_disfavoredOverload
     public mutating func round(_ rule: NSDecimalNumber.RoundingMode = .plain,
                                decimalPlaces: Int) {
         
@@ -224,6 +243,7 @@ extension Decimal {
     
     /// **OTCore:**
     /// Replaces this value by truncating it to `decimalPlaces` number of decimal places.
+    @_disfavoredOverload
     public mutating func truncate(decimalPlaces: Int) {
         
         self = truncated(decimalPlaces: decimalPlaces)
@@ -232,6 +252,7 @@ extension Decimal {
     
     /// **OTCore:**
     /// Truncates decimal places to `decimalPlaces` number of decimal places.
+    @_disfavoredOverload
     public func truncated(decimalPlaces: Int) -> Self {
         
         var initialDecimal = self
@@ -254,6 +275,7 @@ extension Decimal {
     
     /// **OTCore:**
     /// Similar to `Double.truncatingRemainder(dividingBy:)` from the standard Swift library.
+    @_disfavoredOverload
     public func truncatingRemainder(dividingBy rhs: Self) -> Self {
         
         let calculation = self / rhs
@@ -265,6 +287,7 @@ extension Decimal {
     
     /// **OTCore:**
     /// Similar to `Int.quotientAndRemainder(dividingBy:)` from the standard Swift library.
+    @_disfavoredOverload
     public func quotientAndRemainder(dividingBy rhs: Self) -> (quotient: Self, remainder: Self) {
         
         let calculation = self / rhs
@@ -278,7 +301,8 @@ extension Decimal {
     /// Returns both integral part and fractional part.
     ///
     /// - Note: This method is more computationally efficient than calling both `.integral` and .`fraction` properties separately unless you only require one or the other.
-    @inlinable public var integralAndFraction: (integral: Self, fraction: Self) {
+    @inlinable @_disfavoredOverload
+    public var integralAndFraction: (integral: Self, fraction: Self) {
         
         let integral = truncated(decimalPlaces: 0)
         let fraction = self - integral
@@ -288,7 +312,8 @@ extension Decimal {
     
     /// **OTCore:**
     /// Returns the integral part (digits before the decimal point)
-    @inlinable public var integral: Self {
+    @inlinable @_disfavoredOverload
+    public var integral: Self {
         
         integralAndFraction.integral
         
@@ -298,7 +323,8 @@ extension Decimal {
     /// Returns the fractional part (digits after the decimal point)
     ///
     /// Note: this can result in a non-trivial loss of precision for the fractional part.
-    @inlinable public var fraction: Self {
+    @inlinable @_disfavoredOverload
+    public var fraction: Self {
         
         integralAndFraction.fraction
         

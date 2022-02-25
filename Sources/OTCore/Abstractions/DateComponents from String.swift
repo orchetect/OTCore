@@ -38,6 +38,7 @@ extension DateComponents {
     ///
     /// - "21Oct2020"
     /// - "2020Oct21"
+    @_disfavoredOverload
     public init?(string: String) {
         
         self.init()
@@ -205,6 +206,7 @@ extension String {
     
     /// **OTCore:**
     /// Attempts to parse Year, Month and Day components from an unformatted date string using simple heuristics.
+    @_disfavoredOverload
     public var dateComponents: DateComponents? {
         
         DateComponents(string: self)

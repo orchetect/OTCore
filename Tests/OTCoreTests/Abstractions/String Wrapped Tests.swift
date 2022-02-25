@@ -31,7 +31,7 @@ class Abstractions_StringWrapped_Tests: XCTestCase {
     
     func testCategoryMethods() {
         
-        XCTAssertEqual("string".parens, "(string)")
+        XCTAssertEqual("string".parenthesized, "(string)")
         
         XCTAssertEqual("string".singleQuoted, "'string'")
         

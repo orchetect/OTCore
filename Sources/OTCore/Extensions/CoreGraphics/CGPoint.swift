@@ -17,6 +17,7 @@ extension CGPoint {
     
     /// **OTCore:**
     /// Returns the `CGPoint` as a `NSPoint` (toll-free bridged).
+    @inline(__always) @_disfavoredOverload
     public var nsPoint: NSPoint {
         
         self as NSPoint
@@ -31,7 +32,8 @@ extension CGPoint {
     
     /// **OTCore:**
     /// Returns the point with the X value inverted on its axis.
-    @inlinable public var xInverted: CGPoint {
+    @inlinable @_disfavoredOverload
+    public var xInverted: CGPoint {
         
         var newX = x
         newX.negate()
@@ -42,7 +44,8 @@ extension CGPoint {
     
     /// **OTCore:**
     /// Returns the point with the Y value inverted on its axis.
-    @inlinable public var yInverted: CGPoint {
+    @inlinable @_disfavoredOverload
+    public var yInverted: CGPoint {
         
         var newY = y
         newY.negate()
@@ -53,7 +56,8 @@ extension CGPoint {
     
     /// **OTCore:**
     /// Returns the point with the X and Y value inverted on their axes.
-    @inlinable public var xyInverted: CGPoint {
+    @inlinable @_disfavoredOverload
+    public var xyInverted: CGPoint {
         
         var newX = x
         newX.negate()
@@ -71,7 +75,8 @@ extension CGPoint {
     
     /// **OTCore:**
     /// Returns the distance between two coordinate points.
-    @inlinable public func distance(to other: CGPoint) -> CGFloat {
+    @inlinable @_disfavoredOverload
+    public func distance(to other: CGPoint) -> CGFloat {
         
         hypot(other.x - x, other.y - y)
         
@@ -83,7 +88,8 @@ extension CGPoint {
     /// Degrees ascend counterclockwise.
     ///
     /// To calculate the where cardinal North is the origin (0°), use `cardinalAngle(to:)` instead.
-    @inlinable public func angle(to other: CGPoint) -> CGFloat {
+    @inlinable @_disfavoredOverload
+    public func angle(to other: CGPoint) -> CGFloat {
         
         let calc = atan2(other.y - y, other.x - x).radiansToDegrees
         
@@ -99,7 +105,8 @@ extension CGPoint {
     /// Returns the angle in degrees (0.0...360.0) between two `CGPoint`s.
     /// The origin (0°/360°) is on the positive Y axis (cardinal North).
     /// Degrees ascend clockwise.
-    @inlinable public func cardinalAngle(to other: CGPoint) -> CGFloat {
+    @inlinable @_disfavoredOverload
+    public func cardinalAngle(to other: CGPoint) -> CGFloat {
         
         (360.0 - angle(to: other) + 90.0)
             .wrapped(around: 0.0..<360.0)

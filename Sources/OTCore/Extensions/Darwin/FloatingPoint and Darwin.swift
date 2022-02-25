@@ -14,7 +14,8 @@ extension FloatingPoint {
     /// **OTCore:**
     /// Same as `ceil()`
     /// (Functional convenience method)
-    @inlinable public var ceiling: Self {
+    @inlinable @_disfavoredOverload
+    public var ceiling: Self {
         
         Darwin.ceil(self)
         
@@ -23,7 +24,8 @@ extension FloatingPoint {
     /// **OTCore:**
     /// Same as `floor()`
     /// (Functional convenience method)
-    @inlinable public var floor: Self {
+    @inlinable @_disfavoredOverload
+    public var floor: Self {
         
         Darwin.floor(self)
         
@@ -41,7 +43,8 @@ extension Double: FloatingPointPowerComputable {
     /// **OTCore:**
     /// Same as `pow()`
     /// (Functional convenience method)
-    @inlinable public func power(_ exponent: Double) -> Double {
+    @inlinable @_disfavoredOverload
+    public func power(_ exponent: Double) -> Double {
         
         pow(self, exponent)
         
@@ -54,7 +57,8 @@ extension Float: FloatingPointPowerComputable {
     /// **OTCore:**
     /// Same as `powf()`
     /// (Functional convenience method)
-    @inlinable public func power(_ exponent: Float) -> Float {
+    @inlinable @_disfavoredOverload
+    public func power(_ exponent: Float) -> Float {
         
         powf(self, exponent)
         
@@ -68,7 +72,8 @@ extension Float80: FloatingPointPowerComputable {
     /// **OTCore:**
     /// Same as `powl()`
     /// (Functional convenience method)
-    @inlinable public func power(_ exponent: Float80) -> Float80 {
+    @inlinable @_disfavoredOverload
+    public func power(_ exponent: Float80) -> Float80 {
         
         powl(self, exponent)
         
@@ -86,6 +91,7 @@ extension FloatingPoint where Self : FloatingPointPowerComputable {
     /// Replaces this value by truncating it to `decimalPlaces` number of decimal places.
     ///
     /// If `decimalPlaces` <= 0, then `trunc(self)` is returned.
+    @_disfavoredOverload
     public mutating func truncate(decimalPlaces: Int) {
         
         self = truncated(decimalPlaces: decimalPlaces)
@@ -96,6 +102,7 @@ extension FloatingPoint where Self : FloatingPointPowerComputable {
     /// Truncates decimal places to `decimalPlaces` number of decimal places.
     ///
     /// If `decimalPlaces` <= 0, then `trunc(self)` is returned.
+    @_disfavoredOverload
     public func truncated(decimalPlaces: Int) -> Self {
         
         if decimalPlaces < 1 {
@@ -113,6 +120,7 @@ extension FloatingPoint {
     
     /// **OTCore:**
     /// Similar to `Int.quotientAndRemainder(dividingBy:)` from the standard Swift library.
+    @_disfavoredOverload
     public func quotientAndRemainder(dividingBy rhs: Self) -> (quotient: Self, remainder: Self) {
         
         let calculation = self / rhs
@@ -128,7 +136,8 @@ extension FloatingPoint {
     /// - Note: This method is more computationally efficient than calling both `.integral` and .`fraction` properties separately unless you only require one or the other.
     ///
     /// This method can result in a non-trivial loss of precision for the fractional part.
-    @inlinable public var integralAndFraction: (integral: Self, fraction: Self) {
+    @inlinable @_disfavoredOverload
+    public var integralAndFraction: (integral: Self, fraction: Self) {
         
         let integral = trunc(self)
         let fraction = self - integral
@@ -138,7 +147,8 @@ extension FloatingPoint {
     
     /// **OTCore:**
     /// Returns the integral part (digits before the decimal point)
-    @inlinable public var integral: Self {
+    @inlinable @_disfavoredOverload
+    public var integral: Self {
         
         integralAndFraction.integral
         
@@ -148,7 +158,8 @@ extension FloatingPoint {
     /// Returns the fractional part (digits after the decimal point)
     ///
     /// - Note: this method can result in a non-trivial loss of precision for the fractional part.
-    @inlinable public var fraction: Self {
+    @inlinable @_disfavoredOverload
+    public var fraction: Self {
         
         integralAndFraction.fraction
         
