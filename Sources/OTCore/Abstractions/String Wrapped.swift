@@ -57,10 +57,21 @@ extension String {
     /// **OTCore:**
     /// Syntactic sugar. Returns the string wrapped with parentheses: `( )`.
     /// Same as `self.wrapped(with: .parentheses)`
-    @inlinable
-    public var parens: Self {
+    @inlinable @_disfavoredOverload
+    public var parenthesized: Self {
         
         wrapped(with: .parentheses)
+        
+    }
+    
+    /// **OTCore:**
+    /// Syntactic sugar. Returns the string wrapped with parentheses: `( )`.
+    /// Same as `self.wrapped(with: .parentheses)`
+    @inlinable @_disfavoredOverload
+    @available(*, unavailable, renamed: "parenthesized")
+    public var parens: Self {
+        
+        parenthesized
         
     }
     
