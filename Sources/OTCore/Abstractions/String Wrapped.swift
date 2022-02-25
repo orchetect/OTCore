@@ -7,7 +7,7 @@ extension String {
     
     /// **OTCore:**
     /// Returns the string adding the passed `with` parameter as a prefix and suffix.
-    @inlinable
+    @inlinable @_disfavoredOverload
     public func wrapped(with prefixAndSuffix: String) -> String {
         
         prefixAndSuffix + self + prefixAndSuffix
@@ -16,7 +16,7 @@ extension String {
     
     /// **OTCore:**
     /// Returns the string adding the passed `with` parameter as a prefix and suffix.
-    @inlinable
+    @inlinable @_disfavoredOverload
     public func wrapped(with prefixAndSuffix: StringWrappedEnclosingType) -> String {
         
         switch prefixAndSuffix {
@@ -78,7 +78,7 @@ extension String {
     /// **OTCore:**
     /// Syntactic sugar. Returns the string wrapped with single quote marks: `' '`.
     /// Same as `self.wrapped(with: .singleQuotes)`
-    @inlinable
+    @inlinable @_disfavoredOverload
     public var singleQuoted: Self {
         
         wrapped(with: .singleQuotes)
@@ -88,7 +88,7 @@ extension String {
     /// **OTCore:**
     /// Syntactic sugar. Returns the string wrapped with double quote marks: `" "`.
     /// Same as `self.wrapped(with: .quotes)`
-    @inlinable
+    @inlinable @_disfavoredOverload
     public var quoted: Self {
         
         wrapped(with: .quotes)

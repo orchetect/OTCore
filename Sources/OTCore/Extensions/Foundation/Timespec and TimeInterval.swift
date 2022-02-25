@@ -13,7 +13,7 @@ extension timespec {
     
     /// **OTCore:**
     /// Convenience constructor from `TimeInterval`
-    @inlinable
+    @inlinable @_disfavoredOverload
     public init(_ interval: TimeInterval) {
         
         self.init(seconds: interval)
@@ -29,7 +29,7 @@ extension timespec {
     
     /// **OTCore:**
     /// Return a `TimeInterval`
-    @inlinable
+    @inlinable @_disfavoredOverload
     public var doubleValue: TimeInterval {
         
         Double(tv_sec) + (Double(tv_nsec) / 1_000_000_000)

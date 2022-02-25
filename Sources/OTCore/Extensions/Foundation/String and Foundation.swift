@@ -13,6 +13,7 @@ extension StringProtocol {
     
     /// **OTCore:**
     /// Returns the index of the first match, or `nil` if no matches are found.
+    @_disfavoredOverload
     public func firstIndex<T: StringProtocol>(of substring: T) -> String.Index? {
         
         range(of: substring,
@@ -25,6 +26,7 @@ extension StringProtocol {
     /// **OTCore:**
     /// Same as `.range(of: find, options: .backwards)`
     /// (Functional convenience method)
+    @_disfavoredOverload
     public func range<T: StringProtocol>(backwards find: T) -> Range<Index>? {
         
         range(of: find, options: .backwards)
@@ -34,6 +36,7 @@ extension StringProtocol {
     /// **OTCore:**
     /// Same as `.range(of: find, options: [.caseInsensitiveSearch, .backwards])`
     /// (Functional convenience method)
+    @_disfavoredOverload
     public func range<T: StringProtocol>(backwardsCaseInsensitive find: T) -> Range<Index>? {
         
         range(of: find, options: [.caseInsensitive, .backwards])
@@ -42,6 +45,7 @@ extension StringProtocol {
     
     /// **OTCore:**
     /// Returns the substring in the given range of character positions (offsets from the start index).
+    @_disfavoredOverload
     public subscript(position offsetRange: NSRange) -> SubSequence {
         
         let fromIndex = index(startIndex, offsetBy: offsetRange.location)
@@ -52,6 +56,7 @@ extension StringProtocol {
     
     /// **OTCore:**
     /// Convenience method: returns `true` if contains string. Case-insensitive.
+    @_disfavoredOverload
     public func contains<T: StringProtocol>(caseInsensitive find: T) -> Bool {
         
         range(of: find, options: .caseInsensitive) != nil
@@ -62,6 +67,7 @@ extension StringProtocol {
     
     /// **OTCore:**
     /// Convenience method: returns `true` if starts with the specified string. Case-insensitive, non-localized.
+    @_disfavoredOverload
     public func hasPrefix<T: StringProtocol>(caseInsensitive prefix: T) -> Bool {
         
         // Method 1
@@ -88,6 +94,7 @@ extension StringProtocol {
     
     /// **OTCore:**
     /// Convenience method: returns `true` if ends with the specified string. Case-insensitive, non-localized.
+    @_disfavoredOverload
     public func hasSuffix<T: StringProtocol>(caseInsensitive prefix: T) -> Bool {
         
         guard let range = range(of: prefix,

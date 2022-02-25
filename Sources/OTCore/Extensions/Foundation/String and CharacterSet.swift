@@ -20,6 +20,7 @@ extension StringProtocol {
     ///     // ["abc", "123", "def", "456", "g", "7"]
     ///
     /// - complexity: O(*n*) where *n* is length of string
+    @_disfavoredOverload
     public func split(intoSequencesOf characterSets: CharacterSet...,
                       omitNonmatching: Bool = true) -> [Self.SubSequence] {
         
@@ -102,6 +103,7 @@ extension StringProtocol {
     ///     "A string 123".only(.alphanumerics)`
     ///     "A string 123".only(.letters, .decimalDigits)`
     ///
+    @_disfavoredOverload
     public func only(_ characterSet: CharacterSet,
                      _ characterSets: CharacterSet...) -> String {
         
@@ -118,6 +120,7 @@ extension StringProtocol {
     
     /// **OTCore:**
     /// Returns a string preserving only characters from the passed string and removing all other characters.
+    @_disfavoredOverload
     public func only(characters: String) -> String {
         
         only(CharacterSet(charactersIn: characters))
@@ -126,6 +129,7 @@ extension StringProtocol {
     
     /// **OTCore:**
     /// Returns a string containing only alphanumeric characters and removing all other characters.
+    @_disfavoredOverload
     public var onlyAlphanumerics: String {
         
         only(.alphanumerics)
@@ -140,6 +144,7 @@ extension StringProtocol {
     ///     "A string 123".removing(.whitespaces)`
     ///     "A string 123".removing(.letters, .decimalDigits)`
     ///
+    @_disfavoredOverload
     public func removing(_ characterSet: CharacterSet,
                          _ characterSets: CharacterSet...) -> String {
         
@@ -154,6 +159,7 @@ extension StringProtocol {
     
     /// **OTCore:**
     /// Returns a string removing all characters from the passed string.
+    @_disfavoredOverload
     public func removing(characters: String) -> String {
         
         components(separatedBy: CharacterSet(charactersIn: characters))
@@ -169,7 +175,7 @@ extension StringProtocol {
     
     /// **OTCore:**
     /// Returns true if the string is entirely comprised of ASCII characters (0-127).
-    @inlinable
+    @inlinable @_disfavoredOverload
     public var isASCII: Bool {
         
         allSatisfy(\.isASCII)
@@ -178,6 +184,7 @@ extension StringProtocol {
     
     /// **OTCore:**
     /// Returns true if all characters in the string are contained in the character set.
+    @_disfavoredOverload
     public func isOnly(_ characterSet: CharacterSet,
                        _ characterSets: CharacterSet...) -> Bool {
         
@@ -191,6 +198,7 @@ extension StringProtocol {
     
     /// **OTCore:**
     /// Returns true if all characters in the string are contained in the character set.
+    @_disfavoredOverload
     public func isOnly(characters: String) -> Bool {
         
         let characterSet = CharacterSet(charactersIn: characters)
@@ -200,6 +208,7 @@ extension StringProtocol {
     
     /// **OTCore:**
     /// Returns true if any character in the string are contained in the character set.
+    @_disfavoredOverload
     public func contains(any characterSet: CharacterSet,
                          _ characterSets: CharacterSet...) -> Bool {
         
@@ -217,6 +226,7 @@ extension StringProtocol {
     
     /// **OTCore:**
     /// Returns true if any character in the string are contained in the character set.
+    @_disfavoredOverload
     public func contains(anyCharacters characters: String) -> Bool {
         
         let characterSet = CharacterSet(charactersIn: characters)

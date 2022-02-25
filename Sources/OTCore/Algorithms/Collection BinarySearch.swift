@@ -24,7 +24,10 @@ extension ArraySlice where Element: Comparable {
     ///     [].binarySearch(forValue: 10)          // nil
     ///
     /// - warning: The base array must be `.sorted()` prior to invoking this method or it will not function as intended.
-    public func binarySearch(forValue searchElement: Element) -> ClosedRange<Self.Index>? {
+    @_disfavoredOverload
+    public func binarySearch(
+        forValue searchElement: Element
+    ) -> ClosedRange<Self.Index>? {
         
         guard !isEmpty else { return nil }
         guard searchElement >= first! else { return nil }
@@ -75,7 +78,10 @@ extension Array where Element: Comparable {
     ///     [].binarySearch(forValue: 10)          // nil
     ///
     /// - warning: The base array must be `.sorted()` prior to invoking this method or it will not function as intended.
-    public func binarySearch(forValue searchElement: Element) -> ClosedRange<Self.Index>? {
+    @_disfavoredOverload
+    public func binarySearch(
+        forValue searchElement: Element
+    ) -> ClosedRange<Self.Index>? {
         
         ArraySlice(self).binarySearch(forValue: searchElement)
         

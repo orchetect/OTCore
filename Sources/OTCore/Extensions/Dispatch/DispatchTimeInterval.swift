@@ -11,6 +11,7 @@ extension DispatchTimeInterval {
     
     /// **OTCore:**
     /// Return the interval as `Int` seconds.
+    @_disfavoredOverload
     public var microseconds: Int {
         
         switch self {

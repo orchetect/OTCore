@@ -27,7 +27,7 @@ extension Comparable {
     ///     // or
     ///     5.isContained(in: 1...4).toggled() // == true
     ///
-    @inlinable
+    @inlinable @_disfavoredOverload
     public func isContained<R: RangeExpression>(in range: R) -> Bool
     where Self == R.Bound {
         
@@ -58,7 +58,7 @@ extension Comparable {
     ///         return p * 2
     ///     }
     ///
-    @inlinable
+    @inlinable @_disfavoredOverload
     public func ifContained<R: RangeExpression>(
         in range: R,
         then newValue: @autoclosure () throws -> R.Bound
@@ -85,7 +85,7 @@ extension Comparable {
     ///         return $0 + p
     ///     } // 700
     ///
-    @inlinable
+    @inlinable @_disfavoredOverload
     public func ifContained<R: RangeExpression>(
         in range: R,
         then newValue: (Self) throws -> R.Bound
@@ -114,7 +114,7 @@ extension Comparable {
     ///         return String(source) + " " + s
     ///     } nil
     ///
-    @inlinable
+    @inlinable @_disfavoredOverload
     public func ifContained<R: RangeExpression, U>(
         in range: R,
         then newValue: (Self) throws -> U
@@ -148,7 +148,7 @@ extension Comparable {
     ///         return p * 2
     ///     }
     ///
-    @inlinable
+    @inlinable @_disfavoredOverload
     public func ifNotContained<R: RangeExpression>(
         in range: R,
         then newValue: @autoclosure () throws -> R.Bound
@@ -175,7 +175,7 @@ extension Comparable {
     ///         return $0 + p
     ///     } // 705
     ///
-    @inlinable
+    @inlinable @_disfavoredOverload
     public func ifNotContained<R: RangeExpression>(
         in range: R,
         then newValue: (Self) throws -> R.Bound
@@ -204,7 +204,7 @@ extension Comparable {
     ///         return String(source) + " " + s
     ///     } // Optional("700 not in range")
     ///
-    @inlinable
+    @inlinable @_disfavoredOverload
     public func ifNotContained<R: RangeExpression, U>(
         in range: R,
         then newValue: (Self) throws -> U
@@ -229,7 +229,7 @@ extension ClosedRange {
     
     /// **OTCore:**
     /// Returns `true` if base range contains the given range.
-    @inlinable
+    @inlinable @_disfavoredOverload
     public func contains(_ other: ClosedRange<Bound>) -> Bool {
         
         other.lowerBound >= lowerBound &&
@@ -244,7 +244,7 @@ extension ClosedRange where Bound : Strideable,
     
     /// **OTCore:**
     /// Returns `true` if base range contains the given range.
-    @inlinable
+    @inlinable @_disfavoredOverload
     public func contains(_ other: Range<Bound>) -> Bool {
         
         guard let unwrappedMax = self.max() else { return false }
@@ -270,7 +270,7 @@ extension Range {
     
     /// **OTCore:**
     /// Returns `true` if base range contains the given range.
-    @inlinable
+    @inlinable @_disfavoredOverload
     public func contains(_ other: ClosedRange<Bound>) -> Bool {
         
         other.lowerBound >= lowerBound &&
@@ -285,7 +285,7 @@ extension Range where Bound : Strideable,
     
     /// **OTCore:**
     /// Returns `true` if base range contains the given range.
-    @inlinable
+    @inlinable @_disfavoredOverload
     public func contains(_ other: Range<Bound>) -> Bool {
         
         other.lowerBound >= lowerBound &&
@@ -306,7 +306,7 @@ extension PartialRangeFrom {
     
     /// **OTCore:**
     /// Returns `true` if base range contains the given range.
-    @inlinable
+    @inlinable @_disfavoredOverload
     public func contains(_ other: ClosedRange<Bound>) -> Bool {
         
         other.lowerBound >= lowerBound
@@ -315,7 +315,7 @@ extension PartialRangeFrom {
     
     /// **OTCore:**
     /// Returns `true` if base range contains the given range.
-    @inlinable
+    @inlinable @_disfavoredOverload
     public func contains(_ other: Range<Bound>) -> Bool {
         
         other.lowerBound >= lowerBound
@@ -324,7 +324,7 @@ extension PartialRangeFrom {
     
     /// **OTCore:**
     /// Returns `true` if base range contains the given range.
-    @inlinable
+    @inlinable @_disfavoredOverload
     public func contains(_ other: PartialRangeFrom<Bound>) -> Bool {
         
         other.lowerBound >= lowerBound
@@ -343,7 +343,7 @@ extension PartialRangeThrough {
     
     /// **OTCore:**
     /// Returns `true` if base range contains the given range.
-    @inlinable
+    @inlinable @_disfavoredOverload
     public func contains(_ other: ClosedRange<Bound>) -> Bool {
         
         other.upperBound <= upperBound
@@ -356,7 +356,7 @@ extension PartialRangeThrough where Bound : BinaryInteger,
     
     /// **OTCore:**
     /// Returns `true` if base range contains the given range.
-    @inlinable
+    @inlinable @_disfavoredOverload
     public func contains(_ other: Range<Bound>) -> Bool {
         
         guard other.upperBound > Bound.Stride.min else { return false }
@@ -371,7 +371,7 @@ extension PartialRangeThrough {
     
     /// **OTCore:**
     /// Returns `true` if base range contains the given range.
-    @inlinable
+    @inlinable @_disfavoredOverload
     public func contains(_ other: PartialRangeThrough<Bound>) -> Bool {
         
         other.upperBound <= upperBound
@@ -380,7 +380,7 @@ extension PartialRangeThrough {
     
     /// **OTCore:**
     /// Returns `true` if base range contains the given range.
-    @inlinable
+    @inlinable @_disfavoredOverload
     public func contains(_ other: PartialRangeUpTo<Bound>) -> Bool {
         
         other.upperBound < upperBound
@@ -398,7 +398,7 @@ extension PartialRangeUpTo {
     
     /// **OTCore:**
     /// Returns `true` if base range contains the given range.
-    @inlinable
+    @inlinable @_disfavoredOverload
     public func contains(_ other: ClosedRange<Bound>) -> Bool {
         
         other.upperBound < upperBound
@@ -407,7 +407,7 @@ extension PartialRangeUpTo {
     
     /// **OTCore:**
     /// Returns `true` if base range contains the given range.
-    @inlinable
+    @inlinable @_disfavoredOverload
     public func contains(_ other: Range<Bound>) -> Bool {
         
         other.upperBound <= upperBound
@@ -416,7 +416,7 @@ extension PartialRangeUpTo {
     
     /// **OTCore:**
     /// Returns `true` if base range contains the given range.
-    @inlinable
+    @inlinable @_disfavoredOverload
     public func contains(_ other: PartialRangeThrough<Bound>) -> Bool {
         
         other.upperBound < upperBound
@@ -425,7 +425,7 @@ extension PartialRangeUpTo {
     
     /// **OTCore:**
     /// Returns `true` if base range contains the given range.
-    @inlinable
+    @inlinable @_disfavoredOverload
     public func contains(_ other: PartialRangeUpTo<Bound>) -> Bool {
         
         other.upperBound <= upperBound
@@ -444,7 +444,7 @@ extension Comparable {
     // ie: "a".clamped(to: "b"..."h")
     /// **OTCore:**
     /// Returns the value clamped to the passed range.
-    @inlinable
+    @inlinable @_disfavoredOverload
     public func clamped(to limits: ClosedRange<Self>) -> Self {
         
         min(max(self, limits.lowerBound), limits.upperBound)
@@ -456,7 +456,7 @@ extension Comparable {
     // ie: "a".clamped(to: "b"...)
     /// **OTCore:**
     /// Returns the value clamped to the passed range.
-    @inlinable
+    @inlinable @_disfavoredOverload
     public func clamped(to limits: PartialRangeFrom<Self>) -> Self {
         
         max(self, limits.lowerBound)
@@ -468,7 +468,7 @@ extension Comparable {
     // ie: "k".clamped(to: ..."h")
     /// **OTCore:**
     /// Returns the value clamped to the passed range.
-    @inlinable
+    @inlinable @_disfavoredOverload
     public func clamped(to limits: PartialRangeThrough<Self>) -> Self {
         
         min(self, limits.upperBound)
@@ -488,7 +488,7 @@ extension Strideable {
     // won't work for String
     /// **OTCore:**
     /// Returns the value clamped to the passed range.
-    @inlinable
+    @inlinable @_disfavoredOverload
     public func clamped(to limits: PartialRangeUpTo<Self>) -> Self {
         
         // advanced(by:) requires Strideable, not available on just Comparable
@@ -504,7 +504,7 @@ extension Strideable where Self.Stride: SignedInteger {
     // won't work for String
     /// **OTCore:**
     /// Returns the value clamped to the passed range.
-    @inlinable
+    @inlinable @_disfavoredOverload
     public func clamped(to limits: Range<Self>) -> Self {
         
         // index(before:) only available on SignedInteger
@@ -529,6 +529,7 @@ extension ClosedRange where Bound: SignedInteger,
     /// - note: where possible, use the `.first(excluding: Range)` variants of this method because they are far more performant than this one.
     ///
     /// - complexity: O(*n1* * *n2*), where *n1* == self.count, *n2* == excluding.count; lazily over `self.count`.
+    @_disfavoredOverload
     public func first(excluding: ArraySlice<Bound>) -> Bound? {
         
         guard excluding.count > 0 else {
@@ -547,6 +548,7 @@ extension ClosedRange where Bound: SignedInteger,
     /// - note: where possible, use the `.first(excluding: Range)` variants of this method because they are far more performant than this one.
     ///
     /// - complexity: O(*n1* * *n2*), where *n1* == self.count, *n2* == excluding.count; lazily over `self.count`.
+    @_disfavoredOverload
     public func first(excluding: [Bound]) -> Bound? {
         
         first(excluding: ArraySlice(excluding))
@@ -562,6 +564,7 @@ extension ClosedRange where Bound: SignedInteger,
     /// - note: Where possible, use the `.first(excluding: Range)` variants of this method because they are far more performant.
     ///
     /// - complexity: O(*n1* * *n2*), where *n1* == self.count, *n2* == excluding.count; lazily over `self.count`.
+    @_disfavoredOverload
     public func first(presortedExcluding: ArraySlice<Bound>) -> Bound? {
         
         guard presortedExcluding.count > 0 else {
@@ -605,6 +608,7 @@ extension ClosedRange where Bound: SignedInteger,
     /// - note: Where possible, use the `.first(excluding: Range)` variants of this method because they are far more performant.
     ///
     /// - complexity: O(*n1* * *n2*), where *n1* == self.count, *n2* == excluding.count; lazily over `self.count`.
+    @_disfavoredOverload
     public func first(presortedExcluding: [Bound]) -> Bound? {
         
         first(presortedExcluding: ArraySlice(presortedExcluding))
@@ -617,6 +621,7 @@ extension ClosedRange where Bound: SignedInteger,
     /// This method first sorts the values in `sortingAndExcluding` and includes additional logic that may be more efficient (when working with a large base range and/or exclusion array) than simply passing a pre-sorted array to `first(excluding:)`.
     ///
     /// - complexity: Varies, somewhere between O(`sortingAndExcluding.count`) and O(`self.count * excluding.count`).
+    @_disfavoredOverload
     public func first(sortingAndExcluding: ArraySlice<Bound>) -> Bound? {
         
         // optimization: if not excluding anything, just return first value
@@ -634,6 +639,7 @@ extension ClosedRange where Bound: SignedInteger,
     /// This method first sorts the values in `sortingAndExcluding` and includes additional logic that may be more efficient (when working with a large base range and/or exclusion array) than simply passing a pre-sorted array to `first(excluding:)`.
     ///
     /// - complexity: Varies, somewhere between O(`sortingAndExcluding.count`) and O(`self.count * excluding.count`).
+    @_disfavoredOverload
     public func first(sortingAndExcluding: [Bound]) -> Bound? {
         
         first(sortingAndExcluding: ArraySlice(sortingAndExcluding))
@@ -649,6 +655,7 @@ extension ClosedRange where Bound.Stride: SignedInteger,
     /// Returns the first element of the range that does not match any of the `excluding` values.
     /// If there are no available elements, nil is returned.
     /// - complexity: O(1) or slightly higher
+    @_disfavoredOverload
     public func first(excluding: ClosedRange<Bound>) -> Bound? {
         
         if excluding.lowerBound > lowerBound { return lowerBound }
@@ -669,6 +676,7 @@ extension ClosedRange where Bound.Stride: SignedInteger,
     /// Returns the first element of the range that does not match any of the `excluding` values.
     /// If there are no available elements, nil is returned.
     /// - complexity: O(1) or slightly higher
+    @_disfavoredOverload
     public func first(excluding: Range<Bound>) -> Bound? {
         
         if excluding.lowerBound > lowerBound { return lowerBound }
@@ -689,6 +697,7 @@ extension ClosedRange where Bound.Stride: SignedInteger,
     /// Returns the first element of the range that does not match any of the `excluding` values.
     /// If there are no available elements, nil is returned.
     /// - complexity: O(1) or slightly higher
+    @_disfavoredOverload
     public func first(excluding: PartialRangeFrom<Bound>) -> Bound? {
         
         if excluding.lowerBound <= lowerBound { return nil }
@@ -701,6 +710,7 @@ extension ClosedRange where Bound.Stride: SignedInteger,
     /// Returns the first element of the range that does not match any of the `excluding` values.
     /// If there are no available elements, nil is returned.
     /// - complexity: O(1) or slightly higher
+    @_disfavoredOverload
     public func first(excluding: PartialRangeThrough<Bound>) -> Bound? {
         
         if excluding.upperBound < lowerBound { return lowerBound }
@@ -715,6 +725,7 @@ extension ClosedRange where Bound.Stride: SignedInteger,
     /// Returns the first element of the range that does not match any of the `excluding` values.
     /// If there are no available elements, nil is returned.
     /// - complexity: O(1) or slightly higher
+    @_disfavoredOverload
     public func first(excluding: PartialRangeUpTo<Bound>) -> Bound? {
         
         if excluding.upperBound <= lowerBound { return lowerBound }
@@ -739,6 +750,7 @@ extension Range where Bound: SignedInteger,
     /// This method is only typically useful on an array of values that has been `.sorted()` first.
     ///
     /// - complexity: O(`self.count * excluding.count`), lazily over `self.count`.
+    @_disfavoredOverload
     public func first(excluding: ArraySlice<Bound>) -> Bound? {
         
         guard excluding.count > 0 else {
@@ -758,6 +770,7 @@ extension Range where Bound: SignedInteger,
     /// If there are no available elements, nil is returned. This method is only typically useful on an array of values that has been `.sorted()` first.
     ///
     /// - complexity: O(`self.count * excluding.count`), lazily over `self.count`.
+    @_disfavoredOverload
     public func first(excluding: [Bound]) -> Bound? {
         
         first(excluding: ArraySlice(excluding))
@@ -773,6 +786,7 @@ extension Range where Bound: SignedInteger,
     /// - note: Where possible, use the `.first(excluding: Range)` variants of this method because they are far more performant.
     ///
     /// - complexity: O(*n1* * *n2*), where *n1* == self.count, *n2* == excluding.count; lazily over `self.count`.
+    @_disfavoredOverload
     public func first(presortedExcluding: ArraySlice<Bound>) -> Bound? {
         
         if upperBound == lowerBound { return nil }
@@ -792,6 +806,7 @@ extension Range where Bound: SignedInteger,
     /// - note: Where possible, use the `.first(excluding: Range)` variants of this method because they are far more performant.
     ///
     /// - complexity: O(*n1* * *n2*), where *n1* == self.count, *n2* == excluding.count; lazily over `self.count`.
+    @_disfavoredOverload
     public func first(presortedExcluding: [Bound]) -> Bound? {
         
         if upperBound == lowerBound { return nil }
@@ -809,6 +824,7 @@ extension Range where Bound: SignedInteger,
     /// This method first sorts the values in `sortingAndExcluding` and includes additional logic that may be more efficient (when working with a large base range and/or exclusion array) than simply passing a pre-sorted array to `first(excluding:)`.
     ///
     /// - complexity: Varies, somewhere between O(`sortingAndExcluding.count`) and O(`self.count * excluding.count`).
+    @_disfavoredOverload
     public func first(sortingAndExcluding: ArraySlice<Bound>) -> Bound? {
         
         if upperBound == lowerBound { return nil }
@@ -826,6 +842,7 @@ extension Range where Bound: SignedInteger,
     /// This method first sorts the values in `sortingAndExcluding` and includes additional logic that may be more efficient (when working with a large base range and/or exclusion array) than simply passing a pre-sorted array to `first(excluding:)`.
     ///
     /// - complexity: Varies, somewhere between O(`sortingAndExcluding.count`) and O(`self.count * excluding.count`).
+    @_disfavoredOverload
     public func first(sortingAndExcluding: [Bound]) -> Bound? {
         
         first(sortingAndExcluding: ArraySlice(sortingAndExcluding))
@@ -840,6 +857,7 @@ extension Range where Bound : Strideable,
     /// **OTCore:**
     /// Returns the first element of the range that does not match any of the `excluding` values. If there are no available elements, nil is returned.
     /// - complexity: O(1) or slightly higher
+    @_disfavoredOverload
     public func first(excluding: ClosedRange<Bound>) -> Bound? {
         
         if excluding.lowerBound > lowerBound { return lowerBound }
@@ -859,6 +877,7 @@ extension Range where Bound : Strideable,
     /// **OTCore:**
     /// Returns the first element of the range that does not match any of the `excluding` values. If there are no available elements, nil is returned.
     /// - complexity: O(1) or slightly higher
+    @_disfavoredOverload
     public func first(excluding: Range<Bound>) -> Bound? {
         
         if excluding.lowerBound > lowerBound { return lowerBound }
@@ -878,6 +897,7 @@ extension Range where Bound : Strideable,
     /// **OTCore:**
     /// Returns the first element of the range that does not match any of the `excluding` values. If there are no available elements, nil is returned.
     /// - complexity: O(1) or slightly higher
+    @_disfavoredOverload
     public func first(excluding: PartialRangeFrom<Bound>) -> Bound? {
         
         if excluding.lowerBound <= lowerBound { return nil }
@@ -889,6 +909,7 @@ extension Range where Bound : Strideable,
     /// **OTCore:**
     /// Returns the first element of the range that does not match any of the `excluding` values. If there are no available elements, nil is returned.
     /// - complexity: O(1) or slightly higher
+    @_disfavoredOverload
     public func first(excluding: PartialRangeThrough<Bound>) -> Bound? {
         
         if excluding.upperBound < lowerBound { return lowerBound }
@@ -904,6 +925,7 @@ extension Range where Bound : Strideable,
     /// **OTCore:**
     /// Returns the first element of the range that does not match any of the `excluding` values. If there are no available elements, nil is returned.
     /// - complexity: O(1) or slightly higher
+    @_disfavoredOverload
     public func first(excluding: PartialRangeUpTo<Bound>) -> Bound? {
         
         if excluding.upperBound <= lowerBound { return lowerBound }
@@ -926,6 +948,7 @@ extension PartialRangeFrom where Bound.Stride: SignedInteger,
     /// Returns the first element of the range that does not match any of the `excluding` values. This method is only typically useful with an exclusion array of that has been `.sorted()` first.
     ///
     /// - complexity: O(*n*), where *n* is the length of the exclusion array.
+    @_disfavoredOverload
     public func first(excluding: ArraySlice<Bound>) -> Bound {
         
         // should always succeed since PartialRangeFrom values ascend infinitely
@@ -940,6 +963,7 @@ extension PartialRangeFrom where Bound.Stride: SignedInteger,
     /// Returns the first element of the range that does not match any of the `excluding` values. This method is only typically useful with an exclusion array of that has been `.sorted()` first.
     ///
     /// - complexity: O(*n*), where *n* is the length of the exclusion array.
+    @_disfavoredOverload
     public func first(excluding: [Bound]) -> Bound {
         
         first(excluding: ArraySlice(excluding))
@@ -952,6 +976,7 @@ extension PartialRangeFrom where Bound.Stride: SignedInteger,
     /// This method first sorts the values in `sortingAndExcluding` and includes additional logic that may be more efficient (when working with an exclusion array) than simply passing a pre-sorted array to `first(excluding:)`.
     ///
     /// - complexity: O(*n*), where *n* is the length of the exclusion array.
+    @_disfavoredOverload
     public func first(presortedExcluding: ArraySlice<Bound>) -> Bound {
         
         if presortedExcluding.isEmpty { return lowerBound }
@@ -970,6 +995,7 @@ extension PartialRangeFrom where Bound.Stride: SignedInteger,
     /// This method first sorts the values in `sortingAndExcluding` and includes additional logic that may be more efficient (when working with an exclusion array) than simply passing a pre-sorted array to `first(excluding:)`.
     ///
     /// - complexity: O(*n*), where *n* is the length of the exclusion array.
+    @_disfavoredOverload
     public func first(presortedExcluding: [Bound]) -> Bound {
         
         first(presortedExcluding: ArraySlice(presortedExcluding))
@@ -982,6 +1008,7 @@ extension PartialRangeFrom where Bound.Stride: SignedInteger,
     /// This method first sorts the values in `sortingAndExcluding` and includes additional logic that may be more efficient (when working with an exclusion array) than simply passing a pre-sorted array to `first(excluding:)`.
     ///
     /// - complexity: O(*n*), where *n* is the length of the exclusion array.
+    @_disfavoredOverload
     public func first(sortingAndExcluding: ArraySlice<Bound>) -> Bound {
         
         if sortingAndExcluding.isEmpty { return lowerBound }
@@ -1002,6 +1029,7 @@ extension PartialRangeFrom where Bound.Stride: SignedInteger,
     /// This method first sorts the values in `sortingAndExcluding` and includes additional logic that may be more efficient (when working with an exclusion array) than simply passing a pre-sorted array to `first(excluding:)`.
     ///
     /// - complexity: O(*n*), where *n* is the length of the exclusion array.
+    @_disfavoredOverload
     public func first(sortingAndExcluding: [Bound]) -> Bound {
         
         first(sortingAndExcluding: ArraySlice(sortingAndExcluding))
@@ -1017,6 +1045,7 @@ extension PartialRangeFrom where Bound.Stride: SignedInteger,
     /// Returns the first element of the range that does not match any of the `excluding` values.
     /// If there are no available elements, nil is returned.
     /// - complexity: O(1) or slightly higher
+    @_disfavoredOverload
     public func first(excluding: ClosedRange<Bound>) -> Bound {
         
         if lowerBound < excluding.lowerBound { return lowerBound }
@@ -1032,6 +1061,7 @@ extension PartialRangeFrom where Bound.Stride: SignedInteger,
     /// Returns the first element of the range that does not match any of the `excluding` values.
     /// If there are no available elements, nil is returned.
     /// - complexity: O(1) or slightly higher
+    @_disfavoredOverload
     public func first(excluding: Range<Bound>) -> Bound {
         
         if lowerBound < excluding.lowerBound { return lowerBound }
@@ -1047,6 +1077,7 @@ extension PartialRangeFrom where Bound.Stride: SignedInteger,
     /// Returns the first element of the range that does not match any of the `excluding` values.
     /// If there are no available elements, nil is returned.
     /// - complexity: O(1) or slightly higher
+    @_disfavoredOverload
     public func first(excluding: PartialRangeFrom<Bound>) -> Bound? {
         
         if excluding.lowerBound <= lowerBound { return nil }
@@ -1059,6 +1090,7 @@ extension PartialRangeFrom where Bound.Stride: SignedInteger,
     /// Returns the first element of the range that does not match any of the `excluding` values.
     /// If there are no available elements, nil is returned.
     /// - complexity: O(1) or slightly higher
+    @_disfavoredOverload
     public func first(excluding: PartialRangeThrough<Bound>) -> Bound {
         
         if excluding.upperBound < lowerBound { return lowerBound }
@@ -1071,6 +1103,7 @@ extension PartialRangeFrom where Bound.Stride: SignedInteger,
     /// Returns the first element of the range that does not match any of the `excluding` values.
     /// If there are no available elements, nil is returned.
     /// - complexity: O(1) or slightly higher
+    @_disfavoredOverload
     public func first(excluding: PartialRangeUpTo<Bound>) -> Bound {
         
         if excluding.upperBound <= lowerBound { return lowerBound }
@@ -1088,6 +1121,7 @@ extension ClosedRange where Bound == Int {
     
     /// **OTCore:**
     /// Returns elements in groups of n number of elements.
+    @_disfavoredOverload
     public func split(every: Int) -> [ClosedRange<Bound>] {
         
         if every < 1 {
@@ -1118,6 +1152,7 @@ extension Range where Bound == Int {
     
     /// **OTCore:**
     /// Returns elements in groups of n number of elements.
+    @_disfavoredOverload
     public func split(every: Int) -> [ClosedRange<Bound>] {
         
         guard !isEmpty else { return [] }
@@ -1136,6 +1171,7 @@ extension RangeExpression {
     
     /// **OTCore:**
     /// Returns the absolute bound values. Value(s) are `nil` when unbounded.
+    @_disfavoredOverload
     public func getAbsoluteBounds() -> (min: Bound?, max: Bound?) {
         
         switch self {
@@ -1166,6 +1202,7 @@ extension RangeExpression where Bound : Strideable {
     
     /// **OTCore:**
     /// Returns the absolute bound values. Value(s) are `nil` when unbounded.
+    @_disfavoredOverload
     public func getAbsoluteBounds() -> (min: Bound?, max: Bound?) {
         
         switch self {
@@ -1196,6 +1233,7 @@ extension ClosedRange {
     
     /// **OTCore:**
     /// Returns the absolute bound values. Value(s) are `nil` when unbounded.
+    @_disfavoredOverload
     public var absoluteBounds: (min: Bound, max: Bound) {
         
         (min: lowerBound, max: upperBound)
@@ -1209,6 +1247,7 @@ extension Range where Bound : Strideable {
     /// **OTCore:**
     /// Returns the absolute bound values. Value(s) are `nil` when unbounded.
     /// If range is empty, `min` and `max` will return `nil`.
+    @_disfavoredOverload
     public var absoluteBounds: (min: Bound?, max: Bound?) {
         
         var newMin: Bound?
@@ -1241,6 +1280,7 @@ extension PartialRangeUpTo where Bound : Strideable {
     
     /// **OTCore:**
     /// Returns the absolute bound values. Value(s) are `nil` when unbounded.
+    @_disfavoredOverload
     public var absoluteBounds: (min: Bound?, max: Bound) {
         
         (min: nil, max: upperBound.advanced(by: -1))
@@ -1253,6 +1293,7 @@ extension PartialRangeThrough {
     
     /// **OTCore:**
     /// Returns the absolute bound values. Value(s) are `nil` when unbounded.
+    @_disfavoredOverload
     public var absoluteBounds: (min: Bound?, max: Bound) {
         
         (min: nil, max: upperBound)
@@ -1265,6 +1306,7 @@ extension PartialRangeFrom {
     
     /// **OTCore:**
     /// Returns the absolute bound values. Value(s) are `nil` when unbounded.
+    @_disfavoredOverload
     public var absoluteBounds: (min: Bound, max: Bound?) {
         
         (min: lowerBound, max: nil)
@@ -1388,6 +1430,7 @@ extension BinaryInteger {
     
     /// **OTCore:**
     /// Repeats the closure n number of times. The number must be > 0 otherwise the code is never executed.
+    @_disfavoredOverload
     public func repeatEach(_ operation: @escaping () -> Void) {
         
         var increment = 0 as Self
@@ -1404,6 +1447,7 @@ extension ClosedRange where Element : BinaryInteger {
     
     /// **OTCore:**
     /// Repeats the closure once for each element in the range.
+    @_disfavoredOverload
     public func repeatEach(_ operation: @escaping () -> Void) {
         
         for _ in self { operation() }
@@ -1416,6 +1460,7 @@ extension Range where Element : BinaryInteger {
     
     /// **OTCore:**
     /// Repeats the closure once for each element in the range.
+    @_disfavoredOverload
     public func repeatEach(_ operation: @escaping () -> Void) {
         
         for _ in self { operation() }

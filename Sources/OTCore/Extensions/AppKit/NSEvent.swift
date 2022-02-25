@@ -12,6 +12,7 @@ extension NSEvent {
     /// **OTCore:**
     /// Returns an `NSEvent`'s mouse location in relation to a view's coordinate space.
     /// For non-mouse events the return value of this method is undefined.
+    @_disfavoredOverload
     public func location(in view: NSView) -> NSPoint {
         
         // Apple docs:

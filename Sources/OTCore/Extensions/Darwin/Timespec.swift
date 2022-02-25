@@ -30,7 +30,7 @@ import Darwin
 ///
 /// - returns: `timespec(tv_sec: Int, tv_nsec: Int)` where `tv_sec` is seconds and `tc_nsec` is nanoseconds
 @available(OSX 10.12, iOS 10.0, tvOS 10.0, watchOS 3.0, *)
-@inlinable
+@inlinable @_disfavoredOverload
 public func clock_gettime_monotonic_raw() -> timespec {
     
     var uptime = timespec()
@@ -50,7 +50,7 @@ extension timespec {
     
     /// **OTCore:**
     /// Convenience constructor from floating point seconds value
-    @inlinable
+    @inlinable @_disfavoredOverload
     public init<T: BinaryFloatingPoint>(seconds floatingPoint: T) {
         
         self.init()
@@ -70,7 +70,7 @@ extension timespec {
 
 /// **OTCore:**
 /// Add two isntances of `timespec`
-@inlinable
+@inlinable @_disfavoredOverload
 public func + (lhs: timespec, rhs: timespec) -> timespec {
     
     let nsRaw = rhs.tv_nsec + lhs.tv_nsec
@@ -85,7 +85,7 @@ public func + (lhs: timespec, rhs: timespec) -> timespec {
 
 /// **OTCore:**
 /// Subtract two isntances of `timespec`
-@inlinable
+@inlinable @_disfavoredOverload
 public func - (lhs: timespec, rhs: timespec) -> timespec {
     
     let nsRaw = lhs.tv_nsec - rhs.tv_nsec
@@ -115,7 +115,7 @@ public func - (lhs: timespec, rhs: timespec) -> timespec {
 extension timespec: Equatable {
     
     // **OTCore**
-    @inlinable
+    @inlinable @_disfavoredOverload
     static public func == (lhs: Self, rhs: Self) -> Bool {
         
         lhs.tv_sec == rhs.tv_sec &&
@@ -128,7 +128,7 @@ extension timespec: Equatable {
 extension timespec: Comparable {
     
     // **OTCore**
-    @inlinable
+    @inlinable @_disfavoredOverload
     static public func < (lhs: timespec, rhs: timespec) -> Bool {
         
         if lhs.tv_sec < rhs.tv_sec { return true }

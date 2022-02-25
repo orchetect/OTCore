@@ -13,6 +13,7 @@ extension UserDefaults {
     
     /// **OTCore:**
     /// Convenience method to wrap the built-in `.integer(forKey:)` method in an optional returning nil if the key doesn't exist.
+    @_disfavoredOverload
     public func integerOptional(forKey key: String) -> Int? {
         
         guard object(forKey: key) != nil else { return nil }
@@ -22,6 +23,7 @@ extension UserDefaults {
     
     /// **OTCore:**
     /// Convenience method to wrap the built-in `.double(forKey:)` method in an optional returning nil if the key doesn't exist.
+    @_disfavoredOverload
     public func doubleOptional(forKey key: String) -> Double? {
         
         guard object(forKey: key) != nil else { return nil }
@@ -31,6 +33,7 @@ extension UserDefaults {
     
     /// **OTCore:**
     /// Convenience method to wrap the built-in `.float(forKey:)` method in an optional returning nil if the key doesn't exist.
+    @_disfavoredOverload
     public func floatOptional(forKey key: String) -> Float? {
         
         guard object(forKey: key) != nil else { return nil }
@@ -40,6 +43,7 @@ extension UserDefaults {
     
     /// **OTCore:**
     /// Convenience method to wrap the built-in `.bool(forKey:)` method in an optional returning nil if the key doesn't exist.
+    @_disfavoredOverload
     public func boolOptional(forKey key: String) -> Bool? {
         
         guard object(forKey: key) != nil else { return nil }
@@ -51,6 +55,7 @@ extension UserDefaults {
     /// Returns `true` if the key exists.
     ///
     /// This method is only useful when you don't care about extracting a value from the key and merely want to check for the key's existence.
+    @_disfavoredOverload
     public func exists(key: String) -> Bool {
         
         object(forKey: key) != nil

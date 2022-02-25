@@ -14,6 +14,7 @@ extension XMLNode {
     
     /// **OTCore:**
     /// Returns `self` typed as? `XMLElement`
+    @_disfavoredOverload
     public var asElement: XMLElement? {
         
         self as? XMLElement
@@ -29,7 +30,7 @@ extension Collection where Element : XMLNode {
     
     /// **OTCore:**
     /// Filters by the given XML element name
-    @inlinable
+    @inlinable @_disfavoredOverload
     public func filter(elementName: String) -> [XMLNode] {
         
         filter { $0.name == elementName }
@@ -38,7 +39,7 @@ extension Collection where Element : XMLNode {
     
     /// **OTCore:**
     /// Filters by the given `attribute` with matching `value`
-    @inlinable
+    @inlinable @_disfavoredOverload
     public func filter(attribute: String,
                        value: String) -> [XMLNode] {
         
@@ -52,7 +53,7 @@ extension Collection where Element : XMLNode {
     
     /// **OTCore:**
     /// Filters by the given `attribute` with values that satisfy the given predicate
-    @inlinable
+    @inlinable @_disfavoredOverload
     public func filter(attribute: String,
                        _ isIncluded: (String) throws -> Bool) rethrows -> [XMLNode] {
         
@@ -73,6 +74,7 @@ extension XMLNode {
     
     /// **OTCore:**
     /// Gets an attribute value. If attribute name does not exist or does not have a value, nil will be returned.
+    @_disfavoredOverload
     public func attributeStringValue(forName: String) -> String? {
         
         asElement?.attribute(forName: forName)?.stringValue
@@ -81,6 +83,7 @@ extension XMLNode {
     
     /// **OTCore:**
     /// Gets an attribute value. If attribute name does not exist or does not have a value, nil will be returned.
+    @_disfavoredOverload
     public func attributeObjectValue(forName: String) -> Any? {
         
         asElement?.attribute(forName: forName)?.objectValue
@@ -89,6 +92,7 @@ extension XMLNode {
     
     /// **OTCore:**
     /// Adds an attribute. Replaces existing value if attribute name already exists.
+    @_disfavoredOverload
     public func addAttribute(withName: String, value: String?) {
         
         let attr = XMLNode(kind: .attribute)
@@ -109,6 +113,7 @@ extension XMLElement {
     /// **OTCore:**
     /// Convenience to initialize and populate with attributes.
     /// Attributes are accepted as an array of tuples instead of a dictionary in order to maintain order.
+    @_disfavoredOverload
     public convenience init(name: String,
                             attributes: [(name: String, value: String)]) {
         
@@ -121,6 +126,7 @@ extension XMLElement {
     /// **OTCore:**
     /// Convenience to populate with attributes.
     /// Attributes are accepted as an array of tuples instead of a dictionary in order to maintain order.
+    @_disfavoredOverload
     public func addAttributes(_ attributes: [(name: String, value: String)]) {
         
         attributes.forEach {

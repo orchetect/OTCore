@@ -11,6 +11,7 @@ extension Result {
     
     /// **OTCore:**
     /// If `.success` case, returns associated value unwrapped.
+    @_disfavoredOverload
     public var successValue: Success? {
         
         guard case .success(let value) = self else { return nil }
@@ -20,6 +21,7 @@ extension Result {
     
     /// **OTCore:**
     /// If `.failure` case, returns associated value unwrapped.
+    @_disfavoredOverload
     public var failureValue: Failure? {
         
         guard case .failure(let value) = self else { return nil }
@@ -30,6 +32,7 @@ extension Result {
     /// **OTCore:**
     /// Returns `true` if `.success(_)` case.
     /// Returns `false` if .`failure(_)` case.
+    @_disfavoredOverload
     public var isSuccess: Bool {
         
         if case .success = self { return true }
