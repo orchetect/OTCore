@@ -7,6 +7,98 @@
 
 import Foundation
 
+// MARK: - URL Manipulation
+
+extension URL {
+    
+    /// **OTCore:**
+    /// Returns true if the URL begins with the given base URL exactly.
+    ///
+    /// ie:
+    ///
+    ///     // url: "file:///temp1/temp2/file.txt"
+    ///
+    ///     let url2 = URL(string: "file:///temp1/temp2/")!
+    ///     url.hasPrefix(url: url2) // == true
+    ///
+    ///     let url2 = URL(string: "file:///wrong/")!
+    ///     url.hasPrefix(url: url2) // == false
+    ///
+    @_disfavoredOverload
+    public func hasPrefix(url base: URL) -> Bool {
+        
+        absoluteString.starts(with: base.absoluteString)
+        
+    }
+    
+    /// **OTCore:**
+    /// Returns true if the URL path components begin with the specified components.
+    ///
+    /// ie:
+    ///
+    ///     // url: "file:///temp1/temp2/file.txt"
+    ///
+    ///     url.hasPathComponents(prefix: ["/", "temp1"])
+    ///     // == true
+    ///
+    ///     url.hasPathComponents(prefix: ["/", "wrong"])
+    ///     // == false
+    ///
+    @_disfavoredOverload
+    public func hasPathComponents(prefix base: [String]) -> Bool {
+        
+        pathComponents.starts(with: base)
+        
+    }
+    
+    /// **OTCore:**
+    /// If the URL has the given base URL exactly, the path components will be returned removing the base URL's path components.
+    ///
+    /// ie:
+    ///
+    ///     // url: "file:///temp1/temp2/file.txt"
+    ///
+    ///     url.pathComponents(removingBase: "file:///temp1/")
+    ///     // == ["temp2", "file.txt"]
+    ///
+    ///     url.pathComponents(removingBase: "file:///wrong/")
+    ///     // == nil
+    ///
+    @_disfavoredOverload
+    public func pathComponents(removingBase base: URL) -> [String]? {
+        
+        guard !base.pathComponents.isEmpty else { return [] }
+        guard hasPrefix(url: base) else { return nil }
+        
+        return pathComponents.dropFirst(base.pathComponents.count).array
+        
+    }
+    
+    /// **OTCore:**
+    /// If the URL path components begin with those of the given base URL, the path components will be returned removing the base URL's path components.
+    ///
+    /// ie:
+    ///
+    ///     // url: "file:///temp1/temp2/file.txt"
+    ///
+    ///     url.pathComponents(removingBase: ["/", "temp1"])
+    ///     // == ["temp2", "file.txt"]
+    ///
+    ///     url.pathComponents(removingBase: ["/", "wrong"])
+    ///     // == nil
+    ///
+    @_disfavoredOverload
+    public func pathComponents(removingPrefix base: [String]) -> [String]? {
+        
+        guard !base.isEmpty else { return [] }
+        guard hasPathComponents(prefix: base) else { return nil }
+        
+        return pathComponents.dropFirst(base.count).array
+        
+    }
+    
+}
+
 // MARK: - File / folder
 
 extension URL {
