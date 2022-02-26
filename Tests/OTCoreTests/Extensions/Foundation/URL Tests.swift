@@ -13,6 +13,237 @@ class Extensions_Foundation_URL_Tests: XCTestCase {
     override func setUp() { super.setUp() }
     override func tearDown() { super.tearDown() }
     
+    func testHasPrefixURL() {
+        
+        XCTAssertTrue(
+            URL(fileURLWithPath: "/temp1/temp2/file.txt")
+                .hasPrefix(url: URL(fileURLWithPath: "/"))
+        )
+        
+        XCTAssertTrue(
+            URL(fileURLWithPath: "/temp1/temp2/file.txt")
+                .hasPrefix(url: URL(fileURLWithPath: "/temp1/"))
+        )
+        
+        XCTAssertTrue(
+            URL(fileURLWithPath: "/temp1/temp2/file.txt")
+                .hasPrefix(url: URL(fileURLWithPath: "/temp1/temp2/"))
+        )
+        
+        XCTAssertTrue(
+            URL(fileURLWithPath: "/temp1/temp2/file.txt")
+                .hasPrefix(url: URL(fileURLWithPath: "/temp1/temp2/file.txt"))
+        )
+        
+        // different path
+        
+        XCTAssertFalse(
+            URL(fileURLWithPath: "/temp1/temp2/file.txt")
+                .hasPrefix(url: URL(fileURLWithPath: "/wrong/"))
+        )
+        
+        // different schemes (ie: file:// vs. https://)
+        
+        XCTAssertFalse(
+            URL(fileURLWithPath: "/temp1/temp2/file.txt")
+                .hasPrefix(url: URL(string: "https://temp1/temp2/file.txt")!)
+        )
+        
+        XCTAssertFalse(
+            URL(string: "https://temp1/temp2/file.txt")!
+                .hasPrefix(url: URL(fileURLWithPath: "/temp1/temp2/file.txt"))
+        )
+        
+        XCTAssertFalse(
+            URL(fileURLWithPath: "/temp1/temp2/file.txt")
+                .hasPrefix(url: URL(string: "https://somehost/temp1/temp2/file.txt")!)
+        )
+        
+        XCTAssertFalse(
+            URL(string: "https://somehost/temp1/temp2/file.txt")!
+                .hasPrefix(url: URL(fileURLWithPath: "/temp1/temp2/file.txt"))
+        )
+        
+    }
+    
+    func testHasPathComponentsPrefix() {
+        
+        XCTAssertTrue(
+            URL(fileURLWithPath: "/temp1/temp2/file.txt")
+                .hasPathComponents(prefix: URL(fileURLWithPath: "/").pathComponents)
+        )
+        
+        XCTAssertTrue(
+            URL(fileURLWithPath: "/temp1/temp2/file.txt")
+                .hasPathComponents(prefix: URL(fileURLWithPath: "/temp1/").pathComponents)
+        )
+        
+        XCTAssertTrue(
+            URL(fileURLWithPath: "/temp1/temp2/file.txt")
+                .hasPathComponents(prefix: URL(fileURLWithPath: "/temp1/temp2/").pathComponents)
+        )
+        
+        XCTAssertTrue(
+            URL(fileURLWithPath: "/temp1/temp2/file.txt")
+                .hasPathComponents(prefix: URL(fileURLWithPath: "/temp1/temp2/file.txt").pathComponents)
+        )
+        
+        // different path
+        XCTAssertFalse(
+            URL(fileURLWithPath: "/temp1/temp2/file.txt")
+                .hasPathComponents(prefix: URL(fileURLWithPath: "/wrong/").pathComponents)
+        )
+        
+        // different path
+        XCTAssertFalse(
+            URL(fileURLWithPath: "/temp1/temp2/file.txt")
+                .hasPathComponents(prefix: URL(fileURLWithPath: "/temp1/temp2/otherfile.txt").pathComponents)
+        )
+        
+        // temp1 is hostname in https here, not part of path
+        XCTAssertFalse(
+            URL(string: "file:///temp1/temp2/file.txt")!
+                .hasPathComponents(prefix: URL(string: "https://temp1/temp2/file.txt")!.pathComponents)
+        )
+        
+        // temp1 is hostname in https here, not part of path
+        XCTAssertFalse(
+            URL(string: "https://temp1/temp2/file.txt")!
+                .hasPathComponents(prefix: URL(string: "file:///temp1/temp2/file.txt")!.pathComponents)
+        )
+        
+        // different hosts, same paths
+        XCTAssertTrue(
+            URL(string: "https://somehost1.com/temp1/temp2/file.txt")!
+                .hasPathComponents(prefix: URL(string: "https://somehost2.com/temp1/temp2/file.txt")!.pathComponents)
+        )
+        
+        // different hosts with authentication and port numbers, same paths
+        XCTAssertTrue(
+            URL(string: "https://user:pass@somehost1.com:8080/temp1/temp2/file.txt")!
+                .hasPathComponents(prefix: URL(string: "https://somehost2.com/temp1/temp2/file.txt")!.pathComponents)
+        )
+        
+        // different schemes (ie: file:// vs. https://)
+        XCTAssertTrue(
+            URL(string: "https://somehost.com/temp1/temp2/file.txt")!
+                .hasPathComponents(prefix: URL(string: "file:///temp1/temp2/file.txt")!.pathComponents)
+        )
+        
+    }
+    
+    func testOathComponentsRemovingBase() {
+        
+        XCTAssertEqual(
+            URL(string: "file:///temp1/temp2/file.txt")!
+                .pathComponents(removingBase: URL(string: "file:///temp1/temp2/file.txt")!),
+            []
+        )
+        
+        XCTAssertEqual(
+            URL(string: "file:///temp1/temp2/file.txt")!
+                .pathComponents(removingBase: URL(string: "file:///temp1/temp2/")!),
+            ["file.txt"]
+        )
+        
+        XCTAssertEqual(
+            URL(string: "file:///temp1/temp2/file.txt")!
+                .pathComponents(removingBase: URL(string: "file:///temp1/")!),
+            ["temp2", "file.txt"]
+        )
+        
+        XCTAssertEqual(
+            URL(string: "file:///temp1/temp2/file.txt")!
+                .pathComponents(removingBase: URL(string: "file:///")!),
+            ["temp1", "temp2", "file.txt"]
+        )
+        
+        // url does not begin with base url
+        XCTAssertEqual(
+            URL(string: "file:///temp1/temp2/file.txt")!
+                .pathComponents(removingBase: URL(string: "file:///temp2/")!),
+            nil
+        )
+        
+        // different schemes (ie: file:// vs. https://)
+        XCTAssertEqual(
+            URL(string: "file:///temp1/temp2/file.txt")!
+                .pathComponents(removingBase: URL(string: "https://somehost.com/temp1/temp2/file.txt")!),
+            nil
+        )
+        
+        // different schemes (ie: file:// vs. https://)
+        XCTAssertEqual(
+            URL(string: "file:///temp1/temp2/file.txt")!
+                .pathComponents(removingBase: URL(string: "https://somehost.com/temp1/temp2/")!),
+            nil
+        )
+        
+    }
+    
+    func testPathComponentsRemovingPrefix() {
+        
+        XCTAssertEqual(
+            URL(string: "file:///temp1/temp2/file.txt")!
+                .pathComponents(removingPrefix: URL(string: "file:///temp1/temp2/file.txt")!.pathComponents),
+            []
+        )
+        
+        XCTAssertEqual(
+            URL(string: "file:///temp1/temp2/file.txt")!
+                .pathComponents(removingPrefix: URL(string: "file:///temp1/temp2/")!.pathComponents),
+            ["file.txt"]
+        )
+        
+        XCTAssertEqual(
+            URL(string: "file:///temp1/temp2/file.txt")!
+                .pathComponents(removingPrefix: URL(string: "file:///temp1/")!.pathComponents),
+            ["temp2", "file.txt"]
+        )
+        
+        XCTAssertEqual(
+            URL(string: "file:///temp1/temp2/file.txt")!
+                .pathComponents(removingPrefix: URL(string: "file:///")!.pathComponents),
+            ["temp1", "temp2", "file.txt"]
+        )
+        
+        // url does not begin with base url
+        XCTAssertEqual(
+            URL(string: "file:///temp1/temp2/file.txt")!
+                .pathComponents(removingPrefix: URL(string: "file:///temp2/")!.pathComponents),
+            nil
+        )
+        
+        // different schemes (ie: file:// vs. https://)
+        XCTAssertEqual(
+            URL(string: "file:///temp1/temp2/file.txt")!
+                .pathComponents(removingPrefix: URL(string: "https://somehost.com/temp1/temp2/")!.pathComponents),
+            ["file.txt"]
+        )
+        
+        // different hosts, same paths
+        XCTAssertEqual(
+            URL(string: "https://somehost1.com/temp1/temp2/file.txt")!
+                .pathComponents(removingPrefix: URL(string: "https://somehost2.com/temp1/temp2/")!.pathComponents),
+            ["file.txt"]
+        )
+        
+        // different hosts with authentication and port numbers, same paths
+        XCTAssertEqual(
+            URL(string: "https://user:pass@somehost1.com:8080/temp1/temp2/file.txt")!
+                .pathComponents(removingPrefix: URL(string: "https://somehost2.com/temp1/temp2/")!.pathComponents),
+            ["file.txt"]
+        )
+        
+        // different schemes (ie: file:// vs. https://)
+        XCTAssertEqual(
+            URL(string: "file:///temp1/temp2/file.txt")!
+                .pathComponents(removingPrefix: URL(string: "https://somehost.com/temp1/temp2/file.txt")!.pathComponents),
+            []
+        )
+        
+    }
+    
     func testFileExists() {
         
         // guaranteed to exist
