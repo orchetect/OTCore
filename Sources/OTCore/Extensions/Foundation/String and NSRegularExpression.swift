@@ -48,7 +48,7 @@ extension StringProtocol {
                 return []
             }
             
-            return results.map { nsString.substring(with: $0.range)}
+            return results.map { nsString.substring(with: $0.range) }
             
         } catch {
             
