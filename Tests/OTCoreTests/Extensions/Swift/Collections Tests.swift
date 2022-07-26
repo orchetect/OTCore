@@ -1165,6 +1165,8 @@ class Extensions_Swift_Collections_Tests: XCTestCase {
         
     }
     
+    // MARK: - shortest() / shortestIndex()
+    
     func testStringProtocol_Shortest() {
         
         XCTAssertEqual([String]().shortest(), nil)
@@ -1184,6 +1186,30 @@ class Extensions_Swift_Collections_Tests: XCTestCase {
         XCTAssertEqual(["abc", "A", "1", "xy", ""].shortestIndex(), 4)
         XCTAssertEqual(["abc", "A", "1", "xy"].shortestIndex(), 1)
         XCTAssertEqual(["abc", "1", "A", "xy"].shortestIndex(), 1)
+        
+    }
+    
+    // MARK: - longest() / longestIndex()
+    
+    func testStringProtocol_Longest() {
+        
+        XCTAssertEqual([String]().longest(), nil)
+        XCTAssertEqual([""].longest(), "")
+        XCTAssertEqual(["A"].longest(), "A")
+        XCTAssertEqual(["A", "1", "xy", "", "abc"].longest(), "abc")
+        XCTAssertEqual(["abc", "123", "A", "1", "xyz"].longest(), "abc")
+        XCTAssertEqual(["123", "abc", "1", "A", "xyz"].longest(), "123")
+        
+    }
+    
+    func testStringProtocol_LongestIndex() {
+        
+        XCTAssertEqual([String]().longestIndex(), nil)
+        XCTAssertEqual([""].longestIndex(), 0)
+        XCTAssertEqual(["A"].longestIndex(), 0)
+        XCTAssertEqual(["A", "1", "xy", "", "abc"].longestIndex(), 4)
+        XCTAssertEqual(["abc", "123", "A", "1", "xyz"].longestIndex(), 0)
+        XCTAssertEqual(["123", "abc", "1", "A", "xyz"].longestIndex(), 0)
         
     }
     

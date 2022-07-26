@@ -859,6 +859,47 @@ extension Collection where Element: StringProtocol {
     }
 }
 
+// MARK: - longest() / longestIndex()
+
+extension Collection where Element: StringProtocol {
+    
+    /// **OTCore:**
+    /// Returns the longest string in the collection.
+    /// If more than one element are the same length as the longest element, the first will be returned.
+    /// - complexity: O(*n*)
+    @inlinable @_disfavoredOverload
+    public func longest() -> Element? {
+        
+        guard let idx = longestIndex() else { return nil }
+        return self[idx]
+        
+    }
+    
+    /// **OTCore:**
+    /// Returns the index of the longest string in the collection.
+    /// If more than one element are the same length as the longest element, the first will be returned.
+    /// - complexity: O(*n*)
+    @inlinable @_disfavoredOverload
+    public func longestIndex() -> Index? {
+        
+        guard !isEmpty else { return nil }
+        
+        var longestIndex: Index = startIndex
+        var longestLength: Int = self[startIndex].count
+        
+        for index in indices {
+            let elementLength = self[index].count
+            if elementLength > longestLength {
+                longestIndex = index
+                longestLength = elementLength
+            }
+        }
+        
+        return longestIndex
+        
+    }
+}
+
 // MARK: - stringValueArrayLiteral
 
 extension Collection where Element: BinaryInteger {
