@@ -69,7 +69,11 @@ extension Globals {
         
         /// **OTCore:**
         /// Returns the username of the current system account.
-        @available(macOS 10.12, macCatalyst 9999, iOS 9999, tvOS 9999, watchOS 9999, *)
+        @available(macOS 10.12, *)
+        @available(macCatalyst, unavailable)
+        @available(iOS, unavailable)
+        @available(tvOS, unavailable)
+        @available(watchOS, unavailable)
         public static var userName: String {
             
             #if os(macOS)
@@ -82,7 +86,11 @@ extension Globals {
         
         /// **OTCore:**
         /// Returns the full username of the current system account.
-        @available(macOS 10.12, macCatalyst 9999, iOS 9999, tvOS 9999, watchOS 9999, *)
+        @available(macOS 10.12, *)
+        @available(macCatalyst, unavailable)
+        @available(iOS, unavailable)
+        @available(tvOS, unavailable)
+        @available(watchOS, unavailable)
         public static var fullUserName: String {
             
             #if os(macOS)
@@ -104,7 +112,8 @@ extension Globals {
         
         /// **OTCore:**
         /// On macOS, returns Mac computer name. On iOS/tvOS, returns device name.
-        @available(macOS 10.6, macCatalyst 13, iOS 2, tvOS 9, watchOS 9999, *)
+        @available(macOS 10.6, macCatalyst 13, iOS 2, tvOS 9, *)
+        @available(watchOS, unavailable)
         public static var name: String {
             
             #if os(macOS)

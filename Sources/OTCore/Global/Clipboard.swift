@@ -12,7 +12,9 @@ import UIKit
 /// **OTCore:**
 /// Convenience function to set the system clipboard to a `String`.
 /// Returns `true` if successful.
-@available(macOS 10.0, macCatalyst 1.0, iOS 1.0, tvOS 9999, watchOS 9999, *)
+@available(macOS 10.0, macCatalyst 1.0, iOS 1.0, *)
+@available(tvOS, unavailable)
+@available(watchOS, unavailable)
 @discardableResult @_disfavoredOverload
 public func setClipboard(toString: String) -> Bool {
     
@@ -38,7 +40,9 @@ public func setClipboard(toString: String) -> Bool {
 /// **OTCore:**
 /// Convenience function to get the system clipboard contents if it contains a `String`.
 /// Returns `nil` if no text is found on the clipboard.
-@available(macOS 10.0, macCatalyst 1.0, iOS 1.0, tvOS 9999, watchOS 9999, *)
+@available(macOS 10.0, macCatalyst 1.0, iOS 1.0, *)
+@available(tvOS, unavailable)
+@available(watchOS, unavailable)
 @_disfavoredOverload
 public func getClipboardString() -> String? {
     
@@ -57,7 +61,9 @@ extension String {
     /// **OTCore:**
     /// Convenience function to set the system clipboard to a `String`.
     /// Returns `true` if successful.
-    @available(macOS 10.0, macCatalyst 1.0, iOS 1.0, tvOS 9999, watchOS 9999, *)
+    @available(macOS 10.0, macCatalyst 1.0, iOS 1.0, *)
+    @available(tvOS, unavailable)
+    @available(watchOS, unavailable)
     @discardableResult @_disfavoredOverload
     public func copyToClipboard() -> Bool {
         
