@@ -812,6 +812,53 @@ extension Collection where Element : Hashable {
 }
 
 
+// MARK: - shortest() / shortestIndex()
+
+extension Collection where Element: StringProtocol {
+    
+    /// **OTCore:**
+    /// Returns the shortest string in the collection.
+    /// If more than one element are the same length as the shortest element, the first will be returned.
+    /// - complexity: O(*n*)
+    @inlinable @_disfavoredOverload
+    public func shortest() -> Element? {
+        
+        guard let idx = shortestIndex() else { return nil }
+        return self[idx]
+        
+    }
+    
+    /// **OTCore:**
+    /// Returns the index of the shortest string in the collection.
+    /// If more than one element are the same length as the shortest element, the first will be returned.
+    /// - complexity: O(*n*)
+    @inlinable @_disfavoredOverload
+    public func shortestIndex() -> Index? {
+        
+        guard !isEmpty else { return nil }
+        
+        var shortestIndex: Index = startIndex
+        var shortestLength: Int = self[startIndex].count
+        
+        for index in indices {
+            let elementLength = self[index].count
+            if elementLength < shortestLength {
+                shortestIndex = index
+                shortestLength = elementLength
+            }
+            
+            // return early if empty string is encountered since
+            // there is no shorter string possible
+            if elementLength == 0 {
+                return shortestIndex
+            }
+        }
+        
+        return shortestIndex
+        
+    }
+}
+
 // MARK: - stringValueArrayLiteral
 
 extension Collection where Element: BinaryInteger {

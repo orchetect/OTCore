@@ -1165,6 +1165,28 @@ class Extensions_Swift_Collections_Tests: XCTestCase {
         
     }
     
+    func testStringProtocol_Shortest() {
+        
+        XCTAssertEqual([String]().shortest(), nil)
+        XCTAssertEqual([""].shortest(), "")
+        XCTAssertEqual(["A"].shortest(), "A")
+        XCTAssertEqual(["abc", "A", "1", "xy", ""].shortest(), "")
+        XCTAssertEqual(["abc", "A", "1", "xy"].shortest(), "A")
+        XCTAssertEqual(["abc", "1", "A", "xy"].shortest(), "1")
+        
+    }
+    
+    func testStringProtocol_ShortestIndex() {
+        
+        XCTAssertEqual([String]().shortestIndex(), nil)
+        XCTAssertEqual([""].shortestIndex(), 0)
+        XCTAssertEqual(["A"].shortestIndex(), 0)
+        XCTAssertEqual(["abc", "A", "1", "xy", ""].shortestIndex(), 4)
+        XCTAssertEqual(["abc", "A", "1", "xy"].shortestIndex(), 1)
+        XCTAssertEqual(["abc", "1", "A", "xy"].shortestIndex(), 1)
+        
+    }
+    
     // MARK: - .stringValueArrayLiteral
     
     func teststringValueArrayLiteral() {
