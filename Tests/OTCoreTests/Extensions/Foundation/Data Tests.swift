@@ -255,8 +255,8 @@ class Extensions_Foundation_Data_Tests: XCTestCase {
         
         // .toData
         
-        XCTAssertEqual(0b1.uint.toData(.littleEndian)   , Data([0b1,0,0,0]))
-        XCTAssertEqual(0b1.uint.toData(.bigEndian)      , Data([0,0,0,0b1]))
+        XCTAssertEqual(0b1.uInt.toData(.littleEndian)   , Data([0b1,0,0,0]))
+        XCTAssertEqual(0b1.uInt.toData(.bigEndian)      , Data([0,0,0,0b1]))
         
         // .toUInt
         
