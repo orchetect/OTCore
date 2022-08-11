@@ -6,7 +6,6 @@
 // MARK: - Search algorithms
 
 extension ArraySlice where Element: Comparable {
-    
     /// **OTCore:**
     /// Performs a binary search algorithm.
     ///
@@ -28,39 +27,35 @@ extension ArraySlice where Element: Comparable {
     public func binarySearch(
         forValue searchElement: Element
     ) -> ClosedRange<Self.Index>? {
-        
         guard !isEmpty else { return nil }
         guard searchElement >= first! else { return nil }
         guard searchElement <= last!  else { return nil }
         
-        var searchRange = startIndex...endIndex-1
+        var searchRange = startIndex ... endIndex - 1
         
         while searchRange.count > 2 {
             let midIndex = searchRange.lowerBound + (searchRange.count / 2)
             
             let midElement = self[midIndex]
             
-            if midElement == searchElement { return midIndex...midIndex }
+            if midElement == searchElement { return midIndex ... midIndex }
             
             if midElement < searchElement {
-                searchRange = midIndex...searchRange.upperBound
+                searchRange = midIndex ... searchRange.upperBound
             } else {
-                searchRange = searchRange.lowerBound...midIndex
+                searchRange = searchRange.lowerBound ... midIndex
             }
         }
         
         if let foundIndex = self[searchRange].firstIndex(where: { $0 == searchElement }) {
-            return foundIndex...foundIndex
+            return foundIndex ... foundIndex
         } else {
             return searchRange
         }
-        
     }
-    
 }
 
 extension Array where Element: Comparable {
-    
     /// **OTCore:**
     /// Performs a binary search algorithm.
     ///
@@ -82,9 +77,6 @@ extension Array where Element: Comparable {
     public func binarySearch(
         forValue searchElement: Element
     ) -> ClosedRange<Self.Index>? {
-        
         ArraySlice(self).binarySearch(forValue: searchElement)
-        
     }
-    
 }

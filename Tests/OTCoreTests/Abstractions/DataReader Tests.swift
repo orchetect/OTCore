@@ -9,11 +9,9 @@ import XCTest
 import OTCore
 
 class Abstractions_DataReader_Tests: XCTestCase {
-    
     // MARK: - Data storage starting with index 0
     
     func testRead() {
-        
         let data = Data([0x01, 0x02, 0x03, 0x04])
         
         // .read - byte by byte
@@ -49,11 +47,9 @@ class Abstractions_DataReader_Tests: XCTestCase {
             
             XCTAssertEqual(dr.read(bytes: 5), nil)
         }
-        
     }
     
     func testNonAdvancingRead() {
-        
         let data = Data([0x01, 0x02, 0x03, 0x04])
         
         // .nonAdvancingRead - nil read - return all remaining bytes
@@ -79,11 +75,9 @@ class Abstractions_DataReader_Tests: XCTestCase {
             XCTAssertEqual(dr.nonAdvancingRead(bytes: 5), nil)
             XCTAssertEqual(dr.read(bytes: 1), Data([0x01]))
         }
-        
     }
     
     func testAdvanceBy() {
-        
         let data = Data([0x01, 0x02, 0x03, 0x04])
         
         // advanceBy
@@ -93,11 +87,9 @@ class Abstractions_DataReader_Tests: XCTestCase {
             dr.advanceBy(1)
             XCTAssertEqual(dr.read(bytes: 1), Data([0x02]))
         }
-        
     }
     
     func tesReset() {
-        
         let data = Data([0x01, 0x02, 0x03, 0x04])
         
         // reset
@@ -109,15 +101,20 @@ class Abstractions_DataReader_Tests: XCTestCase {
             dr.reset()
             XCTAssertEqual(dr.read(bytes: 1), Data([0x01]))
         }
-        
     }
     
     // MARK: - Data storage starting with index >0
     
     func testRead_DataIndicesOffset() {
-        
-        let rawData = Data([0x00, 0x00, 0x00,
-                            0x01, 0x02, 0x03, 0x04])
+        let rawData = Data([
+            0x00,
+            0x00,
+            0x00,
+            0x01,
+            0x02,
+            0x03,
+            0x04
+        ])
         let data = rawData[3 ... 6]
         
         // .read - byte by byte
@@ -153,13 +150,18 @@ class Abstractions_DataReader_Tests: XCTestCase {
             
             XCTAssertEqual(dr.read(bytes: 5), nil)
         }
-        
     }
     
     func testNonAdvancingRead_DataIndicesOffset() {
-        
-        let rawData = Data([0x00, 0x00, 0x00,
-                            0x01, 0x02, 0x03, 0x04])
+        let rawData = Data([
+            0x00,
+            0x00,
+            0x00,
+            0x01,
+            0x02,
+            0x03,
+            0x04
+        ])
         let data = rawData[3 ... 6]
         
         // .nonAdvancingRead - nil read - return all remaining bytes
@@ -185,13 +187,18 @@ class Abstractions_DataReader_Tests: XCTestCase {
             XCTAssertEqual(dr.nonAdvancingRead(bytes: 5), nil)
             XCTAssertEqual(dr.read(bytes: 1), Data([0x01]))
         }
-        
     }
     
     func testAdvanceBy_DataIndicesOffset() {
-        
-        let rawData = Data([0x00, 0x00, 0x00,
-                            0x01, 0x02, 0x03, 0x04])
+        let rawData = Data([
+            0x00,
+            0x00,
+            0x00,
+            0x01,
+            0x02,
+            0x03,
+            0x04
+        ])
         let data = rawData[3 ... 6]
         
         // advanceBy
@@ -201,15 +208,19 @@ class Abstractions_DataReader_Tests: XCTestCase {
             dr.advanceBy(1)
             XCTAssertEqual(dr.read(bytes: 1), Data([0x02]))
         }
-        
     }
     
     func tesReset_DataIndicesOffset() {
-        
-        let rawData = Data([0x00, 0x00, 0x00,
-                            0x01, 0x02, 0x03, 0x04])
+        let rawData = Data([
+            0x00,
+            0x00,
+            0x00,
+            0x01,
+            0x02,
+            0x03,
+            0x04
+        ])
         let data = rawData[3 ... 6]
-        
         
         // reset
         do {
@@ -220,9 +231,7 @@ class Abstractions_DataReader_Tests: XCTestCase {
             dr.reset()
             XCTAssertEqual(dr.read(bytes: 1), Data([0x01]))
         }
-        
     }
-    
 }
 
 #endif

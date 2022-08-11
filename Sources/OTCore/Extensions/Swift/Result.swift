@@ -8,25 +8,20 @@
 public typealias AnyResult = Result<Any, Error>
 
 extension Result {
-    
     /// **OTCore:**
     /// If `.success` case, returns associated value unwrapped.
     @_disfavoredOverload
     public var successValue: Success? {
-        
-        guard case .success(let value) = self else { return nil }
+        guard case let .success(value) = self else { return nil }
         return value
-        
     }
     
     /// **OTCore:**
     /// If `.failure` case, returns associated value unwrapped.
     @_disfavoredOverload
     public var failureValue: Failure? {
-        
-        guard case .failure(let value) = self else { return nil }
+        guard case let .failure(value) = self else { return nil }
         return value
-        
     }
     
     /// **OTCore:**
@@ -34,10 +29,7 @@ extension Result {
     /// Returns `false` if .`failure(_)` case.
     @_disfavoredOverload
     public var isSuccess: Bool {
-        
         if case .success = self { return true }
         return false
-        
     }
-    
 }

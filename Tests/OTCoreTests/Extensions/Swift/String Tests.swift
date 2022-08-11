@@ -9,32 +9,26 @@ import XCTest
 import OTCore
 
 class Extensions_Swift_String_Tests: XCTestCase {
-    
     override func setUp() { super.setUp() }
     override func tearDown() { super.tearDown() }
     
     func testStringConstants() {
-        
         _ = String.quote
         _ = String.tab
         _ = String.space
         _ = String.newLine
         _ = String.null
-        
     }
     
     func testCharacterConstants() {
-        
         _ = Character.quote
         _ = Character.tab
         _ = Character.space
         _ = Character.newLine
         _ = Character.null
-        
     }
     
     func testStringFunctionalAppendConstants() {
-        
         // .newLined
         
         XCTAssertEqual("test".newLined, "test\n")
@@ -54,11 +48,9 @@ class Extensions_Swift_String_Tests: XCTestCase {
         var strTab = "test"
         strTab.tab()
         XCTAssertEqual(strTab, "test\t")
-        
     }
     
     func testRepeating() {
-        
         // String
         
         XCTAssertEqual("AB".repeating(0), "")
@@ -77,11 +69,9 @@ class Extensions_Swift_String_Tests: XCTestCase {
         XCTAssertEqual(Character("A").repeating(0), "")
         XCTAssertEqual(Character("A").repeating(1), "A")
         XCTAssertEqual(Character("A").repeating(5), "AAAAA")
-        
     }
     
     func testTrimmed() {
-        
         // String
         
         XCTAssertEqual("    string    ".trimmed, "string")
@@ -90,22 +80,18 @@ class Extensions_Swift_String_Tests: XCTestCase {
         
         let substring = "    string    ".suffix(13)
         XCTAssertEqual(substring.trimmed, "string")
-        
     }
     
     func testTrim() {
-        
         // .trim()
         
         var str = "    string    "
         str.trim()
         
         XCTAssertEqual(str, "string")
-        
     }
     
     func testRemovingPrefix() {
-        
         // .removingPrefix
         
         let strrr = "///Users/user"
@@ -124,11 +110,9 @@ class Extensions_Swift_String_Tests: XCTestCase {
         
         XCTAssertEqual(strrr.removingPrefix("zz"), "///Users/user")
         XCTAssertEqual(strrr, "///Users/user")
-        
     }
     
     func testRemovePrefix() {
-        
         // .removePrefix
         
         var strrr = "///Users/user"
@@ -150,11 +134,9 @@ class Extensions_Swift_String_Tests: XCTestCase {
         
         strrr.removePrefix("/")
         XCTAssertEqual(strrr, "Users/user")
-        
     }
     
     func testRemoveSuffix() {
-        
         var strrr = "file:///Users/user///"
         
         // .removingSuffix
@@ -181,39 +163,44 @@ class Extensions_Swift_String_Tests: XCTestCase {
         
         strrr.removeSuffix("/")
         XCTAssertEqual(strrr, "file:///Users/user")
-        
     }
     
     func testOptionalString() {
+        XCTAssertEqual(
+            optionalString(
+                describing: Int(exactly: 123),
+                ifNil: "0"
+            ),
+            "123"
+        )
         
-        XCTAssertEqual(optionalString(describing: Int(exactly: 123),
-                                      ifNil: "0"),
-                       "123")
-        
-        XCTAssertEqual(optionalString(describing: Int(exactly: 123.4),
-                                      ifNil: "0"),
-                       "0")
-        
+        XCTAssertEqual(
+            optionalString(
+                describing: Int(exactly: 123.4),
+                ifNil: "0"
+            ),
+            "0"
+        )
     }
     
     func testStringInterpolationIfNil() {
+        XCTAssertEqual(
+            "\(Int(exactly: 123), ifNil: "0")",
+            "123"
+        )
         
-        XCTAssertEqual("\(Int(exactly: 123), ifNil: "0")",
-                       "123")
-        
-        XCTAssertEqual("\(Int(exactly: 123.4), ifNil: "0")",
-                       "0")
-        
+        XCTAssertEqual(
+            "\(Int(exactly: 123.4), ifNil: "0")",
+            "0"
+        )
     }
     
     func testStringInterpolationRadix() {
-        
         XCTAssertEqual("\("7F", radix: 16)", "127")
         XCTAssertEqual("\("7F", radix: 2)", "nil")
     }
     
     func testSubstringToString() {
-        
         let str = "123"
         
         // form Substring
@@ -227,11 +214,9 @@ class Extensions_Swift_String_Tests: XCTestCase {
         
         XCTAssertEqual(toStr, String("123"))
         XCTAssertEqual(String(describing: type(of: toStr)), "String")
-        
     }
     
     func testCharacterToString() {
-        
         let char = Character("1")
         
         // .string
@@ -240,7 +225,6 @@ class Extensions_Swift_String_Tests: XCTestCase {
         
         XCTAssertEqual(toStr, String("1"))
         XCTAssertEqual(String(describing: type(of: toStr)), "String")
-        
     }
     
     // MARK: Collections tests
@@ -248,35 +232,38 @@ class Extensions_Swift_String_Tests: XCTestCase {
     // but specifically testing their implementation on String/StringProtocol here
     
     func testStartIndexOffsetBy() {
-        
         // .startIndex(offsetBy:)
         
         let str = "1234567890"
         
-        XCTAssertEqual(str.startIndex(offsetBy: 0),
-                       str.startIndex)
+        XCTAssertEqual(
+            str.startIndex(offsetBy: 0),
+            str.startIndex
+        )
         
-        XCTAssertEqual(str.startIndex(offsetBy: 1),
-                       str.index(str.startIndex, offsetBy: 1))
-        
+        XCTAssertEqual(
+            str.startIndex(offsetBy: 1),
+            str.index(str.startIndex, offsetBy: 1)
+        )
     }
     
     func testEndIndexOffsetBy() {
-        
         // .endIndex(offsetBy:)
         
         let str = "1234567890"
         
-        XCTAssertEqual(str.endIndex(offsetBy: 0),
-                       str.endIndex)
+        XCTAssertEqual(
+            str.endIndex(offsetBy: 0),
+            str.endIndex
+        )
         
-        XCTAssertEqual(str.endIndex(offsetBy: -1),
-                       str.index(str.endIndex, offsetBy: -1))
-        
+        XCTAssertEqual(
+            str.endIndex(offsetBy: -1),
+            str.index(str.endIndex, offsetBy: -1)
+        )
     }
     
     func testSubscriptPosition_OffsetIndex() {
-        
         // String
         
         XCTAssertEqual("abc123"[position: 2], "c")
@@ -285,37 +272,31 @@ class Extensions_Swift_String_Tests: XCTestCase {
         
         let substring = "abc123".suffix(4)
         XCTAssertEqual(substring[position: 2], "2")
-        
     }
     
     func testSubscriptPosition_ClosedRange() {
-        
         // String
         
-        XCTAssertEqual("abc123"[position: 1...3], "bc1")
+        XCTAssertEqual("abc123"[position: 1 ... 3], "bc1")
         
         // Substring
         
         let substring = "abc123".suffix(4)
-        XCTAssertEqual(substring[position: 1...3], "123")
-        
+        XCTAssertEqual(substring[position: 1 ... 3], "123")
     }
     
     func testSubscriptPosition_Range() {
-        
         // String
         
-        XCTAssertEqual("abc123"[position: 1..<3], "bc")
+        XCTAssertEqual("abc123"[position: 1 ..< 3], "bc")
         
         // Substring
         
         let substring = "abc123".suffix(4)
-        XCTAssertEqual(substring[position: 1..<3], "12")
-        
+        XCTAssertEqual(substring[position: 1 ..< 3], "12")
     }
     
     func testSubscriptPosition_PartialRangeFrom() {
-        
         // String
         
         XCTAssertEqual("abc123"[position: 2...], "c123")
@@ -324,11 +305,9 @@ class Extensions_Swift_String_Tests: XCTestCase {
         
         let substring = "abc123".suffix(4)
         XCTAssertEqual(substring[position: 2...], "23")
-        
     }
     
     func testSubscriptPosition_PartialRangeThrough() {
-        
         // String
         
         XCTAssertEqual("abc123"[position: ...3], "abc1")
@@ -337,11 +316,9 @@ class Extensions_Swift_String_Tests: XCTestCase {
         
         let substring = "abc123".suffix(4)
         XCTAssertEqual(substring[position: ...3], "c123")
-        
     }
     
     func testSubscriptPosition_PartialRangeUpTo() {
-        
         // String
         
         XCTAssertEqual("abc123"[position: ..<3], "abc")
@@ -350,9 +327,7 @@ class Extensions_Swift_String_Tests: XCTestCase {
         
         let substring = "abc123".suffix(4)
         XCTAssertEqual(substring[position: ..<3], "c12")
-        
     }
-    
 }
 
 #endif

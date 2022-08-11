@@ -10,16 +10,12 @@ import XCTest
 import AppKit
 
 class Extensions_AppKit_NSScreen_Tests: XCTestCase {
-    
     override func setUp() { super.setUp() }
     override func tearDown() { super.tearDown() }
     
     func testEmpty() {
-        
         // nothing to test here
-        
     }
-    
 }
 
 #endif

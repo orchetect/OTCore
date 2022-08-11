@@ -10,12 +10,10 @@ import XCTest
 import AppKit
 
 class Extensions_AppKit_NSEvent_Tests: XCTestCase {
-    
     override func setUp() { super.setUp() }
     override func tearDown() { super.tearDown() }
     
     func testLocationInView() {
-        
         let view = NSView(frame: NSRect())
         let subview = NSView(frame: NSRect())
         view.addSubview(subview)
@@ -39,20 +37,26 @@ class Extensions_AppKit_NSEvent_Tests: XCTestCase {
             clickCount: 1,
             pressure: 1.0
         ) else {
-            XCTFail("Could not create NSEvent.") ; return
+            XCTFail("Could not create NSEvent."); return
         }
         
         // check native property for expected value
-        XCTAssertEqual(mockEvent.locationInWindow,
-                        .init(x: 300, y: 300))
+        XCTAssertEqual(
+            mockEvent.locationInWindow,
+            .init(x: 300, y: 300)
+        )
         
         // check native method
-        XCTAssertEqual(subview.convert(mockEvent.locationInWindow, from: nil),
-                        .init(x: 200, y: 200))
+        XCTAssertEqual(
+            subview.convert(mockEvent.locationInWindow, from: nil),
+            .init(x: 200, y: 200)
+        )
         
         // test OTCore method
-        XCTAssertEqual(mockEvent.location(in: subview),
-                        .init(x: 200, y: 200))
+        XCTAssertEqual(
+            mockEvent.location(in: subview),
+            .init(x: 200, y: 200)
+        )
         
         // dispose of window, keeping view in memory
         window?.contentView = nil
@@ -62,15 +66,17 @@ class Extensions_AppKit_NSEvent_Tests: XCTestCase {
         XCTAssertNotNil(subview)
         
         // check native method
-        XCTAssertEqual(subview.convert(mockEvent.locationInWindow, from: nil),
-                       .init(x: 200, y: 200))
+        XCTAssertEqual(
+            subview.convert(mockEvent.locationInWindow, from: nil),
+            .init(x: 200, y: 200)
+        )
         
         // test OTCore method
-        XCTAssertEqual(mockEvent.location(in: subview),
-                       .init(x: 200, y: 200))
-        
+        XCTAssertEqual(
+            mockEvent.location(in: subview),
+            .init(x: 200, y: 200)
+        )
     }
-    
 }
 
 #endif

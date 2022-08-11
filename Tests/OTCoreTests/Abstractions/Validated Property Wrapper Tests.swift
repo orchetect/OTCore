@@ -9,15 +9,13 @@ import XCTest
 import OTCore
 
 class Abstractions_Validated_Tests: XCTestCase {
-    
     override func setUp() { super.setUp() }
     override func tearDown() { super.tearDown() }
     
     func testValidated() {
-        
         struct SomeStruct {
             @Validated({
-                $0.clamped(to: 5...10)
+                $0.clamped(to: 5 ... 10)
             }) var value = 1
         }
         
@@ -36,9 +34,7 @@ class Abstractions_Validated_Tests: XCTestCase {
         
         someStruct.value = 11
         XCTAssertEqual(someStruct.value, 10)
-        
     }
-    
 }
 
 #endif

@@ -8,16 +8,12 @@
 import Foundation
 
 extension TimeInterval {
-    
     /// **OTCore:**
     /// Convenience constructor from `timespec`
     @inlinable @_disfavoredOverload
     public init(_ time: timespec) {
-        
         self = time.doubleValue
-        
     }
-    
 }
 
 #endif

@@ -9,7 +9,6 @@ import XCTest
 import OTCore
 
 class Global_Clipboard_Tests: XCTestCase {
-    
     override func setUp() { super.setUp() }
     override func tearDown() { super.tearDown() }
     
@@ -18,7 +17,6 @@ class Global_Clipboard_Tests: XCTestCase {
     func testEmpty() {
         XCTAssert(true)
     }
-    
 }
 
 #endif

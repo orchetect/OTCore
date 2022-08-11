@@ -12,12 +12,10 @@ import UIKit
 #endif
 
 extension NSAttributedString {
-    
     /// **OTCore:**
     /// Convenience. Returns a new `NSAttributedString` with the attribute applied to the entire string.
     @_disfavoredOverload
     public func addingAttribute(alignment: NSTextAlignment) -> NSAttributedString {
-        
         let paragraph = NSMutableParagraphStyle()
         paragraph.alignment = alignment
         
@@ -27,29 +25,27 @@ extension NSAttributedString {
             return self
         }
         
-        copy.addAttributes([.paragraphStyle : paragraph],
-                           range: NSRange(location: 0, length: length))
+        copy.addAttributes(
+            [.paragraphStyle: paragraph],
+            range: NSRange(location: 0, length: length)
+        )
         
         return copy
-        
     }
-    
 }
 
 extension NSMutableAttributedString {
-    
     /// **OTCore:**
     /// Convenience. Adds the attribute applied to the entire string.
     @_disfavoredOverload
     public func addAttribute(alignment: NSTextAlignment) {
-        
         let paragraph = NSMutableParagraphStyle()
         paragraph.alignment = alignment
         
-        addAttributes([.paragraphStyle : paragraph],
-                      range: NSRange(location: 0, length: length))
-        
+        addAttributes(
+            [.paragraphStyle: paragraph],
+            range: NSRange(location: 0, length: length)
+        )
     }
-    
 }
 #endif

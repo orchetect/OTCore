@@ -9,12 +9,10 @@ import XCTest
 @testable import OTCore
 
 class Extensions_CoreGraphics_CGFloat_Tests: XCTestCase {
-    
     override func setUp() { super.setUp() }
     override func tearDown() { super.tearDown() }
     
     func testTypeConversions_BinaryIntegerToCGFloat() {
-        
         _ = Int(1).cgFloat
         _ = Int(1).cgFloatExactly
         _ = UInt(1).cgFloat
@@ -53,17 +51,13 @@ class Extensions_CoreGraphics_CGFloat_Tests: XCTestCase {
         _ = Float80(123.456).cgFloat
         _ = Float80(123.456).cgFloatExactly
         #endif
-        
     }
     
     func testPower() {
-        
         XCTAssertEqual(CGFloat(2.0).power(3), 8.0)
-        
     }
     
     // StringProtocol.cgFloat is tested in "FloatingPoint Tests.swift"
-    
 }
 
 #endif

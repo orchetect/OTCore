@@ -9,23 +9,25 @@ import XCTest
 import OTCore
 
 class Abstractions_StringTitleCase_Tests: XCTestCase {
-    
     override func setUp() { super.setUp() }
     override func tearDown() { super.tearDown() }
     
     func testTitleCased() {
+        XCTAssertEqual(
+            "this".titleCased,
+            "This"
+        )
         
-        XCTAssertEqual("this".titleCased,
-                       "This")
+        XCTAssertEqual(
+            "this thing".titleCased,
+            "This Thing"
+        )
         
-        XCTAssertEqual("this thing".titleCased,
-                       "This Thing")
-        
-        XCTAssertEqual("this is a test".titleCased,
-                       "This is a Test")
-        
+        XCTAssertEqual(
+            "this is a test".titleCased,
+            "This is a Test"
+        )
     }
-    
 }
 
 #endif

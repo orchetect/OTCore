@@ -20,14 +20,12 @@ extension Float80: FloatingPointHighPrecisionStringConvertible { }
 fileprivate let ZeroCharacterSet   = CharacterSet(charactersIn: "0")
 fileprivate let PeriodCharacterSet = CharacterSet(charactersIn: ".")
 
-extension FloatingPoint where Self : CVarArg,
-                              Self : FloatingPointHighPrecisionStringConvertible {
-    
+extension FloatingPoint where Self: CVarArg,
+Self: FloatingPointHighPrecisionStringConvertible {
     /// **OTCore:**
     /// Returns a string representation of a floating-point number, with maximum 100 decimal places of precision.
     @_disfavoredOverload
     public var stringValueHighPrecision: String {
-        
         var formatted = String(format: "%.100f", self)
             .trimmingCharacters(in: ZeroCharacterSet)
         
@@ -36,25 +34,19 @@ extension FloatingPoint where Self : CVarArg,
         formatted.removeSuffix(".")
         
         return formatted
-        
     }
-    
 }
 
 #if !(arch(arm64) || arch(arm) || os(watchOS)) // Float80 is now removed for ARM
 extension Float80 {
-    
     /// **OTCore:**
     /// Returns a string representation of a floating-point number, with maximum 100 decimal places of precision.
     @_disfavoredOverload
     public var stringValueHighPrecision: String {
-        
         // String(format:) does not work with Float80
         // so we need a custom implementation here
-        return String(describing: self)
-        
+        String(describing: self)
     }
-    
 }
 #endif
 

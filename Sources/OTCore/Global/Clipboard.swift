@@ -17,24 +17,22 @@ import UIKit
 @available(watchOS, unavailable)
 @discardableResult @_disfavoredOverload
 public func setClipboard(toString: String) -> Bool {
-    
     #if os(macOS)
     
-        let p = NSPasteboard.general
-        p.declareTypes([.string], owner: nil)
-        return p.setString(toString, forType: .string)
+    let p = NSPasteboard.general
+    p.declareTypes([.string], owner: nil)
+    return p.setString(toString, forType: .string)
     
     #elseif os(iOS)
     
-        UIPasteboard.general.string = toString
-        return true
+    UIPasteboard.general.string = toString
+    return true
     
     #else
     
-        fatalError("Not implemented on this platform yet.")
+    fatalError("Not implemented on this platform yet.")
     
     #endif
-    
 }
 
 /// **OTCore:**
@@ -45,19 +43,16 @@ public func setClipboard(toString: String) -> Bool {
 @available(watchOS, unavailable)
 @_disfavoredOverload
 public func getClipboardString() -> String? {
-    
     #if os(macOS)
-        return NSPasteboard.general.pasteboardItems?.first?.string(forType: .string)
+    return NSPasteboard.general.pasteboardItems?.first?.string(forType: .string)
     #elseif os(iOS)
-        return UIPasteboard.general.string
+    return UIPasteboard.general.string
     #else
-        fatalError("Not implemented on this platform yet.")
+    fatalError("Not implemented on this platform yet.")
     #endif
-    
 }
 
 extension String {
-    
     /// **OTCore:**
     /// Convenience function to set the system clipboard to a `String`.
     /// Returns `true` if successful.
@@ -66,9 +61,6 @@ extension String {
     @available(watchOS, unavailable)
     @discardableResult @_disfavoredOverload
     public func copyToClipboard() -> Bool {
-        
         setClipboard(toString: self)
-        
     }
-    
 }

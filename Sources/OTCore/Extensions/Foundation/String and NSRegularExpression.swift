@@ -10,7 +10,6 @@ import Foundation
 // MARK: - RegEx
 
 extension StringProtocol {
-    
     /// **OTCore:**
     /// Returns an array of RegEx matches
     @_disfavoredOverload
@@ -19,16 +18,18 @@ extension StringProtocol {
         options: NSRegularExpression.Options = [],
         matchesOptions: NSRegularExpression.MatchingOptions = [.withTransparentBounds]
     ) -> [String] {
-        
         do {
-            
-            let regex = try NSRegularExpression(pattern: pattern,
-                                                options: options)
+            let regex = try NSRegularExpression(
+                pattern: pattern,
+                options: options
+            )
             
             func runRegEx(in source: String) -> [NSTextCheckingResult] {
-                regex.matches(in: source,
-                              options: matchesOptions,
-                              range: NSMakeRange(0, nsString.length))
+                regex.matches(
+                    in: source,
+                    options: matchesOptions,
+                    range: NSMakeRange(0, nsString.length)
+                )
             }
             
             let nsString: NSString
@@ -51,11 +52,8 @@ extension StringProtocol {
             return results.map { nsString.substring(with: $0.range) }
             
         } catch {
-            
             return []
-            
         }
-        
     }
     
     /// **OTCore:**
@@ -68,11 +66,11 @@ extension StringProtocol {
         matchesOptions: NSRegularExpression.MatchingOptions = [.withTransparentBounds],
         replacingOptions: NSRegularExpression.MatchingOptions = [.withTransparentBounds]
     ) -> String? {
-        
         do {
-            
-            let regex = try NSRegularExpression(pattern: pattern,
-                                                options: options)
+            let regex = try NSRegularExpression(
+                pattern: pattern,
+                options: options
+            )
             
             func runRegEx(in source: String) -> String {
                 regex.stringByReplacingMatches(
@@ -100,11 +98,8 @@ extension StringProtocol {
             return result
             
         } catch {
-            
             return nil
-            
         }
-        
     }
     
     /// **OTCore:**
@@ -115,11 +110,11 @@ extension StringProtocol {
         options: NSRegularExpression.Options = [],
         matchesOptions: NSRegularExpression.MatchingOptions = [.withTransparentBounds]
     ) -> [String?] {
-        
         do {
-            
-            let regex = try NSRegularExpression(pattern: captureGroupsFromPattern,
-                                                options: options)
+            let regex = try NSRegularExpression(
+                pattern: captureGroupsFromPattern,
+                options: options
+            )
             
             let result: [String?]
             
@@ -135,13 +130,13 @@ extension StringProtocol {
                 var matches: [String?] = []
                 
                 for result in results {
-                    for i in 0..<result.numberOfRanges {
+                    for i in 0 ..< result.numberOfRanges {
                         let range = result.range(at: i)
                         
                         if range.location == NSNotFound {
                             matches.append(nil)
                         } else {
-                            matches.append(nsString.substring(with: range ))
+                            matches.append(nsString.substring(with: range))
                         }
                     }
                 }
@@ -164,13 +159,9 @@ extension StringProtocol {
             return result
             
         } catch {
-            
             return []
-            
         }
-        
     }
-    
 }
 
 #endif

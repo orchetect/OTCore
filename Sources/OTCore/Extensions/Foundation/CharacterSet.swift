@@ -8,48 +8,37 @@
 import Foundation
 
 extension CharacterSet {
-    
     /// **OTCore:**
     /// Initialize a `CharacterSet` from one or more `Character`.
     @_disfavoredOverload
     public init(_ characters: Character...) {
-        
         self.init(characters)
-        
     }
     
     /// **OTCore:**
     /// Initialize a `CharacterSet` from one or more `Character`.
     @_disfavoredOverload
     public init(_ characters: [Character]) {
-        
         self.init()
 
         characters.forEach {
             $0.unicodeScalars.forEach { insert($0) }
         }
-        
     }
-    
 }
 
 extension CharacterSet {
-    
     /// **OTCore:**
     /// Returns true if the `CharacterSet` contains the given `Character`.
     @_disfavoredOverload
     public func contains(_ character: Character) -> Bool {
-        
         character
             .unicodeScalars
             .allSatisfy(contains(_:))
-        
     }
-    
 }
 
 extension CharacterSet {
-    
     /// **OTCore:**
     /// Same as `lhs.union(rhs)`.
     @_disfavoredOverload
@@ -77,11 +66,9 @@ extension CharacterSet {
     public static func -= (lhs: inout Self, rhs: Self) {
         lhs.subtract(rhs)
     }
-    
 }
 
 extension CharacterSet {
-    
     /// **OTCore:**
     /// English consonant letters, omitting vowels.
     @_disfavoredOverload
@@ -97,11 +84,11 @@ extension CharacterSet {
     @_disfavoredOverload
     public static var lowercaseVowels = CharacterSet(
         charactersIn:
-            "aàáâäæãåā" + "ª" + "ăąǟǻȁȃȧᵃḁạảấầẩẫậắằẳẵặ"
-        + "eèéêëēėę" + "ĕėěȅȇȩᵉḕḗḙḛḝẹẻẽếềểễệ"
-        + "iîïíīįì" + "ĩĭįıǐȉȋᵢḭḯỉịⁱ"
-        + "oôöòóœøōõ" + "ŏőơǒǫǭȍȏȫȭȯȱᵒṍṏṑṓọỏốồổỗộ"
-        + "uûüùúū" + "ũŭůűųưǔǖǘǚǜȕȗᵘᵤṳṵṷṹṻụủứừửữự"
+        "aàáâäæãåā" + "ª" + "ăąǟǻȁȃȧᵃḁạảấầẩẫậắằẳẵặ"
+            + "eèéêëēėę" + "ĕėěȅȇȩᵉḕḗḙḛḝẹẻẽếềểễệ"
+            + "iîïíīįì" + "ĩĭįıǐȉȋᵢḭḯỉịⁱ"
+            + "oôöòóœøōõ" + "ŏőơǒǫǭȍȏȫȭȯȱᵒṍṏṑṓọỏốồổỗộ"
+            + "uûüùúū" + "ũŭůűųưǔǖǘǚǜȕȗᵘᵤṳṵṷṹṻụủứừửữự"
     )
     
     /// **OTCore:**
@@ -109,13 +96,12 @@ extension CharacterSet {
     @_disfavoredOverload
     public static var uppercaseVowels = CharacterSet(
         charactersIn:
-            "AÀÁÂÄÆÃÅĀ" + "ĂĄǞǺȀȂȦᴬḀẠẢẤẦẨẪẬẮẰẲẴẶ"
-        + "EÈÉÊËĒĖĘ" + "ĔĖĚȄȆȨᴱḔḖḘḚḜẸẺẼẾỀỀỂỄỆ"
-        + "IÎÏÍĪĮÌ" + "ĨĬĮİǏȈȊᴵḬḮỈỊ"
-        + "OÔÖÒÓŒØŌÕ" + "ŎŐƠǑǪǬȌȎȪȬȮȰᴼṌṎṐṒỌỎỐỒỔỖỘỚ"
-        + "UÛÜÙÚŪ" + "ŨŬŮŰŲƯǓǕǗǙǛȔȖᵁṲṴṶṸṺỤỦỨỪỬỮỰ"
+        "AÀÁÂÄÆÃÅĀ" + "ĂĄǞǺȀȂȦᴬḀẠẢẤẦẨẪẬẮẰẲẴẶ"
+            + "EÈÉÊËĒĖĘ" + "ĔĖĚȄȆȨᴱḔḖḘḚḜẸẺẼẾỀỀỂỄỆ"
+            + "IÎÏÍĪĮÌ" + "ĨĬĮİǏȈȊᴵḬḮỈỊ"
+            + "OÔÖÒÓŒØŌÕ" + "ŎŐƠǑǪǬȌȎȪȬȮȰᴼṌṎṐṒỌỎỐỒỔỖỘỚ"
+            + "UÛÜÙÚŪ" + "ŨŬŮŰŲƯǓǕǗǙǛȔȖᵁṲṴṶṸṺỤỦỨỪỬỮỰ"
     )
-    
 }
 
 #endif

@@ -6,12 +6,10 @@
 import Foundation
 
 extension String {
-    
     /// **OTCore:**
     /// Returns true if the string is a valid email address.
     @_disfavoredOverload
     public var isValidEmailAddress: Bool {
-        
         // prefix@domain.TLD
         
         // Prefix (a.k.a. username / local-part)
@@ -24,7 +22,8 @@ extension String {
         // The first and last character cannot be hyphens.
         // Top-level domains (TLD) cannot be all numeric.
         
-        let emailRegEx = #"^([a-zA-Z0-9!#$%&'*+-/=?^_.{}|~]{1,64})@([a-zA-Z0-9.-]+\.[a-zA-Z]{2,63})$"#
+        let emailRegEx =
+            #"^([a-zA-Z0-9!#$%&'*+-/=?^_.{}|~]{1,64})@([a-zA-Z0-9.-]+\.[a-zA-Z]{2,63})$"#
         
         let groups = regexMatches(captureGroupsFromPattern: emailRegEx)
         
@@ -47,18 +46,16 @@ extension String {
         
         // domain validation
         guard domainComponents.count >= 2,
-              domainComponents.allSatisfy({ (1...63).contains($0.count) }),
+              domainComponents.allSatisfy({ (1 ... 63).contains($0.count) }),
               domainComponents.allSatisfy({ $0.first != "-" }),
               domainComponents.allSatisfy({ $0.last != "-" })
         else { return false }
         
         // TLD validation
-        guard (2...63).contains(tld.count),
+        guard (2 ... 63).contains(tld.count),
               !tld.isOnly(.decimalDigits)
         else { return false }
         
         return true
-        
     }
-    
 }

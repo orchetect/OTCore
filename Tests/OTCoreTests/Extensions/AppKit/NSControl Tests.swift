@@ -10,35 +10,27 @@ import XCTest
 import AppKit
 
 class Extensions_AppKit_NSControl_Tests: XCTestCase {
-    
     override func setUp() { super.setUp() }
     override func tearDown() { super.tearDown() }
     
     func testBool_stateValue() {
-        
         XCTAssertEqual(true.stateValue, .on)
         XCTAssertEqual(false.stateValue, .off)
-        
     }
     
     func testStateValue_prefixOperator_Not() {
-        
         XCTAssertEqual(!NSControl.StateValue.on, .off)
         XCTAssertEqual(!NSControl.StateValue.off, .on)
         XCTAssertEqual(!NSControl.StateValue.mixed, .off)
-        
     }
     
     func testStateValue_toggled() {
-        
         XCTAssertEqual(NSControl.StateValue.on.toggled(), .off)
         XCTAssertEqual(NSControl.StateValue.off.toggled(), .on)
         XCTAssertEqual(NSControl.StateValue.mixed.toggled(), .off)
-        
     }
     
     func testStateValue_toggle() {
-        
         var stateValue: NSControl.StateValue
         
         stateValue = .on
@@ -52,9 +44,7 @@ class Extensions_AppKit_NSControl_Tests: XCTestCase {
         stateValue = .mixed
         stateValue.toggle()
         XCTAssertEqual(stateValue, .off)
-        
     }
-    
 }
 
 #endif

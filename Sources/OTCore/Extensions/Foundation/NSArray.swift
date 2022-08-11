@@ -8,7 +8,6 @@
 import Foundation
 
 extension NSArray {
-    
     /// **OTCore:**
     /// Access collection indexes safely.
     /// `NSArray/NSMutableArray` indexes are always zero-based and sequential (0...). Therefore, a `[safePosition:]` subscript is unnecessary, as this `[safe:]` subscript fills both roles.
@@ -20,16 +19,12 @@ extension NSArray {
     ///     arr[safe: 9] // nil
     ///
     @_disfavoredOverload
-    open subscript(safe index: Int) -> Any? {
-        
-        (0..<count).contains(index) ? self[index] : nil
-        
+    public subscript(safe index: Int) -> Any? {
+        (0 ..< count).contains(index) ? self[index] : nil
     }
-    
 }
 
 extension NSMutableArray {
-    
     /// **OTCore:**
     /// Access collection indexes safely.
     /// `NSArray/NSMutableArray` indexes are always zero-based and sequential (0...). Therefore, a `[safePosition:]` subscript is unnecessary, as this `[safeMutable:]` subscript fills both roles.
@@ -45,13 +40,12 @@ extension NSMutableArray {
     ///     arr[safeMutable: 9] // nil
     ///
     @_disfavoredOverload
-    open subscript(safeMutable index: Int) -> Any? {
-        
+    public subscript(safeMutable index: Int) -> Any? {
         get {
-            (0..<count).contains(index) ? self[index] : nil
+            (0 ..< count).contains(index) ? self[index] : nil
         }
         set {
-            guard (0..<count).contains(index) else { return }
+            guard (0 ..< count).contains(index) else { return }
             
             // subscript getter and setter must be of the same type
             // (get is `Element?` so the set must also be `Element?`)
@@ -62,7 +56,9 @@ extension NSMutableArray {
             // so the best course of action is to not allow setting elements to `nil` at all.
             
             guard let valueToStore = newValue else {
-                assertionFailure("Do not use [safe:] setter to set nil for elements on collections that contain Optionals. Setting nil has no effect.")
+                assertionFailure(
+                    "Do not use [safe:] setter to set nil for elements on collections that contain Optionals. Setting nil has no effect."
+                )
                 return
             }
             
@@ -74,10 +70,10 @@ extension NSMutableArray {
             // set by assignment, not inline mutability.
             // however, Swift allows us to compile this code any way.
             
-            guard (0..<count).contains(index) else {
+            guard (0 ..< count).contains(index) else {
                 // _modify { } requires yield to be called, so we can't just return.
                 // we have to allow the yield on a dummy variable first
-                var dummy: Element? = nil
+                var dummy: Element?
                 yield &dummy
                 return
             }
@@ -94,15 +90,15 @@ extension NSMutableArray {
             // so the best course of action is to not allow setting elements to `nil` at all.
             
             guard let valueToStore = valueForMutation else {
-                assertionFailure("Do not use [safe:] setter to set nil for elements on collections that contain Optionals. Setting nil has no effect.")
+                assertionFailure(
+                    "Do not use [safe:] setter to set nil for elements on collections that contain Optionals. Setting nil has no effect."
+                )
                 return
             }
             
             self[index] = valueToStore
         }
-        
     }
-    
 }
 
 #endif

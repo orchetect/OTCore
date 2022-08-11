@@ -34,7 +34,6 @@ import os.log
 /// Centralized logging via os_log.
 @available(macOS 10.12, iOS 10.0, watchOS 3.0, tvOS 10.0, *)
 public class OSLogger {
-    
     /// **OTCore:**
     /// Set to `false` to suppress all logging.
     @inline(__always)
@@ -45,12 +44,12 @@ public class OSLogger {
     
     /// **OTCore:**
     /// Initialize a new `OSLogger` instance.
-    public init(enabled: Bool = true,
-                config: Config = .init()) {
-        
+    public init(
+        enabled: Bool = true,
+        config: Config = .init()
+    ) {
         self.enabled = enabled
         self.config = config
-        
     }
     
     // MARK: - Log methods
@@ -63,14 +62,15 @@ public class OSLogger {
     ///
     /// - remark: OSLog Description: The lowest priority. Only captured in memory. Not stored on disk.
     @inline(__always)
-    public func debug(_ items: Any?...,
-                      log: OSLog? = nil,
-                      template: LogTemplate? = nil,
-                      file: String = #file,
-                      line: Int = #line,
-                      column: Int = #column,
-                      function: String = #function) {
-        
+    public func debug(
+        _ items: Any?...,
+        log: OSLog? = nil,
+        template: LogTemplate? = nil,
+        file: String = #file,
+        line: Int = #line,
+        column: Int = #column,
+        function: String = #function
+    ) {
         #if RELEASE
         
         // do not post debug messages to the log in a Release build
@@ -83,7 +83,8 @@ public class OSLogger {
         let log = log ?? config.log(for: .debug)
         
         let level: OSLogType = config.coerceInfoAndDebugToDefault
-            ? .default : .debug
+            ? .default
+            : .debug
         
         // we have to flatten the items here,
         // otherwise it gets internally converted from `Any?...` to `[Any?]`
@@ -95,24 +96,25 @@ public class OSLogger {
             .joined(separator: " ")
         
         autoreleasepool {
+            let message = assembleMessage(
+                template: template,
+                flatItems: content,
+                level: level,
+                file: file,
+                line: line,
+                column: column,
+                function: function
+            )
             
-            let message = assembleMessage(template: template,
-                                          flatItems: content,
-                                          level: level,
-                                          file: file,
-                                          line: line,
-                                          column: column,
-                                          function: function)
-            
-            os_log("%{public}@",
-                   log: log,
-                   type: level,
-                   message)
-            
+            os_log(
+                "%{public}@",
+                log: log,
+                type: level,
+                message
+            )
         }
         
         #endif
-        
     }
     
     /// **OTCore:**
@@ -121,21 +123,23 @@ public class OSLogger {
     ///
     /// - remark: OSLog Description: Purely informational in nature. Only captured in memory and not stored on disk unless otherwise specified. Eventually purged.
     @inline(__always)
-    public func info(_ items: Any?...,
-                     log: OSLog? = nil,
-                     template: LogTemplate? = nil,
-                     file: String = #file,
-                     line: Int = #line,
-                     column: Int = #column,
-                     function: String = #function) {
-        
+    public func info(
+        _ items: Any?...,
+        log: OSLog? = nil,
+        template: LogTemplate? = nil,
+        file: String = #file,
+        line: Int = #line,
+        column: Int = #column,
+        function: String = #function
+    ) {
         guard enabled else { return }
         
         // if log is nil, use log for level ignoring coerceInfoAndDebugToDefault
         let log = log ?? config.log(for: .info)
         
         let level: OSLogType = config.coerceInfoAndDebugToDefault
-            ? .default : .info
+            ? .default
+            : .info
         
         // we have to flatten the items here,
         // otherwise it gets internally converted from `Any?...` to `[Any?]`
@@ -147,22 +151,23 @@ public class OSLogger {
             .joined(separator: " ")
         
         autoreleasepool {
+            let message = assembleMessage(
+                template: template,
+                flatItems: content,
+                level: level,
+                file: file,
+                line: line,
+                column: column,
+                function: function
+            )
             
-            let message = assembleMessage(template: template,
-                                          flatItems: content,
-                                          level: level,
-                                          file: file,
-                                          line: line,
-                                          column: column,
-                                          function: function)
-            
-            os_log("%{public}@",
-                   log: log,
-                   type: level,
-                   message)
-            
+            os_log(
+                "%{public}@",
+                log: log,
+                type: level,
+                message
+            )
         }
-        
     }
     
     /// **OTCore:**
@@ -171,14 +176,15 @@ public class OSLogger {
     ///
     /// - remark: OSLog Description: Default behavior. Stored on disk. Eventually purged.
     @inline(__always)
-    public func `default`(_ items: Any?...,
-                          log: OSLog? = nil,
-                          template: LogTemplate? = nil,
-                          file: String = #file,
-                          line: Int = #line,
-                          column: Int = #column,
-                          function: String = #function) {
-        
+    public func `default`(
+        _ items: Any?...,
+        log: OSLog? = nil,
+        template: LogTemplate? = nil,
+        file: String = #file,
+        line: Int = #line,
+        column: Int = #column,
+        function: String = #function
+    ) {
         guard enabled else { return }
         
         // if log is nil, use log for level ignoring coerceInfoAndDebugToDefault
@@ -196,22 +202,23 @@ public class OSLogger {
             .joined(separator: " ")
         
         autoreleasepool {
+            let message = assembleMessage(
+                template: template,
+                flatItems: content,
+                level: level,
+                file: file,
+                line: line,
+                column: column,
+                function: function
+            )
             
-            let message = assembleMessage(template: template,
-                                          flatItems: content,
-                                          level: level,
-                                          file: file,
-                                          line: line,
-                                          column: column,
-                                          function: function)
-            
-            os_log("%{public}@",
-                   log: log,
-                   type: level,
-                   message)
-            
+            os_log(
+                "%{public}@",
+                log: log,
+                type: level,
+                message
+            )
         }
-        
     }
     
     /// **OTCore:**
@@ -220,14 +227,15 @@ public class OSLogger {
     ///
     /// - remark: OSLog Description: Something is amiss and might fail if not corrected. Always stored on disk. Eventually purged.
     @inline(__always)
-    public func error(_ items: Any?...,
-                      log: OSLog? = nil,
-                      template: LogTemplate? = nil,
-                      file: String = #file,
-                      line: Int = #line,
-                      column: Int = #column,
-                      function: String = #function) {
-        
+    public func error(
+        _ items: Any?...,
+        log: OSLog? = nil,
+        template: LogTemplate? = nil,
+        file: String = #file,
+        line: Int = #line,
+        column: Int = #column,
+        function: String = #function
+    ) {
         guard enabled else { return }
         
         // if log is nil, use log for level ignoring coerceInfoAndDebugToDefault
@@ -245,22 +253,23 @@ public class OSLogger {
             .joined(separator: " ")
         
         autoreleasepool {
+            let message = assembleMessage(
+                template: template,
+                flatItems: content,
+                level: level,
+                file: file,
+                line: line,
+                column: column,
+                function: function
+            )
             
-            let message = assembleMessage(template: template,
-                                          flatItems: content,
-                                          level: level,
-                                          file: file,
-                                          line: line,
-                                          column: column,
-                                          function: function)
-            
-            os_log("%{public}@",
-                   log: log,
-                   type: level,
-                   message)
-            
+            os_log(
+                "%{public}@",
+                log: log,
+                type: level,
+                message
+            )
         }
-        
     }
     
     /// **OTCore:**
@@ -269,14 +278,15 @@ public class OSLogger {
     ///
     /// - remark: OSLog Description: Something has failed. Always stored on disk. Eventually purged.
     @inline(__always)
-    public func fault(_ items: Any?...,
-                      log: OSLog? = nil,
-                      template: LogTemplate? = nil,
-                      file: String = #file,
-                      line: Int = #line,
-                      column: Int = #column,
-                      function: String = #function) {
-        
+    public func fault(
+        _ items: Any?...,
+        log: OSLog? = nil,
+        template: LogTemplate? = nil,
+        file: String = #file,
+        line: Int = #line,
+        column: Int = #column,
+        function: String = #function
+    ) {
         guard enabled else { return }
         
         // if log is nil, use log for level ignoring coerceInfoAndDebugToDefault
@@ -294,36 +304,38 @@ public class OSLogger {
             .joined(separator: " ")
         
         autoreleasepool {
+            let message = assembleMessage(
+                template: template,
+                flatItems: content,
+                level: level,
+                file: file,
+                line: line,
+                column: column,
+                function: function
+            )
             
-            let message = assembleMessage(template: template,
-                                          flatItems: content,
-                                          level: level,
-                                          file: file,
-                                          line: line,
-                                          column: column,
-                                          function: function)
-            
-            os_log("%{public}@",
-                   log: log,
-                   type: level,
-                   message)
-            
+            os_log(
+                "%{public}@",
+                log: log,
+                type: level,
+                message
+            )
         }
-        
     }
     
     /// **OTCore:**
     /// Log an error using the passed log message type.
     @inline(__always)
-    public func log(_ items: Any?...,
-                    level: OSLogType,
-                    log: OSLog? = nil,
-                    template: LogTemplate? = nil,
-                    file: String = #file,
-                    line: Int = #line,
-                    column: Int = #column,
-                    function: String = #function) {
-        
+    public func log(
+        _ items: Any?...,
+        level: OSLogType,
+        log: OSLog? = nil,
+        template: LogTemplate? = nil,
+        file: String = #file,
+        line: Int = #line,
+        column: Int = #column,
+        function: String = #function
+    ) {
         #if RELEASE
         // do not post debug messages to the log in a Release build
         if level == .debug { return }
@@ -334,9 +346,12 @@ public class OSLogger {
         // if log is nil, use log for level ignoring coerceInfoAndDebugToDefault
         let log = log ?? config.log(for: level)
         
-        let level = ((level == .debug || level == .info)
-                     && config.coerceInfoAndDebugToDefault)
-            ? .default : level
+        let level = (
+            (level == .debug || level == .info)
+                && config.coerceInfoAndDebugToDefault
+        )
+            ? .default
+            : level
         
         // we have to flatten the items here,
         // otherwise it gets internally converted from `Any?...` to `[Any?]`
@@ -348,34 +363,36 @@ public class OSLogger {
             .joined(separator: " ")
         
         autoreleasepool {
+            let message = assembleMessage(
+                template: template,
+                flatItems: content,
+                level: level,
+                file: file,
+                line: line,
+                column: column,
+                function: function
+            )
             
-            let message = assembleMessage(template: template,
-                                          flatItems: content,
-                                          level: level,
-                                          file: file,
-                                          line: line,
-                                          column: column,
-                                          function: function)
-            
-            os_log("%{public}@",
-                   log: log,
-                   type: level,
-                   message)
-            
+            os_log(
+                "%{public}@",
+                log: log,
+                type: level,
+                message
+            )
         }
-        
     }
     
     /// Internal util.
     @inline(__always)
-    private func assembleMessage(template: LogTemplate?,
-                                 flatItems: String,
-                                 level: OSLogType,
-                                 file: String,
-                                 line: Int,
-                                 column: Int,
-                                 function: String) -> String {
-        
+    private func assembleMessage(
+        template: LogTemplate?,
+        flatItems: String,
+        level: OSLogType,
+        file: String,
+        line: Int,
+        column: Int,
+        function: String
+    ) -> String {
         let template = template ?? config.defaultTemplate
         
         return template.compactMap { token in
@@ -383,7 +400,7 @@ public class OSLogger {
             case .message:
                 return flatItems
                 
-            case .emoji(let padding):
+            case let .emoji(padding):
                 switch level {
                 case .debug:   return parseOptional(config.levelDebug.emoji, padding)
                 case .info:    return parseOptional(config.levelInfo.emoji, padding)
@@ -408,19 +425,19 @@ public class OSLogger {
             case .space:
                 return " "
                 
-            case .string(let str):
+            case let .string(str):
                 return str
             }
         }
         .joined()
-        
     }
     
     /// Internal util.
     @inline(__always)
-    private func parseOptional(_ character: Character?,
-                               _ padding: LogToken.OptionalPadding) -> String? {
-        
+    private func parseOptional(
+        _ character: Character?,
+        _ padding: LogToken.OptionalPadding
+    ) -> String? {
         guard let charString = character?.string else { return nil }
         
         switch padding {
@@ -429,14 +446,14 @@ public class OSLogger {
         case .trailing: return "\(charString) "
         case .leadingAndTrailing: return " \(charString) "
         }
-        
     }
     
     /// Internal util.
     @inline(__always)
-    private func parseOptional(_ string: String?,
-                               _ padding: LogToken.OptionalPadding) -> String? {
-        
+    private func parseOptional(
+        _ string: String?,
+        _ padding: LogToken.OptionalPadding
+    ) -> String? {
         guard let unwrappedString = string else { return nil }
         
         switch padding {
@@ -445,22 +462,18 @@ public class OSLogger {
         case .trailing: return "\(unwrappedString) "
         case .leadingAndTrailing: return " \(unwrappedString) "
         }
-        
     }
-    
 }
 
 // MARK: - LogToken
 
 @available(macOS 10.12, iOS 10.0, watchOS 3.0, tvOS 10.0, *)
 extension OSLogger {
-    
     public typealias LogTemplate = [LogToken]
     
     /// **OTCore:**
     /// Log tokens for assembling log messages.
     public enum LogToken {
-        
         case message
         case emoji(padding: OptionalPadding)
         
@@ -479,18 +492,14 @@ extension OSLogger {
             case trailing
             case leadingAndTrailing
         }
-        
     }
-    
 }
 
 @available(macOS 10.12, iOS 10.0, watchOS 3.0, tvOS 10.0, *)
 extension OSLogger {
-    
     /// **OTCore:**
     /// Configuration settings for `OSLogger`.
     public struct Config {
-        
         /// **OTCore:**
         /// Sets the default `OSLog` to use.
         ///
@@ -511,7 +520,6 @@ extension OSLogger {
         // MARK: Level Settings
         
         public struct LevelSettings {
-            
             /// **OTCore:**
             /// Set the emoji used for the `.emoji` LogToken.
             @inline(__always)
@@ -522,43 +530,51 @@ extension OSLogger {
             /// If `nil`, the `.defaultLog` Config property will be used.
             @inline(__always)
             public var log: OSLog?
-            
         }
         
         /// **OTCore:**
         /// Settings for the `.debug` log level.
         @inline(__always)
-        public var levelDebug = LevelSettings(emoji: "🔷",
-                                              log: nil)
+        public var levelDebug = LevelSettings(
+            emoji: "🔷",
+            log: nil
+        )
         
         /// **OTCore:**
         /// Settings for the `.info` log level.
         @inline(__always)
-        public var levelInfo = LevelSettings(emoji: "💬",
-                                             log: nil)
+        public var levelInfo = LevelSettings(
+            emoji: "💬",
+            log: nil
+        )
         
         /// **OTCore:**
         /// Settings for the `.default` log level.
         @inline(__always)
-        public var levelDefault = LevelSettings(emoji: "💬",
-                                                log: nil)
+        public var levelDefault = LevelSettings(
+            emoji: "💬",
+            log: nil
+        )
         
         /// **OTCore:**
         /// Settings for the `.error` log level.
         @inline(__always)
-        public var levelError = LevelSettings(emoji: "⚠️",
-                                              log: nil)
+        public var levelError = LevelSettings(
+            emoji: "⚠️",
+            log: nil
+        )
         
         /// **OTCore:**
         /// Settings for the `.fault` log level.
         @inline(__always)
-        public var levelFault = LevelSettings(emoji: "🛑",
-                                              log: nil)
+        public var levelFault = LevelSettings(
+            emoji: "🛑",
+            log: nil
+        )
         
         /// Internal util.
         @inline(__always)
         func log(for log: OSLogType) -> OSLog {
-            
             switch log {
             case .debug:   return levelDebug.log ?? defaultLog
             case .info:    return levelInfo.log ?? defaultLog
@@ -567,101 +583,88 @@ extension OSLogger {
             case .fault:   return levelFault.log ?? defaultLog
             default:       return defaultLog
             }
-            
         }
         
         /// **OTCore:**
         /// Initialize all settings.
         /// If `nil` is passed for any level, defaults will be used.
-        public init(defaultLog: OSLog = .default,
-                    defaultTemplate: OSLogger.LogTemplate = .default(),
-                    coerceInfoAndDebugToDefault: Bool = false,
-                    debug: LevelSettings? = nil,
-                    info: LevelSettings? = nil,
-                    `default`: LevelSettings? = nil,
-                    error: LevelSettings? = nil,
-                    fault: LevelSettings? = nil) {
-            
+        public init(
+            defaultLog: OSLog = .default,
+            defaultTemplate: OSLogger.LogTemplate = .default(),
+            coerceInfoAndDebugToDefault: Bool = false,
+            debug: LevelSettings? = nil,
+            info: LevelSettings? = nil,
+            default: LevelSettings? = nil,
+            error: LevelSettings? = nil,
+            fault: LevelSettings? = nil
+        ) {
             self.defaultLog = defaultLog
             self.defaultTemplate = defaultTemplate
             self.coerceInfoAndDebugToDefault = coerceInfoAndDebugToDefault
-            if let _debug = debug { self.levelDebug = _debug }
-            if let _info = info { self.levelInfo = _info }
-            if let _default = `default` { self.levelDefault = _default }
-            if let _error = error { self.levelError = _error }
-            if let _fault = fault { self.levelFault = _fault }
-            
+            if let _debug = debug { levelDebug = _debug }
+            if let _info = info { levelInfo = _info }
+            if let _default = `default` { levelDefault = _default }
+            if let _error = error { levelError = _error }
+            if let _fault = fault { levelFault = _fault }
         }
-        
     }
-    
 }
 
 @available(macOS 10.12, iOS 10.0, watchOS 3.0, tvOS 10.0, *)
 extension OSLogger {
-    
     /// **OTCore:**
     /// Initialize a new instance while modifying the logger configuration in a closure.
     public convenience init(_ configuration: (inout Config) -> Void) {
-        
         self.init()
-        configuration(&self.config)
-        
+        configuration(&config)
     }
     
     /// **OTCore:**
     /// Modify logger configuration within a closure.
     public func configure(_ block: (inout Config) -> Void) {
-        
-        block(&self.config)
-        
+        block(&config)
     }
-    
 }
 
 @available(macOS 10.12, iOS 10.0, watchOS 3.0, tvOS 10.0, *)
 extension OSLogger.LogTemplate {
-    
     /// **OTCore:**
     /// Default log template (message only).
     public static func `default`() -> Self {
-        
         [.message]
-        
     }
     
     /// **OTCore:**
     /// Message only.
     public static func minimal() -> Self {
-        
         [.message]
-        
     }
     
     /// **OTCore:**
     /// Message, prefixed by log level emoji.
     public static func withEmoji() -> Self {
-        
         [.emoji(padding: .trailing), .message]
-        
     }
     
     /// **OTCore:**
     /// All meta fields are used to provide as much information as possible.
     /// (emoji, message, file name, function name, line/column numbers)
     public static func verbose() -> Self {
-        
-        [.emoji(padding: .trailing), .message,
-         .space,
-         .string("("),
-         .file, .string(":"),
-         .function, .string(":"),
-         .line, .string(":"), .column,
-         .string(")")
+        [
+            .emoji(padding: .trailing),
+            .message,
+            .space,
+            .string("("),
+            .file,
+            .string(":"),
+            .function,
+            .string(":"),
+            .line,
+            .string(":"),
+            .column,
+            .string(")")
         ]
-        
     }
-    
 }
 
 #endif

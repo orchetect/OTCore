@@ -9,12 +9,10 @@ import XCTest
 import OTCore
 
 class Abstractions_StringParsing_Tests: XCTestCase {
-    
     override func setUp() { super.setUp() }
     override func tearDown() { super.tearDown() }
     
     func testIsValidEmailAddress() {
-        
         // see isValidEmailAddress method comments for email address formatting details
         
         XCTAssertFalse("".isValidEmailAddress)
@@ -67,10 +65,16 @@ class Abstractions_StringParsing_Tests: XCTestCase {
         XCTAssertTrue("user@123456.com".isValidEmailAddress)
         
         // domain: 70 chars, too many
-        XCTAssertFalse("user@1234567890123456789012345678901234567890123456789012345678901234567890.com".isValidEmailAddress)
+        XCTAssertFalse(
+            "user@1234567890123456789012345678901234567890123456789012345678901234567890.com"
+                .isValidEmailAddress
+        )
         
         // domain: 63 chars max, is valid
-        XCTAssertTrue("user@890123456789012345678901234567890123456789012345678901234567890.com".isValidEmailAddress)
+        XCTAssertTrue(
+            "user@890123456789012345678901234567890123456789012345678901234567890.com"
+                .isValidEmailAddress
+        )
         
         // TLD: can't be all numbers
         XCTAssertFalse("user@domain.123".isValidEmailAddress)
@@ -80,14 +84,18 @@ class Abstractions_StringParsing_Tests: XCTestCase {
         
         // hostname: must not exceed 255 characters
         // 256 characters
-        XCTAssertFalse("user@1234567890.1234567890.1234567890.1234567890.1234567890.1234567890.1234567890.1234567890.1234567890.1234567890.1234567890.1234567890.1234567890.1234567890.1234567890.1234567890.1234567890.1234567890.1234567890.1234567890.1234567890.1234567890.1234567890.com".isValidEmailAddress)
+        XCTAssertFalse(
+            "user@1234567890.1234567890.1234567890.1234567890.1234567890.1234567890.1234567890.1234567890.1234567890.1234567890.1234567890.1234567890.1234567890.1234567890.1234567890.1234567890.1234567890.1234567890.1234567890.1234567890.1234567890.1234567890.1234567890.com"
+                .isValidEmailAddress
+        )
         
         // hostname: must not exceed 255 characters
         // 255 characters
-        XCTAssertTrue("user@1234567890.1234567890.1234567890.1234567890.1234567890.1234567890.1234567890.1234567890.1234567890.1234567890.1234567890.1234567890.1234567890.1234567890.1234567890.1234567890.1234567890.1234567890.1234567890.1234567890.1234567890.1234567890.123456789.com".isValidEmailAddress)
-        
+        XCTAssertTrue(
+            "user@1234567890.1234567890.1234567890.1234567890.1234567890.1234567890.1234567890.1234567890.1234567890.1234567890.1234567890.1234567890.1234567890.1234567890.1234567890.1234567890.1234567890.1234567890.1234567890.1234567890.1234567890.1234567890.123456789.com"
+                .isValidEmailAddress
+        )
     }
-    
 }
 
 #endif

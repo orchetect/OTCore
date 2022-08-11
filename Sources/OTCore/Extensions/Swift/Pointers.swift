@@ -4,7 +4,6 @@
 //
 
 extension UnsafeRawBufferPointer {
-    
     /// **OTCore:**
     /// Convenience to return an `UnsafeBufferPointer` rebound to `UInt8` bytes.
     ///
@@ -13,9 +12,6 @@ extension UnsafeRawBufferPointer {
     /// (from the Swift inline documentation for `.bindMemory(to:)`)
     @inlinable @_disfavoredOverload
     public var unsafeBufferPointer: UnsafeBufferPointer<UInt8> {
-        
         bindMemory(to: UInt8.self)
-        
     }
-    
 }

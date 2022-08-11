@@ -10,7 +10,6 @@ import Foundation
 // MARK: - .init?(string:)
 
 extension DateComponents {
-    
     /// **OTCore:**
     /// Parse a date string heuristically in a variety of formats involving month and day, and optionally year.
     ///
@@ -40,7 +39,6 @@ extension DateComponents {
     /// - "2020Oct21"
     @_disfavoredOverload
     public init?(string: String) {
-        
         self.init()
         
         var year = 0
@@ -86,7 +84,7 @@ extension DateComponents {
         // check if year is first component and not possible to be a month or day
         if split.count == 3,
            let getValue = Int(split[0]),
-           (32...99).contains(getValue)
+           (32 ... 99).contains(getValue)
         {
             if getValue < 40 {
                 year = 2000 + getValue
@@ -98,7 +96,7 @@ extension DateComponents {
         // otherwise, check last component
         else if split.count == 3,
                 let getValue = Int(split[2]),
-                (0...99).contains(getValue)
+                (0 ... 99).contains(getValue)
         {
             if getValue < 40 {
                 year = 2000 + getValue
@@ -109,7 +107,7 @@ extension DateComponents {
         }
         
         // named month (not numerical month)
-        for idx in split.startIndex..<split.endIndex {
+        for idx in split.startIndex ..< split.endIndex {
             let getValue = String(split[idx]).trimmingCharacters(in: .whitespacesAndNewlines)
             
             // long month names
@@ -123,13 +121,12 @@ extension DateComponents {
             
             // short month names
             else if let getMatchIndex = Self
-                        .getUCMatchIndex(for: getValue, in: Calendar.current.shortMonthSymbols)
+                .getUCMatchIndex(for: getValue, in: Calendar.current.shortMonthSymbols)
             {
                 month = getMatchIndex + 1
                 split.remove(at: idx)
                 break
             }
-            
         }
         
         // process remaining values as numbers only
@@ -142,10 +139,10 @@ extension DateComponents {
         
         // day > 12 (obvious)
         
-        for idx in remaining.startIndex..<remaining.endIndex {
+        for idx in remaining.startIndex ..< remaining.endIndex {
             let getValue = remaining[idx]
             
-            if (13...31).contains(getValue) {
+            if (13 ... 31).contains(getValue) {
                 day = getValue
                 remaining.remove(at: idx)
                 break
@@ -155,15 +152,15 @@ extension DateComponents {
         switch remaining.count {
         case 1:
             // this is likely the month, or the day 12 or under
-            if month == 0, (1...12).contains(remaining[0]) {
+            if month == 0, (1 ... 12).contains(remaining[0]) {
                 month = remaining[0]
                 remaining.remove(at: 0)
-            } else if day == 0, (1...31).contains(remaining[0]) {
+            } else if day == 0, (1 ... 31).contains(remaining[0]) {
                 day = remaining[0]
                 remaining.remove(at: 0)
             }
         case 2:
-            guard month == 0 && day == 0 else { return nil }
+            guard month == 0, day == 0 else { return nil }
             
             // assume M,D order (US-based, more common?)
             
@@ -179,7 +176,7 @@ extension DateComponents {
         if year == 0 { year = Calendar.current.component(.year, from: Date()) }
         
         // if there are components remaining, something went wrong
-        guard remaining.count == 0 else { return nil }
+        guard remaining.isEmpty else { return nil }
         guard year > 0 else { return nil }
         guard month > 0 else { return nil }
         guard day > 0 else { return nil }
@@ -187,53 +184,40 @@ extension DateComponents {
         self.year = year
         self.month = month
         self.day = day
-        
     }
     
     /// Internal use.
     fileprivate static func getUCMatchIndex(for findStr: String, in array: [String]) -> Int? {
-        
         let UCArray = array.map { $0.uppercased() }
         let UCFind = findStr.uppercased()
         
         return UCArray.firstIndex(of: UCFind)
-        
     }
-    
 }
 
 extension String {
-    
     /// **OTCore:**
     /// Attempts to parse Year, Month and Day components from an unformatted date string using simple heuristics.
     @_disfavoredOverload
     public var dateComponents: DateComponents? {
-        
         DateComponents(string: self)
-        
     }
-    
 }
-
 
 // MARK: - .string(withMask:)
 
 extension DateComponents {
-    
     /// **OTCore:**
     /// Date string mask.
     /// (Currently only supports `YYYYMMDD` but will support more basic formats in the future.)
     public enum StringMask {
-        
         case YYYYMMDD
-        
     }
     
     /// **OTCore:**
     /// Returns `DateComponents` as a flat YYYYMMDD date string.
     /// Values default to 0 if nil.
     public func string(withMask: StringMask) -> String {
-        
         switch withMask {
         case .YYYYMMDD:
             let paddedYear = "0000\(year ?? 0)".suffix(4)
@@ -242,9 +226,7 @@ extension DateComponents {
             
             return "\(paddedYear)\(paddedMonth)\(paddedDay)"
         }
-        
     }
-    
 }
 
 #endif

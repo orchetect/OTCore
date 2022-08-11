@@ -6,7 +6,6 @@
 // MARK: - Convenience type conversion methods
 
 extension BinaryFloatingPoint {
-    
     /// **OTCore:**
     /// Same as `Int()`
     /// (Functional convenience method)
@@ -126,11 +125,9 @@ extension BinaryFloatingPoint {
     /// (Functional convenience method)
     @inlinable @_disfavoredOverload
     public var uInt64Exactly: UInt64? { UInt64(exactly: self) }
-    
 }
 
 extension BinaryFloatingPoint {
-    
     /// **OTCore:**
     /// Same as `Double()`
     /// (Functional convenience method)
@@ -174,26 +171,20 @@ extension BinaryFloatingPoint {
     @inlinable @_disfavoredOverload
     public var float80: Float80 { Float80(self) }
     #endif
-    
 }
-
 
 // MARK: - boolValue
 
 extension BinaryFloatingPoint {
-    
     /// **OTCore:**
     /// Returns true if > 0.0
     @inline(__always) @_disfavoredOverload
     public var boolValue: Bool { self > 0.0 }
-    
 }
-
 
 // MARK: - .truncated() / .rounded
 
-extension FloatingPoint where Self : FloatingPointPowerComputable {
-    
+extension FloatingPoint where Self: FloatingPointPowerComputable {
     /// **OTCore:**
     /// Rounds to `decimalPlaces` number of decimal places using rounding `rule`.
     ///
@@ -203,7 +194,6 @@ extension FloatingPoint where Self : FloatingPointPowerComputable {
         _ rule: FloatingPointRoundingRule = .toNearestOrAwayFromZero,
         decimalPlaces: Int
     ) -> Self {
-        
         if decimalPlaces < 1 {
             return rounded(rule)
         }
@@ -211,7 +201,6 @@ extension FloatingPoint where Self : FloatingPointPowerComputable {
         let offset = Self(10).power(Self(decimalPlaces))
         
         return (self * offset).rounded(rule) / offset
-        
     }
     
     /// **OTCore:**
@@ -223,18 +212,13 @@ extension FloatingPoint where Self : FloatingPointPowerComputable {
         _ rule: FloatingPointRoundingRule = .toNearestOrAwayFromZero,
         decimalPlaces: Int
     ) {
-        
         self = rounded(rule, decimalPlaces: decimalPlaces)
-        
     }
-    
 }
-
 
 // MARK: - Wrapping numbers
 
 extension FloatingPoint {
-    
     /// **OTCore:**
     /// Returns a number that has been wrapped around a range.
     /// If the number already falls within the range, the number is returned as-is.
@@ -258,7 +242,6 @@ extension FloatingPoint {
     /// - parameter range: integer range, allowing negative and positive bounds.
     @inlinable @_disfavoredOverload
     public func wrapped(around range: ClosedRange<Self>) -> Self {
-        
         guard !isNaN, !isInfinite else { return self }
         
         let min = range.lowerBound
@@ -271,7 +254,6 @@ extension FloatingPoint {
             let calculation = max - (min - self) % (min - max)
             return calculation != max ? calculation : min
         }
-        
     }
     
     /// **OTCore:**
@@ -280,7 +262,6 @@ extension FloatingPoint {
     /// If the number underflows or overflows the range, it is wrapped around the range's bounds continuously.
     @inlinable @_disfavoredOverload
     public func wrapped(around range: Range<Self>) -> Self {
-        
         guard !isNaN, !isInfinite else { return self }
         
         let min = range.lowerBound
@@ -288,41 +269,31 @@ extension FloatingPoint {
         
         if max < min { max = min }
         
-        return wrapped(around: min...max)
-        
+        return wrapped(around: min ... max)
     }
-    
 }
 
 // MARK: - Radians
 
 extension BinaryFloatingPoint {
-    
     /// **OTCore:**
     /// Returns degrees converted to radians.
     @inlinable @_disfavoredOverload
     public var degreesToRadians: Self {
-        
         self * .pi / 180
-        
     }
     
     /// **OTCore:**
     /// Returns radians converted to degrees.
     @inlinable @_disfavoredOverload
     public var radiansToDegrees: Self {
-        
         self * 180 / .pi
-        
     }
-    
 }
-
 
 // MARK: - To String
 
 extension FloatingPoint {
-    
     // String(describing:) is not inlinable when passed float types that do not conform to CustomStringConvertible
     
     /// **OTCore:**
@@ -330,15 +301,11 @@ extension FloatingPoint {
     /// (Functional convenience method)
     @_disfavoredOverload
     public var string: String {
-        
         String(describing: self)
-        
     }
-    
 }
 
-extension FloatingPoint where Self : CustomStringConvertible {
-    
+extension FloatingPoint where Self: CustomStringConvertible {
     // String(describing:) are inlinable when passed float types that conform to CustomStringConvertible
     
     /// **OTCore:**
@@ -346,16 +313,12 @@ extension FloatingPoint where Self : CustomStringConvertible {
     /// (Functional convenience method)
     @inlinable @_disfavoredOverload
     public var string: String {
-        
         String(describing: self)
-        
     }
-    
 }
 
-extension FloatingPoint where Self : CVarArg,
-                              Self : FloatingPointPowerComputable {
-    
+extension FloatingPoint where Self: CVarArg,
+Self: FloatingPointPowerComputable {
     /// **OTCore:**
     /// Returns a string formatted to _n_ decimal places, using the given rounding rule.
     @inlinable @_disfavoredOverload
@@ -363,20 +326,16 @@ extension FloatingPoint where Self : CVarArg,
         rounding rule: FloatingPointRoundingRule = .toNearestOrAwayFromZero,
         decimalPlaces: Int
     ) -> String {
-        
         let roundedValue = rounded(rule, decimalPlaces: decimalPlaces)
         
         // (FYI: String(format:) does not work with Float80)
         
         return String(format: "%.\(decimalPlaces)f", roundedValue)
-        
     }
-    
 }
 
 #if !(arch(arm64) || arch(arm) || os(watchOS)) // Float80 is now removed for ARM
 extension Float80 {
-    
     /// **OTCore:**
     /// Returns a string formatted to _n_ decimal places, using the given rounding rule.
     @inlinable @_disfavoredOverload
@@ -384,7 +343,6 @@ extension Float80 {
         rounding rule: FloatingPointRoundingRule = .toNearestOrAwayFromZero,
         decimalPlaces: Int
     ) -> String {
-        
         let roundedValue = rounded(rule, decimalPlaces: decimalPlaces)
         
         // String(format:) does not work with Float80
@@ -397,21 +355,19 @@ extension Float80 {
         }
         
         return (splitComponents[0])
-        + "."
-        + splitComponents[1].padding(toLength: decimalPlaces,
-                                     withPad: "0",
-                                     startingAt: 0)
-        
+            + "."
+            + splitComponents[1].padding(
+                toLength: decimalPlaces,
+                withPad: "0",
+                startingAt: 0
+            )
     }
-    
 }
 #endif
-
 
 // MARK: - String To FloatingPoint
 
 extension String {
-    
     // float types init(_ text:) are inlinable when passed a StringProtocol type (including String)
     
     /// **OTCore:**
@@ -433,11 +389,9 @@ extension String {
     @inlinable @_disfavoredOverload
     public var float80: Float80? { Float80(self) }
     #endif
-    
 }
 
 extension Substring {
-    
     // float types init(_ text:) are not inlinable when passed a Substring, even though when passed a StringProtocol type the init is inlinable
     
     /// **OTCore:**
@@ -459,5 +413,4 @@ extension Substring {
     @_disfavoredOverload
     public var float80: Float80? { Float80(self) }
     #endif
-    
 }

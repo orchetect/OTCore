@@ -9,12 +9,10 @@ import XCTest
 import OTCore
 
 class Global_Globals_Tests: XCTestCase {
-    
     override func setUp() { super.setUp() }
     override func tearDown() { super.tearDown() }
     
     func testBundle() {
-        
         // this test could break in future versions of Xcode/XCTest
         // but we'll test what 'known values' we can here
         
@@ -36,11 +34,9 @@ class Global_Globals_Tests: XCTestCase {
         
         // XCTest appears to always return a non-empty value
         XCTAssertTrue(Globals.MainBundle.versionBuildNumber != "")
-        
     }
     
     func testSystem() {
-        
         // values cannot be tested explicitly since they vary by system
         
         #if os(macOS)
@@ -60,11 +56,9 @@ class Global_Globals_Tests: XCTestCase {
         
         XCTAssertNotNil(Globals.System.hardwareUUID)
         #endif
-        
     }
     
     func testBundle_infoDictionaryString() {
-        
         // String key name
         
         XCTAssertEqual(
@@ -78,9 +72,7 @@ class Global_Globals_Tests: XCTestCase {
             Bundle.main.infoDictionaryString(key: kCFBundleIdentifierKey),
             "com.apple.dt.xctest.tool"
         )
-        
     }
-    
 }
 
 #endif

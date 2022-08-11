@@ -9,12 +9,10 @@ import XCTest
 @testable import OTCore
 
 class Extensions_Foundation_URL_Tests: XCTestCase {
-    
     override func setUp() { super.setUp() }
     override func tearDown() { super.tearDown() }
     
     func testHasPrefixURL() {
-        
         XCTAssertTrue(
             URL(fileURLWithPath: "/temp1/temp2/file.txt")
                 .hasPrefix(url: URL(fileURLWithPath: "/"))
@@ -63,11 +61,9 @@ class Extensions_Foundation_URL_Tests: XCTestCase {
             URL(string: "https://somehost/temp1/temp2/file.txt")!
                 .hasPrefix(url: URL(fileURLWithPath: "/temp1/temp2/file.txt"))
         )
-        
     }
     
     func testHasPathComponentsPrefix() {
-        
         XCTAssertTrue(
             URL(fileURLWithPath: "/temp1/temp2/file.txt")
                 .hasPathComponents(prefix: URL(fileURLWithPath: "/").pathComponents)
@@ -85,7 +81,10 @@ class Extensions_Foundation_URL_Tests: XCTestCase {
         
         XCTAssertTrue(
             URL(fileURLWithPath: "/temp1/temp2/file.txt")
-                .hasPathComponents(prefix: URL(fileURLWithPath: "/temp1/temp2/file.txt").pathComponents)
+                .hasPathComponents(
+                    prefix: URL(fileURLWithPath: "/temp1/temp2/file.txt")
+                        .pathComponents
+                )
         )
         
         // different path
@@ -97,43 +96,59 @@ class Extensions_Foundation_URL_Tests: XCTestCase {
         // different path
         XCTAssertFalse(
             URL(fileURLWithPath: "/temp1/temp2/file.txt")
-                .hasPathComponents(prefix: URL(fileURLWithPath: "/temp1/temp2/otherfile.txt").pathComponents)
+                .hasPathComponents(
+                    prefix: URL(fileURLWithPath: "/temp1/temp2/otherfile.txt")
+                        .pathComponents
+                )
         )
         
         // temp1 is hostname in https here, not part of path
         XCTAssertFalse(
             URL(string: "file:///temp1/temp2/file.txt")!
-                .hasPathComponents(prefix: URL(string: "https://temp1/temp2/file.txt")!.pathComponents)
+                .hasPathComponents(
+                    prefix: URL(string: "https://temp1/temp2/file.txt")!
+                        .pathComponents
+                )
         )
         
         // temp1 is hostname in https here, not part of path
         XCTAssertFalse(
             URL(string: "https://temp1/temp2/file.txt")!
-                .hasPathComponents(prefix: URL(string: "file:///temp1/temp2/file.txt")!.pathComponents)
+                .hasPathComponents(
+                    prefix: URL(string: "file:///temp1/temp2/file.txt")!
+                        .pathComponents
+                )
         )
         
         // different hosts, same paths
         XCTAssertTrue(
             URL(string: "https://somehost1.com/temp1/temp2/file.txt")!
-                .hasPathComponents(prefix: URL(string: "https://somehost2.com/temp1/temp2/file.txt")!.pathComponents)
+                .hasPathComponents(
+                    prefix: URL(string: "https://somehost2.com/temp1/temp2/file.txt")!
+                        .pathComponents
+                )
         )
         
         // different hosts with authentication and port numbers, same paths
         XCTAssertTrue(
             URL(string: "https://user:pass@somehost1.com:8080/temp1/temp2/file.txt")!
-                .hasPathComponents(prefix: URL(string: "https://somehost2.com/temp1/temp2/file.txt")!.pathComponents)
+                .hasPathComponents(
+                    prefix: URL(string: "https://somehost2.com/temp1/temp2/file.txt")!
+                        .pathComponents
+                )
         )
         
         // different schemes (ie: file:// vs. https://)
         XCTAssertTrue(
             URL(string: "https://somehost.com/temp1/temp2/file.txt")!
-                .hasPathComponents(prefix: URL(string: "file:///temp1/temp2/file.txt")!.pathComponents)
+                .hasPathComponents(
+                    prefix: URL(string: "file:///temp1/temp2/file.txt")!
+                        .pathComponents
+                )
         )
-        
     }
     
     func testOathComponentsRemovingBase() {
-        
         XCTAssertEqual(
             URL(string: "file:///temp1/temp2/file.txt")!
                 .pathComponents(removingBase: URL(string: "file:///temp1/temp2/file.txt")!),
@@ -168,7 +183,9 @@ class Extensions_Foundation_URL_Tests: XCTestCase {
         // different schemes (ie: file:// vs. https://)
         XCTAssertEqual(
             URL(string: "file:///temp1/temp2/file.txt")!
-                .pathComponents(removingBase: URL(string: "https://somehost.com/temp1/temp2/file.txt")!),
+                .pathComponents(
+                    removingBase: URL(string: "https://somehost.com/temp1/temp2/file.txt")!
+                ),
             nil
         )
         
@@ -178,20 +195,24 @@ class Extensions_Foundation_URL_Tests: XCTestCase {
                 .pathComponents(removingBase: URL(string: "https://somehost.com/temp1/temp2/")!),
             nil
         )
-        
     }
     
     func testPathComponentsRemovingPrefix() {
-        
         XCTAssertEqual(
             URL(string: "file:///temp1/temp2/file.txt")!
-                .pathComponents(removingPrefix: URL(string: "file:///temp1/temp2/file.txt")!.pathComponents),
+                .pathComponents(
+                    removingPrefix: URL(string: "file:///temp1/temp2/file.txt")!
+                        .pathComponents
+                ),
             []
         )
         
         XCTAssertEqual(
             URL(string: "file:///temp1/temp2/file.txt")!
-                .pathComponents(removingPrefix: URL(string: "file:///temp1/temp2/")!.pathComponents),
+                .pathComponents(
+                    removingPrefix: URL(string: "file:///temp1/temp2/")!
+                        .pathComponents
+                ),
             ["file.txt"]
         )
         
@@ -217,53 +238,59 @@ class Extensions_Foundation_URL_Tests: XCTestCase {
         // different schemes (ie: file:// vs. https://)
         XCTAssertEqual(
             URL(string: "file:///temp1/temp2/file.txt")!
-                .pathComponents(removingPrefix: URL(string: "https://somehost.com/temp1/temp2/")!.pathComponents),
+                .pathComponents(
+                    removingPrefix: URL(string: "https://somehost.com/temp1/temp2/")!
+                        .pathComponents
+                ),
             ["file.txt"]
         )
         
         // different hosts, same paths
         XCTAssertEqual(
             URL(string: "https://somehost1.com/temp1/temp2/file.txt")!
-                .pathComponents(removingPrefix: URL(string: "https://somehost2.com/temp1/temp2/")!.pathComponents),
+                .pathComponents(
+                    removingPrefix: URL(string: "https://somehost2.com/temp1/temp2/")!
+                        .pathComponents
+                ),
             ["file.txt"]
         )
         
         // different hosts with authentication and port numbers, same paths
         XCTAssertEqual(
             URL(string: "https://user:pass@somehost1.com:8080/temp1/temp2/file.txt")!
-                .pathComponents(removingPrefix: URL(string: "https://somehost2.com/temp1/temp2/")!.pathComponents),
+                .pathComponents(
+                    removingPrefix: URL(string: "https://somehost2.com/temp1/temp2/")!
+                        .pathComponents
+                ),
             ["file.txt"]
         )
         
         // different schemes (ie: file:// vs. https://)
         XCTAssertEqual(
             URL(string: "file:///temp1/temp2/file.txt")!
-                .pathComponents(removingPrefix: URL(string: "https://somehost.com/temp1/temp2/file.txt")!.pathComponents),
+                .pathComponents(
+                    removingPrefix: URL(string: "https://somehost.com/temp1/temp2/file.txt")!
+                        .pathComponents
+                ),
             []
         )
-        
     }
     
     func testFileExists() {
-        
         // guaranteed to exist
         let folder = URL(fileURLWithPath: NSHomeDirectory())
         
         XCTAssertTrue(folder.fileExists)
-        
     }
     
     func testIsFolder() {
-        
         // guaranteed to exist
         let folder = URL(fileURLWithPath: NSHomeDirectory())
         
         XCTAssertTrue(folder.isFolder!)
-        
     }
     
     func testTrashOrDelete() {
-        
         // boilerplate
         
         let temporaryDirectoryURL = FileManager.temporaryDirectoryCompat
@@ -287,16 +314,18 @@ class Extensions_Foundation_URL_Tests: XCTestCase {
         
         print("Creating source directory...")
         
-        guard (try? FileManager.default.createDirectory(at: url,
-                                                        withIntermediateDirectories: false,
-                                                        attributes: nil)) != nil else {
+        guard (try? FileManager.default.createDirectory(
+            at: url,
+            withIntermediateDirectories: false,
+            attributes: nil
+        )) != nil else {
             XCTFail("Failed to create source folder \"\(url)\". Can't continue test.")
             return
         }
         
         // operation
         
-        var result: URL? = nil
+        var result: URL?
         
         do {
             result = try url.trashOrDelete()
@@ -307,25 +336,23 @@ class Extensions_Foundation_URL_Tests: XCTestCase {
         // result test
         
         #if os(macOS) || targetEnvironment(macCatalyst)
-            XCTAssertNotNil(result)
+        XCTAssertNotNil(result)
         #elseif os(iOS)
-            XCTAssertNil(result)
+        XCTAssertNil(result)
         #elseif os(tvOS)
-            XCTAssertNil(result)
+        XCTAssertNil(result)
         #elseif os(watchOS)
-            // watchOS can't run XCTest unit tests, but we'll put the expected result here any way:
-            XCTAssertNil(result)
+        // watchOS can't run XCTest unit tests, but we'll put the expected result here any way:
+        XCTAssertNil(result)
         #endif
         
         // clean up
         
         // no clean up necessary
         // test moves any temp files/folders it creates to the trash or deletes them
-        
     }
     
     func testIsFinderAlias() {
-        
         // boilerplate
         
         let temporaryDirectoryURL = FileManager.temporaryDirectoryCompat
@@ -371,9 +398,11 @@ class Extensions_Foundation_URL_Tests: XCTestCase {
         
         print("Creating source directory...")
         
-        guard (try? FileManager.default.createDirectory(at: url1,
-                                                        withIntermediateDirectories: false,
-                                                        attributes: nil)) != nil else {
+        guard (try? FileManager.default.createDirectory(
+            at: url1,
+            withIntermediateDirectories: false,
+            attributes: nil
+        )) != nil else {
             XCTFail("Failed to create source folder \"\(url1)\". Can't continue test.")
             return
         }
@@ -383,7 +412,9 @@ class Extensions_Foundation_URL_Tests: XCTestCase {
         print("Forming alias...")
         
         guard (try? url1.createFinderAlias(at: url2)) != nil else {
-            XCTFail("Failed to create temporary alias \"\(url2)\" on disk from source \"\(url1)\". Can't continue with test.")
+            XCTFail(
+                "Failed to create temporary alias \"\(url2)\" on disk from source \"\(url1)\". Can't continue with test."
+            )
             return
         }
         
@@ -401,11 +432,9 @@ class Extensions_Foundation_URL_Tests: XCTestCase {
         
         print("Cleaning up destination alias...")
         XCTAssertNoThrow(try url2.trashOrDelete())
-        
     }
     
     func testSymlink() {
-        
         // boilerplate
         
         let temporaryDirectoryURL = FileManager.temporaryDirectoryCompat
@@ -451,9 +480,11 @@ class Extensions_Foundation_URL_Tests: XCTestCase {
         
         print("Creating source directory...")
         
-        guard (try? FileManager.default.createDirectory(at: url1,
-                                                        withIntermediateDirectories: false,
-                                                        attributes: nil)) != nil else {
+        guard (try? FileManager.default.createDirectory(
+            at: url1,
+            withIntermediateDirectories: false,
+            attributes: nil
+        )) != nil else {
             XCTFail("Failed to create source folder \"\(url1)\". Can't continue test.")
             return
         }
@@ -463,7 +494,9 @@ class Extensions_Foundation_URL_Tests: XCTestCase {
         print("Forming symlink...")
         
         if (try? url1.createSymLink(at: url2)) == nil {
-            XCTFail("Failed to create symlink, or symlink already exists. Can't continue with test.")
+            XCTFail(
+                "Failed to create symlink, or symlink already exists. Can't continue with test."
+            )
             return
         }
         
@@ -504,11 +537,9 @@ class Extensions_Foundation_URL_Tests: XCTestCase {
         
         print("Cleaning up destination symlink...")
         XCTAssertNoThrow(try url2.trashOrDelete())
-        
     }
     
     func testFolders() {
-        
         #if os(macOS)
         
         // FileManager
@@ -517,9 +548,7 @@ class Extensions_Foundation_URL_Tests: XCTestCase {
         _ = FileManager.temporaryDirectoryCompat
         
         #endif
-        
     }
-    
 }
 
 #endif

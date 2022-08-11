@@ -9,23 +9,19 @@ import XCTest
 @testable import OTCore
 
 class Extensions_CoreGraphics_CGPoint_Tests: XCTestCase {
-    
     override func setUp() { super.setUp() }
     override func tearDown() { super.tearDown() }
     
     #if canImport(AppKit)
     func testNSPoint() {
-        
         let nsPoint = CGPoint(x: 1.23, y: 2.5).nsPoint
         
         XCTAssertEqual(nsPoint.x, 1.23)
         XCTAssertEqual(nsPoint.y, 2.5)
-        
     }
     #endif
     
     func testInverted() {
-        
         // zero
         
         XCTAssertEqual(
@@ -78,11 +74,9 @@ class Extensions_CoreGraphics_CGPoint_Tests: XCTestCase {
             CGPoint(x:  1, y: -1).xyInverted,
             CGPoint(x: -1, y:  1)
         )
-        
     }
     
     func testCGPoint_distanceToOther() {
-        
         // 0 deg
         XCTAssertEqual(
             CGPoint(x: 0, y: 0).distance(to: CGPoint(x: 1, y: 0)),
@@ -130,11 +124,9 @@ class Extensions_CoreGraphics_CGPoint_Tests: XCTestCase {
             CGPoint(x: 0, y: 0).distance(to: CGPoint(x: 1, y: 1)),
             1.4142135623730951
         )
-        
     }
     
     func testCGPoint_angleToOther() {
-        
         // 0deg/360deg origin is X:1, Y: 0
         // Degrees ascend counterclockwise
         
@@ -185,11 +177,9 @@ class Extensions_CoreGraphics_CGPoint_Tests: XCTestCase {
             CGPoint(x: 0, y: 0).angle(to: CGPoint(x: 1, y: -1)),
             315.0
         )
-        
     }
     
     func testCGPoint_cardinalAngleToOther() {
-        
         // 0deg/360deg origin is X:0, Y: 1 (Cardinal North)
         // Degrees ascend clockwise
         
@@ -240,9 +230,7 @@ class Extensions_CoreGraphics_CGPoint_Tests: XCTestCase {
             CGPoint(x: 0, y: 0).cardinalAngle(to: CGPoint(x: -1, y: 1)),
             315.0
         )
-        
     }
-    
 }
 
 #endif

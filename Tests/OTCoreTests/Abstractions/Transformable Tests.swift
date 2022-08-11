@@ -17,12 +17,10 @@ import XCTest
 import OTCore
 
 class Abstractions_Transformable_Tests: XCTestCase {
-    
     override func setUp() { super.setUp() }
     override func tearDown() { super.tearDown() }
     
     func testValueBaseType_Transform() {
-        
         var int = 123
         
         let newInt = int.transform { $0 *= 2 }
@@ -30,29 +28,25 @@ class Abstractions_Transformable_Tests: XCTestCase {
         
         XCTAssertEqual(int, 246)
         XCTAssertEqual(newInt, 248)
-        
     }
     
     func testValueBaseType_Transformed() {
-        
         // emitting same type as self
         
-        XCTAssertEqual (
+        XCTAssertEqual(
             123.transformed { $0 * 2 },
             246
         )
         
         // emitting different type than self
         
-        XCTAssertEqual (
+        XCTAssertEqual(
             123.transformed { "\($0 * 2)" },
             "246"
         )
-        
     }
     
     func testValueBaseType_Transform_Optional() {
-        
         var int: Int? = 123
         
         let newInt = int.transformOptional { $0! *= 2 }?
@@ -60,47 +54,41 @@ class Abstractions_Transformable_Tests: XCTestCase {
         
         XCTAssertEqual(int, 246)
         XCTAssertEqual(newInt, 248)
-        
     }
     
     func testValueBaseType_Transformed_Optional() {
-        
         // emitting same type as self
         
         let int: Int? = 123
         
-        XCTAssertEqual (
+        XCTAssertEqual(
             int.transformedOptional { $0! * 2 },
             246
         )
         
         // emitting different type than self
         
-        XCTAssertEqual (
+        XCTAssertEqual(
             int.transformedOptional { "\($0! * 2)" },
             "246"
         )
-        
     }
     
     func testValueBaseType_Transformed_ImplicitlyUnwrappedOptional() {
-        
         let int: Int! = 123
         
-        XCTAssertEqual (
+        XCTAssertEqual(
             int.transformed { $0 * 2 },
             246
         )
         
-        XCTAssertEqual (
+        XCTAssertEqual(
             int.transformedOptional { $0! * 2 },
             246
         )
-        
     }
     
     func testValueBaseType_Transform_ImplicitlyUnwrappedOptional() {
-        
         var int: Int! = 123
         
         let newInt = int.transform { $0 *= 2 }
@@ -108,11 +96,9 @@ class Abstractions_Transformable_Tests: XCTestCase {
         
         XCTAssertEqual(int, 246)
         XCTAssertEqual(newInt, 248)
-        
     }
     
     func testValueBaseType_VirginTypes() {
-        
         // test origin type that don't conform to Equatable
         
         struct DummyStruct {
@@ -122,19 +108,19 @@ class Abstractions_Transformable_Tests: XCTestCase {
         // .transform
         
         do {
-            //var s: DummyStruct = .init()
+            // var s: DummyStruct = .init()
             
             // no conformance, so the method just doesn't exist
-            //s.transform { _ = $0; return }
+            // s.transform { _ = $0; return }
         }
         
         // .transformed
         
         do {
-            //let s: DummyStruct = .init()
+            // let s: DummyStruct = .init()
             
             // no conformance, so the method just doesn't exist
-            //_ = s.transformed { String(describing: $0) }
+            // _ = s.transformed { String(describing: $0) }
         }
         
         // .transform - optional
@@ -145,7 +131,7 @@ class Abstractions_Transformable_Tests: XCTestCase {
             s.transform { $0?.val = 456 }
             
             // no conformance, so the method just doesn't exist
-            //s?.transform { $0.val = 456 }
+            // s?.transform { $0.val = 456 }
             
             XCTAssertEqual(s?.val, 456)
         }
@@ -158,11 +144,9 @@ class Abstractions_Transformable_Tests: XCTestCase {
             _ = s.transformed { String(describing: $0) }
                 .transformed { $0 + "-" }
         }
-        
     }
     
     func testReferenceBaseType_VirginTypes() {
-        
         // test origin type that don't conform to Equatable
         
         class DummyClass {
@@ -172,19 +156,19 @@ class Abstractions_Transformable_Tests: XCTestCase {
         // .transform
         
         do {
-            //var c: DummyClass = .init()
+            // var c: DummyClass = .init()
             
             // no conformance, so the method just doesn't exist
-            //c.transform { $0.val = 456 }
+            // c.transform { $0.val = 456 }
         }
         
         // .transformed
         
         do {
-            //let c: DummyClass = .init()
+            // let c: DummyClass = .init()
             
             // no conformance, so the method just doesn't exist
-            //_ = c.transformed { String(describing: $0) }
+            // _ = c.transformed { String(describing: $0) }
         }
         
         // .transform - optional
@@ -195,10 +179,9 @@ class Abstractions_Transformable_Tests: XCTestCase {
             c.transform { $0?.val = 345 }
             
             // no conformance, so the method just doesn't exist
-            //c?.transform { $0.val = 456 }
+            // c?.transform { $0.val = 456 }
             
             XCTAssertEqual(c?.val, 345)
-            
         }
         
         // .transformed - optional
@@ -209,15 +192,13 @@ class Abstractions_Transformable_Tests: XCTestCase {
             _ = s.transformed { "\(($0?.val ?? 0) + 2)" }
             
             // no conformance, so the method just doesn't exist
-            //_ = s?.transformed { "\($0.val + 2)" }
+            // _ = s?.transformed { "\($0.val + 2)" }
             
             XCTAssertEqual(s?.val, 123) // not mutating
         }
-        
     }
     
     func testValueBaseType_VirginTypes_Transformable() {
-        
         // test origin type that don't conform to Equatable
         
         struct DummyStruct: Transformable {
@@ -265,11 +246,9 @@ class Abstractions_Transformable_Tests: XCTestCase {
             
             XCTAssertEqual(s?.val, 123) // not mutating
         }
-        
     }
     
     func testReferenceBaseType_VirginTypes_Transformable() {
-        
         // test origin type that don't conform to Equatable
         
         final class DummyClass: Transformable {
@@ -287,7 +266,6 @@ class Abstractions_Transformable_Tests: XCTestCase {
                 .transform { $0.val = 456 }
             
             XCTAssertEqual(c.val, 456)
-            
         }
         
         // .transformed
@@ -325,11 +303,9 @@ class Abstractions_Transformable_Tests: XCTestCase {
             
             XCTAssertEqual(c?.val, 123) // not mutating
         }
-        
     }
     
     func testVariousBaseTypes() {
-        
         _ = 123.transformed { "\($0)" }
         _ = UInt32(123).transformed { "\($0)" }
         _ = "string".transformed { "\($0)" }
@@ -340,18 +316,16 @@ class Abstractions_Transformable_Tests: XCTestCase {
         _ = Optional(UInt32(123)).transformedOptional { "\(String(describing: $0))" }
         _ = Optional("string").transformedOptional { "\(String(describing: $0))" }
         _ = Optional(NSObject()).transformedOptional { "\(String(describing: $0))" }
-        //_ = Optional(CGPoint(x: 5, y: 8)).transformed { "\($0)" } // doesn't work
+        // _ = Optional(CGPoint(x: 5, y: 8)).transformed { "\($0)" } // doesn't work
         
         _ = Optional(123)?.transformed { "\($0)" }
         _ = Optional(UInt32(123))?.transformed { "\($0)" }
         _ = Optional("string")?.transformed { "\($0)" }
         _ = Optional(NSObject())?.transformed { "\($0)" }
         _ = Optional(CGPoint(x: 5, y: 8))?.transformed { "\($0)" }
-        
     }
     
     func testPlatforms_Transform() {
-        
         // all platforms
         
         let nsMAttrString = NSMutableAttributedString()
@@ -401,9 +375,7 @@ class Abstractions_Transformable_Tests: XCTestCase {
         }
         
         #endif
-        
     }
-    
 }
 
 #endif

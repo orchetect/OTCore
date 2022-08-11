@@ -6,7 +6,6 @@
 // MARK: - Convenience type conversion methods
 
 extension BinaryInteger {
-    
     /// **OTCore:**
     /// Same as `Int`
     /// (Functional convenience method)
@@ -66,11 +65,9 @@ extension BinaryInteger {
     /// (Functional convenience method)
     @inlinable @_disfavoredOverload
     public var uInt64: UInt64 { UInt64(self) }
-    
 }
 
 extension BinaryInteger {
-    
     /// **OTCore:**
     /// Same as `Int(exactly:)`
     /// (Functional convenience method)
@@ -130,11 +127,9 @@ extension BinaryInteger {
     /// (Functional convenience method)
     @inlinable @_disfavoredOverload
     public var uInt64Exactly: UInt64? { UInt64(exactly: self) }
-    
 }
 
 extension BinaryInteger {
-    
     /// **OTCore:**
     /// Same as `Double()`
     /// (Functional convenience method)
@@ -172,11 +167,9 @@ extension BinaryInteger {
     @inlinable @_disfavoredOverload
     public var float80: Float80 { Float80(self) }
     #endif
-    
 }
 
 extension StringProtocol {
-    
     /// **OTCore:**
     /// Same as `Int()`
     /// (Functional convenience method)
@@ -236,14 +229,11 @@ extension StringProtocol {
     /// (Functional convenience method)
     @inlinable @_disfavoredOverload
     public var uInt64: UInt64? { UInt64(self) }
-    
 }
-
 
 // MARK: - String Formatting
 
 extension BinaryInteger {
-    
     /// **OTCore:**
     /// Same as `String(describing: self)`
     /// (Functional convenience method)
@@ -254,25 +244,22 @@ extension BinaryInteger {
     /// Convenience method to return a String, padded to `paddedTo` number of leading zeros
     @inlinable @_disfavoredOverload
     public func string(paddedTo: Int) -> String {
-        
         if let cVarArg = self as? CVarArg {
             return String(format: "%0\(paddedTo)d", cVarArg)
         } else {
             // Typically this will never happen,
-            // but BinaryInteger does not implicitly conform to CVarArg, and we can't assume all concrete types that conform to BinaryInteger CVarArg now or in the future.
+            // but BinaryInteger does not implicitly conform to CVarArg,
+            // and we can't assume all concrete types that conform
+            // to BinaryInteger CVarArg now or in the future.
             // Just return a string as-is as a failsafe:
             return String(describing: self)
         }
-        
     }
-    
 }
-
 
 // MARK: - Rounding
 
 extension BinaryInteger {
-    
     /// **OTCore:**
     /// Rounds an integer away from zero to the nearest multiple of `toMultiplesOf`.
     ///
@@ -284,14 +271,12 @@ extension BinaryInteger {
     ///
     @inlinable @_disfavoredOverload
     public func roundedAwayFromZero(toMultiplesOf: Self) -> Self {
-        
         let source: Self = self >= 0 ? self : 0 - self
         let isNegative: Bool = self < 0
         
         let rem = source % toMultiplesOf
         let divisions = rem == 0 ? source : source + toMultiplesOf - rem
         return isNegative ? 0 - divisions : divisions
-        
     }
     
     /// **OTCore:**
@@ -305,16 +290,14 @@ extension BinaryInteger {
     ///
     @inlinable @_disfavoredOverload
     public func roundedUp(toMultiplesOf: Self) -> Self {
-        
         if toMultiplesOf < 1 { return self }
         
         let source: Self = self >= 0 ? self : 0 - self
         let isNegative: Bool = self < 0
         
         let rem = source % toMultiplesOf
-        let divisions = rem == 0 ? self : self + (isNegative ? rem : toMultiplesOf - rem )
+        let divisions = rem == 0 ? self : self + (isNegative ? rem : toMultiplesOf - rem)
         return divisions
-        
     }
     
     /// **OTCore:**
@@ -329,51 +312,38 @@ extension BinaryInteger {
     ///
     @inlinable @_disfavoredOverload
     public func roundedDown(toMultiplesOf: Self) -> Self {
-        
         let source: Self = self >= 0 ? self : 0 - self
         let isNegative: Bool = self < 0
         
         let rem = source % toMultiplesOf
         let divisions = rem == 0 ? self : self - (isNegative ? toMultiplesOf - rem : rem)
         return divisions
-        
     }
-    
 }
-
 
 // MARK: - Binary & Bitwise
 
 extension UnsignedInteger {
-    
     /// **OTCore:**
     /// Access binary bits, zero-based from right-to-left
     @inlinable @_disfavoredOverload
     public func bit(_ position: Int) -> Int {
-        
         Int((self & (0b1 << position)) >> position)
-        
     }
-    
 }
 
 extension Int8 {
-    
     /// **OTCore:**
     /// Returns a two's complement bit format of an `Int8` so it can be stored as a byte (`UInt8`)
     @inlinable @_disfavoredOverload
     public var twosComplement: UInt8 {
-        
         UInt8(bitPattern: self)
-        
     }
-    
 }
 
 // MARK: - Random numbers
 
-extension RangeReplaceableCollection where Element : FixedWidthInteger {
-    
+extension RangeReplaceableCollection where Element: FixedWidthInteger {
     /// **OTCore:**
     /// Returns a collection of random numbers.
     /// Values will be between the range given, with a collection size of `count`.
@@ -383,25 +353,22 @@ extension RangeReplaceableCollection where Element : FixedWidthInteger {
     ///     [UInt8](randomValuesBetween: 0...255, count: 4)
     ///
     @inlinable @_disfavoredOverload
-    public init(randomValuesBetween: ClosedRange<Element>,
-                count: Int) {
-        
+    public init(
+        randomValuesBetween: ClosedRange<Element>,
+        count: Int
+    ) {
         self.init()
         reserveCapacity(count)
         
-        for _ in 0..<count {
+        for _ in 0 ..< count {
             append(Element.random(in: randomValuesBetween))
         }
-        
     }
-    
 }
-
 
 // MARK: - Wrapping numbers
 
 extension BinaryInteger {
-    
     /// **OTCore:**
     /// Returns a number that has been wrapped around a range.
     /// If the number already falls within the range, the number is returned as-is.
@@ -425,7 +392,6 @@ extension BinaryInteger {
     /// - parameter range: integer range, allowing negative and positive bounds.
     @inlinable @_disfavoredOverload
     public func wrapped(around range: ClosedRange<Self>) -> Self {
-        
         let min = range.lowerBound
         let max = range.upperBound + 1
         
@@ -436,7 +402,6 @@ extension BinaryInteger {
             let calculation = max - (min - self) % (min - max)
             return calculation != max ? calculation : min
         }
-        
     }
     
     /// **OTCore:**
@@ -445,23 +410,18 @@ extension BinaryInteger {
     /// If the number underflows or overflows the range, it is wrapped around the range's bounds continuously.
     @inlinable @_disfavoredOverload
     public func wrapped(around range: Range<Self>) -> Self {
-        
         let min = range.lowerBound
         var max = range.upperBound - 1
         
         if max < min { max = min }
         
-        return wrapped(around: min...max)
-        
+        return wrapped(around: min ... max)
     }
-    
 }
-
 
 // MARK: - Digits
 
 extension BinaryInteger {
-    
     /// **OTCore:**
     /// Returns number of digits (places to the left of the decimal) in the number.
     ///
@@ -472,13 +432,10 @@ extension BinaryInteger {
     /// - for the integer 250, this would return 3
     @inlinable @_disfavoredOverload
     public var numberOfDigits: Int {
-        
         if self < 10 && self >= 0 || self > -10 && self < 0 {
             return 1
         } else {
             return 1 + (self / 10).numberOfDigits
         }
-        
     }
-    
 }

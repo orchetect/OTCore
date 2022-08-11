@@ -10,12 +10,10 @@ import XCTest
 import AppKit
 
 class Extensions_AppKit_NSFont_Tests: XCTestCase {
-    
     override func setUp() { super.setUp() }
     override func tearDown() { super.tearDown() }
     
     func testCGFont() {
-        
         let nsFont = NSFont.systemFont(ofSize: 10)
         
         let cgFont = nsFont.cgFont
@@ -29,9 +27,7 @@ class Extensions_AppKit_NSFont_Tests: XCTestCase {
         {
             XCTAssert(cgPSN.hasPrefix(nsPSN))
         }
-        
     }
-    
 }
 
 #endif

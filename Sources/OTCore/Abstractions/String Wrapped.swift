@@ -4,21 +4,17 @@
 //
 
 extension String {
-    
     /// **OTCore:**
     /// Returns the string adding the passed `with` parameter as a prefix and suffix.
     @inlinable @_disfavoredOverload
     public func wrapped(with prefixAndSuffix: String) -> String {
-        
         prefixAndSuffix + self + prefixAndSuffix
-        
     }
     
     /// **OTCore:**
     /// Returns the string adding the passed `with` parameter as a prefix and suffix.
     @inlinable @_disfavoredOverload
     public func wrapped(with prefixAndSuffix: StringWrappedEnclosingType) -> String {
-        
         switch prefixAndSuffix {
         case .parentheses:      return "(" + self + ")"
         case .brackets:         return "[" + self + "]"
@@ -27,13 +23,11 @@ extension String {
         case .singleQuotes:     return "'" + self + "'"
         case .quotes:           return "\"" + self + "\""
         }
-        
     }
     
     /// **OTCore:**
     /// Type describing a pair of enclosing brackets/braces or similar characters that are different for prefix and suffix.
     public enum StringWrappedEnclosingType {
-        
         /// ( ) a.k.a. parens
         case parentheses
         
@@ -51,7 +45,6 @@ extension String {
         
         /// " "
         case quotes
-        
     }
     
     /// **OTCore:**
@@ -59,9 +52,7 @@ extension String {
     /// Same as `self.wrapped(with: .parentheses)`
     @inlinable @_disfavoredOverload
     public var parenthesized: Self {
-        
         wrapped(with: .parentheses)
-        
     }
     
     /// **OTCore:**
@@ -70,9 +61,7 @@ extension String {
     @inlinable @_disfavoredOverload
     @available(*, unavailable, renamed: "parenthesized")
     public var parens: Self {
-        
         parenthesized
-        
     }
     
     /// **OTCore:**
@@ -80,9 +69,7 @@ extension String {
     /// Same as `self.wrapped(with: .singleQuotes)`
     @inlinable @_disfavoredOverload
     public var singleQuoted: Self {
-        
         wrapped(with: .singleQuotes)
-        
     }
     
     /// **OTCore:**
@@ -90,9 +77,6 @@ extension String {
     /// Same as `self.wrapped(with: .quotes)`
     @inlinable @_disfavoredOverload
     public var quoted: Self {
-        
         wrapped(with: .quotes)
-        
     }
-    
 }

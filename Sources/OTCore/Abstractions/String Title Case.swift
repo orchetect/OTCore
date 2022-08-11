@@ -6,11 +6,10 @@
 // MARK: - Title Case
 
 extension String {
-    
     /// **OTCore:**
     /// Used by `titleCased`.
     /// Private array of title case particles to leave as lowercase
-    static private let titleCasedParticles =
+    private static let titleCasedParticles =
         [
             "a", "an", "the",              // articles
             "and", "but", "for",           // coordinating conjunctions
@@ -32,15 +31,14 @@ extension String {
     @available(macOS 10.11, *)
     @_disfavoredOverload
     public var titleCased: String {
-        
         var words =
             localizedCapitalized
-            .split(separator: " ")
-            .map({ String($0) })
+                .split(separator: " ")
+                .map { String($0) }
         
         // only process if there are more than 2 words
         if words.count > 2 {
-            for idx in 1...words.count - 2 {
+            for idx in 1 ... words.count - 2 {
                 let currentWord = words[idx].localizedLowercase
                 
                 if String.titleCasedParticles.contains(currentWord) {
@@ -50,7 +48,5 @@ extension String {
         }
         
         return words.joined(separator: " ")
-        
     }
-    
 }

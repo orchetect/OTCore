@@ -32,27 +32,22 @@ import Darwin
 @available(OSX 10.12, iOS 10.0, tvOS 10.0, watchOS 3.0, *)
 @inlinable @_disfavoredOverload
 public func clock_gettime_monotonic_raw() -> timespec {
-    
     var uptime = timespec()
     
-    if 0 != clock_gettime(CLOCK_MONOTONIC_RAW, &uptime) {
+    if clock_gettime(CLOCK_MONOTONIC_RAW, &uptime) != 0 {
         fatalError("Could not execute clock_gettime, errno: \(errno)")
     }
     
     return uptime
-    
 }
-
 
 // MARK: - Timespec constructors
 
 extension timespec {
-    
     /// **OTCore:**
     /// Convenience constructor from floating point seconds value
     @inlinable @_disfavoredOverload
     public init<T: BinaryFloatingPoint>(seconds floatingPoint: T) {
-        
         self.init()
         
         let intVal = Int(floatingPoint * 1_000_000_000)
@@ -60,11 +55,8 @@ extension timespec {
         tv_nsec = intVal % 1_000_000_000
         
         tv_sec = intVal / 1_000_000_000
-        
     }
-    
 }
-
 
 // MARK: - Timespec operators and comparison
 
@@ -72,7 +64,6 @@ extension timespec {
 /// Add two isntances of `timespec`
 @inlinable @_disfavoredOverload
 public func + (lhs: timespec, rhs: timespec) -> timespec {
-    
     let nsRaw = rhs.tv_nsec + lhs.tv_nsec
     
     let ns = nsRaw % 1_000_000_000
@@ -80,18 +71,15 @@ public func + (lhs: timespec, rhs: timespec) -> timespec {
     let s = lhs.tv_sec + rhs.tv_sec + (nsRaw / 1_000_000_000)
     
     return timespec(tv_sec: s, tv_nsec: ns)
-    
 }
 
 /// **OTCore:**
 /// Subtract two isntances of `timespec`
 @inlinable @_disfavoredOverload
 public func - (lhs: timespec, rhs: timespec) -> timespec {
-    
     let nsRaw = lhs.tv_nsec - rhs.tv_nsec
     
     if nsRaw >= 0 {
-        
         let ns = nsRaw % 1_000_000_000
         
         let s = lhs.tv_sec - rhs.tv_sec + (nsRaw / 1_000_000_000)
@@ -99,7 +87,6 @@ public func - (lhs: timespec, rhs: timespec) -> timespec {
         return timespec(tv_sec: s, tv_nsec: ns)
         
     } else {
-        
         // roll under
         
         let ns = 1_000_000_000 - (-nsRaw % 1_000_000_000)
@@ -107,30 +94,22 @@ public func - (lhs: timespec, rhs: timespec) -> timespec {
         let s = lhs.tv_sec - rhs.tv_sec - 1 - (-nsRaw / 1_000_000_000)
         
         return timespec(tv_sec: s, tv_nsec: ns)
-        
     }
-    
 }
 
 extension timespec: Equatable {
-    
     // **OTCore**
     @inlinable @_disfavoredOverload
-    static public func == (lhs: Self, rhs: Self) -> Bool {
-        
+    public static func == (lhs: Self, rhs: Self) -> Bool {
         lhs.tv_sec == rhs.tv_sec &&
-        lhs.tv_nsec == rhs.tv_nsec
-        
+            lhs.tv_nsec == rhs.tv_nsec
     }
-    
 }
 
 extension timespec: Comparable {
-    
     // **OTCore**
     @inlinable @_disfavoredOverload
-    static public func < (lhs: timespec, rhs: timespec) -> Bool {
-        
+    public static func < (lhs: timespec, rhs: timespec) -> Bool {
         if lhs.tv_sec < rhs.tv_sec { return true }
         if lhs.tv_sec > rhs.tv_sec { return false }
         
@@ -139,9 +118,7 @@ extension timespec: Comparable {
         if lhs.tv_nsec < rhs.tv_nsec { return true }
         
         return false
-        
     }
-    
 }
 
 #endif

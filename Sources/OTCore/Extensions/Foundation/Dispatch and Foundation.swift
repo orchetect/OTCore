@@ -10,11 +10,9 @@ import Foundation // imports Dispatch
 // MARK: - QualityOfService / QoSClass
 
 extension QualityOfService {
-    
     /// Returns the Dispatch framework `DispatchQoS.QoSClass` equivalent.
     @_disfavoredOverload
     public var dispatchQoSClass: DispatchQoS.QoSClass {
-        
         switch self {
         case .userInteractive:
             return .userInteractive
@@ -34,17 +32,13 @@ extension QualityOfService {
         @unknown default:
             return .default
         }
-        
     }
-    
 }
 
 extension DispatchQoS.QoSClass {
-    
     /// Returns the Foundation framework `QualityOfService` equivalent.
     @_disfavoredOverload
     public var qualityOfService: QualityOfService {
-        
         switch self {
         case .userInteractive:
             return .userInteractive
@@ -67,45 +61,40 @@ extension DispatchQoS.QoSClass {
         @unknown default:
             return .default
         }
-        
     }
-    
 }
 
 // MARK: - DispatchTimeInterval
 
 extension DispatchTimeInterval {
-    
     /// **OTCore:**
     /// Return the interval as a `TimeInterval` (floating-point seconds).
     @_disfavoredOverload
     public var timeInterval: TimeInterval? {
-        
         switch self {
-        case .seconds(let val):
+        case let .seconds(val):
             return TimeInterval(val)
             
-        case .milliseconds(let val): // ms
-            return TimeInterval(val) / 1_000
+        case let .milliseconds(val): // ms
+            return TimeInterval(val) / 1000
             
-        case .microseconds(let val): // µs
+        case let .microseconds(val): // µs
             return TimeInterval(val) / 1_000_000
             
-        case .nanoseconds(let val): // ns
+        case let .nanoseconds(val): // ns
             return TimeInterval(val) / 1_000_000_000
             
         case .never:
-            //assertionFailure("Cannot convert 'never' to TimeInterval.")
+            // assertionFailure("Cannot convert 'never' to TimeInterval.")
             return nil
             
         @unknown default:
-            assertionFailure("Unhandled DispatchTimeInterval case when attempting to convert to TimeInterval.")
+            assertionFailure(
+                "Unhandled DispatchTimeInterval case when attempting to convert to TimeInterval."
+            )
             return nil
-            
         }
-        
     }
-    
 }
 
 #endif

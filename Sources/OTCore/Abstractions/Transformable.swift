@@ -55,18 +55,14 @@
 /// - warning: Do not add this protocol to types that already conform to `Equatable`.
 /// When conforming a class to `Transformable`, it must be a `final class`.
 public protocol Transformable {
-    
     func transformed<T>(_ transform: (Self) throws -> T) rethrows -> T
     
     mutating func transform(_ transform: (inout Self) throws -> Void) rethrows -> Self
-    
 }
-
 
 // MARK: Transformable impl.
 
 extension Transformable {
-    
     /// **OTCore:**
     /// Returns a new value transformed by a closure.
     /// (Functional convenience method)
@@ -106,9 +102,7 @@ extension Transformable {
     public func transformed<T>(
         _ transform: (Self) throws -> T
     ) rethrows -> T {
-        
         try transform(self)
-        
     }
     
     /// **OTCore:**
@@ -118,21 +112,16 @@ extension Transformable {
     public mutating func transform(
         _ transform: (inout Self) throws -> Void
     ) rethrows -> Self {
-        
         try transform(&self)
         
         return self
-        
     }
-    
 }
-
 
 // MARK: Transformable class-only impl.
 // required to allow chaining multiple `.transform{}` blocks
 
-extension Transformable where Self : AnyObject {
-    
+extension Transformable where Self: AnyObject {
     /// **OTCore:**
     /// Mutate a value in place and also return it in order to continue chaining methods.
     /// (Functional convenience method)
@@ -140,20 +129,15 @@ extension Transformable where Self : AnyObject {
     public func transform(
         _ transform: (Self) throws -> Void
     ) rethrows -> Self {
-        
         try transform(self)
         
         return self
-        
     }
-    
 }
-
 
 // MARK: - Optional impl.
 
 extension Optional: Transformable {
-    
     /// **OTCore:**
     /// Returns the result of transforming a wrapped Optional using a closure.
     /// (Functional convenience method)
@@ -161,9 +145,7 @@ extension Optional: Transformable {
     public func transformedOptional<T>(
         _ transform: (Self) throws -> T
     ) rethrows -> T {
-        
         try transform(self)
-        
     }
     
     /// **OTCore:**
@@ -173,21 +155,16 @@ extension Optional: Transformable {
     public mutating func transformOptional(
         _ transform: (inout Self) throws -> Void
     ) rethrows -> Self {
-        
         try transform(&self)
         
         return self
-        
     }
-    
 }
-
 
 // MARK: Equatable class-only impl.
 // required to allow chaining multiple `.transform{}` blocks
 
-extension Optional where Wrapped : AnyObject {
-    
+extension Optional where Wrapped: AnyObject {
     /// **OTCore:**
     /// Mutate a value in place and also return it in order to continue chaining methods.
     /// (Functional convenience method)
@@ -195,20 +172,15 @@ extension Optional where Wrapped : AnyObject {
     public func transform(
         _ transform: (Self) throws -> Void
     ) rethrows -> Self {
-        
         try transform(self)
         
         return self
-        
     }
-    
 }
-
 
 // MARK: - Equatable impl.
 
 extension Equatable {
-    
     /// **OTCore:**
     /// Returns a new value transformed by a closure.
     /// (Functional convenience method)
@@ -248,9 +220,7 @@ extension Equatable {
     public func transformed<T>(
         _ transform: (Self) throws -> T
     ) rethrows -> T {
-        
         try transform(self)
-        
     }
     
     /// **OTCore:**
@@ -260,21 +230,16 @@ extension Equatable {
     public mutating func transform(
         _ transform: (inout Self) throws -> Void
     ) rethrows -> Self {
-        
         try transform(&self)
         
         return self
-        
     }
-    
 }
-
 
 // MARK: Equatable class-only impl.
 // required to allow chaining multiple `.transform{}` blocks
 
-extension Equatable where Self : AnyObject {
-    
+extension Equatable where Self: AnyObject {
     /// **OTCore:**
     /// Mutate a value in place and also return it in order to continue chaining methods.
     /// (Functional convenience method)
@@ -282,11 +247,8 @@ extension Equatable where Self : AnyObject {
     public func transform(
         _ transform: (Self) throws -> Void
     ) rethrows -> Self {
-        
         try transform(self)
         
         return self
-        
     }
-    
 }

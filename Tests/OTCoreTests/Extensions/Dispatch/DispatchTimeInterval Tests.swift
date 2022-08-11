@@ -9,19 +9,17 @@ import XCTest
 @testable import OTCore
 
 class Extensions_Dispatch_DispatchTimeInterval_Tests: XCTestCase {
-    
     override func setUp() { super.setUp() }
     override func tearDown() { super.tearDown() }
     
     func testMicroseconds() {
-        
         XCTAssertEqual(
             DispatchTimeInterval.seconds(2).microseconds,
             2_000_000
         )
         
         XCTAssertEqual(
-            DispatchTimeInterval.milliseconds(2_000).microseconds,
+            DispatchTimeInterval.milliseconds(2000).microseconds,
             2_000_000
         )
         
@@ -36,13 +34,11 @@ class Extensions_Dispatch_DispatchTimeInterval_Tests: XCTestCase {
         )
         
         // assertion error:
-        //XCTAssertEqual(
+        // XCTAssertEqual(
         //    DispatchTimeInterval.never.microseconds,
         //    0
-        //)
-        
+        // )
     }
-    
 }
 
 #endif

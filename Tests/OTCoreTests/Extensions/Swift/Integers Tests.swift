@@ -9,12 +9,10 @@ import XCTest
 import OTCore
 
 class Extensions_Swift_Integers_Tests: XCTestCase {
-    
     override func setUp() { super.setUp() }
     override func tearDown() { super.tearDown() }
     
     func testTypeConversions_IntsToIntsAndFloats() {
-        
         // Int
         
         _ = 1.int
@@ -364,122 +362,108 @@ class Extensions_Swift_Integers_Tests: XCTestCase {
         #if !(arch(arm64) || arch(arm) || os(watchOS)) // Float80 is now removed for ARM
         _ = UInt64(1).float80
         #endif
-        
     }
     
     func testTypeConversions_StringToInts() {
-        
-        XCTAssertEqual("1".int      ,          1 )
-        XCTAssertEqual("1".uInt     ,     UInt(1))
-        XCTAssertEqual("1".int8     ,     Int8(1))
-        XCTAssertEqual("1".uInt8    ,    UInt8(1))
-        XCTAssertEqual("1".int16    ,    Int16(1))
-        XCTAssertEqual("1".uInt16   ,   UInt16(1))
-        XCTAssertEqual("1".int32    ,    Int32(1))
-        XCTAssertEqual("1".uInt32   ,   UInt32(1))
-        XCTAssertEqual("1".int64    ,    Int64(1))
-        XCTAssertEqual("1".uInt64   ,   UInt64(1))
-        
+        XCTAssertEqual("1".int,          1)
+        XCTAssertEqual("1".uInt,     UInt(1))
+        XCTAssertEqual("1".int8,     Int8(1))
+        XCTAssertEqual("1".uInt8,    UInt8(1))
+        XCTAssertEqual("1".int16,    Int16(1))
+        XCTAssertEqual("1".uInt16,   UInt16(1))
+        XCTAssertEqual("1".int32,    Int32(1))
+        XCTAssertEqual("1".uInt32,   UInt32(1))
+        XCTAssertEqual("1".int64,    Int64(1))
+        XCTAssertEqual("1".uInt64,   UInt64(1))
     }
     
     func testTypeConversions_IntsToString() {
-        
-        XCTAssertEqual(       1 .string, "1")
-        XCTAssertEqual(  UInt(1).string, "1")
-        XCTAssertEqual(  Int8(1).string, "1")
-        XCTAssertEqual( UInt8(1).string, "1")
-        XCTAssertEqual( Int16(1).string, "1")
+        XCTAssertEqual(1.string, "1")
+        XCTAssertEqual(UInt(1).string, "1")
+        XCTAssertEqual(Int8(1).string, "1")
+        XCTAssertEqual(UInt8(1).string, "1")
+        XCTAssertEqual(Int16(1).string, "1")
         XCTAssertEqual(UInt16(1).string, "1")
-        XCTAssertEqual( Int32(1).string, "1")
+        XCTAssertEqual(Int32(1).string, "1")
         XCTAssertEqual(UInt32(1).string, "1")
-        XCTAssertEqual( Int64(1).string, "1")
+        XCTAssertEqual(Int64(1).string, "1")
         XCTAssertEqual(UInt64(1).string, "1")
-        
     }
     
     func testStringPaddedTo() {
-        
         // basic validation checks
         
-        XCTAssertEqual(  1.string(paddedTo:  1) , "1")
-        XCTAssertEqual(  1.string(paddedTo:  2) , "01")
+        XCTAssertEqual(1.string(paddedTo:  1), "1")
+        XCTAssertEqual(1.string(paddedTo:  2), "01")
         
-        XCTAssertEqual(123.string(paddedTo:  1) , "123")
+        XCTAssertEqual(123.string(paddedTo:  1), "123")
         
-        XCTAssertEqual(  1.string(paddedTo: -1) , "1")
+        XCTAssertEqual(1.string(paddedTo: -1), "1")
         
         // BinaryInteger cases
         
-        XCTAssertEqual(       1 .string(paddedTo: 1)    , "1")
-        XCTAssertEqual(  UInt(1).string(paddedTo: 1)    , "1")
-        XCTAssertEqual(  Int8(1).string(paddedTo: 1)    , "1")
-        XCTAssertEqual( UInt8(1).string(paddedTo: 1)    , "1")
-        XCTAssertEqual( Int16(1).string(paddedTo: 1)    , "1")
-        XCTAssertEqual(UInt16(1).string(paddedTo: 1)    , "1")
-        XCTAssertEqual( Int32(1).string(paddedTo: 1)    , "1")
-        XCTAssertEqual(UInt32(1).string(paddedTo: 1)    , "1")
-        XCTAssertEqual( Int64(1).string(paddedTo: 1)    , "1")
-        XCTAssertEqual(UInt64(1).string(paddedTo: 1)    , "1")
-        
+        XCTAssertEqual(1.string(paddedTo: 1), "1")
+        XCTAssertEqual(UInt(1).string(paddedTo: 1), "1")
+        XCTAssertEqual(Int8(1).string(paddedTo: 1), "1")
+        XCTAssertEqual(UInt8(1).string(paddedTo: 1), "1")
+        XCTAssertEqual(Int16(1).string(paddedTo: 1), "1")
+        XCTAssertEqual(UInt16(1).string(paddedTo: 1), "1")
+        XCTAssertEqual(Int32(1).string(paddedTo: 1), "1")
+        XCTAssertEqual(UInt32(1).string(paddedTo: 1), "1")
+        XCTAssertEqual(Int64(1).string(paddedTo: 1), "1")
+        XCTAssertEqual(UInt64(1).string(paddedTo: 1), "1")
     }
     
     func testRounding() {
-        
         XCTAssertEqual((-5).roundedAwayFromZero(toMultiplesOf: 4),  -8)
         XCTAssertEqual((-1).roundedAwayFromZero(toMultiplesOf: 4),  -4)
-        XCTAssertEqual(   1.roundedAwayFromZero(toMultiplesOf: 1),   1)
-        XCTAssertEqual(   1.roundedAwayFromZero(toMultiplesOf: 4),   4)
-        XCTAssertEqual(   4.roundedAwayFromZero(toMultiplesOf: 4),   4)
-        XCTAssertEqual(   5.roundedAwayFromZero(toMultiplesOf: 4),   8)
+        XCTAssertEqual(1.roundedAwayFromZero(toMultiplesOf: 1),   1)
+        XCTAssertEqual(1.roundedAwayFromZero(toMultiplesOf: 4),   4)
+        XCTAssertEqual(4.roundedAwayFromZero(toMultiplesOf: 4),   4)
+        XCTAssertEqual(5.roundedAwayFromZero(toMultiplesOf: 4),   8)
         
         XCTAssertEqual((-5).roundedUp(toMultiplesOf: 4),    -4)
         XCTAssertEqual((-1).roundedUp(toMultiplesOf: 4),     0)
-        XCTAssertEqual(   1.roundedUp(toMultiplesOf: 1),     1)
-        XCTAssertEqual(   1.roundedUp(toMultiplesOf: 4),     4)
-        XCTAssertEqual(   4.roundedUp(toMultiplesOf: 4),     4)
-        XCTAssertEqual(   5.roundedUp(toMultiplesOf: 4),     8)
+        XCTAssertEqual(1.roundedUp(toMultiplesOf: 1),     1)
+        XCTAssertEqual(1.roundedUp(toMultiplesOf: 4),     4)
+        XCTAssertEqual(4.roundedUp(toMultiplesOf: 4),     4)
+        XCTAssertEqual(5.roundedUp(toMultiplesOf: 4),     8)
         
         XCTAssertEqual((-5).roundedDown(toMultiplesOf: 4),  -8)
         XCTAssertEqual((-1).roundedDown(toMultiplesOf: 4),  -4)
-        XCTAssertEqual(   1.roundedDown(toMultiplesOf: 1),   1)
-        XCTAssertEqual(   1.roundedDown(toMultiplesOf: 4),   0)
-        XCTAssertEqual(   4.roundedDown(toMultiplesOf: 4),   4)
-        XCTAssertEqual(   5.roundedDown(toMultiplesOf: 4),   4)
-        
+        XCTAssertEqual(1.roundedDown(toMultiplesOf: 1),   1)
+        XCTAssertEqual(1.roundedDown(toMultiplesOf: 4),   0)
+        XCTAssertEqual(4.roundedDown(toMultiplesOf: 4),   4)
+        XCTAssertEqual(5.roundedDown(toMultiplesOf: 4),   4)
     }
     
     func testBit() {
-        
         XCTAssertEqual(0b100.uInt8.bit(0),  0)
         XCTAssertEqual(0b100.uInt8.bit(1),  0)
         XCTAssertEqual(0b100.uInt8.bit(2),  1)
-        
     }
     
     func testInt8twosComplement() {
-        
         XCTAssertEqual(Int8(-0b0100_0000).twosComplement, 0b1100_0000)
-        
     }
     
     func testCollectionRandomNumbers() {
-        
         // typical types
         
-        _ = [Int]   (randomValuesBetween:    0...255, count: 4)
-        _ = [UInt]  (randomValuesBetween:    0...255, count: 4)
-        _ = [Int8]  (randomValuesBetween: -128...127, count: 4)
-        _ = [UInt8] (randomValuesBetween:    0...255, count: 4)
-        _ = [Int16] (randomValuesBetween:    0...255, count: 4)
-        _ = [UInt16](randomValuesBetween:    0...255, count: 4)
-        _ = [Int32] (randomValuesBetween:    0...255, count: 4)
-        _ = [UInt32](randomValuesBetween:    0...255, count: 4)
-        _ = [Int64] (randomValuesBetween:    0...255, count: 4)
-        _ = [UInt64](randomValuesBetween:    0...255, count: 4)
+        _ = [Int](randomValuesBetween:    0 ... 255, count: 4)
+        _ = [UInt](randomValuesBetween:    0 ... 255, count: 4)
+        _ = [Int8](randomValuesBetween: -128 ... 127, count: 4)
+        _ = [UInt8](randomValuesBetween:    0 ... 255, count: 4)
+        _ = [Int16](randomValuesBetween:    0 ... 255, count: 4)
+        _ = [UInt16](randomValuesBetween:    0 ... 255, count: 4)
+        _ = [Int32](randomValuesBetween:    0 ... 255, count: 4)
+        _ = [UInt32](randomValuesBetween:    0 ... 255, count: 4)
+        _ = [Int64](randomValuesBetween:    0 ... 255, count: 4)
+        _ = [UInt64](randomValuesBetween:    0 ... 255, count: 4)
         
         // spot check
         
-        let range = UInt8(0)...UInt8(255)
+        let range = UInt8(0) ... UInt8(255)
         
         let arr = [UInt8](randomValuesBetween: range, count: 4)
         
@@ -490,143 +474,137 @@ class Extensions_Swift_Integers_Tests: XCTestCase {
         arr.forEach {
             XCTAssert(range.contains($0))
         }
-        
     }
     
     func testWrappingNumbers() {
-        
         // ClosedRange
         
         // single value ranges
         
-        XCTAssertEqual(    1.wrapped(around: 0...0)     ,  0)
-        XCTAssertEqual(    1.wrapped(around: -1...(-1)) , -1)
+        XCTAssertEqual(1.wrapped(around: 0 ... 0),  0)
+        XCTAssertEqual(1.wrapped(around: -1 ... (-1)), -1)
         
         // basic ranges
         
-        XCTAssertEqual((-11).wrapped(around: 0...4)     ,  4)
-        XCTAssertEqual((-10).wrapped(around: 0...4)     ,  0)
-        XCTAssertEqual( (-9).wrapped(around: 0...4)     ,  1)
-        XCTAssertEqual( (-8).wrapped(around: 0...4)     ,  2)
-        XCTAssertEqual( (-7).wrapped(around: 0...4)     ,  3)
-        XCTAssertEqual( (-6).wrapped(around: 0...4)     ,  4)
-        XCTAssertEqual( (-5).wrapped(around: 0...4)     ,  0)
-        XCTAssertEqual( (-4).wrapped(around: 0...4)     ,  1)
-        XCTAssertEqual( (-3).wrapped(around: 0...4)     ,  2)
-        XCTAssertEqual( (-2).wrapped(around: 0...4)     ,  3)
-        XCTAssertEqual( (-1).wrapped(around: 0...4)     ,  4)
-        XCTAssertEqual(    0.wrapped(around: 0...4)     ,  0)
-        XCTAssertEqual(    1.wrapped(around: 0...4)     ,  1)
-        XCTAssertEqual(    2.wrapped(around: 0...4)     ,  2)
-        XCTAssertEqual(    3.wrapped(around: 0...4)     ,  3)
-        XCTAssertEqual(    4.wrapped(around: 0...4)     ,  4)
-        XCTAssertEqual(    5.wrapped(around: 0...4)     ,  0)
-        XCTAssertEqual(    6.wrapped(around: 0...4)     ,  1)
-        XCTAssertEqual(    7.wrapped(around: 0...4)     ,  2)
-        XCTAssertEqual(    8.wrapped(around: 0...4)     ,  3)
-        XCTAssertEqual(    9.wrapped(around: 0...4)     ,  4)
-        XCTAssertEqual(   10.wrapped(around: 0...4)     ,  0)
-        XCTAssertEqual(   11.wrapped(around: 0...4)     ,  1)
+        XCTAssertEqual((-11).wrapped(around: 0 ... 4),  4)
+        XCTAssertEqual((-10).wrapped(around: 0 ... 4),  0)
+        XCTAssertEqual((-9).wrapped(around: 0 ... 4),  1)
+        XCTAssertEqual((-8).wrapped(around: 0 ... 4),  2)
+        XCTAssertEqual((-7).wrapped(around: 0 ... 4),  3)
+        XCTAssertEqual((-6).wrapped(around: 0 ... 4),  4)
+        XCTAssertEqual((-5).wrapped(around: 0 ... 4),  0)
+        XCTAssertEqual((-4).wrapped(around: 0 ... 4),  1)
+        XCTAssertEqual((-3).wrapped(around: 0 ... 4),  2)
+        XCTAssertEqual((-2).wrapped(around: 0 ... 4),  3)
+        XCTAssertEqual((-1).wrapped(around: 0 ... 4),  4)
+        XCTAssertEqual(0.wrapped(around: 0 ... 4),  0)
+        XCTAssertEqual(1.wrapped(around: 0 ... 4),  1)
+        XCTAssertEqual(2.wrapped(around: 0 ... 4),  2)
+        XCTAssertEqual(3.wrapped(around: 0 ... 4),  3)
+        XCTAssertEqual(4.wrapped(around: 0 ... 4),  4)
+        XCTAssertEqual(5.wrapped(around: 0 ... 4),  0)
+        XCTAssertEqual(6.wrapped(around: 0 ... 4),  1)
+        XCTAssertEqual(7.wrapped(around: 0 ... 4),  2)
+        XCTAssertEqual(8.wrapped(around: 0 ... 4),  3)
+        XCTAssertEqual(9.wrapped(around: 0 ... 4),  4)
+        XCTAssertEqual(10.wrapped(around: 0 ... 4),  0)
+        XCTAssertEqual(11.wrapped(around: 0 ... 4),  1)
         
-        XCTAssertEqual((-11).wrapped(around: 1...5)     ,  4)
-        XCTAssertEqual((-10).wrapped(around: 1...5)     ,  5)
-        XCTAssertEqual( (-9).wrapped(around: 1...5)     ,  1)
-        XCTAssertEqual( (-8).wrapped(around: 1...5)     ,  2)
-        XCTAssertEqual( (-7).wrapped(around: 1...5)     ,  3)
-        XCTAssertEqual( (-6).wrapped(around: 1...5)     ,  4)
-        XCTAssertEqual( (-5).wrapped(around: 1...5)     ,  5)
-        XCTAssertEqual( (-4).wrapped(around: 1...5)     ,  1)
-        XCTAssertEqual( (-3).wrapped(around: 1...5)     ,  2)
-        XCTAssertEqual( (-2).wrapped(around: 1...5)     ,  3)
-        XCTAssertEqual( (-1).wrapped(around: 1...5)     ,  4)
-        XCTAssertEqual(    0.wrapped(around: 1...5)     ,  5)
-        XCTAssertEqual(    1.wrapped(around: 1...5)     ,  1)
-        XCTAssertEqual(    2.wrapped(around: 1...5)     ,  2)
-        XCTAssertEqual(    3.wrapped(around: 1...5)     ,  3)
-        XCTAssertEqual(    4.wrapped(around: 1...5)     ,  4)
-        XCTAssertEqual(    5.wrapped(around: 1...5)     ,  5)
-        XCTAssertEqual(    6.wrapped(around: 1...5)     ,  1)
-        XCTAssertEqual(    7.wrapped(around: 1...5)     ,  2)
-        XCTAssertEqual(    8.wrapped(around: 1...5)     ,  3)
-        XCTAssertEqual(    9.wrapped(around: 1...5)     ,  4)
-        XCTAssertEqual(   10.wrapped(around: 1...5)     ,  5)
-        XCTAssertEqual(   11.wrapped(around: 1...5)     ,  1)
+        XCTAssertEqual((-11).wrapped(around: 1 ... 5),  4)
+        XCTAssertEqual((-10).wrapped(around: 1 ... 5),  5)
+        XCTAssertEqual((-9).wrapped(around: 1 ... 5),  1)
+        XCTAssertEqual((-8).wrapped(around: 1 ... 5),  2)
+        XCTAssertEqual((-7).wrapped(around: 1 ... 5),  3)
+        XCTAssertEqual((-6).wrapped(around: 1 ... 5),  4)
+        XCTAssertEqual((-5).wrapped(around: 1 ... 5),  5)
+        XCTAssertEqual((-4).wrapped(around: 1 ... 5),  1)
+        XCTAssertEqual((-3).wrapped(around: 1 ... 5),  2)
+        XCTAssertEqual((-2).wrapped(around: 1 ... 5),  3)
+        XCTAssertEqual((-1).wrapped(around: 1 ... 5),  4)
+        XCTAssertEqual(0.wrapped(around: 1 ... 5),  5)
+        XCTAssertEqual(1.wrapped(around: 1 ... 5),  1)
+        XCTAssertEqual(2.wrapped(around: 1 ... 5),  2)
+        XCTAssertEqual(3.wrapped(around: 1 ... 5),  3)
+        XCTAssertEqual(4.wrapped(around: 1 ... 5),  4)
+        XCTAssertEqual(5.wrapped(around: 1 ... 5),  5)
+        XCTAssertEqual(6.wrapped(around: 1 ... 5),  1)
+        XCTAssertEqual(7.wrapped(around: 1 ... 5),  2)
+        XCTAssertEqual(8.wrapped(around: 1 ... 5),  3)
+        XCTAssertEqual(9.wrapped(around: 1 ... 5),  4)
+        XCTAssertEqual(10.wrapped(around: 1 ... 5),  5)
+        XCTAssertEqual(11.wrapped(around: 1 ... 5),  1)
         
-        XCTAssertEqual((-11).wrapped(around: -1...3)    , -1)
-        XCTAssertEqual((-10).wrapped(around: -1...3)    ,  0)
-        XCTAssertEqual( (-9).wrapped(around: -1...3)    ,  1)
-        XCTAssertEqual( (-8).wrapped(around: -1...3)    ,  2)
-        XCTAssertEqual( (-7).wrapped(around: -1...3)    ,  3)
-        XCTAssertEqual( (-6).wrapped(around: -1...3)    , -1)
-        XCTAssertEqual( (-5).wrapped(around: -1...3)    ,  0)
-        XCTAssertEqual( (-4).wrapped(around: -1...3)    ,  1)
-        XCTAssertEqual( (-3).wrapped(around: -1...3)    ,  2)
-        XCTAssertEqual( (-2).wrapped(around: -1...3)    ,  3)
-        XCTAssertEqual( (-1).wrapped(around: -1...3)    , -1)
-        XCTAssertEqual(    0.wrapped(around: -1...3)    ,  0)
-        XCTAssertEqual(    1.wrapped(around: -1...3)    ,  1)
-        XCTAssertEqual(    2.wrapped(around: -1...3)    ,  2)
-        XCTAssertEqual(    3.wrapped(around: -1...3)    ,  3)
-        XCTAssertEqual(    4.wrapped(around: -1...3)    , -1)
-        XCTAssertEqual(    5.wrapped(around: -1...3)    ,  0)
-        XCTAssertEqual(    6.wrapped(around: -1...3)    ,  1)
-        XCTAssertEqual(    7.wrapped(around: -1...3)    ,  2)
-        XCTAssertEqual(    8.wrapped(around: -1...3)    ,  3)
-        XCTAssertEqual(    9.wrapped(around: -1...3)    , -1)
-        XCTAssertEqual(   10.wrapped(around: -1...3)    ,  0)
-        XCTAssertEqual(   11.wrapped(around: -1...3)    ,  1)
+        XCTAssertEqual((-11).wrapped(around: -1 ... 3), -1)
+        XCTAssertEqual((-10).wrapped(around: -1 ... 3),  0)
+        XCTAssertEqual((-9).wrapped(around: -1 ... 3),  1)
+        XCTAssertEqual((-8).wrapped(around: -1 ... 3),  2)
+        XCTAssertEqual((-7).wrapped(around: -1 ... 3),  3)
+        XCTAssertEqual((-6).wrapped(around: -1 ... 3), -1)
+        XCTAssertEqual((-5).wrapped(around: -1 ... 3),  0)
+        XCTAssertEqual((-4).wrapped(around: -1 ... 3),  1)
+        XCTAssertEqual((-3).wrapped(around: -1 ... 3),  2)
+        XCTAssertEqual((-2).wrapped(around: -1 ... 3),  3)
+        XCTAssertEqual((-1).wrapped(around: -1 ... 3), -1)
+        XCTAssertEqual(0.wrapped(around: -1 ... 3),  0)
+        XCTAssertEqual(1.wrapped(around: -1 ... 3),  1)
+        XCTAssertEqual(2.wrapped(around: -1 ... 3),  2)
+        XCTAssertEqual(3.wrapped(around: -1 ... 3),  3)
+        XCTAssertEqual(4.wrapped(around: -1 ... 3), -1)
+        XCTAssertEqual(5.wrapped(around: -1 ... 3),  0)
+        XCTAssertEqual(6.wrapped(around: -1 ... 3),  1)
+        XCTAssertEqual(7.wrapped(around: -1 ... 3),  2)
+        XCTAssertEqual(8.wrapped(around: -1 ... 3),  3)
+        XCTAssertEqual(9.wrapped(around: -1 ... 3), -1)
+        XCTAssertEqual(10.wrapped(around: -1 ... 3),  0)
+        XCTAssertEqual(11.wrapped(around: -1 ... 3),  1)
         
         // Range
         
         // single value ranges
         
-        XCTAssertEqual(    1.wrapped(around: 0..<0)     ,  0)
-        XCTAssertEqual(    1.wrapped(around: -1..<(-1)) , -1)
+        XCTAssertEqual(1.wrapped(around: 0 ..< 0),  0)
+        XCTAssertEqual(1.wrapped(around: -1 ..< (-1)), -1)
         
         // basic ranges
         
-        XCTAssertEqual((-11).wrapped(around: 0..<4)     ,  1)
-        XCTAssertEqual((-10).wrapped(around: 0..<4)     ,  2)
-        XCTAssertEqual( (-9).wrapped(around: 0..<4)     ,  3)
-        XCTAssertEqual( (-8).wrapped(around: 0..<4)     ,  0)
-        XCTAssertEqual( (-7).wrapped(around: 0..<4)     ,  1)
-        XCTAssertEqual( (-6).wrapped(around: 0..<4)     ,  2)
-        XCTAssertEqual( (-5).wrapped(around: 0..<4)     ,  3)
-        XCTAssertEqual( (-4).wrapped(around: 0..<4)     ,  0)
-        XCTAssertEqual( (-3).wrapped(around: 0..<4)     ,  1)
-        XCTAssertEqual( (-2).wrapped(around: 0..<4)     ,  2)
-        XCTAssertEqual( (-1).wrapped(around: 0..<4)     ,  3)
-        XCTAssertEqual(    0.wrapped(around: 0..<4)     ,  0)
-        XCTAssertEqual(    1.wrapped(around: 0..<4)     ,  1)
-        XCTAssertEqual(    2.wrapped(around: 0..<4)     ,  2)
-        XCTAssertEqual(    3.wrapped(around: 0..<4)     ,  3)
-        XCTAssertEqual(    4.wrapped(around: 0..<4)     ,  0)
-        XCTAssertEqual(    5.wrapped(around: 0..<4)     ,  1)
-        XCTAssertEqual(    6.wrapped(around: 0..<4)     ,  2)
-        XCTAssertEqual(    7.wrapped(around: 0..<4)     ,  3)
-        XCTAssertEqual(    8.wrapped(around: 0..<4)     ,  0)
-        XCTAssertEqual(    9.wrapped(around: 0..<4)     ,  1)
-        XCTAssertEqual(   10.wrapped(around: 0..<4)     ,  2)
-        XCTAssertEqual(   11.wrapped(around: 0..<4)     ,  3)
-        
+        XCTAssertEqual((-11).wrapped(around: 0 ..< 4),  1)
+        XCTAssertEqual((-10).wrapped(around: 0 ..< 4),  2)
+        XCTAssertEqual((-9).wrapped(around: 0 ..< 4),  3)
+        XCTAssertEqual((-8).wrapped(around: 0 ..< 4),  0)
+        XCTAssertEqual((-7).wrapped(around: 0 ..< 4),  1)
+        XCTAssertEqual((-6).wrapped(around: 0 ..< 4),  2)
+        XCTAssertEqual((-5).wrapped(around: 0 ..< 4),  3)
+        XCTAssertEqual((-4).wrapped(around: 0 ..< 4),  0)
+        XCTAssertEqual((-3).wrapped(around: 0 ..< 4),  1)
+        XCTAssertEqual((-2).wrapped(around: 0 ..< 4),  2)
+        XCTAssertEqual((-1).wrapped(around: 0 ..< 4),  3)
+        XCTAssertEqual(0.wrapped(around: 0 ..< 4),  0)
+        XCTAssertEqual(1.wrapped(around: 0 ..< 4),  1)
+        XCTAssertEqual(2.wrapped(around: 0 ..< 4),  2)
+        XCTAssertEqual(3.wrapped(around: 0 ..< 4),  3)
+        XCTAssertEqual(4.wrapped(around: 0 ..< 4),  0)
+        XCTAssertEqual(5.wrapped(around: 0 ..< 4),  1)
+        XCTAssertEqual(6.wrapped(around: 0 ..< 4),  2)
+        XCTAssertEqual(7.wrapped(around: 0 ..< 4),  3)
+        XCTAssertEqual(8.wrapped(around: 0 ..< 4),  0)
+        XCTAssertEqual(9.wrapped(around: 0 ..< 4),  1)
+        XCTAssertEqual(10.wrapped(around: 0 ..< 4),  2)
+        XCTAssertEqual(11.wrapped(around: 0 ..< 4),  3)
     }
     
     func testNumberOfDigits() {
+        XCTAssertEqual(0.numberOfDigits,   1)
+        XCTAssertEqual(1.numberOfDigits,   1)
+        XCTAssertEqual(10.numberOfDigits,   2)
+        XCTAssertEqual(15.numberOfDigits,   2)
+        XCTAssertEqual(205.numberOfDigits,   3)
         
-        XCTAssertEqual(     0.numberOfDigits,   1)
-        XCTAssertEqual(     1.numberOfDigits,   1)
-        XCTAssertEqual(    10.numberOfDigits,   2)
-        XCTAssertEqual(    15.numberOfDigits,   2)
-        XCTAssertEqual(   205.numberOfDigits,   3)
-        
-        XCTAssertEqual(  (-0).numberOfDigits,   1)
-        XCTAssertEqual(  (-1).numberOfDigits,   1)
-        XCTAssertEqual( (-10).numberOfDigits,   2)
-        XCTAssertEqual( (-15).numberOfDigits,   2)
+        XCTAssertEqual((-0).numberOfDigits,   1)
+        XCTAssertEqual((-1).numberOfDigits,   1)
+        XCTAssertEqual((-10).numberOfDigits,   2)
+        XCTAssertEqual((-15).numberOfDigits,   2)
         XCTAssertEqual((-205).numberOfDigits,   3)
-        
     }
-    
 }
 
 #endif

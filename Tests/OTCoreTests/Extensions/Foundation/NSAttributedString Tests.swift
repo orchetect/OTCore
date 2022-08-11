@@ -15,12 +15,10 @@ import XCTest
 @testable import OTCore
 
 class Extensions_Foundation_NSAttributedString_Tests: XCTestCase {
-    
     override func setUp() { super.setUp() }
     override func tearDown() { super.tearDown() }
     
     func testNSAttributedString_addingAttribute() {
-        
         let rawString = "Test"
         
         // vanilla NSAttributedString
@@ -32,11 +30,9 @@ class Extensions_Foundation_NSAttributedString_Tests: XCTestCase {
         let attrStr2 = attrStr1.addingAttribute(alignment: .center)
         XCTAssertEqual(attrStr2.string, rawString)
         XCTAssertEqual(attrStr2.getAlignmentAttributes(), [.center])
-        
     }
     
     func testNSAttributedString_addAttribute() {
-        
         let rawString = "Test"
         
         // vanilla NSMutableAttributedString
@@ -48,15 +44,11 @@ class Extensions_Foundation_NSAttributedString_Tests: XCTestCase {
         attrStr.addAttribute(alignment: .center)
         XCTAssertEqual(attrStr.string, rawString)
         XCTAssertEqual(attrStr.getAlignmentAttributes(), [.center])
-        
     }
-    
 }
 
-fileprivate extension NSAttributedString {
-    
-    func getAlignmentAttributes() -> [NSTextAlignment] {
-        
+extension NSAttributedString {
+    fileprivate func getAlignmentAttributes() -> [NSTextAlignment] {
         var range = NSRange(location: 0, length: length)
         
         return attributes(at: 0, effectiveRange: &range)
@@ -64,9 +56,7 @@ fileprivate extension NSAttributedString {
             .values
             .compactMap { $0 as? NSMutableParagraphStyle }
             .map { $0.alignment }
-        
     }
-    
 }
 
 #endif

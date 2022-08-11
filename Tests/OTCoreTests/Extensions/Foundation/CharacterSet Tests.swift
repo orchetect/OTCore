@@ -9,12 +9,10 @@ import XCTest
 @testable import OTCore
 
 class Extensions_Foundation_CharacterSet_Tests: XCTestCase {
-    
     override func setUp() { super.setUp() }
     override func tearDown() { super.tearDown() }
     
     func testInitCharactersArray() {
-        
         let chars: [Character] = ["a", "á", "e", "ö", "1", "%", "😄", "👨‍👩‍👦"]
         
         let cs = CharacterSet(chars)
@@ -25,11 +23,9 @@ class Extensions_Foundation_CharacterSet_Tests: XCTestCase {
         XCTAssertFalse(cs.contains(.init("o")))
         
         XCTAssertEqual("ghijkl234567890âēAÁEÖ_a_á_e_ö_1_%_😄_👨‍👩‍👦".only(cs), "aáeö1%😄👨‍👩‍👦")
-        
     }
     
     func testInitCharactersVariadic() {
-        
         let chars: [Character] = ["a", "á", "e", "ö", "1", "%", "😄", "👨‍👩‍👦"]
         
         // variadic parameter
@@ -41,11 +37,9 @@ class Extensions_Foundation_CharacterSet_Tests: XCTestCase {
         XCTAssertFalse(cs.contains(.init("o")))
         
         XCTAssertEqual("ghijkl234567890âēAÁEÖ_a_á_e_ö_1_%_😄_👨‍👩‍👦".only(cs), "aáeö1%😄👨‍👩‍👦")
-        
     }
     
     func testContainsCharacter() {
-        
         let charset = CharacterSet.alphanumerics
         
         let a: Character = "a"
@@ -55,11 +49,9 @@ class Extensions_Foundation_CharacterSet_Tests: XCTestCase {
         XCTAssertTrue(charset.contains(a))
         XCTAssertTrue(charset.contains(one))
         XCTAssertFalse(charset.contains(ds))
-        
     }
     
     func testOperators() {
-        
         // +
         
         let added: CharacterSet = .letters + .decimalDigits
@@ -93,11 +85,9 @@ class Extensions_Foundation_CharacterSet_Tests: XCTestCase {
         XCTAssertTrue(subtractedInPlace.contains("a"))
         XCTAssertFalse(subtractedInPlace.contains("1"))
         XCTAssertFalse(subtractedInPlace.contains("!"))
-        
     }
     
     func testConsonants() {
-        
         // random sampling of test characters
         let matchingChars = "bckmzBCKMZĜǧ"
         
@@ -111,11 +101,9 @@ class Extensions_Foundation_CharacterSet_Tests: XCTestCase {
         XCTAssert(
             !nonMatchingChars.allSatisfy(CharacterSet.consonants.contains(_:))
         )
-        
     }
     
     func testVowels() {
-        
         // random sampling of test characters
         let matchingChars = "aeiouàëïöùAEIOUÀËÏÖÙ"
         
@@ -129,11 +117,9 @@ class Extensions_Foundation_CharacterSet_Tests: XCTestCase {
         XCTAssert(
             !nonMatchingChars.allSatisfy(CharacterSet.vowels.contains(_:))
         )
-        
     }
     
     func testLowercaseVowels() {
-        
         // random sampling of test characters
         let matchingChars = "aeiouàëïöù"
         
@@ -147,11 +133,9 @@ class Extensions_Foundation_CharacterSet_Tests: XCTestCase {
         XCTAssert(
             !nonMatchingChars.allSatisfy(CharacterSet.lowercaseVowels.contains(_:))
         )
-        
     }
     
     func testUppercaseVowels() {
-        
         // random sampling of test characters
         let matchingChars = "AEIOUÀËÏÖÙ"
         
@@ -165,9 +149,7 @@ class Extensions_Foundation_CharacterSet_Tests: XCTestCase {
         XCTAssert(
             !nonMatchingChars.allSatisfy(CharacterSet.uppercaseVowels.contains(_:))
         )
-        
     }
-    
 }
 
 #endif

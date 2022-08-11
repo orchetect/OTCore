@@ -12,20 +12,16 @@ import OTCore
 
 fileprivate protocol testStructProtocol { }
 
-fileprivate extension Collection where Element: OTCoreOptionalTyped,
-                                       Element.Wrapped: testStructProtocol {
-    
-    var foo: Int { return 2 }
-    
+extension Collection where Element: OTCoreOptionalTyped,
+Element.Wrapped: testStructProtocol {
+    fileprivate var foo: Int { 2 }
 }
 
 class Extensions_Swift_Optional_Tests: XCTestCase {
-    
     override func setUp() { super.setUp() }
     override func tearDown() { super.tearDown() }
     
     func testOptionalType() {
-        
         // basic test
         
         let num: Int? = 1
@@ -41,11 +37,9 @@ class Extensions_Swift_Optional_Tests: XCTestCase {
         let arr: [testStruct<UInt8>?] = [testStruct(value: UInt8(1)), nil]
         
         XCTAssertEqual(arr.foo, 2) // ensure the extension works
-        
     }
     
     func testDefault() {
-        
         let val1: Int? = 1
         
         XCTAssertEqual(val1.ifNil(2), 1)
@@ -53,9 +47,7 @@ class Extensions_Swift_Optional_Tests: XCTestCase {
         let val2: Int? = nil
         
         XCTAssertEqual(val2.ifNil(2), 2)
-        
     }
-    
 }
 
 #endif

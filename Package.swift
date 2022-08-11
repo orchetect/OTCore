@@ -3,7 +3,6 @@
 import PackageDescription
 
 let package = Package(
-    
     name: "OTCore",
     
     // certain features of the library are marked @available only on newer versions of OSes,
@@ -17,7 +16,8 @@ let package = Package(
         .library(
             name: "OTCore",
             type: .static,
-            targets: ["OTCore"])
+            targets: ["OTCore"]
+        )
     ],
     
     dependencies: [
@@ -29,13 +29,14 @@ let package = Package(
     targets: [
         .target(
             name: "OTCore",
-            dependencies: []),
+            dependencies: []
+        ),
         
         .testTarget(
             name: "OTCoreTests",
-            dependencies: ["OTCore", "XCTestUtils", "SegmentedProgress"])
+            dependencies: ["OTCore", "XCTestUtils", "SegmentedProgress"]
+        )
     ]
-    
 )
 
 func addShouldTestFlag() {
@@ -54,9 +55,9 @@ func addShouldTestFlag() {
 
 // Swift version in Xcode 12.5.1 which introduced watchOS testing
 #if os(watchOS) && swift(>=5.4.2)
-    addShouldTestFlag()
+addShouldTestFlag()
 #elseif os(watchOS)
-    // don't add flag
+// don't add flag
 #else
-    addShouldTestFlag()
+addShouldTestFlag()
 #endif

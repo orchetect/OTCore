@@ -10,7 +10,6 @@ import Foundation
 /// Passes new value through the validation closure before storing.
 @propertyWrapper
 public struct Validated<Value> {
-    
     private var value: Value
     private var validationClosure: (Value) -> Value
     
@@ -23,12 +22,11 @@ public struct Validated<Value> {
         }
     }
     
-    public init(wrappedValue defaultValue: Value,
-                _ validationClosure: @escaping (Value) -> Value) {
-        
+    public init(
+        wrappedValue defaultValue: Value,
+        _ validationClosure: @escaping (Value) -> Value
+    ) {
         self.validationClosure = validationClosure
-        self.value = validationClosure(defaultValue)
-        
+        value = validationClosure(defaultValue)
     }
-    
 }
