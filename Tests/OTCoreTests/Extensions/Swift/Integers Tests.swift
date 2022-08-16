@@ -1,6 +1,7 @@
 //
 //  Integers Tests.swift
 //  OTCore • https://github.com/orchetect/OTCore
+//  © 2022 Steffan Andrews • Licensed under MIT License
 //
 
 #if shouldTestCurrentPlatform
@@ -444,7 +445,7 @@ class Extensions_Swift_Integers_Tests: XCTestCase {
     }
     
     func testInt8twosComplement() {
-        XCTAssertEqual(Int8(-0b0100_0000).twosComplement, 0b1100_0000)
+        XCTAssertEqual(Int8(-0b01000000).twosComplement, 0b11000000)
     }
     
     func testCollectionRandomNumbers() {

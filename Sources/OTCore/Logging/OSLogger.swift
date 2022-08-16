@@ -1,6 +1,7 @@
 //
 //  OSLogger.swift
 //  OTCore • https://github.com/orchetect/OTCore
+//  © 2022 Steffan Andrews • Licensed under MIT License
 //
 
 // os.log does not rely on Foundation, but we need Foundation for file path string operations

@@ -1,6 +1,7 @@
 //
 //  String Title Case.swift
 //  OTCore • https://github.com/orchetect/OTCore
+//  © 2022 Steffan Andrews • Licensed under MIT License
 //
 
 // MARK: - Title Case
