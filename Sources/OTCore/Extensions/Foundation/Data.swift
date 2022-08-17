@@ -156,39 +156,35 @@ extension Float32 {
     @_disfavoredOverload
     public func toData(_ endianness: NumberEndianness = .platformDefault) -> Data {
         var number = self
-        var data: Data!
         
-        withUnsafeBytes(of: &number) { rawBuffer in
-            
-            let unsafeBufferPointer = rawBuffer.unsafeBufferPointer
-            
-            switch endianness {
-            case .platformDefault:
-                data = Data(buffer: unsafeBufferPointer)
-                
-            case .littleEndian:
-                switch NumberEndianness.system {
+        return withUnsafeBytes(of: &number) { rawBuffer in
+            rawBuffer.withMemoryRebound(to: UInt8.self) { buffer in
+                switch endianness {
+                case .platformDefault:
+                    return Data(buffer: buffer)
+                    
                 case .littleEndian:
-                    data = Data(buffer: unsafeBufferPointer)
+                    switch NumberEndianness.system {
+                    case .littleEndian:
+                        return Data(buffer: buffer)
+                    case .bigEndian:
+                        return Data(Data(buffer: buffer).reversed())
+                    default:
+                        fatalError() // should never happen
+                    }
+                    
                 case .bigEndian:
-                    data = Data(Data(buffer: unsafeBufferPointer).reversed())
-                default:
-                    fatalError() // should never happen
-                }
-                
-            case .bigEndian:
-                switch NumberEndianness.system {
-                case .littleEndian:
-                    data = Data(Data(buffer: unsafeBufferPointer).reversed())
-                case .bigEndian:
-                    data = Data(buffer: unsafeBufferPointer)
-                default:
-                    fatalError() // should never happen
+                    switch NumberEndianness.system {
+                    case .littleEndian:
+                        return Data(Data(buffer: buffer).reversed())
+                    case .bigEndian:
+                        return Data(buffer: buffer)
+                    default:
+                        fatalError() // should never happen
+                    }
                 }
             }
         }
-        
-        return data
     }
 }
 
@@ -263,39 +259,35 @@ extension Double {
     @_disfavoredOverload
     public func toData(_ endianness: NumberEndianness = .platformDefault) -> Data {
         var number = self
-        var data: Data!
         
-        withUnsafeBytes(of: &number) { rawBuffer in
-            
-            let unsafeBufferPointer = rawBuffer.unsafeBufferPointer
-            
-            switch endianness {
-            case .platformDefault:
-                data = Data(buffer: unsafeBufferPointer)
-                
-            case .littleEndian:
-                switch NumberEndianness.system {
+        return withUnsafeBytes(of: &number) { rawBuffer in
+            rawBuffer.withMemoryRebound(to: UInt8.self) { buffer in
+                switch endianness {
+                case .platformDefault:
+                    return Data(buffer: buffer)
+                    
                 case .littleEndian:
-                    data = Data(buffer: unsafeBufferPointer)
+                    switch NumberEndianness.system {
+                    case .littleEndian:
+                        return Data(buffer: buffer)
+                    case .bigEndian:
+                        return Data(Data(buffer: buffer).reversed())
+                    default:
+                        fatalError() // should never happen
+                    }
+                    
                 case .bigEndian:
-                    data = Data(Data(buffer: unsafeBufferPointer).reversed())
-                default:
-                    fatalError() // should never happen
-                }
-                
-            case .bigEndian:
-                switch NumberEndianness.system {
-                case .littleEndian:
-                    data = Data(Data(buffer: unsafeBufferPointer).reversed())
-                case .bigEndian:
-                    data = Data(buffer: unsafeBufferPointer)
-                default:
-                    fatalError() // should never happen
+                    switch NumberEndianness.system {
+                    case .littleEndian:
+                        return Data(Data(buffer: buffer).reversed())
+                    case .bigEndian:
+                        return Data(buffer: buffer)
+                    default:
+                        fatalError() // should never happen
+                    }
                 }
             }
         }
-        
-        return data
     }
 }
 
@@ -370,20 +362,18 @@ extension FixedWidthInteger {
     @_disfavoredOverload
     public func toData(_ endianness: NumberEndianness = .platformDefault) -> Data {
         var int: Self
-        var data: Data!
         
         switch endianness {
-        case .platformDefault:  int = self
-        case .littleEndian:             int = littleEndian
-        case .bigEndian:                int = bigEndian
+        case .platformDefault: int = self
+        case .littleEndian:    int = littleEndian
+        case .bigEndian:       int = bigEndian
         }
         
-        withUnsafeBytes(of: &int) { rawBuffer in
-            let unsafeBufferPointer = rawBuffer.unsafeBufferPointer
-            data = Data(buffer: unsafeBufferPointer)
+        return withUnsafeBytes(of: &int) { rawBuffer in
+            rawBuffer.withMemoryRebound(to: UInt8.self) { buffer in
+                Data(buffer: buffer)
+            }
         }
-        
-        return data
     }
 }
 
