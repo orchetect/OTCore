@@ -128,7 +128,7 @@ class Abstractions_DataReader_Tests: XCTestCase {
         do {
             var dr = DataReader(data)
             
-            XCTAssertEqual(dr.readPosition, 0)
+            XCTAssertEqual(dr.readOffset, 0)
             XCTAssertEqual(dr.read(bytes: 1), Data([0x01]))
             XCTAssertEqual(dr.read(bytes: 1), Data([0x02]))
             XCTAssertEqual(dr.read(bytes: 1), Data([0x03]))
