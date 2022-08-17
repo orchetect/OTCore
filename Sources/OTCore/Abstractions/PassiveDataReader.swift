@@ -95,3 +95,14 @@ public struct PassiveDataReader<D: DataProtocol> {
         return (data: returnBytes, advanceCount: count)
     }
 }
+
+extension DataProtocol {
+    /// **OTCore:**
+    /// Accesses the data by providing a `PassiveDataReader` instance to a closure.
+    @_disfavoredOverload
+    public func withDataReader(_ block: (inout PassiveDataReader<Self>) -> Void) {
+        var mutableSelf = self
+        var reader = PassiveDataReader { $0(&mutableSelf) }
+        block(&reader)
+    }
+}
