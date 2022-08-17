@@ -17,8 +17,8 @@ import Foundation
 ///
 ///     if let bytes = dr.read(bytes: 4) { ... }
 ///
-public struct PassiveDataReader {
-    public typealias DataAccess = (inout Data) -> Void
+public struct PassiveDataReader<D: DataProtocol> {
+    public typealias DataAccess = (inout D) -> Void
     public typealias Closure = (_ block: DataAccess) -> Void
     
     let closure: Closure
@@ -51,7 +51,7 @@ public struct PassiveDataReader {
     /// If `bytes` parameter is nil, the remainder of the data will be returned.
     ///
     /// If fewer bytes remain than are requested, `nil` will be returned.
-    public mutating func read(bytes count: Int? = nil) -> Data? {
+    public mutating func read(bytes count: Int? = nil) -> D.SubSequence? {
         guard let d = data(bytes: count) else { return nil }
         defer { readOffset += d.advanceCount }
         return d.data
@@ -60,31 +60,31 @@ public struct PassiveDataReader {
     /// Read _n_ number of bytes from the current read offset, without advancing the read offset.
     /// If `bytes count` passed is `nil`, the remainder of the data will be returned.
     /// If fewer bytes remain than are requested, `nil` will be returned.
-    public func nonAdvancingRead(bytes count: Int? = nil) -> Data? {
+    public func nonAdvancingRead(bytes count: Int? = nil) -> D.SubSequence? {
         data(bytes: count)?.data
     }
     
     // MARK: - Internal
     
-    func withData<T>(_ block: (inout Data) -> T) -> T {
+    func withData<T>(_ block: (inout D) -> T) -> T {
         var out: T!
         closure { out = block(&$0) }
         return out
     }
     
-    func data(bytes count: Int? = nil) -> (data: Data, advanceCount: Int)? {
+    func data(bytes count: Int? = nil) -> (data: D.SubSequence, advanceCount: Int)? {
         if count == 0 {
-            return (data: Data(), advanceCount: 0)
+            return (data: withData { $0[$0.startIndex ..< $0.startIndex] }, advanceCount: 0)
         }
         
         if let count = count,
            count < 0 { return nil }
         
-        let readPosStartIndex = withData(\.startIndex).advanced(by: readOffset)
+        let readPosStartIndex = withData { $0.index($0.startIndex, offsetBy: readOffset) }
         
         let count = count ?? (withData(\.count) - readOffset)
         
-        let endIndex = readPosStartIndex.advanced(by: count - 1)
+        let endIndex = withData { $0.index(readPosStartIndex, offsetBy: count - 1) }
         
         guard withData({
             $0.indices.contains(readPosStartIndex) && $0.indices.contains(endIndex)
