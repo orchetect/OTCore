@@ -251,7 +251,7 @@ class Abstractions_PassiveDataReader_Tests: XCTestCase {
         }
     }
     
-    func testWithDataReader() {
+    func testWithDataReader() throws {
         let data = Data([0x01, 0x02, 0x03, 0x04])
         
         data.withDataReader { dr in
@@ -262,6 +262,14 @@ class Abstractions_PassiveDataReader_Tests: XCTestCase {
             XCTAssertEqual(dr.read(bytes: 1), Data([0x04]))
             XCTAssertEqual(dr.read(bytes: 1), nil)
         }
+        
+        struct TestError: Error { }
+        
+        XCTAssertThrowsError(
+            try data.withDataReader { dr in
+                throw TestError()
+            }
+        )
     }
 }
 
