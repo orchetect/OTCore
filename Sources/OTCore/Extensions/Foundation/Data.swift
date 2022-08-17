@@ -157,33 +157,39 @@ extension Float32 {
     public func toData(_ endianness: NumberEndianness = .platformDefault) -> Data {
         var number = self
         
+        // TODO: Remove bindMemory(to:)
+        // In Swift 5.7, `.bindMemory(to: UInt8.self)` is not necessary;
+        // directly using .`withMemoryRebound` is supported on UnsafeRawBufferPointer.
+        // Until Xcode 14 / Swift 5.7 is a minimum requirement we have to keep it this way:
         return withUnsafeBytes(of: &number) { rawBuffer in
-            rawBuffer.withMemoryRebound(to: UInt8.self) { buffer in
-                switch endianness {
-                case .platformDefault:
-                    return Data(buffer: buffer)
-                    
-                case .littleEndian:
-                    switch NumberEndianness.system {
-                    case .littleEndian:
+            rawBuffer
+                .bindMemory(to: UInt8.self)
+                .withMemoryRebound(to: UInt8.self) { buffer in
+                    switch endianness {
+                    case .platformDefault:
                         return Data(buffer: buffer)
-                    case .bigEndian:
-                        return Data(Data(buffer: buffer).reversed())
-                    default:
-                        fatalError() // should never happen
-                    }
                     
-                case .bigEndian:
-                    switch NumberEndianness.system {
                     case .littleEndian:
-                        return Data(Data(buffer: buffer).reversed())
+                        switch NumberEndianness.system {
+                        case .littleEndian:
+                            return Data(buffer: buffer)
+                        case .bigEndian:
+                            return Data(Data(buffer: buffer).reversed())
+                        default:
+                            fatalError() // should never happen
+                        }
+                    
                     case .bigEndian:
-                        return Data(buffer: buffer)
-                    default:
-                        fatalError() // should never happen
+                        switch NumberEndianness.system {
+                        case .littleEndian:
+                            return Data(Data(buffer: buffer).reversed())
+                        case .bigEndian:
+                            return Data(buffer: buffer)
+                        default:
+                            fatalError() // should never happen
+                        }
                     }
                 }
-            }
         }
     }
 }
@@ -260,33 +266,39 @@ extension Double {
     public func toData(_ endianness: NumberEndianness = .platformDefault) -> Data {
         var number = self
         
+        // TODO: Remove bindMemory(to:)
+        // In Swift 5.7, `.bindMemory(to: UInt8.self)` is not necessary;
+        // directly using .`withMemoryRebound` is supported on UnsafeRawBufferPointer.
+        // Until Xcode 14 / Swift 5.7 is a minimum requirement we have to keep it this way:
         return withUnsafeBytes(of: &number) { rawBuffer in
-            rawBuffer.withMemoryRebound(to: UInt8.self) { buffer in
-                switch endianness {
-                case .platformDefault:
-                    return Data(buffer: buffer)
-                    
-                case .littleEndian:
-                    switch NumberEndianness.system {
-                    case .littleEndian:
+            rawBuffer
+                .bindMemory(to: UInt8.self)
+                .withMemoryRebound(to: UInt8.self) { buffer in
+                    switch endianness {
+                    case .platformDefault:
                         return Data(buffer: buffer)
-                    case .bigEndian:
-                        return Data(Data(buffer: buffer).reversed())
-                    default:
-                        fatalError() // should never happen
-                    }
                     
-                case .bigEndian:
-                    switch NumberEndianness.system {
                     case .littleEndian:
-                        return Data(Data(buffer: buffer).reversed())
+                        switch NumberEndianness.system {
+                        case .littleEndian:
+                            return Data(buffer: buffer)
+                        case .bigEndian:
+                            return Data(Data(buffer: buffer).reversed())
+                        default:
+                            fatalError() // should never happen
+                        }
+                    
                     case .bigEndian:
-                        return Data(buffer: buffer)
-                    default:
-                        fatalError() // should never happen
+                        switch NumberEndianness.system {
+                        case .littleEndian:
+                            return Data(Data(buffer: buffer).reversed())
+                        case .bigEndian:
+                            return Data(buffer: buffer)
+                        default:
+                            fatalError() // should never happen
+                        }
                     }
                 }
-            }
         }
     }
 }
@@ -369,10 +381,16 @@ extension FixedWidthInteger {
         case .bigEndian:       int = bigEndian
         }
         
+        // TODO: Remove bindMemory(to:)
+        // In Swift 5.7, `.bindMemory(to: UInt8.self)` is not necessary;
+        // directly using .`withMemoryRebound` is supported on UnsafeRawBufferPointer.
+        // Until Xcode 14 / Swift 5.7 is a minimum requirement we have to keep it this way:
         return withUnsafeBytes(of: &int) { rawBuffer in
-            rawBuffer.withMemoryRebound(to: UInt8.self) { buffer in
-                Data(buffer: buffer)
-            }
+            rawBuffer
+                .bindMemory(to: UInt8.self)
+                .withMemoryRebound(to: UInt8.self) { buffer in
+                    Data(buffer: buffer)
+                }
         }
     }
 }
