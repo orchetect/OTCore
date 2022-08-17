@@ -34,6 +34,9 @@ public struct PassiveDataReader<D: DataProtocol> {
     /// Current byte index of read offset (byte position).
     public internal(set) var readOffset = 0
     
+    /// Returns number of available remaining bytes.
+    public var remainingByteCount: Int { withData(\.count) - readOffset }
+    
     /// Resets read offset back to 0.
     public mutating func reset() {
         readOffset = 0

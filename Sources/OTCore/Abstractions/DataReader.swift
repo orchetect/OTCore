@@ -26,6 +26,9 @@ public struct DataReader {
     )
     public var readPosition: Int { readOffset }
     
+    /// Returns number of available remaining bytes.
+    public var remainingByteCount: Int { base.count - readOffset }
+    
     /// Resets read offset back to 0.
     public mutating func reset() {
         readOffset = 0

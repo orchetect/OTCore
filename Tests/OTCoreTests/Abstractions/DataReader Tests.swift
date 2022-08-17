@@ -20,11 +20,17 @@ class Abstractions_DataReader_Tests: XCTestCase {
             var dr = DataReader(data)
             
             XCTAssertEqual(dr.readPosition, 0)
+            XCTAssertEqual(dr.remainingByteCount, 4)
             XCTAssertEqual(dr.read(bytes: 1), Data([0x01]))
+            XCTAssertEqual(dr.remainingByteCount, 3)
             XCTAssertEqual(dr.read(bytes: 1), Data([0x02]))
+            XCTAssertEqual(dr.remainingByteCount, 2)
             XCTAssertEqual(dr.read(bytes: 1), Data([0x03]))
+            XCTAssertEqual(dr.remainingByteCount, 1)
             XCTAssertEqual(dr.read(bytes: 1), Data([0x04]))
+            XCTAssertEqual(dr.remainingByteCount, 0)
             XCTAssertEqual(dr.read(bytes: 1), nil)
+            XCTAssertEqual(dr.remainingByteCount, 0)
         }
         
         // .read - nil read - return all remaining bytes
