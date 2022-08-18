@@ -103,7 +103,9 @@ extension DataProtocol {
     /// **OTCore:**
     /// Accesses the data by providing a `PassiveDataReader` instance to a closure.
     @_disfavoredOverload
-    public func withDataReader(_ block: (inout PassiveDataReader<Self>) throws -> Void) rethrows {
+    public func withDataReader(
+        _ block: (_ dataReader: inout PassiveDataReader<Self>) throws -> Void
+    ) rethrows {
         var mutableSelf = self
         var reader = PassiveDataReader { $0(&mutableSelf) }
         try block(&reader)
