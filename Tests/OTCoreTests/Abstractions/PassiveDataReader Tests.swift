@@ -21,15 +21,15 @@ class Abstractions_PassiveDataReader_Tests: XCTestCase {
             
             XCTAssertEqual(dr.readOffset, 0)
             XCTAssertEqual(dr.remainingByteCount, 4)
-            XCTAssertEqual(dr.read(bytes: 1), Data([0x01]))
+            XCTAssertEqual(try dr.read(bytes: 1), Data([0x01]))
             XCTAssertEqual(dr.remainingByteCount, 3)
-            XCTAssertEqual(dr.read(bytes: 1), Data([0x02]))
+            XCTAssertEqual(try dr.read(bytes: 1), Data([0x02]))
             XCTAssertEqual(dr.remainingByteCount, 2)
-            XCTAssertEqual(dr.read(bytes: 1), Data([0x03]))
+            XCTAssertEqual(try dr.read(bytes: 1), Data([0x03]))
             XCTAssertEqual(dr.remainingByteCount, 1)
-            XCTAssertEqual(dr.read(bytes: 1), Data([0x04]))
+            XCTAssertEqual(try dr.read(bytes: 1), Data([0x04]))
             XCTAssertEqual(dr.remainingByteCount, 0)
-            XCTAssertEqual(dr.read(bytes: 1), nil)
+            XCTAssertThrowsError(try dr.read(bytes: 1))
             XCTAssertEqual(dr.remainingByteCount, 0)
         }
         
@@ -39,15 +39,15 @@ class Abstractions_PassiveDataReader_Tests: XCTestCase {
             
             XCTAssertEqual(dr.readOffset, 0)
             XCTAssertEqual(dr.remainingByteCount, 4)
-            XCTAssertEqual(dr.readByte(), 0x01)
+            XCTAssertEqual(try dr.readByte(), 0x01)
             XCTAssertEqual(dr.remainingByteCount, 3)
-            XCTAssertEqual(dr.readByte(), 0x02)
+            XCTAssertEqual(try dr.readByte(), 0x02)
             XCTAssertEqual(dr.remainingByteCount, 2)
-            XCTAssertEqual(dr.readByte(), 0x03)
+            XCTAssertEqual(try dr.readByte(), 0x03)
             XCTAssertEqual(dr.remainingByteCount, 1)
-            XCTAssertEqual(dr.readByte(), 0x04)
+            XCTAssertEqual(try dr.readByte(), 0x04)
             XCTAssertEqual(dr.remainingByteCount, 0)
-            XCTAssertEqual(dr.readByte(), nil)
+            XCTAssertThrowsError(try dr.readByte())
             XCTAssertEqual(dr.remainingByteCount, 0)
         }
         
@@ -55,22 +55,22 @@ class Abstractions_PassiveDataReader_Tests: XCTestCase {
         do {
             var dr = PassiveDataReader { $0(&data) }
             
-            XCTAssertEqual(dr.read(), data)
-            XCTAssertEqual(dr.read(bytes: 1), nil)
+            XCTAssertEqual(try dr.read(), data)
+            XCTAssertThrowsError(try dr.read(bytes: 1))
         }
         
         // .read - zero count read - return empty data, not nil
         do {
             var dr = PassiveDataReader { $0(&data) }
             
-            XCTAssertEqual(dr.read(bytes: 0), Data())
+            XCTAssertEqual(try dr.read(bytes: 0), Data())
         }
         
         // .read - read overflow - return nil
         do {
             var dr = PassiveDataReader { $0(&data) }
             
-            XCTAssertEqual(dr.read(bytes: 5), nil)
+            XCTAssertThrowsError(try dr.read(bytes: 5))
         }
     }
     
@@ -81,34 +81,34 @@ class Abstractions_PassiveDataReader_Tests: XCTestCase {
         do {
             var dr = PassiveDataReader { $0(&data) }
             
-            XCTAssertEqual(dr.nonAdvancingRead(), data)
-            XCTAssertEqual(dr.read(bytes: 1), Data([0x01]))
+            XCTAssertEqual(try dr.nonAdvancingRead(), data)
+            XCTAssertEqual(try dr.read(bytes: 1), Data([0x01]))
         }
         
         // single bytes
         do {
             var dr = PassiveDataReader { $0(&data) }
             
-            XCTAssertEqual(dr.nonAdvancingReadByte(), data[0])
-            XCTAssertEqual(dr.nonAdvancingReadByte(), data[0])
-            XCTAssertEqual(dr.readByte(), data[0])
-            XCTAssertEqual(dr.readByte(), data[1])
+            XCTAssertEqual(try dr.nonAdvancingReadByte(), data[0])
+            XCTAssertEqual(try dr.nonAdvancingReadByte(), data[0])
+            XCTAssertEqual(try dr.readByte(), data[0])
+            XCTAssertEqual(try dr.readByte(), data[1])
         }
         
         // .nonAdvancingRead - read byte counts
         do {
             let dr = PassiveDataReader { $0(&data) }
             
-            XCTAssertEqual(dr.nonAdvancingRead(bytes: 1), Data([0x01]))
-            XCTAssertEqual(dr.nonAdvancingRead(bytes: 2), Data([0x01, 0x02]))
+            XCTAssertEqual(try dr.nonAdvancingRead(bytes: 1), Data([0x01]))
+            XCTAssertEqual(try dr.nonAdvancingRead(bytes: 2), Data([0x01, 0x02]))
         }
         
         // .nonAdvancingRead - read overflow - return nil
         do {
             var dr = PassiveDataReader { $0(&data) }
             
-            XCTAssertEqual(dr.nonAdvancingRead(bytes: 5), nil)
-            XCTAssertEqual(dr.read(bytes: 1), Data([0x01]))
+            XCTAssertThrowsError(try dr.nonAdvancingRead(bytes: 5))
+            XCTAssertEqual(try dr.read(bytes: 1), Data([0x01]))
         }
     }
     
@@ -120,7 +120,7 @@ class Abstractions_PassiveDataReader_Tests: XCTestCase {
             var dr = PassiveDataReader { $0(&data) }
             
             dr.advanceBy(1)
-            XCTAssertEqual(dr.read(bytes: 1), Data([0x02]))
+            XCTAssertEqual(try dr.read(bytes: 1), Data([0x02]))
         }
     }
     
@@ -131,10 +131,10 @@ class Abstractions_PassiveDataReader_Tests: XCTestCase {
         do {
             var dr = PassiveDataReader { $0(&data) }
             
-            XCTAssertEqual(dr.read(bytes: 1), Data([0x01]))
-            XCTAssertEqual(dr.read(bytes: 2), Data([0x02, 0x03]))
+            XCTAssertEqual(try dr.read(bytes: 1), Data([0x01]))
+            XCTAssertEqual(try dr.read(bytes: 2), Data([0x02, 0x03]))
             dr.reset()
-            XCTAssertEqual(dr.read(bytes: 1), Data([0x01]))
+            XCTAssertEqual(try dr.read(bytes: 1), Data([0x01]))
         }
     }
     
@@ -145,14 +145,14 @@ class Abstractions_PassiveDataReader_Tests: XCTestCase {
         var dr = PassiveDataReader { $0(&data) }
         
         XCTAssertEqual(dr.readOffset, 0)
-        XCTAssertEqual(dr.read(bytes: 1), Data([0x01]))
-        XCTAssertEqual(dr.read(bytes: 1), Data([0x02]))
+        XCTAssertEqual(try dr.read(bytes: 1), Data([0x01]))
+        XCTAssertEqual(try dr.read(bytes: 1), Data([0x02]))
         
         data = Data([0x0A, 0x0B, 0x0C, 0x0D])
         
-        XCTAssertEqual(dr.read(bytes: 1), Data([0x0C]))
-        XCTAssertEqual(dr.read(bytes: 1), Data([0x0D]))
-        XCTAssertEqual(dr.read(bytes: 1), nil)
+        XCTAssertEqual(try dr.read(bytes: 1), Data([0x0C]))
+        XCTAssertEqual(try dr.read(bytes: 1), Data([0x0D]))
+        XCTAssertThrowsError(try dr.read(bytes: 1))
     }
     
     // MARK: - Data storage starting with index >0
@@ -174,33 +174,33 @@ class Abstractions_PassiveDataReader_Tests: XCTestCase {
             var dr = PassiveDataReader { $0(&data) }
             
             XCTAssertEqual(dr.readOffset, 0)
-            XCTAssertEqual(dr.read(bytes: 1), Data([0x01]))
-            XCTAssertEqual(dr.read(bytes: 1), Data([0x02]))
-            XCTAssertEqual(dr.read(bytes: 1), Data([0x03]))
-            XCTAssertEqual(dr.read(bytes: 1), Data([0x04]))
-            XCTAssertEqual(dr.read(bytes: 1), nil)
+            XCTAssertEqual(try dr.read(bytes: 1), Data([0x01]))
+            XCTAssertEqual(try dr.read(bytes: 1), Data([0x02]))
+            XCTAssertEqual(try dr.read(bytes: 1), Data([0x03]))
+            XCTAssertEqual(try dr.read(bytes: 1), Data([0x04]))
+            XCTAssertThrowsError(try dr.read(bytes: 1))
         }
         
         // .read - nil read - return all remaining bytes
         do {
             var dr = PassiveDataReader { $0(&data) }
             
-            XCTAssertEqual(dr.read(), data)
-            XCTAssertEqual(dr.read(bytes: 1), nil)
+            XCTAssertEqual(try dr.read(), data)
+            XCTAssertThrowsError(try dr.read(bytes: 1))
         }
         
         // .read - zero count read - return empty data, not nil
         do {
             var dr = PassiveDataReader { $0(&data) }
             
-            XCTAssertEqual(dr.read(bytes: 0), Data())
+            XCTAssertEqual(try dr.read(bytes: 0), Data())
         }
         
         // .read - read overflow - return nil
         do {
             var dr = PassiveDataReader { $0(&data) }
             
-            XCTAssertEqual(dr.read(bytes: 5), nil)
+            XCTAssertThrowsError(try dr.read(bytes: 5))
         }
     }
     
@@ -220,24 +220,24 @@ class Abstractions_PassiveDataReader_Tests: XCTestCase {
         do {
             var dr = PassiveDataReader { $0(&data) }
             
-            XCTAssertEqual(dr.nonAdvancingRead(), data)
-            XCTAssertEqual(dr.read(bytes: 1), Data([0x01]))
+            XCTAssertEqual(try dr.nonAdvancingRead(), data)
+            XCTAssertEqual(try dr.read(bytes: 1), Data([0x01]))
         }
         
         // .nonAdvancingRead - read byte counts
         do {
             let dr = PassiveDataReader { $0(&data) }
             
-            XCTAssertEqual(dr.nonAdvancingRead(bytes: 1), Data([0x01]))
-            XCTAssertEqual(dr.nonAdvancingRead(bytes: 2), Data([0x01, 0x02]))
+            XCTAssertEqual(try dr.nonAdvancingRead(bytes: 1), Data([0x01]))
+            XCTAssertEqual(try dr.nonAdvancingRead(bytes: 2), Data([0x01, 0x02]))
         }
         
         // .nonAdvancingRead - read overflow - return nil
         do {
             var dr = PassiveDataReader { $0(&data) }
             
-            XCTAssertEqual(dr.nonAdvancingRead(bytes: 5), nil)
-            XCTAssertEqual(dr.read(bytes: 1), Data([0x01]))
+            XCTAssertThrowsError(try dr.nonAdvancingRead(bytes: 5))
+            XCTAssertEqual(try dr.read(bytes: 1), Data([0x01]))
         }
     }
     
@@ -258,7 +258,7 @@ class Abstractions_PassiveDataReader_Tests: XCTestCase {
             var dr = PassiveDataReader { $0(&data) }
             
             dr.advanceBy(1)
-            XCTAssertEqual(dr.read(bytes: 1), Data([0x02]))
+            XCTAssertEqual(try dr.read(bytes: 1), Data([0x02]))
         }
     }
     
@@ -278,23 +278,23 @@ class Abstractions_PassiveDataReader_Tests: XCTestCase {
         do {
             var dr = PassiveDataReader { $0(&data) }
             
-            XCTAssertEqual(dr.read(bytes: 1), Data([0x01]))
-            XCTAssertEqual(dr.read(bytes: 2), Data([0x02, 0x03]))
+            XCTAssertEqual(try dr.read(bytes: 1), Data([0x01]))
+            XCTAssertEqual(try dr.read(bytes: 2), Data([0x02, 0x03]))
             dr.reset()
-            XCTAssertEqual(dr.read(bytes: 1), Data([0x01]))
+            XCTAssertEqual(try dr.read(bytes: 1), Data([0x01]))
         }
     }
     
     func testWithDataReader() throws {
         let data = Data([0x01, 0x02, 0x03, 0x04])
         
-        data.withDataReader { dr in
+        try data.withDataReader { dr in
             XCTAssertEqual(dr.readOffset, 0)
-            XCTAssertEqual(dr.read(bytes: 1), Data([0x01]))
-            XCTAssertEqual(dr.read(bytes: 1), Data([0x02]))
-            XCTAssertEqual(dr.read(bytes: 1), Data([0x03]))
-            XCTAssertEqual(dr.read(bytes: 1), Data([0x04]))
-            XCTAssertEqual(dr.read(bytes: 1), nil)
+            XCTAssertEqual(try dr.read(bytes: 1), Data([0x01]))
+            XCTAssertEqual(try dr.read(bytes: 1), Data([0x02]))
+            XCTAssertEqual(try dr.read(bytes: 1), Data([0x03]))
+            XCTAssertEqual(try dr.read(bytes: 1), Data([0x04]))
+            XCTAssertThrowsError(try dr.read(bytes: 1))
         }
         
         struct TestError: Error { }

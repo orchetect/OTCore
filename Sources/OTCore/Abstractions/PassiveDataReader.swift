@@ -53,16 +53,16 @@ public struct PassiveDataReader<D: DataProtocol> {
     /// Return the next byte and increment the read offset.
     ///
     /// If no bytes remain, `nil` will be returned.
-    public mutating func readByte() -> D.Element? {
-        guard let d = dataByte() else { return nil }
+    public mutating func readByte() throws -> D.Element {
+        let d = try dataByte()
         defer { readOffset += 1 }
         return d
     }
     
     /// Read the next byte without advancing the read offset.
     /// If no bytes remain, `nil` will be returned.
-    public func nonAdvancingReadByte() -> D.Element? {
-        dataByte()
+    public func nonAdvancingReadByte() throws -> D.Element {
+        try dataByte()
     }
     
     /// Return the next _n_ number of bytes and increment the read offset.
@@ -70,8 +70,8 @@ public struct PassiveDataReader<D: DataProtocol> {
     /// If `bytes` parameter is nil, the remainder of the data will be returned.
     ///
     /// If fewer bytes remain than are requested, `nil` will be returned.
-    public mutating func read(bytes count: Int? = nil) -> D.SubSequence? {
-        guard let d = data(bytes: count) else { return nil }
+    public mutating func read(bytes count: Int? = nil) throws -> D.SubSequence {
+        let d = try data(bytes: count)
         defer { readOffset += d.advanceCount }
         return d.data
     }
@@ -79,8 +79,8 @@ public struct PassiveDataReader<D: DataProtocol> {
     /// Read _n_ number of bytes from the current read offset, without advancing the read offset.
     /// If `bytes count` passed is `nil`, the remainder of the data will be returned.
     /// If fewer bytes remain than are requested, `nil` will be returned.
-    public func nonAdvancingRead(bytes count: Int? = nil) -> D.SubSequence? {
-        data(bytes: count)?.data
+    public func nonAdvancingRead(bytes count: Int? = nil) throws -> D.SubSequence {
+        try data(bytes: count).data
     }
     
     // MARK: - Internal
@@ -91,19 +91,19 @@ public struct PassiveDataReader<D: DataProtocol> {
         return out
     }
     
-    func dataByte() -> D.Element? {
-        guard remainingByteCount > 0 else { return nil }
+    func dataByte() throws -> D.Element {
+        guard remainingByteCount > 0 else { throw ReadError.pastEndOfStream }
         let readPosIndex = withData { $0.index($0.startIndex, offsetBy: readOffset) }
         return withData { $0[readPosIndex] }
     }
     
-    func data(bytes count: Int? = nil) -> (data: D.SubSequence, advanceCount: Int)? {
+    func data(bytes count: Int? = nil) throws -> (data: D.SubSequence, advanceCount: Int) {
         if count == 0 {
             return (data: withData { $0[$0.startIndex ..< $0.startIndex] }, advanceCount: 0)
         }
         
         if let count = count,
-           count < 0 { return nil }
+           count < 0 { throw ReadError.invalidByteCount }
         
         let readPosStartIndex = withData { $0.index($0.startIndex, offsetBy: readOffset) }
         
@@ -113,11 +113,19 @@ public struct PassiveDataReader<D: DataProtocol> {
         
         guard withData({
             $0.indices.contains(readPosStartIndex) && $0.indices.contains(endIndex)
-        }) else { return nil }
+        }) else { throw ReadError.pastEndOfStream }
         
         let returnBytes = withData { $0[readPosStartIndex ... endIndex] }
         
         return (data: returnBytes, advanceCount: count)
+    }
+}
+
+extension PassiveDataReader {
+    /// Error returned by `PassiveDataReader` methods.
+    public enum ReadError: Error {
+        case pastEndOfStream
+        case invalidByteCount
     }
 }
 
