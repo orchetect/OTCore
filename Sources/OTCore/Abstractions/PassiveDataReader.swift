@@ -45,8 +45,24 @@ public struct PassiveDataReader<D: DataProtocol> {
     // MARK: - Methods
     
     /// Manually advance by _n_ number of bytes from current read offset.
+    /// Note that this method is unchecked which may result in an offset beyond the end of the data stream.
     public mutating func advanceBy(_ count: Int) {
         readOffset += count
+    }
+    
+    /// Return the next byte and increment the read offset.
+    ///
+    /// If no bytes remain, `nil` will be returned.
+    public mutating func readByte() -> D.Element? {
+        guard let d = dataByte() else { return nil }
+        defer { readOffset += 1 }
+        return d
+    }
+    
+    /// Read the next byte without advancing the read offset.
+    /// If no bytes remain, `nil` will be returned.
+    public func nonAdvancingReadByte() -> D.Element? {
+        dataByte()
     }
     
     /// Return the next _n_ number of bytes and increment the read offset.
@@ -73,6 +89,12 @@ public struct PassiveDataReader<D: DataProtocol> {
         var out: T!
         closure { out = block(&$0) }
         return out
+    }
+    
+    func dataByte() -> D.Element? {
+        guard remainingByteCount > 0 else { return nil }
+        let readPosIndex = withData { $0.index($0.startIndex, offsetBy: readOffset) }
+        return withData { $0[readPosIndex] }
     }
     
     func data(bytes count: Int? = nil) -> (data: D.SubSequence, advanceCount: Int)? {

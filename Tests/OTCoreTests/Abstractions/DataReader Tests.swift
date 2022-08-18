@@ -15,7 +15,7 @@ class Abstractions_DataReader_Tests: XCTestCase {
     func testRead() {
         let data = Data([0x01, 0x02, 0x03, 0x04])
         
-        // .read - byte by byte
+        // .read(bytes:)
         do {
             var dr = DataReader(data)
             
@@ -30,6 +30,24 @@ class Abstractions_DataReader_Tests: XCTestCase {
             XCTAssertEqual(dr.read(bytes: 1), Data([0x04]))
             XCTAssertEqual(dr.remainingByteCount, 0)
             XCTAssertEqual(dr.read(bytes: 1), nil)
+            XCTAssertEqual(dr.remainingByteCount, 0)
+        }
+        
+        // .readByte()
+        do {
+            var dr = DataReader(data)
+            
+            XCTAssertEqual(dr.readOffset, 0)
+            XCTAssertEqual(dr.remainingByteCount, 4)
+            XCTAssertEqual(dr.readByte(), 0x01)
+            XCTAssertEqual(dr.remainingByteCount, 3)
+            XCTAssertEqual(dr.readByte(), 0x02)
+            XCTAssertEqual(dr.remainingByteCount, 2)
+            XCTAssertEqual(dr.readByte(), 0x03)
+            XCTAssertEqual(dr.remainingByteCount, 1)
+            XCTAssertEqual(dr.readByte(), 0x04)
+            XCTAssertEqual(dr.remainingByteCount, 0)
+            XCTAssertEqual(dr.readByte(), nil)
             XCTAssertEqual(dr.remainingByteCount, 0)
         }
         
@@ -65,6 +83,16 @@ class Abstractions_DataReader_Tests: XCTestCase {
             
             XCTAssertEqual(dr.nonAdvancingRead(), data)
             XCTAssertEqual(dr.read(bytes: 1), Data([0x01]))
+        }
+        
+        // single bytes
+        do {
+            var dr = DataReader(data)
+            
+            XCTAssertEqual(dr.nonAdvancingReadByte(), data[0])
+            XCTAssertEqual(dr.nonAdvancingReadByte(), data[0])
+            XCTAssertEqual(dr.readByte(), data[0])
+            XCTAssertEqual(dr.readByte(), data[1])
         }
         
         // .nonAdvancingRead - read byte counts

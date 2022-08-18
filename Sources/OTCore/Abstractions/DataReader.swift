@@ -35,8 +35,24 @@ public struct DataReader {
     }
     
     /// Manually advance by _n_ number of bytes from current read offset.
+    /// Note that this method is unchecked which may result in an offset beyond the end of the data stream.
     public mutating func advanceBy(_ count: Int) {
         readOffset += count
+    }
+    
+    /// Return the next byte and increment the read offset.
+    ///
+    /// If no bytes remain, `nil` will be returned.
+    public mutating func readByte() -> UInt8? {
+        guard let d = dataByte() else { return nil }
+        defer { readOffset += 1 }
+        return d
+    }
+    
+    /// Read the next byte without advancing the read offset.
+    /// If no bytes remain, `nil` will be returned.
+    public func nonAdvancingReadByte() -> UInt8? {
+        dataByte()
     }
     
     /// Return the next _n_ number of bytes and increment the read offset.
@@ -58,6 +74,11 @@ public struct DataReader {
     }
     
     // MARK: - Internal
+    
+    func dataByte() -> UInt8? {
+        guard remainingByteCount > 0 else { return nil }
+        return base[readOffset]
+    }
     
     func data(bytes count: Int? = nil) -> (data: Data, advanceCount: Int)? {
         if count == 0 {
