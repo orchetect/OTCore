@@ -305,6 +305,24 @@ class Abstractions_PassiveDataReader_Tests: XCTestCase {
             }
         )
     }
+    
+    func testWithDataReader_ReturnsValue() throws {
+        let data = Data([0x01, 0x02, 0x03, 0x04])
+        
+        #if swift(>=5.7)
+        let getByte = try data.withDataReader { dr in
+            _ = try dr.readByte()
+            return try dr.readByte()
+        }
+        #else
+        let getByte: UInt8 = try data.withDataReader { dr in
+            _ = try dr.readByte()
+            return try dr.readByte()
+        }
+        #endif
+        
+        XCTAssertEqual(getByte, 0x02)
+    }
 }
 
 #endif
