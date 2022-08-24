@@ -9,7 +9,7 @@ let package = Package(
     // but a platforms spec here determines what base platforms
     // the library is currently supported on
     platforms: [
-        .macOS(.v10_12)
+        .macOS(.v10_12), .iOS(.v9), .tvOS(.v9), .watchOS(.v2)
     ],
     
     products: [
