@@ -22,8 +22,7 @@ let package = Package(
     
     dependencies: [
         // testing-only dependency
-        .package(url: "https://github.com/orchetect/XCTestUtils", from: "1.0.0"),
-        .package(url: "https://github.com/orchetect/SegmentedProgress", from: "1.0.1")
+        .package(url: "https://github.com/orchetect/XCTestUtils", from: "1.0.3")
     ],
     
     targets: [
@@ -34,30 +33,21 @@ let package = Package(
         
         .testTarget(
             name: "OTCoreTests",
-            dependencies: ["OTCore", "XCTestUtils", "SegmentedProgress"]
+            dependencies: ["OTCore", "XCTestUtils"]
         )
     ]
 )
 
 func addShouldTestFlag() {
-    // swiftSettings may be nil so we can't directly append to it
-    
-    var swiftSettings = package.targets
-        .first(where: { $0.name == "OTCoreTests" })?
-        .swiftSettings ?? []
-    
-    swiftSettings.append(.define("shouldTestCurrentPlatform"))
-    
-    package.targets
-        .first(where: { $0.name == "OTCoreTests" })?
-        .swiftSettings = swiftSettings
+    package.targets.filter { $0.isTest }.forEach { target in
+        if target.swiftSettings == nil { target.swiftSettings = [] }
+        target.swiftSettings?.append(.define("shouldTestCurrentPlatform"))
+    }
 }
 
-// Swift version in Xcode 12.5.1 which introduced watchOS testing
-#if os(watchOS) && swift(>=5.4.2)
+// Xcode 12.5.1 (Swift 5.4.2) introduced watchOS testing
+#if swift(>=5.4.2)
 addShouldTestFlag()
-#elseif os(watchOS)
-// don't add flag
-#else
+#elseif !os(watchOS)
 addShouldTestFlag()
 #endif

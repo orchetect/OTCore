@@ -8,7 +8,7 @@
 
 import XCTest
 import OTCore
-import SegmentedProgress
+import XCTestUtils
 
 class Algorithms_CollectionBinarySearch_Tests: XCTestCase {
     override func setUp() { super.setUp() }
