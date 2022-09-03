@@ -45,7 +45,7 @@ public struct IPAddress {
             return nil
         }
         
-        self.format = validatedFormat
+        format = validatedFormat
     }
 	
     // MARK: - Methods
