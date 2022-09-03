@@ -1,16 +1,34 @@
 //
-//  String Parsing.swift
+//  EmailAddress.swift
 //  OTCore • https://github.com/orchetect/OTCore
 //  © 2022 Steffan Andrews • Licensed under MIT License
 //
 
+#if canImport(Foundation)
+
 import Foundation
 
-extension String {
+/// **OTCore:**
+/// Email Address Format Validation.
+public struct EmailAddress {
+    /// **OTCore:**
+    /// Email address.
+    public let email: String
+    
+    /// **OTCore:**
+    /// Email Address Format Validation.
+    public init(_ email: String) {
+        self.email = email
+    }
+    
+    /// Internal:
+    /// Email Address RegEx Validation Pattern.
+    static let emailRegEx =
+        #"^([a-zA-Z0-9!#$%&'*+-/=?^_.{}|~]{1,64})@([a-zA-Z0-9.-]+\.[a-zA-Z]{2,63})$"#
+    
     /// **OTCore:**
     /// Returns true if the string is a valid email address.
-    @_disfavoredOverload
-    public var isValidEmailAddress: Bool {
+    public var isValid: Bool {
         // prefix@domain.TLD
         
         // Prefix (a.k.a. username / local-part)
@@ -23,10 +41,7 @@ extension String {
         // The first and last character cannot be hyphens.
         // Top-level domains (TLD) cannot be all numeric.
         
-        let emailRegEx =
-            #"^([a-zA-Z0-9!#$%&'*+-/=?^_.{}|~]{1,64})@([a-zA-Z0-9.-]+\.[a-zA-Z]{2,63})$"#
-        
-        let groups = regexMatches(captureGroupsFromPattern: emailRegEx)
+        let groups = email.regexMatches(captureGroupsFromPattern: Self.emailRegEx)
         
         // first array element is the entire match, then capture groups follow
         guard groups.count == 2 + 1 else { return false }
@@ -60,3 +75,15 @@ extension String {
         return true
     }
 }
+
+// MARK: - API Changes in 1.4.4
+
+extension String {
+    @available(*, deprecated, message: "Renamed to: EmailAddress(\"\").isValid")
+    @_disfavoredOverload
+    public var isValidEmailAddress: Bool {
+        EmailAddress(self).isValid
+    }
+}
+
+#endif
