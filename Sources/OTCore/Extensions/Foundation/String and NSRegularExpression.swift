@@ -41,13 +41,10 @@ extension StringProtocol {
                 nsString = _self as NSString
                 results = runRegEx(in: _self)
                 
-            case let _self as Substring:
-                let stringSelf = String(_self)
+            default:
+                let stringSelf = String(self)
                 nsString = stringSelf as NSString
                 results = runRegEx(in: stringSelf)
-                
-            default:
-                return []
             }
             
             return results.map { nsString.substring(with: $0.range) }
@@ -88,12 +85,9 @@ extension StringProtocol {
             case let _self as String:
                 result = runRegEx(in: _self)
                 
-            case let _self as Substring:
-                let stringSelf = String(_self)
-                result = runRegEx(in: stringSelf)
-                
             default:
-                return nil
+                let stringSelf = String(self)
+                result = runRegEx(in: stringSelf)
             }
             
             return result
@@ -149,12 +143,9 @@ extension StringProtocol {
             case let _self as String:
                 result = runRegEx(in: _self)
                 
-            case let _self as Substring:
-                let stringSelf = String(_self)
-                result = runRegEx(in: stringSelf)
-                
             default:
-                return []
+                let stringSelf = String(self)
+                result = runRegEx(in: stringSelf)
             }
             
             return result
