@@ -28,7 +28,16 @@ let package = Package(
     targets: [
         .target(
             name: "OTCore",
-            dependencies: []
+            dependencies: [],
+            swiftSettings: [
+                .define(
+                    "DEBUG",
+                    .when(
+                        platforms: [.iOS, .macOS, .tvOS, .watchOS],
+                        configuration: .debug
+                    )
+                )
+            ]
         ),
         
         .testTarget(

@@ -72,11 +72,7 @@ public class OSLogger {
         column: Int = #column,
         function: String = #function
     ) {
-        #if RELEASE
-        
-        // do not post debug messages to the log in a Release build
-        
-        #else
+        #if DEBUG
         
         guard enabled else { return }
         
@@ -337,8 +333,8 @@ public class OSLogger {
         column: Int = #column,
         function: String = #function
     ) {
-        #if RELEASE
-        // do not post debug messages to the log in a Release build
+        #if !DEBUG
+        // do not post debug messages to the log in a non-Debug build
         if level == .debug { return }
         #endif
         
