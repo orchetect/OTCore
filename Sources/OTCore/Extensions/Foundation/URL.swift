@@ -88,6 +88,59 @@ extension URL {
         
         return pathComponents.dropFirst(base.count).array
     }
+    
+    /// **OTCore:**
+    /// Returns the URL with a relative base URL applied.
+    /// If the URL is not prefixed by the passed `base` URL, the URL is simply returned unchanged.
+    ///
+    /// ie:
+    ///
+    ///     let url = URL(string: "file:///temp1/temp2/file.txt")
+    ///     let base = URL(string: "file:///temp1/")
+    ///
+    ///     let rel = url.relative(to: base)
+    ///     rel.absoluteString // == "file:///temp1/temp2/file.txt"
+    ///     rel.baseURL?.absoluteString // == "file:///temp1/"
+    ///     rel.relativeString // == "temp2/file.txt"
+    ///
+    @_disfavoredOverload
+    public func relative(to base: URL) -> Self {
+        let relPath = pathComponents(removingBase: base)?
+            .joined(separator: "/") ?? ""
+        guard !relPath.isEmpty,
+              let newURL = URL(string: relPath, relativeTo: base)
+        else { return self }
+        return newURL
+    }
+    
+    /// **OTCore:**
+    /// Return a new URL by mutating the file name (last path component) including extension.
+    @_disfavoredOverload
+    public func mutatingLastPathComponent(
+        _ transform: (_ fileName: String) -> String
+    ) -> Self {
+        let oldFileName = lastPathComponent
+        let newFileName = transform(oldFileName)
+        let newURL: URL = self
+            .deletingLastPathComponent()
+            .appendingPathComponent(newFileName)
+        return newURL
+    }
+    
+    /// **OTCore:**
+    /// Return a new URL by mutating the file name (last path component) excluding extension.
+    @_disfavoredOverload
+    public func mutatingLastPathComponentExcludingExtension(
+        _ transform: (_ fileName: String) -> String
+    ) -> Self {
+        let oldFileName = deletingPathExtension().lastPathComponent
+        let newFileName = transform(oldFileName)
+        let newURL: URL = self
+            .deletingLastPathComponent()
+            .appendingPathComponent(newFileName)
+            .appendingPathExtension(pathExtension)
+        return newURL
+    }
 }
 
 // MARK: - File / folder

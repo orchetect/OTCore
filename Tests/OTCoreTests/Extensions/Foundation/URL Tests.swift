@@ -277,6 +277,50 @@ class Extensions_Foundation_URL_Tests: XCTestCase {
         )
     }
     
+    func testRelativeToBaseURL() {
+        // ensure absolute URL remains unchanged
+        XCTAssertEqual(
+            URL(string: "file:///temp1/temp2/file.txt")!
+                .relative(to: URL(string: "file:///temp1/")!)
+                .absoluteString,
+            "file:///temp1/temp2/file.txt"
+        )
+        
+        // test baseURL
+        XCTAssertEqual(
+            URL(string: "file:///temp1/temp2/file.txt")!
+                .relative(to: URL(string: "file:///temp1/")!)
+                .baseURL?.absoluteString,
+            "file:///temp1/"
+        )
+        
+        // test relative path
+        XCTAssertEqual(
+            URL(string: "file:///temp1/temp2/file.txt")!
+                .relative(to: URL(string: "file:///temp1/")!)
+                .relativeString,
+            "temp2/file.txt"
+        )
+    }
+    
+    func testMutatingLastPathComponent() {
+        XCTAssertEqual(
+            URL(string: "file:///temp1/temp2/file.txt")!
+                .mutatingLastPathComponent { "a" + $0 + ".pdf" }
+                .absoluteString,
+            "file:///temp1/temp2/afile.txt.pdf"
+        )
+    }
+    
+    func testMutatingLastPathComponentExcludingExtension() {
+        XCTAssertEqual(
+            URL(string: "file:///temp1/temp2/file.txt")!
+                .mutatingLastPathComponentExcludingExtension { "a" + $0 + "b" }
+                .absoluteString,
+            "file:///temp1/temp2/afileb.txt"
+        )
+    }
+    
     func testFileExists() {
         // guaranteed to exist
         let folder = URL(fileURLWithPath: NSHomeDirectory())
