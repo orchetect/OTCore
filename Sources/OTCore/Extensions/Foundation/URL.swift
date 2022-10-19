@@ -105,12 +105,11 @@ extension URL {
     ///
     @_disfavoredOverload
     public func relative(to base: URL) -> Self {
-        let relPath = pathComponents(removingBase: base)?
-            .joined(separator: "/") ?? ""
-        guard !relPath.isEmpty,
-              let newURL = URL(string: relPath, relativeTo: base)
+        guard let relPath = pathComponents(removingBase: base)?.joined(separator: "/"),
+              !relPath.isEmpty
         else { return self }
-        return newURL
+        let encodedRelPath = URL(fileURLWithPath: relPath).relativeString
+        return URL(string: encodedRelPath, relativeTo: base) ?? self
     }
     
     /// **OTCore:**

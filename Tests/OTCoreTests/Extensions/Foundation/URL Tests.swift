@@ -280,15 +280,15 @@ class Extensions_Foundation_URL_Tests: XCTestCase {
     func testRelativeToBaseURL() {
         // ensure absolute URL remains unchanged
         XCTAssertEqual(
-            URL(string: "file:///temp1/temp2/file.txt")!
+            URL(string: "file:///temp1/temp2/some%20file.txt")!
                 .relative(to: URL(string: "file:///temp1/")!)
                 .absoluteString,
-            "file:///temp1/temp2/file.txt"
+            "file:///temp1/temp2/some%20file.txt"
         )
         
         // test baseURL
         XCTAssertEqual(
-            URL(string: "file:///temp1/temp2/file.txt")!
+            URL(string: "file:///temp1/temp2/some%20file.txt")!
                 .relative(to: URL(string: "file:///temp1/")!)
                 .baseURL?.absoluteString,
             "file:///temp1/"
@@ -296,28 +296,42 @@ class Extensions_Foundation_URL_Tests: XCTestCase {
         
         // test relative path
         XCTAssertEqual(
-            URL(string: "file:///temp1/temp2/file.txt")!
+            URL(string: "file:///temp1/temp2/some%20file.txt")!
                 .relative(to: URL(string: "file:///temp1/")!)
                 .relativeString,
-            "temp2/file.txt"
+            "temp2/some%20file.txt"
         )
     }
     
     func testMutatingLastPathComponent() {
         XCTAssertEqual(
-            URL(string: "file:///temp1/temp2/file.txt")!
+            URL(string: "file:///temp1/temp2/some%20file.txt")!
                 .mutatingLastPathComponent { "a" + $0 + ".pdf" }
                 .absoluteString,
-            "file:///temp1/temp2/afile.txt.pdf"
+            "file:///temp1/temp2/asome%20file.txt.pdf"
+        )
+        
+        XCTAssertEqual(
+            URL(string: "file:///temp1/temp2/some%20file.txt")!
+                .mutatingLastPathComponent { _ in "new file name" }
+                .absoluteString,
+            "file:///temp1/temp2/new%20file%20name"
         )
     }
     
     func testMutatingLastPathComponentExcludingExtension() {
         XCTAssertEqual(
-            URL(string: "file:///temp1/temp2/file.txt")!
+            URL(string: "file:///temp1/temp2/some%20file.txt")!
                 .mutatingLastPathComponentExcludingExtension { "a" + $0 + "b" }
                 .absoluteString,
-            "file:///temp1/temp2/afileb.txt"
+            "file:///temp1/temp2/asome%20fileb.txt"
+        )
+        
+        XCTAssertEqual(
+            URL(string: "file:///temp1/temp2/some%20file.txt")!
+                .mutatingLastPathComponentExcludingExtension { _ in "new file name" }
+                .absoluteString,
+            "file:///temp1/temp2/new%20file%20name.txt"
         )
     }
     
