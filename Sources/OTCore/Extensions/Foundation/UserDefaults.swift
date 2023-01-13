@@ -114,7 +114,7 @@ extension UserDefaults {
 ///     var pref = 1 // will be clamped to 5
 ///
 @propertyWrapper
-public struct UserDefaultsStorage<Value, StorageValue> {
+public struct UserDefaultsStorage<Value, StorageValue> where StorageValue: UserDefaultsStorable {
     private let key: String
     private let defaultValue: Any
     public var storage: UserDefaults
@@ -133,7 +133,14 @@ public struct UserDefaultsStorage<Value, StorageValue> {
     // instead of having to split it up into multiple different structs.
     public var wrappedValue: Value {
         get {
-            let value = storage.value(forKey: key) as? StorageValue
+            var value: StorageValue?
+            if Value.self is URL.Type || Value.self is URL?.Type,
+               let strValue = storage.string(forKey: key)
+            {
+                value = URL(string: strValue) as? StorageValue
+            } else {
+                value = storage.value(forKey: key) as? StorageValue
+            }
             if computedOnly {
                 return getTransformationComputedOnly(value)
             }
@@ -144,28 +151,33 @@ public struct UserDefaultsStorage<Value, StorageValue> {
             return processed ?? defaultValue as! Value
         }
         set {
+            var processedValue: StorageValue?
+            
             if let asOptional = newValue as? OTCoreOptional {
                 if asOptional.isNone {
                     // we have to treat newValue == nil as a special case
                     // otherwise .setValue() will throw an exception
                     storage.removeObject(forKey: key)
+                    return
                 } else if let unwrappedNewValue = asOptional.asAny() as? Value {
-                    var processedValue: StorageValue?
                     if computedOnly {
                         processedValue = setTransformationComputedOnly(unwrappedNewValue)
                     } else {
                         processedValue = setTransformation(unwrappedNewValue)
                     }
-                    storage.setValue(processedValue, forKey: key)
                 }
             } else {
-                var processedValue: StorageValue?
                 if computedOnly {
                     processedValue = setTransformationComputedOnly(newValue)
                 } else {
                     processedValue = setTransformation(newValue)
                         ?? setTransformation(defaultValue as! Value)
                 }
+            }
+            
+            if let processedValue = processedValue as? URL {
+                storage.setValue(processedValue.absoluteString, forKey: key)
+            } else {
                 storage.setValue(processedValue, forKey: key)
             }
         }
@@ -350,7 +362,24 @@ extension UserDefaultsStorage where Value: ExpressibleByNilLiteral {
     }
 }
 
+// MARK: - UserDefaults Compatible Storage Types
+
+public protocol UserDefaultsStorable { }
+
+extension String: UserDefaultsStorable { }
+extension Int: UserDefaultsStorable { }
+extension Float: UserDefaultsStorable { }
+extension Double: UserDefaultsStorable { }
+extension Data: UserDefaultsStorable { }
+extension Date: UserDefaultsStorable { }
+extension Bool: UserDefaultsStorable { }
+extension URL: UserDefaultsStorable { }
+extension [UserDefaultsStorable]: UserDefaultsStorable { }
+extension [String: UserDefaultsStorable]: UserDefaultsStorable { }
+extension Optional: UserDefaultsStorable where Wrapped: UserDefaultsStorable { }
+
 // MARK: - API Changes in 1.4.6
+
 @available(*, unavailable, renamed: "UserDefaultsStorage")
 @propertyWrapper
 public struct UserDefaultsBacked<Value> {

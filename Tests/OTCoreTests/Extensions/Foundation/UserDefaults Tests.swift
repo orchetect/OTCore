@@ -593,7 +593,8 @@ class Extensions_Foundation_UserDefaults_Tests: XCTestCase {
             @UserDefaultsStorage(
                 key: "myPref",
                 get: { Int($0 ?? "") ?? 0 },
-                set: { "\($0)" }
+                set: { "\($0)" },
+                storage: ud
             )
             var myPref: Int
         }
@@ -616,6 +617,112 @@ class Extensions_Foundation_UserDefaults_Tests: XCTestCase {
         
         XCTAssertEqual(ud.integerOptional(forKey: DummyPrefs.prefKey), nil)
         XCTAssertEqual(dummyPrefs.pref, -1)
+    }
+    
+    // MARK: URL
+    
+    func testUserDefaultsStorage_URL_Defaulted_NoPreviousValue() {
+        struct DummyPrefs {
+            static let prefKey = "urlPref"
+            
+            @UserDefaultsStorage(key: prefKey, storage: ud)
+            var pref: URL = URL(fileURLWithPath: "/")
+        }
+        
+        var dummyPrefs = DummyPrefs()
+        
+        // default value
+        XCTAssertEqual(ud.string(forKey: DummyPrefs.prefKey), "file:///")
+        XCTAssertEqual(dummyPrefs.pref, URL(fileURLWithPath: "/"))
+        
+        dummyPrefs.pref = URL(string: "https://www.google.com/test")!
+        
+        XCTAssertEqual(ud.string(forKey: DummyPrefs.prefKey), "https://www.google.com/test")
+        XCTAssertEqual(dummyPrefs.pref, URL(string: "https://www.google.com/test")!)
+    }
+    
+    func testUserDefaultsStorage_URL_Defaulted_HasPreviousValue() {
+        struct DummyPrefs {
+            static let prefKey = "urlPref"
+            
+            @UserDefaultsStorage(key: prefKey, storage: ud)
+            var pref: URL = URL(fileURLWithPath: "/")
+        }
+        
+        var dummyPrefs = DummyPrefs()
+        
+        // set a pre-existing value
+        ud.set(URL(fileURLWithPath: "/test/").absoluteString, forKey: DummyPrefs.prefKey)
+        
+        XCTAssertEqual(ud.string(forKey: DummyPrefs.prefKey), "file:///test/")
+        XCTAssertEqual(dummyPrefs.pref, URL(fileURLWithPath: "/test/"))
+        
+        dummyPrefs.pref = URL(string: "https://www.google.com/test")!
+        
+        XCTAssertEqual(ud.string(forKey: DummyPrefs.prefKey), "https://www.google.com/test")
+        XCTAssertEqual(dummyPrefs.pref, URL(string: "https://www.google.com/test")!)
+    }
+    
+    func testUserDefaultsStorage_URL_NonDefaulted_Optional_NoPreviousValue() {
+        struct DummyPrefs {
+            static let prefKey = "urlPref"
+            
+            @UserDefaultsStorage(key: prefKey, storage: ud)
+            var pref: URL?
+        }
+        
+        var dummyPrefs = DummyPrefs()
+        
+        // default value
+        XCTAssertEqual(ud.string(forKey: DummyPrefs.prefKey), nil)
+        XCTAssertEqual(dummyPrefs.pref, nil)
+        
+        dummyPrefs.pref = URL(fileURLWithPath: "/")
+        
+        XCTAssertEqual(ud.string(forKey: DummyPrefs.prefKey), "file:///")
+        XCTAssertEqual(dummyPrefs.pref, URL(fileURLWithPath: "/"))
+        
+        dummyPrefs.pref = URL(string: "https://www.google.com/test")!
+        
+        XCTAssertEqual(ud.string(forKey: DummyPrefs.prefKey), "https://www.google.com/test")
+        XCTAssertEqual(dummyPrefs.pref, URL(string: "https://www.google.com/test")!)
+        
+        dummyPrefs.pref = nil
+        
+        XCTAssertEqual(ud.string(forKey: DummyPrefs.prefKey), nil)
+        XCTAssertEqual(dummyPrefs.pref, nil)
+    }
+    
+    func testUserDefaultsStorage_URL_NonDefaulted_Optional_HasPreviousValue() {
+        struct DummyPrefs {
+            static let prefKey = "urlPref"
+            
+            @UserDefaultsStorage(key: prefKey, storage: ud)
+            var pref: URL?
+        }
+        
+        var dummyPrefs = DummyPrefs()
+        
+        // set a pre-existing value
+        ud.set(URL(fileURLWithPath: "/test/").absoluteString, forKey: DummyPrefs.prefKey)
+        
+        XCTAssertEqual(ud.string(forKey: DummyPrefs.prefKey), "file:///test/")
+        XCTAssertEqual(dummyPrefs.pref, URL(fileURLWithPath: "/test/"))
+        
+        dummyPrefs.pref = URL(fileURLWithPath: "/")
+        
+        XCTAssertEqual(ud.string(forKey: DummyPrefs.prefKey), "file:///")
+        XCTAssertEqual(dummyPrefs.pref, URL(fileURLWithPath: "/"))
+        
+        dummyPrefs.pref = URL(string: "https://www.google.com/test")!
+        
+        XCTAssertEqual(ud.string(forKey: DummyPrefs.prefKey), "https://www.google.com/test")
+        XCTAssertEqual(dummyPrefs.pref, URL(string: "https://www.google.com/test")!)
+        
+        dummyPrefs.pref = nil
+        
+        XCTAssertEqual(ud.string(forKey: DummyPrefs.prefKey), nil)
+        XCTAssertEqual(dummyPrefs.pref, nil)
     }
 }
 
