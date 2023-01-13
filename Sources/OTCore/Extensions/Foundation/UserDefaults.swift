@@ -83,8 +83,8 @@ public struct UserDefaultsBacked<Value, StorageValue> {
     private let defaultValue: Value
     public var storage: UserDefaults
     
-    private let getTransformation: ((StorageValue) -> Value?)
-    private let setTransformation: ((Value) -> StorageValue?)
+    private let getTransformation: ((_ storedValue: StorageValue) -> Value?)
+    private let setTransformation: ((_ newValue: Value) -> StorageValue?)
     
     public var wrappedValue: Value {
         get {
@@ -172,7 +172,7 @@ public struct UserDefaultsBacked<Value, StorageValue> {
     public init(
         wrappedValue defaultValue: Value,
         key: String,
-        validation closure: @escaping (Value) -> Value,
+        validation closure: @escaping (_ value: Value) -> Value,
         storage: UserDefaults = .standard
     ) where Value == StorageValue {
         self.key = key
@@ -197,8 +197,8 @@ public struct UserDefaultsBacked<Value, StorageValue> {
     public init(
         wrappedValue defaultValue: Value,
         key: String,
-        get getTransformation: @escaping (StorageValue) -> Value?,
-        set setTransformation: @escaping (Value) -> StorageValue?,
+        get getTransformation: @escaping (_ storedValue: StorageValue) -> Value?,
+        set setTransformation: @escaping (_ newValue: Value) -> StorageValue?,
         storage: UserDefaults = .standard
     ) {
         self.key = key
@@ -229,7 +229,7 @@ extension UserDefaultsBacked where Value: ExpressibleByNilLiteral {
     
     public init(
         key: String,
-        validation closure: @escaping (Value) -> Value,
+        validation closure: @escaping (_ value: Value) -> Value,
         storage: UserDefaults = .standard
     ) where Value == StorageValue {
         self.init(
@@ -246,8 +246,8 @@ extension UserDefaultsBacked where Value: ExpressibleByNilLiteral {
     /// type.
     public init(
         key: String,
-        get getTransformation: @escaping (StorageValue) -> Value?,
-        set setTransformation: @escaping (Value) -> StorageValue?,
+        get getTransformation: @escaping (_ storedValue: StorageValue) -> Value?,
+        set setTransformation: @escaping (_ newValue: Value) -> StorageValue?,
         storage: UserDefaults = .standard
     ) {
         self.init(
