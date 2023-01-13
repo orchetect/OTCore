@@ -75,14 +75,16 @@ public struct UserDefaultsBacked<Value, StorageValue> {
     private let defaultValue: Value
     public var storage: UserDefaults
     
-    private let validator: ((Value) -> Value)?
-    private let transformValueToStorageValue: ((Value) -> StorageValue)?
-    private let transformStorageValueToValue: ((StorageValue) -> Value)?
+    private let getTransformation: ((StorageValue) -> Value?)
+    private let setTransformation: ((Value) -> StorageValue?)
     
     public var wrappedValue: Value {
         get {
-            let value = storage.value(forKey: key) as? Value
-            return value ?? defaultValue
+            guard let value = storage.value(forKey: key) as? StorageValue else {
+                return defaultValue
+            }
+            let processed = process(value)
+            return processed ?? defaultValue
         }
         set {
             if let asOptional = newValue as? OTCoreOptional {
@@ -91,21 +93,22 @@ public struct UserDefaultsBacked<Value, StorageValue> {
                     // otherwise .setValue() will throw an exception
                     storage.removeObject(forKey: key)
                 } else if let unwrappedNewValue = asOptional.asAny() as? Value {
-                    let processedValue = validate(unwrappedNewValue, validator: validator)
+                    let processedValue = process(unwrappedNewValue)
                     storage.setValue(processedValue, forKey: key)
                 }
             } else {
-                let processedValue = validate(newValue, validator: validator)
+                let processedValue = process(newValue) ?? process(defaultValue)
                 storage.setValue(processedValue, forKey: key)
             }
         }
     }
     
-    private func validate(
-        _ value: Value,
-        validator: ((Value) -> Value)?
-    ) -> Value {
-        validator?(value) ?? value
+    private func process(_ value: StorageValue) -> Value? {
+        getTransformation(value)
+    }
+    
+    private func process(_ value: Value) -> StorageValue? {
+        setTransformation(value)
     }
     
     // MARK: Init - Same Type
@@ -118,11 +121,10 @@ public struct UserDefaultsBacked<Value, StorageValue> {
         self.defaultValue = defaultValue
         self.key = key
         self.storage = storage
-        validator = nil
         
         // not used
-        transformStorageValueToValue = nil
-        transformValueToStorageValue = nil
+        getTransformation = { $0 }
+        setTransformation = { $0 }
         
         // update stored value
         let readValue = wrappedValue
@@ -140,7 +142,7 @@ public struct UserDefaultsBacked<Value, StorageValue> {
         
         let rangeBounds = range.getAbsoluteBounds()
         
-        validator = {
+        let closure: (Value) -> Value = {
             Clamped<Value>.clamping(
                 $0,
                 min: rangeBounds.min,
@@ -148,11 +150,11 @@ public struct UserDefaultsBacked<Value, StorageValue> {
             )
         }
         
-        self.defaultValue = validator!(defaultValue)
+        getTransformation = closure
+        setTransformation = closure
         
-        // not used
-        transformStorageValueToValue = nil
-        transformValueToStorageValue = nil
+        // clamp initial value
+        self.defaultValue = closure(defaultValue)
         
         // update stored value
         let readValue = wrappedValue
@@ -167,12 +169,35 @@ public struct UserDefaultsBacked<Value, StorageValue> {
     ) where Value == StorageValue {
         self.key = key
         self.storage = storage
-        validator = closure
-        self.defaultValue = closure(defaultValue)
         
         // not used
-        transformStorageValueToValue = nil
-        transformValueToStorageValue = nil
+        getTransformation = closure
+        setTransformation = closure
+        
+        // validate initial value
+        self.defaultValue = closure(defaultValue)
+        
+        // update stored value
+        let readValue = wrappedValue
+        wrappedValue = readValue
+    }
+    
+    // MARK: - Different Types
+    
+    /// Uses get and set transform closures to allow a value to have a different underlying storage
+    /// type.
+    public init(
+        wrappedValue defaultValue: Value,
+        key: String,
+        get getTransformation: @escaping (StorageValue) -> Value?,
+        set setTransformation: @escaping (Value) -> StorageValue?,
+        storage: UserDefaults = .standard
+    ) {
+        self.key = key
+        self.storage = storage
+        self.getTransformation = getTransformation
+        self.setTransformation = setTransformation
+        self.defaultValue = defaultValue
         
         // update stored value
         let readValue = wrappedValue
@@ -203,6 +228,25 @@ extension UserDefaultsBacked where Value: ExpressibleByNilLiteral {
             wrappedValue: nil,
             key: key,
             validation: closure,
+            storage: storage
+        )
+    }
+    
+    // MARK: - Different Types
+    
+    /// Uses get and set transform closures to allow a value to have a different underlying storage
+    /// type.
+    public init(
+        key: String,
+        get getTransformation: @escaping (StorageValue) -> Value?,
+        set setTransformation: @escaping (Value) -> StorageValue?,
+        storage: UserDefaults = .standard
+    ) {
+        self.init(
+            wrappedValue: nil,
+            key: key,
+            get: getTransformation,
+            set: setTransformation,
             storage: storage
         )
     }
