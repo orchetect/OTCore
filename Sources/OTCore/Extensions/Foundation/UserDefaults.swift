@@ -58,10 +58,12 @@ extension UserDefaults {
 /// **OTCore:**
 /// Read and write the value of a `UserDefaults` key.
 ///
-/// If a default value is provided, the `Value` will be treated as a non-Optional.
+/// If a defaults suite is not specified, `.standard` will be used.
+///
+/// If a default value is provided, the `Value` will be treated as a non-Optional with a default.
 ///
 ///     @UserDefaultsBacked(key: "myPref")
-///     var myPref = true
+///     var myPref: Bool = true
 ///
 /// If no default is provided, the `Value` will be treated as an Optional.
 ///
@@ -72,27 +74,74 @@ extension UserDefaults {
 /// Both `get` and `set` closures allow for custom transform code.
 /// If either closure returns nil, the default value of 1 will be used.
 ///
-///     // UserDefaults will store this as a `String`, but the var is an `Int`.
-///     @UserDefaultsBacked(key: "myPref", get: { Int($0) }, set: { "\($0)" })
+///     // Stored as a `String`, but the var is an `Int`.
+///     // get closure: transform `String` into `Int`
+///     // set closure: transform `Int` into `String`
+///     @UserDefaultsBacked(
+///         key: "myPref",
+///         get: { Int($0) },
+///         set: { "\($0)" }
+///     )
 ///     var myPref: Int = 1
 ///
-/// If a defaults suite is not specified, `.standard` will be used.
+/// A non-defaulted declaration relies on the closures to process the values with no default.
+///
+///     // Stored as a `String`, but the var is an `Int`.
+///     // get closure: transform `String?` into `Int`
+///     // set closure: transform `Int` into `String`
+///     @UserDefaultsBacked(
+///         key: "myPref",
+///         get: { Int($0 ?? "") ?? 0 },
+///         set: { "\($0)" }
+///     )
+///     var myPref: Int
+///
+/// Additional conveniences are available through specific parameters.
+///
+/// A special value validation closure is available when the value type matches the stored value
+/// type.
+///
+///     @UserDefaultsBacked(
+///         key: "myPref",
+///         validation: { $0.trimmingCharacters(in: .whitespaces) },
+///     )
+///     var pref = "  test  " // will be stored as "test"
+///
+/// A special value clamping closure is available when the value type matches the stored value
+/// type. Any types (not just integers) that can form a range can be clamped.
+///
+///     @UserDefaultsBacked(key: "myPref", clamped: 5 ... 10)
+///     var pref = 1 // will be clamped to 5
+///
 @propertyWrapper
 public struct UserDefaultsBacked<Value, StorageValue> {
     private let key: String
-    private let defaultValue: Value
+    private let defaultValue: Any
     public var storage: UserDefaults
     
     private let getTransformation: ((_ storedValue: StorageValue) -> Value?)
     private let setTransformation: ((_ newValue: Value) -> StorageValue?)
     
+    private let computedOnly: Bool
+    private let getTransformationComputedOnly: ((_ storedValue: StorageValue?) -> Value)
+    private let setTransformationComputedOnly: ((_ newValue: Value) -> StorageValue)
+    
+    // note: "defaultValue as! Value" is guaranteed to work because it's only used
+    // where the value is known to be of type Value.
+    // it's an unfortunate workaround that defaultValue is Any but it allows us to
+    // build this big beautiful single propertyWrapper with multiple uses
+    // instead of having to split it up into multiple different structs.
     public var wrappedValue: Value {
         get {
-            guard let value = storage.value(forKey: key) as? StorageValue else {
-                return defaultValue
+            let value = storage.value(forKey: key) as? StorageValue
+            if computedOnly {
+                return getTransformationComputedOnly(value)
             }
-            let processed = process(value)
-            return processed ?? defaultValue
+            guard let value = value else {
+                return defaultValue as! Value
+            }
+            let processed = getTransformation(value)
+            return processed ?? defaultValue as! Value
         }
         set {
             if let asOptional = newValue as? OTCoreOptional {
@@ -101,22 +150,25 @@ public struct UserDefaultsBacked<Value, StorageValue> {
                     // otherwise .setValue() will throw an exception
                     storage.removeObject(forKey: key)
                 } else if let unwrappedNewValue = asOptional.asAny() as? Value {
-                    let processedValue = process(unwrappedNewValue)
+                    var processedValue: StorageValue?
+                    if computedOnly {
+                        processedValue = setTransformationComputedOnly(unwrappedNewValue)
+                    } else {
+                        processedValue = setTransformation(unwrappedNewValue)
+                    }
                     storage.setValue(processedValue, forKey: key)
                 }
             } else {
-                let processedValue = process(newValue) ?? process(defaultValue)
+                var processedValue: StorageValue?
+                if computedOnly {
+                    processedValue = setTransformationComputedOnly(newValue)
+                } else {
+                    processedValue = setTransformation(newValue)
+                        ?? setTransformation(defaultValue as! Value)
+                }
                 storage.setValue(processedValue, forKey: key)
             }
         }
-    }
-    
-    private func process(_ value: StorageValue) -> Value? {
-        getTransformation(value)
-    }
-    
-    private func process(_ value: Value) -> StorageValue? {
-        setTransformation(value)
     }
     
     // MARK: Init - Same Type
@@ -133,6 +185,9 @@ public struct UserDefaultsBacked<Value, StorageValue> {
         // not used
         getTransformation = { $0 }
         setTransformation = { $0 }
+        computedOnly = false
+        getTransformationComputedOnly = { _ in defaultValue }
+        setTransformationComputedOnly = { $0 }
         
         // update stored value
         let readValue = wrappedValue
@@ -164,6 +219,11 @@ public struct UserDefaultsBacked<Value, StorageValue> {
         // clamp initial value
         self.defaultValue = closure(defaultValue)
         
+        // not used
+        computedOnly = false
+        getTransformationComputedOnly = { _ in defaultValue }
+        setTransformationComputedOnly = { $0 }
+        
         // update stored value
         let readValue = wrappedValue
         wrappedValue = readValue
@@ -181,6 +241,9 @@ public struct UserDefaultsBacked<Value, StorageValue> {
         // not used
         getTransformation = closure
         setTransformation = closure
+        computedOnly = false
+        getTransformationComputedOnly = { _ in defaultValue }
+        setTransformationComputedOnly = { $0 }
         
         // validate initial value
         self.defaultValue = closure(defaultValue)
@@ -207,9 +270,36 @@ public struct UserDefaultsBacked<Value, StorageValue> {
         self.setTransformation = setTransformation
         self.defaultValue = defaultValue
         
+        // not used
+        computedOnly = false
+        getTransformationComputedOnly = { _ in defaultValue }
+        setTransformationComputedOnly = { setTransformation($0)! }
+        
         // update stored value
         let readValue = wrappedValue
         wrappedValue = readValue
+    }
+    
+    /// Uses get and set transform closures to allow a value to have a different underlying storage
+    /// type.
+    public init(
+        key: String,
+        get getTransformation: @escaping (_ storedValue: StorageValue?) -> Value,
+        set setTransformation: @escaping (_ newValue: Value) -> StorageValue,
+        storage: UserDefaults = .standard
+    ) {
+        computedOnly = true
+        
+        self.key = key
+        self.storage = storage
+        self.getTransformationComputedOnly = getTransformation
+        self.setTransformationComputedOnly = setTransformation
+        
+        // not used
+        self.getTransformation = { _ in nil }
+        self.setTransformation = { _ in nil }
+        // safe because we ensure to not use this property when computedOnly == true
+        self.defaultValue = Void.self
     }
 }
 
