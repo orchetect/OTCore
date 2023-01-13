@@ -374,8 +374,8 @@ extension Data: UserDefaultsStorable { }
 extension Date: UserDefaultsStorable { }
 extension Bool: UserDefaultsStorable { }
 extension URL: UserDefaultsStorable { }
-extension [UserDefaultsStorable]: UserDefaultsStorable { }
-extension [String: UserDefaultsStorable]: UserDefaultsStorable { }
+extension Array: UserDefaultsStorable where Element: UserDefaultsStorable { }
+extension Dictionary<String, UserDefaultsStorable>: UserDefaultsStorable { }
 extension Optional: UserDefaultsStorable where Wrapped: UserDefaultsStorable { }
 
 extension NSString: UserDefaultsStorable { }
