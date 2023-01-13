@@ -727,6 +727,7 @@ class Extensions_Foundation_UserDefaults_Tests: XCTestCase {
     
     // MARK: Date
     
+    @available(iOS 13, *) // needed for Date.advanced(by:)
     func testUserDefaultsStorage_Date_Defaulted_NoPreviousValue() {
         struct DummyPrefs {
             static let prefKey = "urlPref"
