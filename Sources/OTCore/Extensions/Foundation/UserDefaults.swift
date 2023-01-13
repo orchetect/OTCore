@@ -68,6 +68,14 @@ extension UserDefaults {
 ///     @UserDefaultsBacked(key: "myPref")
 ///     var myPref: Bool?
 ///
+/// A different type than the underlying storage type can be used.
+/// Both `get` and `set` closures allow for custom transform code.
+/// If either closure returns nil, the default value of 1 will be used.
+///
+///     // UserDefaults will store this as a `String`, but the var is an `Int`.
+///     @UserDefaultsBacked(key: "myPref", get: { Int($0) }, set: { "\($0)" })
+///     var myPref: Int = 1
+///
 /// If a defaults suite is not specified, `.standard` will be used.
 @propertyWrapper
 public struct UserDefaultsBacked<Value, StorageValue> {
