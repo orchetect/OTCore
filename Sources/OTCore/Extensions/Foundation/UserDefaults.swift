@@ -70,12 +70,14 @@ extension UserDefaults {
 ///
 /// If a defaults suite is not specified, `.standard` will be used.
 @propertyWrapper
-public struct UserDefaultsBacked<Value> {
+public struct UserDefaultsBacked<Value, StorageValue> {
     private let key: String
     private let defaultValue: Value
     public var storage: UserDefaults
     
-    private let processor: ((Value) -> Value)?
+    private let validator: ((Value) -> Value)?
+    private let transformValueToStorageValue: ((Value) -> StorageValue)?
+    private let transformStorageValueToValue: ((StorageValue) -> Value)?
     
     public var wrappedValue: Value {
         get {
@@ -89,38 +91,38 @@ public struct UserDefaultsBacked<Value> {
                     // otherwise .setValue() will throw an exception
                     storage.removeObject(forKey: key)
                 } else if let unwrappedNewValue = asOptional.asAny() as? Value {
-                    let processedValue = process(unwrappedNewValue, processor: processor)
+                    let processedValue = validate(unwrappedNewValue, validator: validator)
                     storage.setValue(processedValue, forKey: key)
                 }
             } else {
-                let processedValue = process(newValue, processor: processor)
+                let processedValue = validate(newValue, validator: validator)
                 storage.setValue(processedValue, forKey: key)
             }
         }
     }
     
-    private func process(
+    private func validate(
         _ value: Value,
-        processor: ((Value) -> Value)?
+        validator: ((Value) -> Value)?
     ) -> Value {
-        if let processor = processor {
-            return processor(value)
-        } else {
-            return value
-        }
+        validator?(value) ?? value
     }
     
-    // MARK: Init
+    // MARK: Init - Same Type
     
     public init(
         wrappedValue defaultValue: Value,
         key: String,
         storage: UserDefaults = .standard
-    ) {
+    ) where Value == StorageValue {
         self.defaultValue = defaultValue
         self.key = key
         self.storage = storage
-        processor = nil
+        validator = nil
+        
+        // not used
+        transformStorageValueToValue = nil
+        transformValueToStorageValue = nil
         
         // update stored value
         let readValue = wrappedValue
@@ -132,13 +134,13 @@ public struct UserDefaultsBacked<Value> {
         key: String,
         clamped range: R,
         storage: UserDefaults = .standard
-    ) where R.Bound == Value {
+    ) where Value == StorageValue, R.Bound == Value {
         self.key = key
         self.storage = storage
         
         let rangeBounds = range.getAbsoluteBounds()
         
-        processor = {
+        validator = {
             Clamped<Value>.clamping(
                 $0,
                 min: rangeBounds.min,
@@ -146,7 +148,11 @@ public struct UserDefaultsBacked<Value> {
             )
         }
         
-        self.defaultValue = processor!(defaultValue)
+        self.defaultValue = validator!(defaultValue)
+        
+        // not used
+        transformStorageValueToValue = nil
+        transformValueToStorageValue = nil
         
         // update stored value
         let readValue = wrappedValue
@@ -158,11 +164,15 @@ public struct UserDefaultsBacked<Value> {
         key: String,
         validation closure: @escaping (Value) -> Value,
         storage: UserDefaults = .standard
-    ) {
+    ) where Value == StorageValue {
         self.key = key
         self.storage = storage
-        processor = closure
+        validator = closure
         self.defaultValue = closure(defaultValue)
+        
+        // not used
+        transformStorageValueToValue = nil
+        transformValueToStorageValue = nil
         
         // update stored value
         let readValue = wrappedValue
@@ -171,10 +181,12 @@ public struct UserDefaultsBacked<Value> {
 }
 
 extension UserDefaultsBacked where Value: ExpressibleByNilLiteral {
+    // MARK: Init - Same Type
+    
     public init(
         key: String,
         storage: UserDefaults = .standard
-    ) {
+    ) where Value == StorageValue {
         self.init(
             wrappedValue: nil,
             key: key,
@@ -186,7 +198,7 @@ extension UserDefaultsBacked where Value: ExpressibleByNilLiteral {
         key: String,
         validation closure: @escaping (Value) -> Value,
         storage: UserDefaults = .standard
-    ) {
+    ) where Value == StorageValue {
         self.init(
             wrappedValue: nil,
             key: key,
