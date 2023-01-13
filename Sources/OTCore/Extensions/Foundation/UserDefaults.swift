@@ -378,6 +378,13 @@ extension [UserDefaultsStorable]: UserDefaultsStorable { }
 extension [String: UserDefaultsStorable]: UserDefaultsStorable { }
 extension Optional: UserDefaultsStorable where Wrapped: UserDefaultsStorable { }
 
+extension NSString: UserDefaultsStorable { }
+extension NSData: UserDefaultsStorable { }
+extension NSDate: UserDefaultsStorable { }
+extension NSNumber: UserDefaultsStorable { }
+extension NSArray: UserDefaultsStorable { }
+extension NSDictionary: UserDefaultsStorable { }
+
 // MARK: - API Changes in 1.4.6
 
 @available(*, unavailable, renamed: "UserDefaultsStorage")

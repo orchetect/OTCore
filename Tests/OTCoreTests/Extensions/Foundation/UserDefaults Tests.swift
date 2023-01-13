@@ -724,6 +724,75 @@ class Extensions_Foundation_UserDefaults_Tests: XCTestCase {
         XCTAssertEqual(ud.string(forKey: DummyPrefs.prefKey), nil)
         XCTAssertEqual(dummyPrefs.pref, nil)
     }
+    
+    // MARK: Date
+    
+    func testUserDefaultsStorage_Date_Defaulted_NoPreviousValue() {
+        struct DummyPrefs {
+            static let prefKey = "urlPref"
+            
+            static let date = Date()
+            
+            @UserDefaultsStorage(key: prefKey, storage: ud)
+            var pref: Date = date
+        }
+        
+        var dummyPrefs = DummyPrefs()
+        
+        // default value
+        XCTAssertEqual(ud.value(forKey: DummyPrefs.prefKey) as? Date, DummyPrefs.date)
+        XCTAssertEqual(dummyPrefs.pref, DummyPrefs.date)
+        
+        dummyPrefs.pref = DummyPrefs.date.advanced(by: 10)
+        
+        XCTAssertEqual(ud.value(forKey: DummyPrefs.prefKey) as? Date,
+                       DummyPrefs.date.advanced(by: 10))
+        XCTAssertEqual(dummyPrefs.pref, DummyPrefs.date.advanced(by: 10))
+    }
+    
+    // MARK: Double
+    
+    func testUserDefaultsStorage_Double_Defaulted_NoPreviousValue() {
+        struct DummyPrefs {
+            static let prefKey = "urlPref"
+            
+            @UserDefaultsStorage(key: prefKey, storage: ud)
+            var pref: Double = 2.0
+        }
+        
+        var dummyPrefs = DummyPrefs()
+        
+        // default value
+        XCTAssertEqual(ud.double(forKey: DummyPrefs.prefKey), 2.0)
+        XCTAssertEqual(dummyPrefs.pref, 2.0)
+        
+        dummyPrefs.pref = 5.0
+        
+        XCTAssertEqual(ud.double(forKey: DummyPrefs.prefKey), 5.0)
+        XCTAssertEqual(dummyPrefs.pref, 5.0)
+    }
+    
+    // MARK: Float
+    
+    func testUserDefaultsStorage_Float_Defaulted_NoPreviousValue() {
+        struct DummyPrefs {
+            static let prefKey = "urlPref"
+            
+            @UserDefaultsStorage(key: prefKey, storage: ud)
+            var pref: Float = 2.0
+        }
+        
+        var dummyPrefs = DummyPrefs()
+        
+        // default value
+        XCTAssertEqual(ud.float(forKey: DummyPrefs.prefKey), 2.0)
+        XCTAssertEqual(dummyPrefs.pref, 2.0)
+        
+        dummyPrefs.pref = 5.0
+        
+        XCTAssertEqual(ud.float(forKey: DummyPrefs.prefKey), 5.0)
+        XCTAssertEqual(dummyPrefs.pref, 5.0)
+    }
 }
 
 #endif
