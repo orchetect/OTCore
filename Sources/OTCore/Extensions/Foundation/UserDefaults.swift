@@ -62,12 +62,12 @@ extension UserDefaults {
 ///
 /// If a default value is provided, the `Value` will be treated as a non-Optional with a default.
 ///
-///     @UserDefaultsBacked(key: "myPref")
+///     @UserDefaultsStorage(key: "myPref")
 ///     var myPref: Bool = true
 ///
 /// If no default is provided, the `Value` will be treated as an Optional.
 ///
-///     @UserDefaultsBacked(key: "myPref")
+///     @UserDefaultsStorage(key: "myPref")
 ///     var myPref: Bool?
 ///
 /// A different type than the underlying storage type can be used.
@@ -77,7 +77,7 @@ extension UserDefaults {
 ///     // Stored as a `String`, but the var is an `Int`.
 ///     // get closure: transform `String` into `Int`
 ///     // set closure: transform `Int` into `String`
-///     @UserDefaultsBacked(
+///     @UserDefaultsStorage(
 ///         key: "myPref",
 ///         get: { Int($0) },
 ///         set: { "\($0)" }
@@ -89,7 +89,7 @@ extension UserDefaults {
 ///     // Stored as a `String`, but the var is an `Int`.
 ///     // get closure: transform `String?` into `Int`
 ///     // set closure: transform `Int` into `String`
-///     @UserDefaultsBacked(
+///     @UserDefaultsStorage(
 ///         key: "myPref",
 ///         get: { Int($0 ?? "") ?? 0 },
 ///         set: { "\($0)" }
@@ -101,7 +101,7 @@ extension UserDefaults {
 /// A special value validation closure is available when the value type matches the stored value
 /// type.
 ///
-///     @UserDefaultsBacked(
+///     @UserDefaultsStorage(
 ///         key: "myPref",
 ///         validation: { $0.trimmingCharacters(in: .whitespaces) },
 ///     )
@@ -110,11 +110,11 @@ extension UserDefaults {
 /// A special value clamping closure is available when the value type matches the stored value
 /// type. Any types (not just integers) that can form a range can be clamped.
 ///
-///     @UserDefaultsBacked(key: "myPref", clamped: 5 ... 10)
+///     @UserDefaultsStorage(key: "myPref", clamped: 5 ... 10)
 ///     var pref = 1 // will be clamped to 5
 ///
 @propertyWrapper
-public struct UserDefaultsBacked<Value, StorageValue> {
+public struct UserDefaultsStorage<Value, StorageValue> {
     private let key: String
     private let defaultValue: Any
     public var storage: UserDefaults
@@ -303,7 +303,7 @@ public struct UserDefaultsBacked<Value, StorageValue> {
     }
 }
 
-extension UserDefaultsBacked where Value: ExpressibleByNilLiteral {
+extension UserDefaultsStorage where Value: ExpressibleByNilLiteral {
     // MARK: Init - Same Type
     
     public init(
@@ -348,6 +348,51 @@ extension UserDefaultsBacked where Value: ExpressibleByNilLiteral {
             storage: storage
         )
     }
+}
+
+// MARK: - API Changes in 1.4.6
+@available(*, unavailable, renamed: "UserDefaultsStorage")
+@propertyWrapper
+public struct UserDefaultsBacked<Value> {
+    public var storage: UserDefaults
+    public var wrappedValue: Value
+    
+    //public init(wrappedValue: Value) { fatalError() }
+    
+    //public init(key: String) { fatalError() }
+    
+    public init(
+        wrappedValue defaultValue: Value,
+        key: String,
+        storage: UserDefaults = .standard
+    ) { fatalError() }
+    
+    public init<R: RangeExpression>(
+        wrappedValue defaultValue: Value,
+        key: String,
+        clamped range: R,
+        storage: UserDefaults = .standard
+    ) where R.Bound == Value { fatalError() }
+    
+    public init(
+        wrappedValue defaultValue: Value,
+        key: String,
+        validation closure: @escaping (Value) -> Value,
+        storage: UserDefaults = .standard
+    ) { fatalError() }
+
+    /* extension UserDefaultsBacked where Value: ExpressibleByNilLiteral { */
+
+    public init<V>(
+        key: String,
+        storage: UserDefaults = .standard
+    ) where Value == V? { fatalError() }
+    
+    public init<V>(
+        key: String,
+        validation closure: @escaping (Value) -> Value,
+        storage: UserDefaults = .standard
+    ) where Value == V? { fatalError() }
 }
 
 #endif

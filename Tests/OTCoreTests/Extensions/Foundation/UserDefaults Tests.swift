@@ -82,11 +82,11 @@ class Extensions_Foundation_UserDefaults_Tests: XCTestCase {
         XCTAssertFalse(ud.exists(key: "does_not_exist"))
     }
     
-    func testUserDefaultsBacked_Defaulted_NoPreviousValue() {
+    func testUserDefaultsStorage_Defaulted_NoPreviousValue() {
         struct DummyPrefs {
             static let prefKey = "defaultedPref"
             
-            @UserDefaultsBacked(key: prefKey, storage: ud)
+            @UserDefaultsStorage(key: prefKey, storage: ud)
             var pref = 2
         }
         
@@ -101,11 +101,11 @@ class Extensions_Foundation_UserDefaults_Tests: XCTestCase {
         XCTAssertEqual(dummyPrefs.pref, 4)
     }
     
-    func testUserDefaultsBacked_Defaulted_HasPreviousValue() {
+    func testUserDefaultsStorage_Defaulted_HasPreviousValue() {
         struct DummyPrefs {
             static let prefKey = "defaultedPref"
             
-            @UserDefaultsBacked(key: prefKey, storage: ud)
+            @UserDefaultsStorage(key: prefKey, storage: ud)
             var pref = 2
         }
         
@@ -123,11 +123,11 @@ class Extensions_Foundation_UserDefaults_Tests: XCTestCase {
         XCTAssertEqual(dummyPrefs.pref, 4)
     }
     
-    func testUserDefaultsBacked_NonDefaulted_NoPreviousValue() {
+    func testUserDefaultsStorage_NonDefaulted_NoPreviousValue() {
         struct DummyPrefs {
             static let prefKey = "nonDefaultedPref"
             
-            @UserDefaultsBacked(key: prefKey, storage: ud)
+            @UserDefaultsStorage(key: prefKey, storage: ud)
             var pref: String?
         }
         
@@ -148,11 +148,11 @@ class Extensions_Foundation_UserDefaults_Tests: XCTestCase {
         XCTAssertEqual(dummyPrefs.pref, nil)
     }
     
-    func testUserDefaultsBacked_NonDefaulted_HasPreviousValue() {
+    func testUserDefaultsStorage_NonDefaulted_HasPreviousValue() {
         struct DummyPrefs {
             static let prefKey = "nonDefaultedPref"
             
-            @UserDefaultsBacked(key: prefKey, storage: ud)
+            @UserDefaultsStorage(key: prefKey, storage: ud)
             var pref: String?
         }
         
@@ -176,11 +176,11 @@ class Extensions_Foundation_UserDefaults_Tests: XCTestCase {
         XCTAssertEqual(dummyPrefs.pref, nil)
     }
     
-    func testUserDefaultsBacked_Defaulted_Clamped_NoPreviousValue() {
+    func testUserDefaultsStorage_Defaulted_Clamped_NoPreviousValue() {
         struct DummyPrefs {
             static let prefKey = "clampedPref"
             
-            @UserDefaultsBacked(key: prefKey, clamped: 5 ... 10, storage: ud)
+            @UserDefaultsStorage(key: prefKey, clamped: 5 ... 10, storage: ud)
             var pref = 1
         }
         
@@ -216,11 +216,11 @@ class Extensions_Foundation_UserDefaults_Tests: XCTestCase {
         XCTAssertEqual(dummyPrefs.pref, 10)
     }
     
-    func testUserDefaultsBacked_Defaulted_Clamped_HasPreviousValue() {
+    func testUserDefaultsStorage_Defaulted_Clamped_HasPreviousValue() {
         struct DummyPrefs {
             static let prefKey = "clampedPref"
             
-            @UserDefaultsBacked(key: prefKey, clamped: 5 ... 10, storage: ud)
+            @UserDefaultsStorage(key: prefKey, clamped: 5 ... 10, storage: ud)
             var pref = 1
         }
         
@@ -259,11 +259,11 @@ class Extensions_Foundation_UserDefaults_Tests: XCTestCase {
         XCTAssertEqual(dummyPrefs.pref, 10)
     }
     
-    func testUserDefaultsBacked_Defaulted_Validated_NoPreviousValue() {
+    func testUserDefaultsStorage_Defaulted_Validated_NoPreviousValue() {
         struct DummyPrefs {
             static let prefKey = "validatedPref"
             
-            @UserDefaultsBacked(
+            @UserDefaultsStorage(
                 key: prefKey,
                 validation: { $0.clamped(to: 5 ... 10) },
                 storage: ud
@@ -303,11 +303,11 @@ class Extensions_Foundation_UserDefaults_Tests: XCTestCase {
         XCTAssertEqual(dummyPrefs.pref, 10)
     }
     
-    func testUserDefaultsBacked_Defaulted_Validated_HasPreviousValue() {
+    func testUserDefaultsStorage_Defaulted_Validated_HasPreviousValue() {
         struct DummyPrefs {
             static let prefKey = "validatedPref"
             
-            @UserDefaultsBacked(
+            @UserDefaultsStorage(
                 key: prefKey,
                 validation: { $0.clamped(to: 5 ... 10) },
                 storage: ud
@@ -350,11 +350,11 @@ class Extensions_Foundation_UserDefaults_Tests: XCTestCase {
         XCTAssertEqual(dummyPrefs.pref, 10)
     }
     
-    func testUserDefaultsBacked_Defaulted_GetSet_NoPreviousValue() {
+    func testUserDefaultsStorage_Defaulted_GetSet_NoPreviousValue() {
         struct DummyPrefs {
             static let prefKey = "transformedPref"
             
-            @UserDefaultsBacked(
+            @UserDefaultsStorage(
                 key: prefKey,
                 get: { Int($0) },
                 set: { $0 < 5 ? "\($0)" : nil },
@@ -381,11 +381,11 @@ class Extensions_Foundation_UserDefaults_Tests: XCTestCase {
         XCTAssertEqual(dummyPrefs.pref, 1)
     }
     
-    func testUserDefaultsBacked_Defaulted_GetSet_HasPreviousValue() {
+    func testUserDefaultsStorage_Defaulted_GetSet_HasPreviousValue() {
         struct DummyPrefs {
             static let prefKey = "transformedPref"
             
-            @UserDefaultsBacked(
+            @UserDefaultsStorage(
                 key: prefKey,
                 get: { Int($0) },
                 set: { $0 < 8 ? "\($0)" : nil },
@@ -409,11 +409,11 @@ class Extensions_Foundation_UserDefaults_Tests: XCTestCase {
         XCTAssertEqual(dummyPrefs.pref, 4)
     }
     
-    func testUserDefaultsBacked_NonDefaulted_GetSet_NoPreviousValue() {
+    func testUserDefaultsStorage_NonDefaulted_GetSet_NoPreviousValue() {
         struct DummyPrefs {
             static let prefKey = "nonDefaultedTransformedPref"
             
-            @UserDefaultsBacked(
+            @UserDefaultsStorage(
                 key: prefKey,
                 get: { Int($0) },
                 set: { $0 != nil ? "\($0!)" : nil },
@@ -439,11 +439,11 @@ class Extensions_Foundation_UserDefaults_Tests: XCTestCase {
         XCTAssertEqual(dummyPrefs.pref, nil)
     }
     
-    func testUserDefaultsBacked_NonDefaulted_GetSet_HasPreviousValue() {
+    func testUserDefaultsStorage_NonDefaulted_GetSet_HasPreviousValue() {
         struct DummyPrefs {
             static let prefKey = "nonDefaultedTransformedPref"
             
-            @UserDefaultsBacked(
+            @UserDefaultsStorage(
                 key: prefKey,
                 get: { Int($0) },
                 set: { $0 != nil ? "\($0!)" : nil },
@@ -467,12 +467,12 @@ class Extensions_Foundation_UserDefaults_Tests: XCTestCase {
         XCTAssertEqual(dummyPrefs.pref, 4)
     }
     
-    func testUserDefaultsBacked_ComputedOnly_Generic() {
+    func testUserDefaultsStorage_ComputedOnly_Generic() {
         struct DummyPrefs {
             static let prefKey = "computedOnlyPref"
             
             // not used, just here to see if this alternate syntax compiles
-            @UserDefaultsBacked<Int, String>(
+            @UserDefaultsStorage<Int, String>(
                 key: prefKey,
                 get: { $0 != nil ? Int($0!) ?? 0 : 0 },
                 set: { "\($0)" },
@@ -481,7 +481,7 @@ class Extensions_Foundation_UserDefaults_Tests: XCTestCase {
             private var pref1: Int
             
             // not used, just here to see if this alternate syntax compiles
-            @UserDefaultsBacked(
+            @UserDefaultsStorage(
                 key: prefKey,
                 get: { (storedValue: String?) in
                     storedValue != nil ? Int(storedValue!) ?? 0 : 0
@@ -495,11 +495,11 @@ class Extensions_Foundation_UserDefaults_Tests: XCTestCase {
         _ = DummyPrefs() // forces property wrappers to init
     }
     
-    func testUserDefaultsBacked_ComputedOnly_NoPreviousValue() {
+    func testUserDefaultsStorage_ComputedOnly_NoPreviousValue() {
         struct DummyPrefs {
             static let prefKey = "computedOnlyPref"
             
-            @UserDefaultsBacked(
+            @UserDefaultsStorage(
                 key: prefKey,
                 get: { $0 != nil ? Int($0!) ?? -1 : -1 },
                 set: { "\($0)" },
@@ -520,11 +520,11 @@ class Extensions_Foundation_UserDefaults_Tests: XCTestCase {
         XCTAssertEqual(dummyPrefs.pref, 4)
     }
     
-    func testUserDefaultsBacked_ComputedOnly_Optional_NoPreviousValue() {
+    func testUserDefaultsStorage_ComputedOnly_Optional_NoPreviousValue() {
         struct DummyPrefs {
             static let prefKey = "computedOnlyOptionalPref"
             
-            @UserDefaultsBacked(
+            @UserDefaultsStorage(
                 key: prefKey,
                 get: { $0 != nil ? Int($0!) ?? -1 : -1 },
                 set: { "\($0 ?? -1)" },
@@ -550,11 +550,11 @@ class Extensions_Foundation_UserDefaults_Tests: XCTestCase {
         XCTAssertEqual(dummyPrefs.pref, -1)
     }
     
-    func testUserDefaultsBacked_ComputedOnly_HasPreviousValue() {
+    func testUserDefaultsStorage_ComputedOnly_HasPreviousValue() {
         struct DummyPrefs {
             static let prefKey = "computedOnlyPref"
             
-            @UserDefaultsBacked(
+            @UserDefaultsStorage(
                 key: prefKey,
                 get: { $0 != nil ? Int($0!) ?? -1 : -1 },
                 set: { "\($0)" },
@@ -578,11 +578,11 @@ class Extensions_Foundation_UserDefaults_Tests: XCTestCase {
         XCTAssertEqual(dummyPrefs.pref, 4)
     }
     
-    func testUserDefaultsBacked_ComputedOnly_Optional_HasPreviousValue() {
+    func testUserDefaultsStorage_ComputedOnly_Optional_HasPreviousValue() {
         struct DummyPrefs {
             static let prefKey = "computedOnlyOptionalPref"
             
-            @UserDefaultsBacked(
+            @UserDefaultsStorage(
                 key: prefKey,
                 get: { $0 != nil ? Int($0!) ?? -1 : -1 },
                 set: { "\($0 ?? -1)" },
@@ -590,7 +590,7 @@ class Extensions_Foundation_UserDefaults_Tests: XCTestCase {
             )
             var pref: Int?
             
-            @UserDefaultsBacked(
+            @UserDefaultsStorage(
                 key: "myPref",
                 get: { Int($0 ?? "") ?? 0 },
                 set: { "\($0)" }
