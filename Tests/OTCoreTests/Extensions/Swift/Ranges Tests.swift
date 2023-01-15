@@ -847,6 +847,55 @@ class Extensions_Swift_Ranges_Tests: XCTestCase {
         XCTAssertEqual((0 ..< 11).split(every: 12), [0 ... 10])
     }
     
+    func testAbsoluteBounds() {
+        func bounds<R: RangeExpression>(of r: R) -> (min: R.Bound?, max: R.Bound?) where R.Bound: Strideable {
+            r.getAbsoluteBounds()
+        }
+        
+        // ClosedRange
+        XCTAssertEqual(bounds(of:  0 ... 0).min, 0)
+        XCTAssertEqual(bounds(of:  0 ... 0).max, 0)
+        XCTAssertEqual(bounds(of:  0 ... 1).min, 0)
+        XCTAssertEqual(bounds(of:  0 ... 1).max, 1)
+        XCTAssertEqual(bounds(of: -1 ... 1).min, -1)
+        XCTAssertEqual(bounds(of: -1 ... 1).max, 1)
+        
+        // Range
+        XCTAssertEqual(bounds(of:  0 ..< 0).min, nil)
+        XCTAssertEqual(bounds(of:  0 ..< 0).max, nil)
+        XCTAssertEqual(bounds(of: -1 ..< 0).min, -1)
+        XCTAssertEqual(bounds(of: -1 ..< 0).max, -1)
+        XCTAssertEqual(bounds(of: -1 ..< 1).min, -1)
+        XCTAssertEqual(bounds(of: -1 ..< 1).max, 0)
+        
+        // PartialRangeFrom
+        XCTAssertEqual(bounds(of:    0...).min, 0)
+        XCTAssertEqual(bounds(of:    0...).max, nil)
+        XCTAssertEqual(bounds(of: (-1)...).min, -1)
+        XCTAssertEqual(bounds(of: (-1)...).max, nil)
+        XCTAssertEqual(bounds(of:    1...).min, 1)
+        XCTAssertEqual(bounds(of:    1...).max, nil)
+        
+        
+        // PartialRangeUpTo
+        XCTAssertEqual(bounds(of:   ..<0).min, nil)
+        XCTAssertEqual(bounds(of:   ..<0).max, -1)
+        XCTAssertEqual(bounds(of: ..<(-1)).min, nil)
+        XCTAssertEqual(bounds(of: ..<(-1)).max, -2)
+        XCTAssertEqual(bounds(of:   ..<1).min, nil)
+        XCTAssertEqual(bounds(of:   ..<1).max, 0)
+        XCTAssertEqual(bounds(of:   ..<2).min, nil)
+        XCTAssertEqual(bounds(of:   ..<2).max, 1)
+        
+        // PartialRangeThrough
+        XCTAssertEqual(bounds(of:   ...0).min, nil)
+        XCTAssertEqual(bounds(of:   ...0).max, 0)
+        XCTAssertEqual(bounds(of: ...(-1)).min, nil)
+        XCTAssertEqual(bounds(of: ...(-1)).max, -1)
+        XCTAssertEqual(bounds(of:   ...1).min, nil)
+        XCTAssertEqual(bounds(of:   ...1).max, 1)
+    }
+    
     func testBinaryIntegerRepeatEach() {
         // basic functionality
         

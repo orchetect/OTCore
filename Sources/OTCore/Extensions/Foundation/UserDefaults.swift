@@ -211,7 +211,7 @@ public struct UserDefaultsStorage<Value, StorageValue> where StorageValue: UserD
         key: String,
         clamped range: R,
         storage: UserDefaults = .standard
-    ) where Value == StorageValue, R.Bound == Value {
+    ) where Value == StorageValue, Value: Strideable, R.Bound == Value {
         self.key = key
         self.storage = storage
         

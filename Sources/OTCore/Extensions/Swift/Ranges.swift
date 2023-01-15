@@ -830,33 +830,6 @@ extension Range where Bound == Int {
 
 // MARK: - @Clamped Property Wrapper
 
-extension RangeExpression {
-    /// **OTCore:**
-    /// Returns the absolute bound values. Value(s) are `nil` when unbounded.
-    @_disfavoredOverload
-    public func getAbsoluteBounds() -> (min: Bound?, max: Bound?) {
-        switch self {
-        case let range as ClosedRange<Bound>:
-            return range.absoluteBounds
-            
-            // case let range as Range<Bound>:
-            //    return range.absoluteBounds
-            
-        case let range as PartialRangeFrom<Bound>:
-            return range.absoluteBounds
-            
-            // case let range as PartialRangeUpTo<Bound>:
-            //    return range.absoluteBounds
-            
-        case let range as PartialRangeThrough<Bound>:
-            return range.absoluteBounds
-            
-        default:
-            fatalError("Unexpected range type.")
-        }
-    }
-}
-
 extension RangeExpression where Bound: Strideable {
     /// **OTCore:**
     /// Returns the absolute bound values. Value(s) are `nil` when unbounded.
@@ -879,7 +852,8 @@ extension RangeExpression where Bound: Strideable {
             return range.absoluteBounds
             
         default:
-            fatalError("Unexpected range type.")
+            assertionFailure("Unexpected range type: \(type(of: self))")
+            return (nil, nil)
         }
     }
 }
@@ -909,7 +883,7 @@ extension Range where Bound: Strideable {
             let adjustedMin = lowerBound
             let adjustedMax = upperBound.advanced(by: -1)
             
-            if adjustedMax <= adjustedMin {
+            if adjustedMax < adjustedMin {
                 // invalid range
                 newMin = nil
                 newMax = nil
