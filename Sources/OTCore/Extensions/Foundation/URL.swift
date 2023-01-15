@@ -157,7 +157,7 @@ extension URL {
     }
     
     /// **OTCore:**
-    /// Convenience method to test if a file URL is a symbolic link and not an actual file/folder.
+    /// Returns whether the file URL path is a folder.
     ///
     /// - Will return `nil` if the URL is not a properly formatted file URL, or there was a problem querying the URL's file system attributes.
     @_disfavoredOverload
