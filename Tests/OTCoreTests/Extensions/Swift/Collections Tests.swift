@@ -1308,6 +1308,17 @@ class Extensions_Swift_Collections_Tests: XCTestCase {
         XCTAssertEqual([1, 2, 2, 2, 2].duplicateElements(), [2])
     }
     
+    func testAllElementsAreEqual() {
+        XCTAssertTrue([Int]().allElementsAreEqual)
+        XCTAssertTrue([1].allElementsAreEqual)
+        XCTAssertTrue([1, 1].allElementsAreEqual)
+        XCTAssertTrue([1, 1, 1].allElementsAreEqual)
+        
+        XCTAssertFalse([1, 2].allElementsAreEqual)
+        XCTAssertFalse([1, 2, 1].allElementsAreEqual)
+        XCTAssertFalse([1, 1, 2].allElementsAreEqual)
+    }
+    
     // MARK: - .mapKeys
     
     func testDictionary_mapKeys_SameTypes() {

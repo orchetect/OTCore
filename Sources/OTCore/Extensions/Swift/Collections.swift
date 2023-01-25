@@ -1011,6 +1011,17 @@ extension Collection where Element: Equatable, Index: Strideable, Index.Stride: 
     }
 }
 
+extension Collection where Element: Equatable {
+    /// **OTCore:**
+    /// Returns `true` if all elements are equal.
+    @_disfavoredOverload
+    public var allElementsAreEqual: Bool {
+        guard !isEmpty else { return true }
+        let firstValue = first
+        return dropFirst().allSatisfy({ $0 == firstValue })
+    }
+}
+
 // MARK: - Dictionary map
 
 extension Dictionary {
