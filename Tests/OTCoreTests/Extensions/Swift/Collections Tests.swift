@@ -1300,6 +1300,22 @@ class Extensions_Swift_Collections_Tests: XCTestCase {
         XCTAssertEqual([1, 2, 2, 2, 2].removingDuplicates(), [1, 2])
     }
     
+    func testRemovingDuplicatesRandomOrdering() {
+        XCTAssertEqual([].removingDuplicatesRandomOrdering(), [] as [Int])
+        XCTAssertTrue(
+            [1, 2, 3, 4].removingDuplicatesRandomOrdering()
+                .elementsEqual(orderInsensitive: [1, 2, 3, 4])
+        )
+        XCTAssertTrue(
+            [1, 2, 3, 2, 4].removingDuplicatesRandomOrdering()
+                .elementsEqual(orderInsensitive: [1, 2, 3, 4])
+        )
+        XCTAssertTrue(
+            [1, 2, 2, 2, 2].removingDuplicatesRandomOrdering()
+                .elementsEqual(orderInsensitive: [1, 2])
+        )
+    }
+    
     func testDuplicateElements() {
         XCTAssertEqual([].duplicateElements(), [] as [Int])
         XCTAssertEqual([1, 2, 3, 4].duplicateElements(), [])

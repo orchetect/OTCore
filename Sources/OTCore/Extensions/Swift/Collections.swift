@@ -987,6 +987,18 @@ extension Collection where Element: Equatable {
     }
 }
 
+extension Collection where Element: Hashable {
+    /// **OTCore:**
+    /// Returns the array with duplicates removed but elements will be in random order.
+    /// This is due to using a `Set` to remove duplicates performantly.
+    /// If array ordering must be preserved, `removingDuplicates()` can be used instead
+    /// at the cost of performance.
+    @_disfavoredOverload
+    public func removingDuplicatesRandomOrdering() -> [Element] {
+        Array(Set(self))
+    }
+}
+
 extension Collection where Element: Equatable, Index: Strideable, Index.Stride: SignedInteger {
     /// **OTCore:**
     /// Returns only duplicate elements (elements that occur more than once in the array).
