@@ -984,6 +984,33 @@ extension Collection where Element: Equatable {
     }
 }
 
+extension Collection where Element: Equatable, Index: Strideable, Index.Stride: SignedInteger {
+    /// **OTCore:**
+    /// Returns only duplicate elements (elements that occur more than once in the array).
+    /// Only one instance of each duplicate element will be output in the resulting array.
+    /// Resulting array ordering is the order in which the first instance of each duplicate element
+    /// appears.
+    @_disfavoredOverload
+    public func duplicateElements() -> [Element] {
+        let zipped = zip(indices, self)
+        let dupeIndices = zipped.reduce(into: [Index]()) { result, element in
+            let advancedIndex = self.index(element.0, offsetBy: 1)
+            guard advancedIndex != endIndex else { return }
+            let scanIndices = advancedIndex..<endIndex
+            
+            if let newDupeIndex = scanIndices.first(
+                where: {
+                    self[$0] == self[element.0]
+                    && !result.contains(where: { self[$0] == self[element.0] })
+                }
+            ) {
+                result.append(newDupeIndex)
+            }
+        }
+        return dupeIndices.map { self[$0] }
+    }
+}
+
 // MARK: - Dictionary map
 
 extension Dictionary {

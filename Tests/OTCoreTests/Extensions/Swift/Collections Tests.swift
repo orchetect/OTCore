@@ -1300,6 +1300,14 @@ class Extensions_Swift_Collections_Tests: XCTestCase {
         XCTAssertEqual([1, 2, 2, 2, 2].removingDuplicates(), [1, 2])
     }
     
+    func testDuplicateElements() {
+        XCTAssertEqual([].duplicateElements(), [] as [Int])
+        XCTAssertEqual([1, 2, 3, 4].duplicateElements(), [])
+        XCTAssertEqual([1, 2, 3, 2, 4].duplicateElements(), [2])
+        XCTAssertEqual([1, 2, 3, 2, 1, 4].duplicateElements(), [1, 2])
+        XCTAssertEqual([1, 2, 2, 2, 2].duplicateElements(), [2])
+    }
+    
     // MARK: - .mapKeys
     
     func testDictionary_mapKeys_SameTypes() {
