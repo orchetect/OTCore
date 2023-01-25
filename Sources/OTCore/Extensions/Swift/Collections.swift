@@ -1023,6 +1023,31 @@ extension Collection where Element: Equatable {
         let firstValue = first
         return dropFirst().allSatisfy({ $0 == firstValue })
     }
+    
+    /// **OTCore:**
+    /// Returns `true` if all elements are equal regardless of order.
+    @_disfavoredOverload
+    public func elementsEqual<C: Collection>(
+        orderInsensitive other: C
+    ) -> Bool
+    where Element == C.Element, C.Index: Hashable
+    {
+        guard count == other.count else { return false }
+        guard count > 0 else { return true }
+        
+        var rhsIndices = Set(other.indices)
+        
+        for lhsIndex in indices {
+            guard let rhsIndex = rhsIndices.first(where: { self[lhsIndex] == other[$0] })
+            else { return false }
+            rhsIndices.remove(rhsIndex)
+        }
+        
+        // double-check
+        guard rhsIndices.isEmpty else { return false }
+        
+        return true
+    }
 }
 
 // MARK: - Dictionary map
