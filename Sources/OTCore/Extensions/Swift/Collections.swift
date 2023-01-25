@@ -987,6 +987,20 @@ extension Collection where Element: Equatable {
     }
 }
 
+extension RangeReplaceableCollection where Element: Equatable {
+    /// **OTCore:**
+    /// Removes duplicate elements.
+    /// Array ordering is preserved.
+    @_disfavoredOverload
+    public mutating func removeDuplicates() {
+        indices.reversed().dropLast().forEach { idx in
+            if self[startIndex ..< idx].contains(self[idx]) {
+                self.remove(at: idx)
+            }
+        }
+    }
+}
+
 extension Collection where Element: Hashable {
     /// **OTCore:**
     /// Returns the array with duplicates removed but elements will be in random order.
