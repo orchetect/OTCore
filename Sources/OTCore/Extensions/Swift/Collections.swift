@@ -968,7 +968,20 @@ extension Collection where Index == Int {
     }
 }
 
-// MARK: - Element Introspection
+// MARK: - Duplicates
+
+/// **OTCore:**
+/// Cases describing duplicate collection element behavior.
+public enum DuplicateElementFilter {
+    /// First occurrence of duplicate elements.
+    case firstOccurrences
+    
+    /// Only subsequence occurrences of duplicates, omitting the first instance.
+    case afterFirstOccurrences
+    
+    /// All occurrences of duplicates, including the first instance.
+    case allOccurrences
+}
 
 extension Collection where Element: Equatable {
     /// **OTCore:**
@@ -987,16 +1000,25 @@ extension Collection where Element: Equatable {
     }
 }
 
-extension RangeReplaceableCollection where Element: Equatable {
+extension RangeReplaceableCollection
+where Element: Equatable,
+      Index: Strideable,
+      Index.Stride: SignedInteger
+{
     /// **OTCore:**
     /// Removes duplicate elements.
-    /// Array ordering is preserved.
+    /// All duplicate elements are removed after the first appearance of the identical element.
+    ///
+    /// - Parameters:
+    ///   - removing: Defines duplicate filtering.
     @_disfavoredOverload
-    public mutating func removeDuplicates() {
-        indices.reversed().dropLast().forEach { idx in
-            if self[startIndex ..< idx].contains(self[idx]) {
-                self.remove(at: idx)
-            }
+    public mutating func removeDuplicates(
+        _ removing: DuplicateElementFilter = .afterFirstOccurrences
+    ) {
+        let dupeIndices = duplicateElementIndices(removing, sorted: true)
+        
+        dupeIndices.reversed().forEach {
+            remove(at: $0)
         }
     }
 }
@@ -1013,32 +1035,72 @@ extension Collection where Element: Hashable {
     }
 }
 
-extension Collection where Element: Equatable, Index: Strideable, Index.Stride: SignedInteger {
+extension Collection
+where Element: Equatable,
+      Index: Strideable,
+      Index.Stride: SignedInteger
+{
     /// **OTCore:**
     /// Returns only duplicate elements (elements that occur more than once in the array).
     /// Only one instance of each duplicate element will be output in the resulting array.
-    /// Resulting array ordering is the order in which the first instance of each duplicate element
-    /// appears.
+    /// All duplicate elements are removed after the first appearance of the identical element.
     @_disfavoredOverload
-    public func duplicateElements() -> [Element] {
-        let zipped = zip(indices, self)
-        let dupeIndices = zipped.reduce(into: [Index]()) { result, element in
-            let advancedIndex = self.index(element.0, offsetBy: 1)
+    public func duplicateElements(
+        _ dupeFilter: DuplicateElementFilter = .firstOccurrences
+    ) -> [Element] {
+        let dupeIndices = duplicateElementIndices(dupeFilter, sorted: false)
+        return dupeIndices.map { self[$0] }
+    }
+    
+    /// **OTCore:**
+    /// Returns indices of duplicate elements.
+    /// Returned indices are not sorted by default and may be out of order.
+    /// To sort the results, pass `true` to the `sort` parameter.
+    ///
+    /// - Parameters:
+    ///   - dupeFilter: Defines duplicate filtering.
+    ///   - sorted: If `true`, resulting indices are sorted.
+    /// - Returns: Index array.
+    @_disfavoredOverload
+    public func duplicateElementIndices(
+        _ dupeFilter: DuplicateElementFilter = .firstOccurrences,
+        sorted: Bool = false
+    ) -> [Index] {
+        var dupeIndices: [Index] = indices.reduce(into: []) { result, idx in
+            let advancedIndex = self.index(idx, offsetBy: 1)
             guard advancedIndex != endIndex else { return }
             let scanIndices = advancedIndex..<endIndex
             
-            if let newDupeIndex = scanIndices.first(
-                where: {
-                    self[$0] == self[element.0]
-                    && !result.contains(where: { self[$0] == self[element.0] })
+            switch dupeFilter {
+            case .firstOccurrences:
+                if let _ = scanIndices.first(where: { self[$0] == self[idx] }),
+                   !result.contains(where: { self[$0] == self[idx] })
+                {
+                    result.append(idx)
                 }
-            ) {
-                result.append(newDupeIndex)
+                
+            case .afterFirstOccurrences:
+                if let newDupeIndex = scanIndices.first(where: { self[$0] == self[idx] }) {
+                    result.append(newDupeIndex)
+                }
+                
+            case .allOccurrences:
+                if let newDupeIndex = scanIndices.first(where: { self[$0] == self[idx] }) {
+                    if !result.contains(where: { self[$0] == self[idx] }) {
+                        result.append(idx)
+                    }
+                    result.append(newDupeIndex)
+                }
             }
         }
-        return dupeIndices.map { self[$0] }
+        if sorted {
+            dupeIndices.sort()
+        }
+        return dupeIndices
     }
 }
+
+// MARK: - Element Equality
 
 extension Collection where Element: Equatable {
     /// **OTCore:**

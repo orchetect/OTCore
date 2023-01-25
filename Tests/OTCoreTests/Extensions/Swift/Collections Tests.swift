@@ -1363,6 +1363,64 @@ class Extensions_Swift_Collections_Tests: XCTestCase {
         XCTAssertFalse(([1, 2] as [Int]).elementsEqual(orderInsensitive: [2, 2]))
     }
     
+    func testDuplicateElementIndices() {
+        XCTAssertEqual(([] as [Int]).duplicateElementIndices(.firstOccurrences), [])
+        XCTAssertEqual(([] as [Int]).duplicateElementIndices(.afterFirstOccurrences), [])
+        XCTAssertEqual(([] as [Int]).duplicateElementIndices(.allOccurrences), [])
+        
+        XCTAssertEqual([1].duplicateElementIndices(.firstOccurrences), [])
+        XCTAssertEqual([1].duplicateElementIndices(.afterFirstOccurrences), [])
+        XCTAssertEqual([1].duplicateElementIndices(.allOccurrences), [])
+        
+        XCTAssertEqual([1, 2].duplicateElementIndices(.firstOccurrences), [])
+        XCTAssertEqual([1, 2].duplicateElementIndices(.afterFirstOccurrences), [])
+        XCTAssertEqual([1, 2].duplicateElementIndices(.allOccurrences), [])
+        
+        XCTAssertEqual([1, 1].duplicateElementIndices(.firstOccurrences), [0])
+        XCTAssertEqual([1, 1].duplicateElementIndices(.afterFirstOccurrences), [1])
+        XCTAssertEqual([1, 1].duplicateElementIndices(.allOccurrences), [0, 1])
+        
+        XCTAssertEqual([1, 2, 3, 4].duplicateElementIndices(.firstOccurrences), [])
+        XCTAssertEqual([1, 2, 3, 4].duplicateElementIndices(.afterFirstOccurrences), [])
+        XCTAssertEqual([1, 2, 3, 4].duplicateElementIndices(.allOccurrences), [])
+        
+        XCTAssertEqual([1, 2, 3, 2, 4].duplicateElementIndices(.firstOccurrences), [1])
+        XCTAssertEqual([1, 2, 3, 2, 4].duplicateElementIndices(.afterFirstOccurrences), [3])
+        XCTAssertEqual([1, 2, 3, 2, 4].duplicateElementIndices(.allOccurrences), [1, 3])
+        
+        XCTAssertEqual([1, 2, 2, 2].duplicateElementIndices(.firstOccurrences), [1])
+        XCTAssertEqual([1, 2, 2, 2].duplicateElementIndices(.afterFirstOccurrences), [2, 3])
+        XCTAssertEqual([1, 2, 2, 2].duplicateElementIndices(.allOccurrences), [1, 2, 3])
+        
+        // unsorted
+        XCTAssertEqual(
+            [1, 2, 2, 3, 2, 2, 3].duplicateElementIndices(.firstOccurrences),
+            [1, 3]
+        )
+        XCTAssertEqual(
+            [1, 2, 2, 3, 2, 2, 3].duplicateElementIndices(.afterFirstOccurrences),
+            [2, 4, 6, 5]
+        )
+        XCTAssertEqual(
+            [1, 2, 2, 3, 2, 2, 3].duplicateElementIndices(.allOccurrences),
+            [1, 2, 4, 3, 6, 5]
+        )
+        
+        // sorted
+        XCTAssertEqual(
+            [1, 2, 2, 3, 2, 2, 3].duplicateElementIndices(.firstOccurrences, sorted: true),
+            [1, 3]
+        )
+        XCTAssertEqual(
+            [1, 2, 2, 3, 2, 2, 3].duplicateElementIndices(.afterFirstOccurrences, sorted: true),
+            [2, 4, 5, 6]
+        )
+        XCTAssertEqual(
+            [1, 2, 2, 3, 2, 2, 3].duplicateElementIndices(.allOccurrences, sorted: true),
+            [1, 2, 3, 4, 5, 6]
+        )
+    }
+    
     func testAllElementsAreEqual() {
         XCTAssertTrue([Int]().allElementsAreEqual)
         XCTAssertTrue([1].allElementsAreEqual)
