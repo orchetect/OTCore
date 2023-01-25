@@ -976,6 +976,9 @@ extension Collection where Element: Equatable {
     /// Array ordering is preserved.
     @_disfavoredOverload
     public func removingDuplicates() -> [Element] {
+        // TODO: performance could be improved by using a dictionary keyed by the element and the value could be the original index, then reassemble a new array based on the index ordering?
+        // TODO: performance could be improved if this operated on indexes instead of copying all elements to a new array? perhaps use FlattenSequence or something similar
+        
         reduce(into: []) { result, element in
             if !result.contains(element) {
                 result.append(element)
