@@ -1432,6 +1432,52 @@ class Extensions_Swift_Collections_Tests: XCTestCase {
         XCTAssertFalse(([1, 2] as [Int]).elementsEqual(orderInsensitive: [2, 2]))
     }
     
+    // MARK: - String Collection Duplicates
+    
+    func testStringCollection_caseInsensitiveRemovingDuplicates() {
+        XCTAssertEqual(["", ""].caseInsensitiveRemovingDuplicates(), [""])
+        XCTAssertEqual(["a", "a"].caseInsensitiveRemovingDuplicates(), ["a"])
+        XCTAssertEqual(["a", "A"].caseInsensitiveRemovingDuplicates(), ["a"])
+        XCTAssertEqual(["A", "a"].caseInsensitiveRemovingDuplicates(), ["A"])
+        XCTAssertEqual(["A", "b", "a", "A", "B"].caseInsensitiveRemovingDuplicates(), ["A", "b"])
+    }
+    
+    func testStringCollection_localizedRemovingDuplicates() throws {
+        guard Locale.current.identifier.starts(with: "en_") else {
+            throw XCTSkip("Test can only run for English locale.")
+        }
+        
+        XCTAssertEqual(["", ""].localizedRemovingDuplicates(), [""])
+        XCTAssertEqual(["a", "a"].localizedRemovingDuplicates(), ["a"])
+        XCTAssertEqual(["a", "A"].localizedRemovingDuplicates(), ["a", "A"])
+        XCTAssertEqual(["A", "a"].localizedRemovingDuplicates(), ["A", "a"])
+        XCTAssertEqual(["A", "b", "a", "A", "B"].localizedRemovingDuplicates(), ["A", "b", "a", "B"])
+    }
+    
+    func testStringCollection_localizedCaseInsensitiveRemovingDuplicates() throws {
+        guard Locale.current.identifier.starts(with: "en_") else {
+            throw XCTSkip("Test can only run for English locale.")
+        }
+        
+        XCTAssertEqual(["", ""].localizedCaseInsensitiveRemovingDuplicates(), [""])
+        XCTAssertEqual(["a", "a"].localizedCaseInsensitiveRemovingDuplicates(), ["a"])
+        XCTAssertEqual(["a", "A"].localizedCaseInsensitiveRemovingDuplicates(), ["a"])
+        XCTAssertEqual(["A", "a"].localizedCaseInsensitiveRemovingDuplicates(), ["A"])
+        XCTAssertEqual(["A", "b", "a", "A", "B"].localizedCaseInsensitiveRemovingDuplicates(), ["A", "b"])
+    }
+    
+    func testStringCollection_localizedStandardRemovingDuplicates() throws {
+        guard Locale.current.identifier.starts(with: "en_") else {
+            throw XCTSkip("Test can only run for English locale.")
+        }
+        
+        XCTAssertEqual(["", ""].localizedStandardRemovingDuplicates(), [""])
+        XCTAssertEqual(["a", "a"].localizedStandardRemovingDuplicates(), ["a"])
+        XCTAssertEqual(["a", "A"].localizedStandardRemovingDuplicates(), ["a", "A"])
+        XCTAssertEqual(["A", "a"].localizedStandardRemovingDuplicates(), ["A", "a"])
+        XCTAssertEqual(["A", "b", "a", "A", "B"].localizedStandardRemovingDuplicates(), ["A", "b", "a", "B"])
+    }
+    
     // MARK: - .mapKeys
     
     func testDictionary_mapKeys_SameTypes() {

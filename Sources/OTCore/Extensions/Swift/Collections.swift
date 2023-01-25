@@ -1107,6 +1107,71 @@ where Element: Equatable,
     }
 }
 
+// MARK: - String Collection Duplicates
+
+extension Collection where Element: StringProtocol {
+    /// **OTCore:**
+    /// Returns the collection with duplicates removed using case-insensitive string comparison.
+    /// Only the first occurrence of elements with duplicates will remain and subsequent instances
+    /// are removed.
+    @_disfavoredOverload
+    public func caseInsensitiveRemovingDuplicates() -> [Element] {
+        reduce(into: []) { result, element in
+            if !result.contains(where: { item in
+                item.caseInsensitiveCompare(element) == .orderedSame
+            }) {
+                result.append(element)
+            }
+        }
+    }
+    
+    /// **OTCore:**
+    /// Returns the collection with duplicates removed using localized string comparison.
+    /// Only the first occurrence of elements with duplicates will remain and subsequent instances
+    /// are removed.
+    @_disfavoredOverload
+    public func localizedRemovingDuplicates() -> [Element] {
+        reduce(into: []) { result, element in
+            if !result.contains(where: { item in
+                item.localizedCompare(element) == .orderedSame
+            }) {
+                result.append(element)
+            }
+        }
+    }
+    
+    /// **OTCore:**
+    /// Returns the collection with duplicates removed using localized case-insensitive string
+    /// comparison.
+    /// Only the first occurrence of elements with duplicates will remain and subsequent instances
+    /// are removed.
+    @_disfavoredOverload
+    public func localizedCaseInsensitiveRemovingDuplicates() -> [Element] {
+        reduce(into: []) { result, element in
+            if !result.contains(where: { item in
+                item.localizedCaseInsensitiveCompare(element) == .orderedSame
+            }) {
+                result.append(element)
+            }
+        }
+    }
+    
+    /// **OTCore:**
+    /// Returns the collection with duplicates removed using localized standard string comparison.
+    /// Only the first occurrence of elements with duplicates will remain and subsequent instances
+    /// are removed.
+    @_disfavoredOverload
+    public func localizedStandardRemovingDuplicates() -> [Element] {
+        reduce(into: []) { result, element in
+            if !result.contains(where: { item in
+                item.localizedStandardCompare(element) == .orderedSame
+            }) {
+                result.append(element)
+            }
+        }
+    }
+}
+
 // MARK: - Element Equality
 
 extension Collection where Element: Equatable {
