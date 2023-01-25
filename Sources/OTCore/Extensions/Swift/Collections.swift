@@ -983,20 +983,24 @@ public enum DuplicateElementFilter {
     case allOccurrences
 }
 
-extension Collection where Element: Equatable {
+extension Collection
+where Element: Equatable,
+      Index: Strideable,
+      Index.Stride: SignedInteger
+{
     /// **OTCore:**
     /// Returns the array with duplicates removed.
     /// Array ordering is preserved.
+    ///
+    /// - Parameters:
+    ///   - removing: Defines duplicate filtering.
     @_disfavoredOverload
-    public func removingDuplicates() -> [Element] {
-        // TODO: performance could be improved by using a dictionary keyed by the element and the value could be the original index, then reassemble a new array based on the index ordering?
-        // TODO: performance could be improved if this operated on indexes instead of copying all elements to a new array? perhaps use FlattenSequence or something similar
+    public func removingDuplicates(
+        _ removing: DuplicateElementFilter = .afterFirstOccurrences
+    ) -> [Element] {
+        let dupeIndices = duplicateElementIndices(removing, sorted: false)
         
-        reduce(into: []) { result, element in
-            if !result.contains(element) {
-                result.append(element)
-            }
-        }
+        return indices.lazy.filter { !dupeIndices.contains($0) }.map { self[$0] }
     }
 }
 
@@ -1044,11 +1048,14 @@ where Element: Equatable,
     /// Returns only duplicate elements (elements that occur more than once in the array).
     /// Only one instance of each duplicate element will be output in the resulting array.
     /// All duplicate elements are removed after the first appearance of the identical element.
+    ///
+    /// - Parameters:
+    ///   - dupeFilter: Defines duplicate filtering.
     @_disfavoredOverload
     public func duplicateElements(
         _ dupeFilter: DuplicateElementFilter = .firstOccurrences
     ) -> [Element] {
-        let dupeIndices = duplicateElementIndices(dupeFilter, sorted: false)
+        let dupeIndices = duplicateElementIndices(dupeFilter, sorted: true)
         return dupeIndices.map { self[$0] }
     }
     
