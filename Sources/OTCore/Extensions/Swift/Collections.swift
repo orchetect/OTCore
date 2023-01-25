@@ -920,6 +920,10 @@ extension Collection {
         every: Int,
         backwards: Bool = false
     ) -> [SubSequence] {
+        guard every != 0 else {
+            return [self[startIndex...]]
+        }
+        
         var result: [SubSequence] = []
         
         for i in stride(from: 0, to: count, by: every) {

@@ -1246,13 +1246,17 @@ class Extensions_Swift_Collections_Tests: XCTestCase {
     // MARK: - .split(every:backwards:)
     
     func testSplitEvery() {
-        // .split(every:)
-        
         let str = "1234567890"
         
+        XCTAssertEqual(str.split(every: 1), ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"])
         XCTAssertEqual(str.split(every: 2), ["12", "34", "56", "78", "90"])
         XCTAssertEqual(str.split(every: 4), ["1234", "5678", "90"])
         XCTAssertEqual(str.split(every: 4, backwards: true), ["12", "3456", "7890"])
+        
+        // edge cases
+        XCTAssertEqual(str.split(every: -1), [])
+        XCTAssertEqual(str.split(every: 0), ["1234567890"])
+        XCTAssertEqual(str.split(every: 0, backwards: true), ["1234567890"])
     }
     
     // MARK: - .indices(splitEvery:)
