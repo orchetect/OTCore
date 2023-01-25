@@ -1291,7 +1291,7 @@ class Extensions_Swift_Collections_Tests: XCTestCase {
         XCTAssertEqual(arr.indices(splitEvery: 12), [0 ... 10])
     }
     
-    // MARK: - Element Introspection
+    // MARK: - Duplicates
     
     func testRemovingDuplicates() {
         XCTAssertEqual([].removingDuplicates(), [] as [Int])
@@ -1345,22 +1345,6 @@ class Extensions_Swift_Collections_Tests: XCTestCase {
         XCTAssertEqual([1, 2, 3, 2, 4].duplicateElements(), [2])
         XCTAssertEqual([1, 2, 3, 2, 1, 4].duplicateElements(), [1, 2])
         XCTAssertEqual([1, 2, 2, 2, 2].duplicateElements(), [2])
-    }
-    
-    func testElementsEqual_orderInsensitive() {
-        XCTAssertTrue(([] as [Int]).elementsEqual(orderInsensitive: []))
-        XCTAssertTrue(([1] as [Int]).elementsEqual(orderInsensitive: [1]))
-        XCTAssertTrue(([1, 2] as [Int]).elementsEqual(orderInsensitive: [1, 2]))
-        XCTAssertTrue(([1, 2] as [Int]).elementsEqual(orderInsensitive: [2, 1]))
-        XCTAssertTrue(([1, 1] as [Int]).elementsEqual(orderInsensitive: [1, 1]))
-        XCTAssertTrue(([1, 3, 2] as [Int]).elementsEqual(orderInsensitive: [3, 2, 1]))
-        
-        XCTAssertFalse(([1] as [Int]).elementsEqual(orderInsensitive: []))
-        XCTAssertFalse(([] as [Int]).elementsEqual(orderInsensitive: [1]))
-        
-        XCTAssertFalse(([1] as [Int]).elementsEqual(orderInsensitive: [2]))
-        XCTAssertFalse(([1, 2] as [Int]).elementsEqual(orderInsensitive: [1, 1]))
-        XCTAssertFalse(([1, 2] as [Int]).elementsEqual(orderInsensitive: [2, 2]))
     }
     
     func testDuplicateElementIndices() {
@@ -1430,6 +1414,22 @@ class Extensions_Swift_Collections_Tests: XCTestCase {
         XCTAssertFalse([1, 2].allElementsAreEqual)
         XCTAssertFalse([1, 2, 1].allElementsAreEqual)
         XCTAssertFalse([1, 1, 2].allElementsAreEqual)
+    }
+    
+    func testElementsEqual_orderInsensitive() {
+        XCTAssertTrue(([] as [Int]).elementsEqual(orderInsensitive: []))
+        XCTAssertTrue(([1] as [Int]).elementsEqual(orderInsensitive: [1]))
+        XCTAssertTrue(([1, 2] as [Int]).elementsEqual(orderInsensitive: [1, 2]))
+        XCTAssertTrue(([1, 2] as [Int]).elementsEqual(orderInsensitive: [2, 1]))
+        XCTAssertTrue(([1, 1] as [Int]).elementsEqual(orderInsensitive: [1, 1]))
+        XCTAssertTrue(([1, 3, 2] as [Int]).elementsEqual(orderInsensitive: [3, 2, 1]))
+        
+        XCTAssertFalse(([1] as [Int]).elementsEqual(orderInsensitive: []))
+        XCTAssertFalse(([] as [Int]).elementsEqual(orderInsensitive: [1]))
+        
+        XCTAssertFalse(([1] as [Int]).elementsEqual(orderInsensitive: [2]))
+        XCTAssertFalse(([1, 2] as [Int]).elementsEqual(orderInsensitive: [1, 1]))
+        XCTAssertFalse(([1, 2] as [Int]).elementsEqual(orderInsensitive: [2, 2]))
     }
     
     // MARK: - .mapKeys
