@@ -1291,6 +1291,15 @@ class Extensions_Swift_Collections_Tests: XCTestCase {
         XCTAssertEqual(arr.indices(splitEvery: 12), [0 ... 10])
     }
     
+    // MARK: - Element Introspection
+    
+    func testRemovingDuplicates() {
+        XCTAssertEqual([].removingDuplicates(), [] as [Int])
+        XCTAssertEqual([1, 2, 3, 4].removingDuplicates(), [1, 2, 3, 4])
+        XCTAssertEqual([1, 2, 3, 2, 4].removingDuplicates(), [1, 2, 3, 4])
+        XCTAssertEqual([1, 2, 2, 2, 2].removingDuplicates(), [1, 2])
+    }
+    
     // MARK: - .mapKeys
     
     func testDictionary_mapKeys_SameTypes() {

@@ -968,6 +968,22 @@ extension Collection where Index == Int {
     }
 }
 
+// MARK: - Element Introspection
+
+extension Collection where Element: Equatable {
+    /// **OTCore:**
+    /// Returns the array with duplicates removed.
+    /// Array ordering is preserved.
+    @_disfavoredOverload
+    public func removingDuplicates() -> [Element] {
+        reduce(into: []) { result, element in
+            if !result.contains(element) {
+                result.append(element)
+            }
+        }
+    }
+}
+
 // MARK: - Dictionary map
 
 extension Dictionary {
