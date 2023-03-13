@@ -239,6 +239,13 @@ class Abstractions_PassiveDataReader_Tests: XCTestCase {
             XCTAssertThrowsError(try dr.nonAdvancingRead(bytes: 5))
             XCTAssertEqual(try dr.read(bytes: 1), Data([0x01]))
         }
+        
+        // .nonAdvancingRead - read overflow - return nil
+        do {
+            var dr = PassiveDataReader { $0(&data) }
+            
+            XCTAssertThrowsError(try dr.read(bytes: 8))
+        }
     }
     
     func testAdvanceBy_DataIndicesOffset() {

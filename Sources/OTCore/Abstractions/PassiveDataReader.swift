@@ -107,13 +107,21 @@ public struct PassiveDataReader<D: DataProtocol> {
         
         let readPosStartIndex = withData { $0.index($0.startIndex, offsetBy: readOffset) }
         
-        let count = count ?? (withData(\.count) - readOffset)
+        let remainingCount = remainingByteCount
+        
+        let count = count ?? remainingCount
+        
+        guard count <= remainingCount else {
+            throw ReadError.pastEndOfStream
+        }
         
         let endIndex = withData { $0.index(readPosStartIndex, offsetBy: count - 1) }
         
         guard withData({
             $0.indices.contains(readPosStartIndex) && $0.indices.contains(endIndex)
-        }) else { throw ReadError.pastEndOfStream }
+        }) else {
+            throw ReadError.pastEndOfStream
+        }
         
         let returnBytes = withData { $0[readPosStartIndex ... endIndex] }
         
@@ -122,6 +130,7 @@ public struct PassiveDataReader<D: DataProtocol> {
 }
 
 extension PassiveDataReader {
+    /// **OTCore:**
     /// Error returned by `PassiveDataReader` methods.
     public enum ReadError: Error {
         case pastEndOfStream
