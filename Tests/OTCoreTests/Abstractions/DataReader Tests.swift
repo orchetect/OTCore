@@ -110,6 +110,13 @@ class Abstractions_DataReader_Tests: XCTestCase {
             XCTAssertEqual(dr.nonAdvancingRead(bytes: 5), nil)
             XCTAssertEqual(dr.read(bytes: 1), Data([0x01]))
         }
+        
+        // .nonAdvancingRead - read overflow - return nil
+        do {
+            var dr = DataReader(data)
+            
+            XCTAssertEqual(dr.read(bytes: 6), nil)
+        }
     }
     
     func testAdvanceBy() {
