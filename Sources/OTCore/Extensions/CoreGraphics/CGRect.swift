@@ -42,6 +42,18 @@ extension CGRect {
             height: height - (distance * 2)
         )
     }
+    
+    /// **OTCore:**
+    /// Returns a new rect by scaling its four edges by the given scale factor.
+    @_disfavoredOverload
+    public func scale(factor: CGFloat) -> Self {
+        CGRect(
+            x: origin.x + ((width - (width * factor)) / 2),
+            y: origin.y + ((height - (height * factor)) / 2),
+            width: width * factor,
+            height: height * factor
+        )
+    }
 }
 
 #endif
