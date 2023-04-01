@@ -22,7 +22,7 @@ fileprivate let ZeroCharacterSet   = CharacterSet(charactersIn: "0")
 fileprivate let PeriodCharacterSet = CharacterSet(charactersIn: ".")
 
 extension FloatingPoint where Self: CVarArg,
-Self: FloatingPointHighPrecisionStringConvertible {
+                              Self: FloatingPointHighPrecisionStringConvertible {
     /// **OTCore:**
     /// Returns a string representation of a floating-point number, with maximum 100 decimal places of precision.
     @_disfavoredOverload
@@ -50,5 +50,22 @@ extension Float80 {
     }
 }
 #endif
+
+extension FloatingPoint where Self: CVarArg,
+                              Self: FloatingPointPowerComputable {
+    /// **OTCore:**
+    /// Returns a string formatted to _n_ decimal places, using the given rounding rule.
+    @inlinable @_disfavoredOverload
+    public func string(
+        rounding rule: FloatingPointRoundingRule = .toNearestOrAwayFromZero,
+        decimalPlaces: Int
+    ) -> String {
+        let roundedValue = rounded(rule, decimalPlaces: decimalPlaces)
+        
+        // (FYI: String(format:) does not work with Float80)
+        
+        return String(format: "%.\(decimalPlaces)f", roundedValue)
+    }
+}
 
 #endif

@@ -140,6 +140,17 @@ class Extensions_Foundation_StringAndFoundation_Tests: XCTestCase {
         XCTAssertFalse(str.hasSuffix(caseInsensitive: "zzz"))
         XCTAssertFalse(str.hasSuffix(caseInsensitive: ""))
     }
+    
+    func testTrimmed() {
+        // String
+        
+        XCTAssertEqual("    string    ".trimmed, "string")
+        
+        // Substring
+        
+        let substring = "    string    ".suffix(13)
+        XCTAssertEqual(substring.trimmed, "string")
+    }
 }
 
 #endif

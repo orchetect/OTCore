@@ -391,30 +391,6 @@ class Extensions_Swift_Integers_Tests: XCTestCase {
         XCTAssertEqual(UInt64(1).string, "1")
     }
     
-    func testStringPaddedTo() {
-        // basic validation checks
-        
-        XCTAssertEqual(1.string(paddedTo:  1), "1")
-        XCTAssertEqual(1.string(paddedTo:  2), "01")
-        
-        XCTAssertEqual(123.string(paddedTo:  1), "123")
-        
-        XCTAssertEqual(1.string(paddedTo: -1), "1")
-        
-        // BinaryInteger cases
-        
-        XCTAssertEqual(1.string(paddedTo: 1), "1")
-        XCTAssertEqual(UInt(1).string(paddedTo: 1), "1")
-        XCTAssertEqual(Int8(1).string(paddedTo: 1), "1")
-        XCTAssertEqual(UInt8(1).string(paddedTo: 1), "1")
-        XCTAssertEqual(Int16(1).string(paddedTo: 1), "1")
-        XCTAssertEqual(UInt16(1).string(paddedTo: 1), "1")
-        XCTAssertEqual(Int32(1).string(paddedTo: 1), "1")
-        XCTAssertEqual(UInt32(1).string(paddedTo: 1), "1")
-        XCTAssertEqual(Int64(1).string(paddedTo: 1), "1")
-        XCTAssertEqual(UInt64(1).string(paddedTo: 1), "1")
-    }
-    
     func testRounding() {
         XCTAssertEqual((-5).roundedAwayFromZero(toMultiplesOf: 4),  -8)
         XCTAssertEqual((-1).roundedAwayFromZero(toMultiplesOf: 4),  -4)

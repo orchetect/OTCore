@@ -72,17 +72,6 @@ class Extensions_Swift_String_Tests: XCTestCase {
         XCTAssertEqual(Character("A").repeating(5), "AAAAA")
     }
     
-    func testTrimmed() {
-        // String
-        
-        XCTAssertEqual("    string    ".trimmed, "string")
-        
-        // Substring
-        
-        let substring = "    string    ".suffix(13)
-        XCTAssertEqual(substring.trimmed, "string")
-    }
-    
     func testTrim() {
         // .trim()
         

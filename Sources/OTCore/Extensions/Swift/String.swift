@@ -142,15 +142,6 @@ extension Character {
     }
 }
 
-extension StringProtocol {
-    /// **OTCore:**
-    /// Convenience function to return a new string with whitespaces and newlines trimmed off start and end.
-    @inlinable @_disfavoredOverload
-    public var trimmed: String {
-        trimmingCharacters(in: .whitespacesAndNewlines)
-    }
-}
-
 extension String {
     /// **OTCore:**
     /// Convenience function to trim whitespaces and newlines off start and end.
