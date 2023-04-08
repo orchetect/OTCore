@@ -10,7 +10,7 @@
 ///
 /// Since in the Swift language it is not possible to extend `Any` or `AnyObject`, this approach is a compromise. `.transform` and `.transformed` have been implemented on `Equatable` so any type that conforms to `Equatable` will get these methods for free. For types that do not conform to `Equatable` or cannot conform to it, the `Transformable` protocol has been provided to add these methods.
 ///
-/// It is useful to note that all `NSObject`-based classes intrinsically conform to `Equatable`. As well, all Swift `Optional`s are bound by `Equatable` so even if the wrapped type has no exposure to .`transform`/`.transformed`, these two functions will be exposed on a wrapped `Optional` containing that type.
+/// It is useful to note that all `NSObject`-based classes intrinsically conform to `Equatable`. As well, all Swift `Optional`s are bound by `Equatable` so even if the wrapped type has no exposure to `.transform`/`.transformed`, these two functions will be exposed on a wrapped `Optional` containing that type.
 ///
 /// For Example:
 ///

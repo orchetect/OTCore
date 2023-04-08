@@ -159,7 +159,7 @@ extension Float32 {
         
         // TODO: Remove bindMemory(to:)
         // In Swift 5.7, `.bindMemory(to: UInt8.self)` is not necessary;
-        // directly using .`withMemoryRebound` is supported on UnsafeRawBufferPointer.
+        // directly using `.withMemoryRebound` is supported on UnsafeRawBufferPointer.
         // Until Xcode 14 / Swift 5.7 is a minimum requirement we have to keep it this way:
         return withUnsafeBytes(of: &number) { rawBuffer in
             rawBuffer
@@ -268,7 +268,7 @@ extension Double {
         
         // TODO: Remove bindMemory(to:)
         // In Swift 5.7, `.bindMemory(to: UInt8.self)` is not necessary;
-        // directly using .`withMemoryRebound` is supported on UnsafeRawBufferPointer.
+        // directly using `.withMemoryRebound` is supported on UnsafeRawBufferPointer.
         // Until Xcode 14 / Swift 5.7 is a minimum requirement we have to keep it this way:
         return withUnsafeBytes(of: &number) { rawBuffer in
             rawBuffer
@@ -383,7 +383,7 @@ extension FixedWidthInteger {
         
         // TODO: Remove bindMemory(to:)
         // In Swift 5.7, `.bindMemory(to: UInt8.self)` is not necessary;
-        // directly using .`withMemoryRebound` is supported on UnsafeRawBufferPointer.
+        // directly using `.withMemoryRebound` is supported on UnsafeRawBufferPointer.
         // Until Xcode 14 / Swift 5.7 is a minimum requirement we have to keep it this way:
         return withUnsafeBytes(of: &int) { rawBuffer in
             rawBuffer

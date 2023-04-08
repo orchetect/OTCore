@@ -243,7 +243,8 @@ extension Decimal {
     /// **OTCore:**
     /// Returns both integral part and fractional part.
     ///
-    /// - Note: This method is more computationally efficient than calling both `.integral` and .`fraction` properties separately unless you only require one or the other.
+    /// - Note: This method is more computationally efficient than calling both `.integral` and
+    ///   `.fraction` properties separately unless you only require one or the other.
     @inlinable @_disfavoredOverload
     public var integralAndFraction: (integral: Self, fraction: Self) {
         let integral = truncated(decimalPlaces: 0)

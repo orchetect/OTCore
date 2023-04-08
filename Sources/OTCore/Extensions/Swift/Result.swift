@@ -27,7 +27,7 @@ extension Result {
     
     /// **OTCore:**
     /// Returns `true` if `.success(_)` case.
-    /// Returns `false` if .`failure(_)` case.
+    /// Returns `false` if `.failure(_)` case.
     @_disfavoredOverload
     public var isSuccess: Bool {
         if case .success = self { return true }
