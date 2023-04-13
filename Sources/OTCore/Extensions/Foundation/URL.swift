@@ -189,12 +189,12 @@ extension URL {
         // platform-specific logic
         
         #if os(macOS) || targetEnvironment(macCatalyst) || os(iOS)
-            
+        
         if #available(macOS 10.8, iOS 11.0, *) {
             // move file to trash
-                
+            
             var resultingURL: NSURL?
-                
+            
             do {
                 try FileManager.default.trashItem(at: self, resultingItemURL: &resultingURL)
             } catch {
@@ -205,12 +205,12 @@ extension URL {
                 return nil
                 #endif
             }
-                
+            
             return resultingURL?.absoluteURL
-                
+            
         } else {
             // OS version requirements not met - delete file as a fallback
-                
+            
             try __delFile(url: self)
             return nil
         }
@@ -218,7 +218,7 @@ extension URL {
         #elseif os(tvOS)
         
         // tvOS has no Trash - just delete the file
-            
+        
         try __delFile(url: self)
         return nil
         
@@ -291,7 +291,8 @@ extension URL {
     /// **OTCore:**
     /// Convenience method to test if a file URL is a symbolic link and not an actual file/folder.
     ///
-    /// - Returns `nil` if the URL is not a properly formatted file URL, or there was a problem querying the URL's file system attributes.
+    /// - Returns `nil` if the URL is not a properly formatted file URL, or there was a problem
+    ///   querying the URL's file system attributes.
     @_disfavoredOverload
     public var isSymLink: Bool? {
         guard isFileURL
@@ -341,8 +342,8 @@ extension URL {
     /// **OTCore:**
     /// Creates a symbolic link (symlink) of the base URL file or folder `at` the supplied target location.
     ///
-    /// Returns `true` if new symlink gets created.
-    /// Returns `false` if destination already exists or if the symlink already exists.
+    /// - Returns `true` if new symlink gets created.
+    /// - Returns `false` if destination already exists or if the symlink already exists.
     @_disfavoredOverload
     public func createSymLink(at url: URL) throws {
         try FileManager.default
