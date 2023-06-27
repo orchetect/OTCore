@@ -626,7 +626,7 @@ class Extensions_Foundation_UserDefaults_Tests: XCTestCase {
             @UserDefaultsStorage(
                 key: prefKey,
                 get: { storedValue in
-                    if let storedValue {
+                    if let storedValue = storedValue {
                         return URL(fileURLWithPath: storedValue)
                     } else {
                         return URL(fileURLWithPath: "/default")
