@@ -619,6 +619,41 @@ class Extensions_Foundation_UserDefaults_Tests: XCTestCase {
         XCTAssertEqual(dummyPrefs.pref, -1)
     }
     
+    func testUserDefaultsStorage_ComputedOnly_URL_HasPreviousValue() {
+        struct DummyPrefs {
+            static let prefKey = "urlPref"
+            
+            @UserDefaultsStorage(
+                key: prefKey,
+                get: { storedValue in
+                    if let storedValue {
+                        return URL(fileURLWithPath: storedValue)
+                    } else {
+                        return URL(fileURLWithPath: "/default")
+                    }
+                },
+                set: { newValue in
+                    newValue.path
+                },
+                storage: ud
+            )
+            var pref: URL
+        }
+        
+        var dummyPrefs = DummyPrefs()
+        
+        // default value
+        XCTAssertEqual(dummyPrefs.pref.absoluteString, "file:///default")
+        
+        // set raw value
+        ud.set("/Some/Path/file.txt", forKey: DummyPrefs.prefKey)
+        XCTAssertEqual(dummyPrefs.pref.absoluteString, "file:///Some/Path/file.txt")
+        
+        // set using property wrapper
+        dummyPrefs.pref = URL(fileURLWithPath: "/New/Path/newfile.txt")
+        XCTAssertEqual(dummyPrefs.pref.absoluteString, "file:///New/Path/newfile.txt")
+    }
+    
     // MARK: URL
     
     func testUserDefaultsStorage_URL_Defaulted_NoPreviousValue() {
@@ -730,7 +765,7 @@ class Extensions_Foundation_UserDefaults_Tests: XCTestCase {
     @available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *) // needed for Date.advanced(by:)
     func testUserDefaultsStorage_Date_Defaulted_NoPreviousValue() {
         struct DummyPrefs {
-            static let prefKey = "urlPref"
+            static let prefKey = "datePref"
             
             static let date = Date()
             
@@ -755,7 +790,7 @@ class Extensions_Foundation_UserDefaults_Tests: XCTestCase {
     
     func testUserDefaultsStorage_Double_Defaulted_NoPreviousValue() {
         struct DummyPrefs {
-            static let prefKey = "urlPref"
+            static let prefKey = "doublePref"
             
             @UserDefaultsStorage(key: prefKey, storage: ud)
             var pref: Double = 2.0
@@ -777,7 +812,7 @@ class Extensions_Foundation_UserDefaults_Tests: XCTestCase {
     
     func testUserDefaultsStorage_Float_Defaulted_NoPreviousValue() {
         struct DummyPrefs {
-            static let prefKey = "urlPref"
+            static let prefKey = "floatPref"
             
             @UserDefaultsStorage(key: prefKey, storage: ud)
             var pref: Float = 2.0

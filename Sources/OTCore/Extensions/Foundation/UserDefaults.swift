@@ -134,7 +134,7 @@ public struct UserDefaultsStorage<Value, StorageValue> where StorageValue: UserD
     public var wrappedValue: Value {
         get {
             var value: StorageValue?
-            if Value.self is URL.Type || Value.self is URL?.Type,
+            if !computedOnly, Value.self is URL.Type || Value.self is URL?.Type,
                let strValue = storage.string(forKey: key)
             {
                 value = URL(string: strValue) as? StorageValue
