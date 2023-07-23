@@ -140,6 +140,29 @@ extension URL {
             .appendingPathExtension(pathExtension)
         return newURL
     }
+    
+    /// **OTCore:**
+    /// Return a new URL by appending a string to the file name (last path component) before the extension.
+    ///
+    /// ie:
+    ///
+    /// ```
+    /// let url = URL(string: "file:///Users/user/file.txt")!
+    /// let url2 = url.appendingToLastPathComponentBeforeExtension("-2")
+    /// url2.absoluteString // "file:///Users/user/file-2.txt"
+    /// ```
+    @_disfavoredOverload
+    public func appendingToLastPathComponentBeforeExtension(
+        _ string: String
+    ) -> Self {
+        let oldFileName = deletingPathExtension().lastPathComponent
+        let newFileName = "\(oldFileName)\(string)"
+        let newURL: URL = self
+            .deletingLastPathComponent()
+            .appendingPathComponent(newFileName)
+            .appendingPathExtension(pathExtension)
+        return newURL
+    }
 }
 
 // MARK: - File / folder

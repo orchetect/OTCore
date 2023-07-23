@@ -335,6 +335,15 @@ class Extensions_Foundation_URL_Tests: XCTestCase {
         )
     }
     
+    func testAppendingToLastPathComponentBeforeExtension() {
+        XCTAssertEqual(
+            URL(string: "file:///temp1/temp2/some%20file.txt")!
+                .appendingToLastPathComponentBeforeExtension("-2")
+                .absoluteString,
+            "file:///temp1/temp2/some%20file-2.txt"
+        )
+    }
+    
     func testFileExists() {
         // guaranteed to exist
         let folder = URL(fileURLWithPath: NSHomeDirectory())
