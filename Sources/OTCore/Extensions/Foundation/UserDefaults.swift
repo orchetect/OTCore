@@ -53,7 +53,7 @@ extension UserDefaults {
     }
 }
 
-// MARK: - Backed PropertyWrappers
+// MARK: - UserDefaults Storage PropertyWrappers
 
 /// **OTCore:**
 /// Read and write the value of a `UserDefaults` key.
@@ -265,6 +265,40 @@ public struct UserDefaultsStorage<Value, StorageValue> where StorageValue: UserD
         wrappedValue = readValue
     }
     
+    // MARK: Init - Same Type Codable
+    
+    /// Store and retrieve any object conforming to `Codable` by using JSON serialization and storing as `String` in UserDefaults.
+    @_disfavoredOverload
+    public init(
+        wrappedValue defaultValue: Value,
+        key: String,
+        storage: UserDefaults = .standard
+    ) where Value: Codable, StorageValue == String {
+        self.defaultValue = defaultValue
+        self.key = key
+        self.storage = storage
+        
+        getTransformation = { storedValue in
+            let decoder = JSONDecoder()
+            guard let data = storedValue.data(using: .utf8),
+                  let decoded = try? decoder.decode(Value.self, from: data)
+            else { return nil }
+            return decoded
+        }
+        setTransformation = { newValue in
+            let encoder = JSONEncoder()
+            guard let encoded = try? encoder.encode(newValue),
+                  let string = encoded.toString(using: .utf8)
+            else { return nil }
+            return string
+        }
+        
+        // not used
+        computedOnly = false
+        getTransformationComputedOnly = { _ in defaultValue }
+        setTransformationComputedOnly = { _ in "" }
+    }
+    
     // MARK: - Different Types
     
     /// Uses get and set transform closures to allow a value to have a different underlying storage
@@ -338,6 +372,21 @@ extension UserDefaultsStorage where Value: ExpressibleByNilLiteral {
             wrappedValue: nil,
             key: key,
             validation: closure,
+            storage: storage
+        )
+    }
+    
+    // MARK: Init - Same Type Codable
+    
+    /// Store and retrieve any object conforming to `Codable` by using JSON serialization and storing as `String` in UserDefaults.
+    @_disfavoredOverload
+    public init(
+        key: String,
+        storage: UserDefaults = .standard
+    ) where Value: Codable, StorageValue == String {
+        self.init(
+            wrappedValue: nil,
+            key: key,
             storage: storage
         )
     }

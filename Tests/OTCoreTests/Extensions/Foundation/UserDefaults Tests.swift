@@ -829,6 +829,135 @@ class Extensions_Foundation_UserDefaults_Tests: XCTestCase {
         XCTAssertEqual(ud.float(forKey: DummyPrefs.prefKey), 5.0)
         XCTAssertEqual(dummyPrefs.pref, 5.0)
     }
+    
+    // MARK: Codable
+    
+    func testUserDefaultsStorage_Codable_NonDefaulted_Optional_NoPreviousValue() {
+        struct Prefs: Codable, Equatable {
+            var someString: String
+            var someInt: Int
+            var array: [String]
+            var dict: [String: String]
+            var nestedStruct: NestedStruct
+            
+            struct NestedStruct: Codable, Equatable {
+                var nestedInt: Int
+                var nestedString: String
+            }
+        }
+        
+        struct DummyPrefs {
+            static let prefKey = "codablePref"
+            static let prefsTemplate = Prefs(
+                someString: "hello",
+                someInt: 123,
+                array: ["one", "two"],
+                dict: ["Key1": "ValA", "Key2": "ValB"],
+                nestedStruct: .init(nestedInt: 456, nestedString: "test")
+            )
+            
+            @UserDefaultsStorage(key: prefKey, storage: ud)
+            var pref: Prefs?
+        }
+        
+        var dummyPrefs = DummyPrefs()
+        
+        // default value
+        XCTAssertNil(ud.string(forKey: DummyPrefs.prefKey))
+        XCTAssertNil(dummyPrefs.pref)
+        
+        dummyPrefs.pref = DummyPrefs.prefsTemplate
+        
+        XCTAssertNotNil(ud.string(forKey: DummyPrefs.prefKey))
+        XCTAssertEqual(dummyPrefs.pref, DummyPrefs.prefsTemplate)
+        
+        dummyPrefs.pref = nil
+        
+        XCTAssertNil(ud.string(forKey: DummyPrefs.prefKey))
+        XCTAssertNil(dummyPrefs.pref)
+    }
+    
+    func testUserDefaultsStorage_Codable_Defaulted_NoPreviousValue() {
+        struct Prefs: Codable, Equatable {
+            var someString: String
+            var someInt: Int
+            var array: [String]
+            var dict: [String: String]
+            var nestedStruct: NestedStruct
+            
+            struct NestedStruct: Codable, Equatable {
+                var nestedInt: Int
+                var nestedString: String
+            }
+        }
+        
+        struct DummyPrefs {
+            static let prefKey = "codablePref"
+            static let prefsTemplate = Prefs(
+                someString: "hello",
+                someInt: 123,
+                array: ["one", "two"],
+                dict: ["Key1": "ValA", "Key2": "ValB"],
+                nestedStruct: .init(nestedInt: 456, nestedString: "test")
+            )
+            
+            @UserDefaultsStorage(key: prefKey, storage: ud)
+            var pref: Prefs = prefsTemplate
+        }
+        
+        var dummyPrefs = DummyPrefs()
+        
+        // default value
+        XCTAssertNil(ud.string(forKey: DummyPrefs.prefKey))
+        XCTAssertEqual(dummyPrefs.pref, DummyPrefs.prefsTemplate)
+        
+        dummyPrefs.pref = DummyPrefs.prefsTemplate
+        
+        XCTAssertNotNil(ud.string(forKey: DummyPrefs.prefKey))
+        XCTAssertEqual(dummyPrefs.pref, DummyPrefs.prefsTemplate)
+    }
+    
+    /// Test that a primitive type that already conforms to Codable is stored normally and
+    /// not by using the Codable inits on `@UserDefaultsStorage`.
+    func testUserDefaultsStorage_String_NonCodable() {
+        struct DummyPrefs {
+            static let prefKey = "stringPref"
+            
+            @UserDefaultsStorage(key: prefKey, storage: ud)
+            var pref: String = "A"
+        }
+        
+        var dummyPrefs = DummyPrefs()
+        
+        XCTAssertEqual(ud.string(forKey: DummyPrefs.prefKey), "A")
+        XCTAssertEqual(dummyPrefs.pref, "A")
+        
+        dummyPrefs.pref = "ABC"
+        
+        XCTAssertEqual(ud.string(forKey: DummyPrefs.prefKey), "ABC")
+        XCTAssertEqual(dummyPrefs.pref, "ABC")
+    }
+    
+    /// Test that a primitive type that already conforms to Codable is stored normally and
+    /// not by using the Codable inits on `@UserDefaultsStorage`.
+    func testUserDefaultsStorage_String_Optional_NonCodable() {
+        struct DummyPrefs {
+            static let prefKey = "stringPref"
+            
+            @UserDefaultsStorage(key: prefKey, storage: ud)
+            var pref: String?
+        }
+        
+        var dummyPrefs = DummyPrefs()
+        
+        XCTAssertNil(ud.string(forKey: DummyPrefs.prefKey))
+        XCTAssertNil(dummyPrefs.pref)
+        
+        dummyPrefs.pref = "ABC"
+        
+        XCTAssertEqual(ud.string(forKey: DummyPrefs.prefKey), "ABC")
+        XCTAssertEqual(dummyPrefs.pref, "ABC")
+    }
 }
 
 #endif
