@@ -191,6 +191,46 @@ class Extensions_Foundation_Decimal_Tests: XCTestCase {
         XCTAssertEqual(Decimal(string: "17.5")!.integral, Decimal(string: "17")!)
         XCTAssertEqual(Decimal(string: "17.5")!.fraction, Decimal(string: "0.5")!)
     }
+    
+    func testIntegralDigitPlaces_and_fractionDigitPlaces() {
+        // we'll cast the number literals as Double to see if Decimal converts them and results are
+        // still as expected
+        
+        XCTAssertEqual(Decimal(0.05 as Double).integralDigitPlaces, 0)
+        XCTAssertEqual(Decimal(0.05 as Double).fractionDigitPlaces, 2)
+        XCTAssertEqual(Decimal(-0.05 as Double).integralDigitPlaces, 0)
+        XCTAssertEqual(Decimal(-0.05 as Double).fractionDigitPlaces, 2)
+        
+        XCTAssertEqual(Decimal(10.0 as Double).integralDigitPlaces, 2)
+        XCTAssertEqual(Decimal(10.0 as Double).fractionDigitPlaces, 0)
+        XCTAssertEqual(Decimal(-10.0 as Double).integralDigitPlaces, 2)
+        XCTAssertEqual(Decimal(-10.0 as Double).fractionDigitPlaces, 0)
+        
+        XCTAssertEqual(Decimal(10.123 as Double).integralDigitPlaces, 2)
+        XCTAssertEqual(Decimal(10.123 as Double).fractionDigitPlaces, 3)
+        XCTAssertEqual(Decimal(-10.123 as Double).integralDigitPlaces, 2)
+        XCTAssertEqual(Decimal(-10.123 as Double).fractionDigitPlaces, 3)
+        
+        XCTAssertEqual(Decimal(10_000.123 as Double).integralDigitPlaces, 5)
+        XCTAssertEqual(Decimal(10_000.123 as Double).fractionDigitPlaces, 3)
+        XCTAssertEqual(Decimal(-10_000.123 as Double).integralDigitPlaces, 5)
+        XCTAssertEqual(Decimal(-10_000.123 as Double).fractionDigitPlaces, 3)
+        
+        XCTAssertEqual(Decimal(10_000.0 as Double).integralDigitPlaces, 5)
+        XCTAssertEqual(Decimal(10_000.0 as Double).fractionDigitPlaces, 0)
+        XCTAssertEqual(Decimal(-10_000.0 as Double).integralDigitPlaces, 5)
+        XCTAssertEqual(Decimal(-10_000.0 as Double).fractionDigitPlaces, 0)
+        
+        XCTAssertEqual(Decimal(12_345.0 as Double).integralDigitPlaces, 5)
+        XCTAssertEqual(Decimal(12_345.0 as Double).fractionDigitPlaces, 0)
+        XCTAssertEqual(Decimal(-12_345.0 as Double).integralDigitPlaces, 5)
+        XCTAssertEqual(Decimal(-12_345.0 as Double).fractionDigitPlaces, 0)
+        
+        XCTAssertEqual(Decimal(12_345.67 as Double).integralDigitPlaces, 5)
+        XCTAssertEqual(Decimal(12_345.67 as Double).fractionDigitPlaces, 2)
+        XCTAssertEqual(Decimal(-12_345.67 as Double).integralDigitPlaces, 5)
+        XCTAssertEqual(Decimal(-12_345.67 as Double).fractionDigitPlaces, 2)
+    }
 }
 
 #endif

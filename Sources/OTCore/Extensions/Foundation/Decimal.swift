@@ -269,4 +269,28 @@ extension Decimal {
     }
 }
 
+// MARK: - Digit Places
+
+extension Decimal {
+    /// **OTCore:**
+    /// Returns the number of digit places of the ``integral`` portion (left of the decimal).
+    @inlinable @_disfavoredOverload
+    public var integralDigitPlaces: Int {
+        // this works but may be brittle.
+        // not sure if some locales will localize the number differently than expected.
+        // on English systems the `significand` string interpolation produces
+        // a string of digits with no thousands separators or other characters.
+        
+        if abs(self) <= 1 { return 0 }
+        return "\(abs(significand))".count + exponent
+    }
+    
+    /// **OTCore:**
+    /// Returns the number of digit places of the ``fraction`` portion (right of the decimal).
+    @inlinable @_disfavoredOverload
+    public var fractionDigitPlaces: Int {
+        return max(-exponent, 0)
+    }
+}
+
 #endif
