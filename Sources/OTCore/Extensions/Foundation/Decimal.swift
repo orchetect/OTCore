@@ -289,7 +289,7 @@ extension Decimal {
     /// Returns the number of digit places of the ``fraction`` portion (right of the decimal).
     @inlinable @_disfavoredOverload
     public var fractionDigitPlaces: Int {
-        return max(-exponent, 0)
+        max(-exponent, 0)
     }
 }
 
