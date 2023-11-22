@@ -858,7 +858,8 @@ extension Collection where Element: Strideable,
 
 extension Set {
     /// **OTCore:**
-    /// Same as `.union()` but replaces existing values with new values instead of `.union()`'s behavior of retaining existing hash-equivalent values.
+    /// Same as `union()` but replaces existing values with new values instead of `union()`'s
+    /// behavior of retaining existing equivalent values.
     @inlinable @_disfavoredOverload
     public func union<S>(updating other: S) -> Set<Set<Element>.Element>
         where Element == S.Element,
@@ -874,7 +875,8 @@ extension Set {
     }
     
     /// **OTCore:**
-    /// Same as `.formUnion()` but replaces existing values with new values instead of `.formUnion()`'s behavior of retaining existing hash-equivalent values.
+    /// Same as `formUnion()` but replaces existing values with new values instead of
+    /// `formUnion()`'s behavior of retaining existing equivalent values.
     @inlinable @_disfavoredOverload
     public mutating func formUnion<S>(updating other: S)
         where Element == S.Element,

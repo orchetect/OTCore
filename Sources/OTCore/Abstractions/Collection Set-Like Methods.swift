@@ -29,11 +29,23 @@ extension Collection where Self: RangeReplaceableCollection,
     Element: Hashable
 {
     /// **OTCore:**
-    /// Similar behavior to a Set, this will append the element to the end of the collection if it does not already exist in the collection.
+    /// Similar behavior to a `Set`, inserts the given element in the collection if it is not
+    /// already present. The element will be appended to the end of the collection in that case.
     @inlinable @_disfavoredOverload
     public mutating func insert(
+        _ element: Element
+    ) {
+        insert(element, position: .default)
+    }
+    
+    /// **OTCore:**
+    /// Similar behavior to a `Set`, inserts the given element in the collection if it is not
+    /// already present. The element will either be appended to the end of the collection or
+    /// inserted at the start depending on the `position` parameter.
+    @inlinable
+    public mutating func insert(
         _ element: Element,
-        position: CollectionPosition = .default
+        position: CollectionPosition
     ) {
         if !contains(element) {
             switch position {
@@ -46,11 +58,29 @@ extension Collection where Self: RangeReplaceableCollection,
     }
     
     /// **OTCore:**
-    /// Similar behavior to a Set, if the element exists in the collection this will replace it at its current index with the new element. If it doesn't exist, it will either be replaced, reordered to the start, or reordered to the end of the collection based upon the `position` specified.
+    /// Similar behavior to a `Set`, inserts the given element into the collection unconditionally.
+    ///
+    /// If the element exists in the collection this will replace it at its current index with the
+    /// new element. Otherwise it will be appended to the end of the collection.
     @inlinable @_disfavoredOverload
     public mutating func update(
+        with newMember: Element
+    ) {
+        update(with: newMember, position: .default)
+    }
+    
+    /// **OTCore:**
+    /// Similar behavior to a `Set`, inserts the given element into the set unconditionally.
+    ///
+    /// If the element exists in the collection this will replace it and optionally reposition it
+    /// within the collection at the same time depending on the `position` parameter.
+    ///
+    /// If the element does not exist, it will either be appended to the end of the collection or
+    /// inserted at the start depending on the `position` parameter.
+    @inlinable
+    public mutating func update(
         with newMember: Element,
-        position: CollectionPosition = .default
+        position: CollectionPosition
     ) {
         if let index = firstIndex(of: newMember) {
             switch position {
@@ -74,14 +104,15 @@ extension Collection where Self: RangeReplaceableCollection,
     }
     
     /// **OTCore:**
-    /// Similar behavior to a Set, but removes all instances of the element.
+    /// Similar behavior to a `Set`, but removes all instances of the element.
     @inlinable @_disfavoredOverload
     public mutating func removeAll(_ member: Element) {
         removeAll(where: { $0 == member })
     }
     
     /// **OTCore:**
-    /// Similar behavior to a Set, join two collections together and where elements are equal, retain the existing element.
+    /// Similar behavior to a `Set`, join two collections together and where elements are equal,
+    /// retain the existing element.
     @inlinable @_disfavoredOverload
     public func union<S>(_ other: S) -> Self
     where Element == S.Element, S: Sequence {
@@ -95,7 +126,8 @@ extension Collection where Self: RangeReplaceableCollection,
     }
     
     /// **OTCore:**
-    /// Similar behavior to a Set, join two collections together and where elements are equal, retain the existing element.
+    /// Similar behavior to a `Set`, join two collections together and where elements are equal,
+    /// retain the existing element.
     @inlinable @_disfavoredOverload
     public mutating func formUnion<S>(_ other: S)
     where Element == S.Element, S: Sequence {
@@ -107,24 +139,26 @@ extension Collection where Self: RangeReplaceableCollection,
     }
     
     /// **OTCore:**
-    /// Similar behavior to a Set, join two collections together and where elements are equal, replace the existing element with the new element preserving the original index.
+    /// Similar behavior to a `Set`, join two collections together and where elements are equal,
+    /// replace the existing element with the new element preserving the original index.
     @inlinable @_disfavoredOverload
     public func union<S>(updating other: S) -> Self
     where Element == S.Element, S: Sequence {
         var newCollection = self
         other.forEach {
-            newCollection.update(with: $0)
+            newCollection.update(with: $0, position: .default)
         }
         return newCollection
     }
     
     /// **OTCore:**
-    /// Similar behavior to a Set, join two collections together and where elements are equal, replace the existing element with the new element preserving the original index.
+    /// Similar behavior to a `Set`, join two collections together and where elements are equal,
+    /// replace the existing element with the new element preserving the original index.
     @inlinable @_disfavoredOverload
     public mutating func formUnion<S>(updating other: S)
     where Element == S.Element, S: Sequence {
         other.forEach {
-            update(with: $0)
+            update(with: $0, position: .default)
         }
     }
 }
