@@ -18,7 +18,7 @@ extension StringProtocol {
         pattern: String,
         options: NSRegularExpression.Options = [],
         matchesOptions: NSRegularExpression.MatchingOptions = [.withTransparentBounds]
-    ) -> [String] {
+    ) -> [SubSequence] {
         do {
             let regex = try NSRegularExpression(
                 pattern: pattern,
@@ -29,7 +29,7 @@ extension StringProtocol {
                 regex.matches(
                     in: source,
                     options: matchesOptions,
-                    range: NSMakeRange(0, nsString.length)
+                    range: NSMakeRange(0, (nsString as String).utf16.count)
                 )
             }
             
@@ -47,7 +47,13 @@ extension StringProtocol {
                 results = runRegEx(in: stringSelf)
             }
             
-            return results.map { nsString.substring(with: $0.range) }
+            return results.map {
+                let lb = self.utf16.index(self.startIndex, offsetBy: $0.range.lowerBound)
+                let ub = self.utf16.index(self.startIndex, offsetBy: $0.range.upperBound)
+                
+                let subString = self[lb ..< ub]
+                return subString
+            }
             
         } catch {
             return []
@@ -74,7 +80,7 @@ extension StringProtocol {
                 regex.stringByReplacingMatches(
                     in: source,
                     options: replacingOptions,
-                    range: NSMakeRange(0, source.count),
+                    range: NSMakeRange(0, source.utf16.count),
                     withTemplate: replacementTemplate
                 )
             }
@@ -104,34 +110,36 @@ extension StringProtocol {
         captureGroupsFromPattern: String,
         options: NSRegularExpression.Options = [],
         matchesOptions: NSRegularExpression.MatchingOptions = [.withTransparentBounds]
-    ) -> [String?] {
+    ) -> [SubSequence?] {
         do {
             let regex = try NSRegularExpression(
                 pattern: captureGroupsFromPattern,
                 options: options
             )
             
-            let result: [String?]
+            let result: [SubSequence?]
             
-            func runRegEx(in source: String) -> [String?] {
+            func runRegEx(in source: String) -> [SubSequence?] {
                 let results = regex.matches(
                     in: source,
                     options: matchesOptions,
-                    range: NSMakeRange(0, source.count)
+                    range: NSMakeRange(0, source.utf16.count)
                 )
                 
-                let nsString = source as NSString
-                
-                var matches: [String?] = []
+                var matches: [SubSequence?] = []
                 
                 for result in results {
                     for i in 0 ..< result.numberOfRanges {
-                        let range = result.range(at: i)
+                        let nsRange = result.range(at: i)
                         
-                        if range.location == NSNotFound {
+                        if nsRange.location == NSNotFound {
                             matches.append(nil)
                         } else {
-                            matches.append(nsString.substring(with: range))
+                            let lb = self.utf16.index(source.startIndex, offsetBy: nsRange.lowerBound)
+                            let ub = self.utf16.index(source.startIndex, offsetBy: nsRange.upperBound)
+                            
+                            let subString = self[lb ..< ub]
+                            matches.append(subString)
                         }
                     }
                 }
