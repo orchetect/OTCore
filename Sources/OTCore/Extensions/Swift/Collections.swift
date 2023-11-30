@@ -4,6 +4,18 @@
 //  © 2022 Steffan Andrews • Licensed under MIT License
 //
 
+// MARK: - Typealiases & Protocols
+
+/// **OTCore:**
+/// A `Sequence` whose elements consist of those in a `Base Sequence` passed through a transform
+/// function returning `Element?`. These elements are computed lazily, each time they’re read, by
+/// calling the transform function on a base element.
+/// Similar to `LazyMapSequence` but uses `compactMap` instead of `map`.
+public typealias LazyCompactMapSequence<Base: Sequence, Element> = LazyMapSequence<
+    LazyFilterSequence<LazyMapSequence<LazySequence<Base>.Elements, Element?>>,
+    Element
+>
+
 // MARK: - Operators
 
 extension Collection where Self: RangeReplaceableCollection,
