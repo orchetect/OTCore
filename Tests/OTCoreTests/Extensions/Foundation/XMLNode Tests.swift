@@ -75,6 +75,30 @@ final class Extensions_Foundation_XMLNode_Tests: XCTestCase {
         XCTAssertEqual(filtered, [nodes[2], nodes[3]])
     }
     
+    func testCollection_XMLNode_Lazy_FilterAttribute() throws {
+        // prep
+        
+        let nodes = [
+            try XMLElement(xmlString: "<obj class='classA' name='name1'/>"),
+            try XMLElement(xmlString: "<obj class='classA' name='name2'/>"),
+            try XMLElement(xmlString: "<obj class='classB' name='name3'/>"),
+            try XMLElement(xmlString: "<obj class='classB' name='name4'/>")
+        ]
+            .lazy
+        
+        // test
+        
+        var filtered = nodes.filter(whereAttribute: "name", hasValue: "name3")
+        XCTAssertEqual(filtered[position: 0], nodes[2])
+        
+        filtered = nodes.filter(whereAttribute: "name") { $0 == "name4" }
+        XCTAssertEqual(filtered[position: 0], nodes[3])
+        
+        filtered = nodes.filter(whereAttribute: "class") { $0.hasSuffix("B") }
+        XCTAssertEqual(filtered[position: 0], nodes[2])
+        XCTAssertEqual(filtered[position: 1], nodes[3])
+    }
+    
     func testXMLElement_StringValueForAttribute() throws {
         let node = XMLNode(kind: .element)
         
