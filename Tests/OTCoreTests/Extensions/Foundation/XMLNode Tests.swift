@@ -22,7 +22,7 @@ final class Extensions_Foundation_XMLNode_Tests: XCTestCase {
         
         let root = loadxml.rootElement()
         let setup = root?.children?
-            .filter(attribute: "name", value: "Setup")
+            .filter(whereAttribute: "name", hasValue: "Setup")
             .first as? XMLElement
         
         XCTAssertEqual(setup?.childCount, 14)
@@ -45,10 +45,10 @@ final class Extensions_Foundation_XMLNode_Tests: XCTestCase {
         
         // test
         
-        let filtered1 = nodes.filter(elementName: "list1B")
+        let filtered1 = nodes.filter(whereNodeNamed: "list1B")
         XCTAssertEqual(filtered1[0], nodes[1])
         
-        let filtered2 = nodes.filter(elementName: "DoesNotExist")
+        let filtered2 = nodes.filter(whereNodeNamed: "DoesNotExist")
         XCTAssertEqual(filtered2, [])
     }
     
@@ -64,17 +64,17 @@ final class Extensions_Foundation_XMLNode_Tests: XCTestCase {
         
         // test
         
-        var filtered = nodes.filter(attribute: "name", value: "name3")
+        var filtered = nodes.filter(whereAttribute: "name", hasValue: "name3")
         XCTAssertEqual(filtered[0], nodes[2])
         
-        filtered = nodes.filter(attribute: "name") { $0 == "name4" }
+        filtered = nodes.filter(whereAttribute: "name") { $0 == "name4" }
         XCTAssertEqual(filtered[0], nodes[3])
         
-        filtered = nodes.filter(attribute: "class") { $0.hasSuffix("B") }
+        filtered = nodes.filter(whereAttribute: "class") { $0.hasSuffix("B") }
         XCTAssertEqual(filtered, [nodes[2], nodes[3]])
     }
     
-    func testXMLNode_AttributeStringValue() throws {
+    func testXMLNode_StringValueForAttribute() throws {
         let node = XMLNode(kind: .element)
         
         let attr = XMLNode(kind: .attribute)
@@ -83,14 +83,14 @@ final class Extensions_Foundation_XMLNode_Tests: XCTestCase {
         (node as? XMLElement)?.addAttribute(attr)
         
         // as node
-        XCTAssertEqual(node.attributeStringValue(forName: "key1"), "value1")
+        XCTAssertEqual(node.stringValue(forAttributeNamed: "key1"), "value1")
         
         // as element
         let element = try XCTUnwrap(node as? XMLElement)
-        XCTAssertEqual(element.attributeStringValue(forName: "key1"), "value1")
+        XCTAssertEqual(element.stringValue(forAttributeNamed: "key1"), "value1")
     }
     
-    func testXMLNode_AttributeObjectValue() throws {
+    func testXMLNode_ObjectValueForAttribute() throws {
         let node = XMLNode(kind: .element)
         
         let attr = XMLNode(kind: .attribute)
@@ -99,11 +99,11 @@ final class Extensions_Foundation_XMLNode_Tests: XCTestCase {
         (node as? XMLElement)?.addAttribute(attr)
         
         // as node
-        XCTAssertEqual(node.attributeObjectValue(forName: "key1") as? String, "value1")
+        XCTAssertEqual(node.objectValue(forAttributeNamed: "key1") as? String, "value1")
         
         // as element
         let element = try XCTUnwrap(node as? XMLElement)
-        XCTAssertEqual(element.attributeObjectValue(forName: "key1") as? String, "value1")
+        XCTAssertEqual(element.objectValue(forAttributeNamed: "key1") as? String, "value1")
     }
     
     func testXMLNode_AddAttributeWithNameValue() throws {
@@ -112,11 +112,16 @@ final class Extensions_Foundation_XMLNode_Tests: XCTestCase {
         node.addAttribute(withName: "key1", value: "value1")
         
         // as node
-        XCTAssertEqual(node.attributeObjectValue(forName: "key1") as? String, "value1")
+        XCTAssertEqual(node.objectValue(forAttributeNamed: "key1") as? String, "value1")
         
         // as element
         let element = try XCTUnwrap(node as? XMLElement)
-        XCTAssertEqual(element.attributeObjectValue(forName: "key1") as? String, "value1")
+        XCTAssertEqual(element.objectValue(forAttributeNamed: "key1") as? String, "value1")
+        
+        // remove attribute if `nil` value is passed
+        node.addAttribute(withName: "key1", value: nil)
+        
+        XCTAssertNil(element.objectValue(forAttributeNamed: "key1"))
     }
     
     func testXMLElement_InitNameAttributes() {

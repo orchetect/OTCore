@@ -13,7 +13,7 @@ import Foundation
 
 extension XMLNode {
     /// **OTCore:**
-    /// Returns `self` typed as? `XMLElement`
+    /// Returns `self` typed as `XMLElement`.
     @_disfavoredOverload
     public var asElement: XMLElement? {
         self as? XMLElement
@@ -24,35 +24,36 @@ extension XMLNode {
 
 extension Collection where Element: XMLNode {
     /// **OTCore:**
-    /// Filters by the given XML element name
+    /// Filters by the given XML node name.
     @inlinable @_disfavoredOverload
-    public func filter(elementName: String) -> [XMLNode] {
-        filter { $0.name == elementName }
+    public func filter(whereNodeNamed nodeName: String) -> [XMLNode] {
+        filter { $0.name == nodeName }
     }
     
     /// **OTCore:**
-    /// Filters by the given `attribute` with matching `value`
+    /// Filters nodes that have an attribute matching the given `attribute` name and `value`.
     @inlinable @_disfavoredOverload
     public func filter(
-        attribute: String,
-        value: String
+        whereAttribute attributeName: String,
+        hasValue value: String
     ) -> [XMLNode] {
         filter {
             $0.asElement?
-                .attribute(forName: attribute)?
+                .attribute(forName: attributeName)?
                 .stringValue == value
         }
     }
     
     /// **OTCore:**
-    /// Filters by the given `attribute` with values that satisfy the given predicate
+    /// Filters nodes that have an attribute matching the given `attribute` name and satisfies the
+    /// given predicate.
     @inlinable @_disfavoredOverload
     public func filter(
-        attribute: String,
-        _ isIncluded: (String) throws -> Bool
+        whereAttribute attributeName: String,
+        _ isIncluded: (_ attributeValue: String) throws -> Bool
     ) rethrows -> [XMLNode] {
         try filter {
-            let filtered = try [$0.attributeStringValue(forName: attribute)]
+            let filtered = try [$0.stringValue(forAttributeNamed: attributeName)]
                 .compactMap { $0 }
                 .filter(isIncluded)
             return !filtered.isEmpty
@@ -60,32 +61,50 @@ extension Collection where Element: XMLNode {
     }
 }
 
+// MARK: - Attributes
+
 extension XMLNode {
-    // MARK: - Attributes
-    
     /// **OTCore:**
-    /// Gets an attribute value. If attribute name does not exist or does not have a value, nil will be returned.
+    /// Gets an attribute value as `String`.
+    /// If attribute name does not exist or does not have a value convertible to `String`, `nil`
+    /// will be returned.
     @_disfavoredOverload
-    public func attributeStringValue(forName: String) -> String? {
-        asElement?.attribute(forName: forName)?.stringValue
+    public func stringValue(forAttributeNamed attributeName: String) -> String? {
+        asElement?.attribute(forName: attributeName)?.stringValue
     }
     
     /// **OTCore:**
-    /// Gets an attribute value. If attribute name does not exist or does not have a value, nil will be returned.
+    /// Gets an attribute value.
+    /// If attribute name does not exist or does not have a value, nil will be returned.
     @_disfavoredOverload
-    public func attributeObjectValue(forName: String) -> Any? {
-        asElement?.attribute(forName: forName)?.objectValue
+    public func objectValue(forAttributeNamed attributeName: String) -> Any? {
+        asElement?.attribute(forName: attributeName)?.objectValue
     }
     
     /// **OTCore:**
-    /// Adds an attribute. Replaces existing value if attribute name already exists.
+    /// Adds an attribute.
+    /// Replaces existing value if attribute name already exists.
+    /// Removes attribute if `value` is `nil`.
     @_disfavoredOverload
-    public func addAttribute(withName: String, value: String?) {
-        let attr = XMLNode(kind: .attribute)
-        attr.name = withName
-        attr.stringValue = value
-        
-        asElement?.addAttribute(attr)
+    public func addAttribute(withName attributeName: String, value: String?) {
+        if let value = value {
+            let attr = XMLNode(kind: .attribute)
+            attr.name = attributeName
+            attr.stringValue = value
+            asElement?.addAttribute(attr)
+        } else {
+            asElement?.removeAttribute(forName: attributeName)
+        }
+    }
+    
+    /// **OTCore:**
+    /// Convenience to populate with attributes.
+    /// Attributes are accepted as an array of tuples instead of a dictionary in order to maintain order.
+    @_disfavoredOverload
+    public func addAttributes(_ attributes: [(name: String, value: String)]) {
+        attributes.forEach {
+            addAttribute(withName: $0.name, value: $0.value)
+        }
     }
 }
 
@@ -103,16 +122,6 @@ extension XMLElement {
         self.init(name: name)
         
         addAttributes(attributes)
-    }
-    
-    /// **OTCore:**
-    /// Convenience to populate with attributes.
-    /// Attributes are accepted as an array of tuples instead of a dictionary in order to maintain order.
-    @_disfavoredOverload
-    public func addAttributes(_ attributes: [(name: String, value: String)]) {
-        attributes.forEach {
-            addAttribute(withName: $0.name, value: $0.value)
-        }
     }
 }
 
