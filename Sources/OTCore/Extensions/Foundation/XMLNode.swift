@@ -52,7 +52,7 @@ extension Collection where Element: XMLElement {
     public func filter(
         whereAttribute attributeName: String,
         hasValue value: String
-    ) -> [XMLNode] {
+    ) -> [Element] {
         filter {
             $0.attribute(forName: attributeName)?
                 .stringValue == value
@@ -65,13 +65,46 @@ extension Collection where Element: XMLElement {
     @inlinable @_disfavoredOverload
     public func filter(
         whereAttribute attributeName: String,
-        _ isIncluded: (_ attributeValue: String) throws -> Bool
-    ) rethrows -> [XMLNode] {
-        try filter {
-            let filtered = try [$0.stringValue(forAttributeNamed: attributeName)]
-                .compactMap { $0 }
-                .filter(isIncluded)
-            return !filtered.isEmpty
+        _ isIncluded: (_ attributeValue: String) -> Bool
+    ) -> [Element] {
+        filter {
+            guard let value = $0.stringValue(forAttributeNamed: attributeName)
+            else { return false }
+            
+            return isIncluded(value)
+        }
+    }
+}
+
+extension LazyCollection where Element: XMLElement {
+    /// **OTCore:**
+    /// Filters nodes that have an attribute matching the given `attribute` name and `value`.
+    /// Filter is performed lazily.
+    @inlinable @_disfavoredOverload
+    public func filter(
+        whereAttribute attributeName: String,
+        hasValue value: String
+    ) -> LazyFilterSequence<LazySequence<Base>.Elements> {
+        filter {
+            $0.attribute(forName: attributeName)?
+                .stringValue == value
+        }
+    }
+    
+    /// **OTCore:**
+    /// Filters nodes that have an attribute matching the given `attribute` name and satisfies the
+    /// given predicate.
+    /// Filter is performed lazily.
+    @inlinable @_disfavoredOverload
+    public func filter(
+        whereAttribute attributeName: String,
+        _ isIncluded: @escaping (_ attributeValue: String) -> Bool
+    ) -> LazyFilterSequence<LazySequence<Base>.Elements> {
+        filter {
+            guard let value = $0.stringValue(forAttributeNamed: attributeName)
+            else { return false }
+            
+            return isIncluded(value)
         }
     }
 }

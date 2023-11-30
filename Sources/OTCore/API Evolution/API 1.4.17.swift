@@ -41,7 +41,9 @@ extension Collection where Element: XMLNode {
         attribute: String,
         _ isIncluded: (_ attributeValue: String) throws -> Bool
     ) rethrows -> [XMLNode] {
-        try asElements().filter(whereAttribute: attribute, isIncluded)
+        asElements().filter(whereAttribute: attribute) {
+            (try? isIncluded($0)) == true
+        }
     }
 }
 
