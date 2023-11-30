@@ -16,36 +16,56 @@ extension Collection where Element: XMLNode {
         filter(whereNodeNamed: elementName)
     }
     
-    @available(*, deprecated, renamed: "filter(whereAttribute:hasValue:)")
+    @available(
+        *,
+        deprecated,
+        renamed: "filter(whereAttribute:hasValue:)",
+        message: "Method has been renamed, and is also now only available on XMLElement and no longer available on XMLNode."
+    )
     @inlinable @_disfavoredOverload
     public func filter(
         attribute: String,
         value: String
     ) -> [XMLNode] {
-        filter(whereAttribute: attribute, hasValue: value)
+        asElements().filter(whereAttribute: attribute, hasValue: value)
     }
     
-    @available(*, deprecated, renamed: "filter(whereAttribute:hasValue:)")
+    @available(
+        *,
+        deprecated,
+        renamed: "filter(whereAttribute:hasValue:)",
+        message: "Method has been renamed, and is also now only available on XMLElement and no longer available on XMLNode."
+    )
     @inlinable @_disfavoredOverload
     public func filter(
         attribute: String,
         _ isIncluded: (_ attributeValue: String) throws -> Bool
     ) rethrows -> [XMLNode] {
-        try filter(whereAttribute: attribute, isIncluded)
+        try asElements().filter(whereAttribute: attribute, isIncluded)
     }
 }
 
 extension XMLNode {
-    @available(*, deprecated, renamed: "stringValue(forAttributeNamed:)")
+    @available(
+        *,
+        deprecated,
+        renamed: "stringValue(forAttributeNamed:)",
+        message: "Method has been renamed, and is also now only available on XMLElement and no longer available on XMLNode."
+    )
     @_disfavoredOverload
     public func attributeStringValue(forName: String) -> String? {
-        stringValue(forAttributeNamed: forName)
+        asElement?.stringValue(forAttributeNamed: forName)
     }
     
-    @available(*, deprecated, renamed: "objectValue(forAttributeNamed:)")
+    @available(
+        *,
+        deprecated,
+        renamed: "objectValue(forAttributeNamed:)",
+        message: "Method has been renamed, and is also now only available on XMLElement and no longer available on XMLNode."
+    )
     @_disfavoredOverload
     public func attributeObjectValue(forName: String) -> Any? {
-        objectValue(forAttributeNamed: forName)
+        asElement?.objectValue(forAttributeNamed: forName)
     }
 }
 

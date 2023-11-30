@@ -22,8 +22,9 @@ final class Extensions_Foundation_XMLNode_Tests: XCTestCase {
         
         let root = loadxml.rootElement()
         let setup = root?.children?
+            .asElements()
             .filter(whereAttribute: "name", hasValue: "Setup")
-            .first as? XMLElement
+            .first
         
         XCTAssertEqual(setup?.childCount, 14)
     }
@@ -74,7 +75,7 @@ final class Extensions_Foundation_XMLNode_Tests: XCTestCase {
         XCTAssertEqual(filtered, [nodes[2], nodes[3]])
     }
     
-    func testXMLNode_StringValueForAttribute() throws {
+    func testXMLElement_StringValueForAttribute() throws {
         let node = XMLNode(kind: .element)
         
         let attr = XMLNode(kind: .attribute)
@@ -82,15 +83,11 @@ final class Extensions_Foundation_XMLNode_Tests: XCTestCase {
         attr.stringValue = "value1"
         (node as? XMLElement)?.addAttribute(attr)
         
-        // as node
-        XCTAssertEqual(node.stringValue(forAttributeNamed: "key1"), "value1")
-        
-        // as element
         let element = try XCTUnwrap(node as? XMLElement)
         XCTAssertEqual(element.stringValue(forAttributeNamed: "key1"), "value1")
     }
     
-    func testXMLNode_ObjectValueForAttribute() throws {
+    func testXMLElement_ObjectValueForAttribute() throws {
         let node = XMLNode(kind: .element)
         
         let attr = XMLNode(kind: .attribute)
@@ -98,29 +95,18 @@ final class Extensions_Foundation_XMLNode_Tests: XCTestCase {
         attr.stringValue = "value1"
         (node as? XMLElement)?.addAttribute(attr)
         
-        // as node
-        XCTAssertEqual(node.objectValue(forAttributeNamed: "key1") as? String, "value1")
-        
-        // as element
         let element = try XCTUnwrap(node as? XMLElement)
         XCTAssertEqual(element.objectValue(forAttributeNamed: "key1") as? String, "value1")
     }
     
-    func testXMLNode_AddAttributeWithNameValue() throws {
-        let node = XMLNode(kind: .element)
+    func testXMLElement_AddAttributeWithNameValue() throws {
+        let element = XMLElement(name: "test")
         
-        node.addAttribute(withName: "key1", value: "value1")
-        
-        // as node
-        XCTAssertEqual(node.objectValue(forAttributeNamed: "key1") as? String, "value1")
-        
-        // as element
-        let element = try XCTUnwrap(node as? XMLElement)
+        element.addAttribute(withName: "key1", value: "value1")
         XCTAssertEqual(element.objectValue(forAttributeNamed: "key1") as? String, "value1")
         
         // remove attribute if `nil` value is passed
-        node.addAttribute(withName: "key1", value: nil)
-        
+        element.addAttribute(withName: "key1", value: nil)
         XCTAssertNil(element.objectValue(forAttributeNamed: "key1"))
     }
     

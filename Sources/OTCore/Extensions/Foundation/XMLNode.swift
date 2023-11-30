@@ -9,18 +9,30 @@
 
 import Foundation
 
-// MARK: - XMLNode
+// MARK: - XMLNode Typing
 
 extension XMLNode {
     /// **OTCore:**
     /// Returns `self` typed as `XMLElement`.
-    @_disfavoredOverload
+    @inlinable @_disfavoredOverload
     public var asElement: XMLElement? {
         self as? XMLElement
     }
 }
 
-// MARK: - .filter
+// MARK: - XMLNode Collection Typing
+
+extension Collection where Element: XMLNode {
+    
+    /// **OTCore:**
+    /// Returns the collection as a lazy iterator that compact maps to `XMLElement`.
+    @inlinable @_disfavoredOverload
+    public func asElements() -> LazyCompactMapSequence<Self, XMLElement> {
+        self.lazy.compactMap(\.asElement)
+    }
+}
+
+// MARK: - XMLNode Collection Filtering
 
 extension Collection where Element: XMLNode {
     /// **OTCore:**
@@ -29,7 +41,11 @@ extension Collection where Element: XMLNode {
     public func filter(whereNodeNamed nodeName: String) -> [XMLNode] {
         filter { $0.name == nodeName }
     }
-    
+}
+
+// MARK: - XMLElement Collection Filtering
+
+extension Collection where Element: XMLElement {
     /// **OTCore:**
     /// Filters nodes that have an attribute matching the given `attribute` name and `value`.
     @inlinable @_disfavoredOverload
@@ -38,8 +54,7 @@ extension Collection where Element: XMLNode {
         hasValue value: String
     ) -> [XMLNode] {
         filter {
-            $0.asElement?
-                .attribute(forName: attributeName)?
+            $0.attribute(forName: attributeName)?
                 .stringValue == value
         }
     }
@@ -61,16 +76,16 @@ extension Collection where Element: XMLNode {
     }
 }
 
-// MARK: - Attributes
+// MARK: - XMLElement Attributes
 
-extension XMLNode {
+extension XMLElement {
     /// **OTCore:**
     /// Gets an attribute value as `String`.
     /// If attribute name does not exist or does not have a value convertible to `String`, `nil`
     /// will be returned.
     @_disfavoredOverload
     public func stringValue(forAttributeNamed attributeName: String) -> String? {
-        asElement?.attribute(forName: attributeName)?.stringValue
+        attribute(forName: attributeName)?.stringValue
     }
     
     /// **OTCore:**
@@ -78,7 +93,7 @@ extension XMLNode {
     /// If attribute name does not exist or does not have a value, nil will be returned.
     @_disfavoredOverload
     public func objectValue(forAttributeNamed attributeName: String) -> Any? {
-        asElement?.attribute(forName: attributeName)?.objectValue
+        attribute(forName: attributeName)?.objectValue
     }
     
     /// **OTCore:**
@@ -91,9 +106,9 @@ extension XMLNode {
             let attr = XMLNode(kind: .attribute)
             attr.name = attributeName
             attr.stringValue = value
-            asElement?.addAttribute(attr)
+            addAttribute(attr)
         } else {
-            asElement?.removeAttribute(forName: attributeName)
+            removeAttribute(forName: attributeName)
         }
     }
     
@@ -108,7 +123,7 @@ extension XMLNode {
     }
 }
 
-// MARK: - XMLElement
+// MARK: - XMLElement Convenience Inits
 
 extension XMLElement {
     /// **OTCore:**
