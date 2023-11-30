@@ -26,6 +26,7 @@ extension Collection where Element: XMLNode {
     
     /// **OTCore:**
     /// Returns the collection as a lazy iterator that compact maps to `XMLElement`.
+    /// Mapping is performed lazily.
     @inlinable @_disfavoredOverload
     public func asElements() -> LazyCompactMapSequence<Self, XMLElement> {
         self.lazy.compactMap(\.asElement)
@@ -37,8 +38,25 @@ extension Collection where Element: XMLNode {
 extension Collection where Element: XMLNode {
     /// **OTCore:**
     /// Filters by the given XML node name.
+    /// Filter is performed lazily.
     @inlinable @_disfavoredOverload
-    public func filter(whereNodeNamed nodeName: String) -> [XMLNode] {
+    public func filter(
+        whereNodeNamed nodeName: String
+    ) -> LazyFilterSequence<LazySequence<Self>.Elements> {
+        self.lazy.filter(whereNodeNamed: nodeName)
+    }
+}
+
+// MARK: - XMLNode Lazy Collection Filtering
+
+extension LazyCollection where Element: XMLNode {
+    /// **OTCore:**
+    /// Filters by the given XML node name.
+    /// Filter is performed lazily.
+    @inlinable @_disfavoredOverload
+    public func filter(
+        whereNodeNamed nodeName: String
+    ) -> LazyFilterSequence<LazySequence<Base>.Elements> {
         filter { $0.name == nodeName }
     }
 }
@@ -48,12 +66,13 @@ extension Collection where Element: XMLNode {
 extension Collection where Element: XMLElement {
     /// **OTCore:**
     /// Filters nodes that have an attribute matching the given `attribute` name and `value`.
+    /// Filter is performed lazily.
     @inlinable @_disfavoredOverload
     public func filter(
         whereAttribute attributeName: String,
         hasValue value: String
-    ) -> [Element] {
-        filter {
+    ) -> LazyFilterSequence<LazySequence<Self>.Elements> {
+        self.lazy.filter {
             $0.attribute(forName: attributeName)?
                 .stringValue == value
         }
@@ -62,19 +81,17 @@ extension Collection where Element: XMLElement {
     /// **OTCore:**
     /// Filters nodes that have an attribute matching the given `attribute` name and satisfies the
     /// given predicate.
+    /// Filter is performed lazily.
     @inlinable @_disfavoredOverload
     public func filter(
         whereAttribute attributeName: String,
-        _ isIncluded: (_ attributeValue: String) -> Bool
-    ) -> [Element] {
-        filter {
-            guard let value = $0.stringValue(forAttributeNamed: attributeName)
-            else { return false }
-            
-            return isIncluded(value)
-        }
+        _ isIncluded: @escaping (_ attributeValue: String) -> Bool
+    ) -> LazyFilterSequence<LazySequence<Self>.Elements> {
+        self.lazy.filter(whereAttribute: attributeName, isIncluded)
     }
 }
+
+// MARK: - XMLElement Lazy Collection Filtering
 
 extension LazyCollection where Element: XMLElement {
     /// **OTCore:**

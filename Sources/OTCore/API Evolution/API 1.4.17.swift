@@ -13,7 +13,7 @@ extension Collection where Element: XMLNode {
     @available(*, deprecated, renamed: "filter(whereNodeNamed:)")
     @inlinable @_disfavoredOverload
     public func filter(elementName: String) -> [XMLNode] {
-        filter(whereNodeNamed: elementName)
+        Array(filter(whereNodeNamed: elementName))
     }
     
     @available(
@@ -27,7 +27,7 @@ extension Collection where Element: XMLNode {
         attribute: String,
         value: String
     ) -> [XMLNode] {
-        asElements().filter(whereAttribute: attribute, hasValue: value)
+        Array(asElements().filter(whereAttribute: attribute, hasValue: value))
     }
     
     @available(
@@ -39,11 +39,12 @@ extension Collection where Element: XMLNode {
     @inlinable @_disfavoredOverload
     public func filter(
         attribute: String,
-        _ isIncluded: (_ attributeValue: String) throws -> Bool
+        _ isIncluded: @escaping (_ attributeValue: String) throws -> Bool
     ) rethrows -> [XMLNode] {
-        asElements().filter(whereAttribute: attribute) {
+        let filtered = asElements().filter(whereAttribute: attribute) {
             (try? isIncluded($0)) == true
         }
+        return Array(filtered)
     }
 }
 

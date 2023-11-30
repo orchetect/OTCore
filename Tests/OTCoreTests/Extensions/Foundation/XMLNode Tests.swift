@@ -47,10 +47,10 @@ final class Extensions_Foundation_XMLNode_Tests: XCTestCase {
         // test
         
         let filtered1 = nodes.filter(whereNodeNamed: "list1B")
-        XCTAssertEqual(filtered1[0], nodes[1])
+        XCTAssertEqual(filtered1[position: 0], nodes[1])
         
         let filtered2 = nodes.filter(whereNodeNamed: "DoesNotExist")
-        XCTAssertEqual(filtered2, [])
+        XCTAssert(filtered2.isEmpty)
     }
     
     func testCollection_XMLNode_FilterAttribute() throws {
@@ -66,13 +66,14 @@ final class Extensions_Foundation_XMLNode_Tests: XCTestCase {
         // test
         
         var filtered = nodes.filter(whereAttribute: "name", hasValue: "name3")
-        XCTAssertEqual(filtered[0], nodes[2])
+        XCTAssertEqual(filtered[position: 0], nodes[2])
         
         filtered = nodes.filter(whereAttribute: "name") { $0 == "name4" }
-        XCTAssertEqual(filtered[0], nodes[3])
+        XCTAssertEqual(filtered[position: 0], nodes[3])
         
         filtered = nodes.filter(whereAttribute: "class") { $0.hasSuffix("B") }
-        XCTAssertEqual(filtered, [nodes[2], nodes[3]])
+        XCTAssertEqual(filtered[position: 0], nodes[2])
+        XCTAssertEqual(filtered[position: 1], nodes[3])
     }
     
     func testCollection_XMLNode_Lazy_FilterAttribute() throws {
