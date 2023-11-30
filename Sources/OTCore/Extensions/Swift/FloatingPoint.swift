@@ -318,37 +318,6 @@ extension FloatingPoint where Self: CustomStringConvertible {
     }
 }
 
-#if !(arch(arm64) || arch(arm) || os(watchOS)) // Float80 is now removed for ARM
-extension Float80 {
-    /// **OTCore:**
-    /// Returns a string formatted to _n_ decimal places, using the given rounding rule.
-    @inlinable @_disfavoredOverload
-    public func string(
-        rounding rule: FloatingPointRoundingRule = .toNearestOrAwayFromZero,
-        decimalPlaces: Int
-    ) -> String {
-        let roundedValue = rounded(rule, decimalPlaces: decimalPlaces)
-        
-        // String(format:) does not work with Float80
-        // so we need a custom implementation here
-        
-        let rawString = String(describing: roundedValue)
-        let splitComponents = rawString.split(separator: ".")
-        if decimalPlaces < 1 || splitComponents.count < 2 {
-            return String(splitComponents.first ?? "0")
-        }
-        
-        return (splitComponents[0])
-            + "."
-            + splitComponents[1].padding(
-                toLength: decimalPlaces,
-                withPad: "0",
-                startingAt: 0
-            )
-    }
-}
-#endif
-
 // MARK: - String To FloatingPoint
 
 extension String {
