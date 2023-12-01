@@ -9,6 +9,17 @@
 
 import Foundation
 
+// MARK: - XML Traversal
+
+extension XMLElement {
+    /// **OTCore:**
+    /// Returns the first immediate child whose element name matches the given string.
+    @_disfavoredOverload
+    public func firstChild(named name: String) -> XMLElement? {
+        childElements.first(where: { $0.name == name })
+    }
+}
+
 // MARK: - Attributes
 
 extension XMLElement {
