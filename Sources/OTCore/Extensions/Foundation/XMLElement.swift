@@ -30,6 +30,15 @@ extension XMLElement {
     public func firstChildElement(named name: String) -> XMLElement? {
         childElements.first(where: { $0.name == name })
     }
+    
+    /// **OTCore:**
+    /// Returns the first immediate child containing an attribute with the given name.
+    @_disfavoredOverload
+    public func firstChildElement(
+        withAttribute attributeName: String
+    ) -> (element: XMLElement, attributeValue: String)? {
+        childElements.first(withAttribute: attributeName)
+    }
 }
 
 // MARK: - Attributes
