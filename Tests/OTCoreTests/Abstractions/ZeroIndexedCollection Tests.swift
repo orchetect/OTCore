@@ -50,7 +50,7 @@ class Abstractions_ZeroIndexedCollection_Tests: XCTestCase {
         XCTAssertEqual(coll[1], "X")
         
         XCTAssertEqual(coll.first, "Y")
-        XCTAssertEqual(coll.firstRange(of: ["Y", "X"]), 0 ..< 2)
+        XCTAssertEqual(coll.firstIndex(of: "X"), 1)
     }
     
     func testZeroIndexedRangeReplaceableCollection() {
