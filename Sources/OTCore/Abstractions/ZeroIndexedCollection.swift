@@ -7,15 +7,15 @@
 // MARK: - ZeroIndexedCollection
 
 /// **OTCore:**
-/// A view on a collection that translates the base collection's indices to zero-based sequential
+/// A view into a collection that translates the base collection's indices to zero-based sequential
 /// indices.
 ///
 /// For example: a collection with indices `2, 4, 5` could be accessed using indices `0, 1, 2`.
 public struct ZeroIndexedCollection<Base: Collection> {
-    private var base: Base
+    private let base: Slice<Base>
     
     public init(_ base: Base) {
-        self.base = base
+        self.base = Slice(base: base, bounds: base.startIndex ..< base.endIndex)
     }
 }
 
@@ -47,15 +47,15 @@ extension Collection {
 // MARK: - ZeroIndexedMutableCollection
 
 /// **OTCore:**
-/// A view on a collection that translates the base collection's indices to zero-based sequential
+/// A view into a collection that translates the base collection's indices to zero-based sequential
 /// indices.
 ///
 /// For example: a collection with indices `2, 4, 5` could be accessed using indices `0, 1, 2`.
 public struct ZeroIndexedMutableCollection<Base: MutableCollection> {
-    private var base: Base
+    private var base: Slice<Base>
     
     public init(_ base: Base) {
-        self.base = base
+        self.base = Slice(base: base, bounds: base.startIndex ..< base.endIndex)
     }
 }
 
@@ -91,6 +91,61 @@ extension MutableCollection {
     /// For example: a collection with indices `2, 4, 5` could be accessed using indices `0, 1, 2`.
     public var zeroIndexed: ZeroIndexedMutableCollection<Self> {
         ZeroIndexedMutableCollection(self)
+    }
+}
+
+// MARK: - ZeroIndexedRangeReplaceableCollection
+
+/// **OTCore:**
+/// A view into a collection that translates the base collection's indices to zero-based sequential
+/// indices.
+///
+/// For example: a collection with indices `2, 4, 5` could be accessed using indices `0, 1, 2`.
+public struct ZeroIndexedRangeReplaceableCollection<Base: RangeReplaceableCollection> {
+    private var base: Slice<Base>
+    
+    public init(_ base: Base) {
+        self.base = Slice(base: base, bounds: base.startIndex ..< base.endIndex)
+    }
+}
+
+extension ZeroIndexedRangeReplaceableCollection: Collection {
+    public typealias Element = Base.Element
+    
+    public var startIndex: Int { 0 }
+    
+    public var endIndex: Int { base.count }
+    
+    public func index(after i: Int) -> Int { i + 1 }
+    
+    public subscript(_ indexOffset: Index) -> Element {
+        base[base._index(forOffset: indexOffset)]
+    }
+}
+
+extension ZeroIndexedRangeReplaceableCollection: RangeReplaceableCollection {
+    public mutating func replaceSubrange<C>(
+        _ subrange: Range<Index>,
+        with newElements: C
+    ) where C: Collection, Element == C.Element {
+        let offsetLowerBound = base._index(forOffset: subrange.lowerBound)
+        let offsetUpperBound = base._index(forOffset: subrange.upperBound)
+        base.replaceSubrange(offsetLowerBound ..< offsetUpperBound, with: newElements)
+    }
+    
+    public init() {
+        base = .init()
+    }
+}
+
+extension RangeReplaceableCollection {
+    /// **OTCore:**
+    /// Returns a view on the collection that translates the base collection's indices to zero-based
+    /// sequential indices.
+    ///
+    /// For example: a collection with indices `2, 4, 5` could be accessed using indices `0, 1, 2`.
+    public var zeroIndexed: ZeroIndexedRangeReplaceableCollection<Self> {
+        ZeroIndexedRangeReplaceableCollection(self)
     }
 }
 
