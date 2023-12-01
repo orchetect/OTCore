@@ -15,7 +15,7 @@ final class Extensions_Foundation_XMLNode_Tests: XMLTestCase {
     override func tearDown() { super.tearDown() }
     
     func testXMLLoad() throws {
-        let loadxml = try Self.testXMLDocument
+        let loadxml = try Self.testXMLDocument()
         
         let root = loadxml.rootElement()
         let setup = root?.children?

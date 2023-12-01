@@ -20,11 +20,11 @@ class XMLTestCase: XCTestCase {
         return unwrapped
     }
     
-    static var testXMLDocument: XMLDocument {
-        get throws {
-            try XMLDocument(data: testXMLStringData, 
-                            options: [.nodePrettyPrint, .nodeCompactEmptyElement])
-        }
+    static func testXMLDocument() throws -> XMLDocument {
+        try XMLDocument(
+            data: testXMLStringData,
+            options: [.nodePrettyPrint, .nodeCompactEmptyElement]
+        )
     }
     static let testXMLStringData = testXMLString.toData()!
     static let testXMLString = """

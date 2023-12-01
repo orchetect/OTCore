@@ -15,7 +15,7 @@ final class Extensions_Foundation_XMLElement_Tests: XMLTestCase {
     override func tearDown() { super.tearDown() }
     
     func testAncestors() throws {
-        let loadxml = try Self.testXMLDocument
+        let loadxml = try Self.testXMLDocument()
         
         let tracklist = try Self.child(of: loadxml, named: "tracklist2")
         let list = try Self.child(of: tracklist, named: "list")
@@ -75,7 +75,7 @@ final class Extensions_Foundation_XMLElement_Tests: XMLTestCase {
     }
     
     func testFirstWithAttribute() throws {
-        let loadxml = try Self.testXMLDocument
+        let loadxml = try Self.testXMLDocument()
         
         let tracklist = try Self.child(of: loadxml, named: "tracklist2")
         let list = try Self.child(of: tracklist, named: "list")
@@ -91,7 +91,7 @@ final class Extensions_Foundation_XMLElement_Tests: XMLTestCase {
     }
     
     func testFirstWithAnyAttribute() throws {
-        let loadxml = try Self.testXMLDocument
+        let loadxml = try Self.testXMLDocument()
         
         let tracklist = try Self.child(of: loadxml, named: "tracklist2")
         let list = try Self.child(of: tracklist, named: "list")
