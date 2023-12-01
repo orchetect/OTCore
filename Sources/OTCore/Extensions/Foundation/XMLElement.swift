@@ -13,6 +13,18 @@ import Foundation
 
 extension XMLElement {
     /// **OTCore:**
+    /// Iterates on all ancestors of the element, starting with the element's parent.
+    /// Iterator is performed lazily.
+    @_disfavoredOverload
+    public var ancestorElements: UnfoldSequence<XMLElement, XMLElement> {
+        sequence(state: self) { element in
+            guard let parent = element.parentElement else { return nil }
+            element = parent
+            return parent
+        }
+    }
+    
+    /// **OTCore:**
     /// Returns the first immediate child whose element name matches the given string.
     @_disfavoredOverload
     public func firstChild(named name: String) -> XMLElement? {

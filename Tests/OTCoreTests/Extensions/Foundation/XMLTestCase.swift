@@ -11,6 +11,22 @@ import XCTest
 @testable import OTCore
 
 class XMLTestCase: XCTestCase {
+    static func child(of node: XMLNode, named: String) throws -> XMLElement {
+        let child = node.children?
+            .lazy
+            .compactMap(\.asElement)
+            .first(where: { $0.name == named })
+        let unwrapped = try XCTUnwrap(child)
+        return unwrapped
+    }
+    
+    static var testXMLDocument: XMLDocument {
+        get throws {
+            try XMLDocument(data: testXMLStringData, 
+                            options: [.nodePrettyPrint, .nodeCompactEmptyElement])
+        }
+    }
+    static let testXMLStringData = testXMLString.toData()!
     static let testXMLString = """
         <?xml version="1.0" encoding="utf-8"?>
         <tracklist2>
