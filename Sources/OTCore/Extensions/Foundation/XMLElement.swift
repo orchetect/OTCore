@@ -127,7 +127,7 @@ extension Collection where Element: XMLElement {
     
     /// **OTCore:**
     /// Finds the first element in the collection that has an attribute matching the given
-    /// `attribute` name, and returns the element as well as the attribute's value.
+    /// attribute name, and returns the element as well as the attribute's value.
     @inlinable @_disfavoredOverload
     public func first(
         withAttribute attributeName: String
@@ -138,6 +138,21 @@ extension Collection where Element: XMLElement {
             }
         }
         return nil
+    }
+    
+    /// **OTCore:**
+    /// Finds the first element in the collection that has an attribute matching any of the given
+    /// attribute names, and returns the element.
+    @inlinable @_disfavoredOverload
+    public func first(
+        withAnyAttribute attributeNames: [String]
+    ) -> Element? {
+        first { 
+            for attributeName in attributeNames {
+                if $0.attribute(forName: attributeName) != nil { return true }
+            }
+            return false
+        }
     }
 }
 
