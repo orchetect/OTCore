@@ -124,6 +124,21 @@ extension Collection where Element: XMLElement {
     ) -> LazyFilterSequence<LazySequence<Self>.Elements> {
         self.lazy.filter(whereAttribute: attributeName, isIncluded)
     }
+    
+    /// **OTCore:**
+    /// Finds the first element in the collection that has an attribute matching the given
+    /// `attribute` name, and returns the element as well as the attribute's value.
+    @inlinable @_disfavoredOverload
+    public func first(
+        withAttribute attributeName: String
+    ) -> (element: Element, attributeValue: String)? {
+        for element in self {
+            if let attributeValue = element.stringValue(forAttributeNamed: attributeName) {
+                return (element: element, attributeValue: attributeValue)
+            }
+        }
+        return nil
+    }
 }
 
 // MARK: - LazyCollection Filtering

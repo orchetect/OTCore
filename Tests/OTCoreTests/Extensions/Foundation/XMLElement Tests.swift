@@ -74,6 +74,22 @@ final class Extensions_Foundation_XMLElement_Tests: XMLTestCase {
         XCTAssertEqual(filtered[position: 1], nodes[3])
     }
     
+    func testFirstWithAttribute() throws {
+        let loadxml = try Self.testXMLDocument
+        
+        let tracklist = try Self.child(of: loadxml, named: "tracklist2")
+        let list = try Self.child(of: tracklist, named: "list")
+        let obj = try Self.child(of: list, named: "obj")
+        let obj2 = try Self.child(of: obj, named: "obj")
+        
+        let (element, attrValue) = try XCTUnwrap(
+            obj2.childElements.first(withAttribute: "type")
+        )
+        
+        XCTAssertEqual(element.name, "list")
+        XCTAssertEqual(attrValue, "obj")
+    }
+    
     func testXMLElement_StringValueForAttribute() throws {
         let node = XMLNode(kind: .element)
         
