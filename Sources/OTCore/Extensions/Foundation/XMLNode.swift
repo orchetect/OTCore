@@ -25,12 +25,18 @@ extension XMLNode {
     public var parentElement: XMLElement? {
         parent as? XMLElement
     }
+    
+    /// **OTCore:**
+    /// Returns `children` typed as `XMLElement`s.
+    @inlinable @_disfavoredOverload
+    public var childElements: LazyCompactMapSequence<[XMLNode], XMLElement> {
+        (children ?? []).asElements()
+    }
 }
 
 // MARK: - Collection Typing
 
 extension Collection where Element: XMLNode {
-    
     /// **OTCore:**
     /// Returns the collection as a lazy iterator that compact maps to `XMLElement`.
     /// Mapping is performed lazily.
