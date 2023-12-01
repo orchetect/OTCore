@@ -135,6 +135,16 @@ extension Sequence where Element: XMLElement {
     }
     
     /// **OTCore:**
+    /// Filters nodes that have an attribute matching the given `attribute` name.
+    /// Filter is performed lazily.
+    @inlinable @_disfavoredOverload
+    public func filter(
+        withAttribute attributeName: String
+    ) -> LazyFilterSequence<LazySequence<Self>.Elements> {
+        self.lazy.filter { $0.attribute(forName: attributeName) != nil }
+    }
+    
+    /// **OTCore:**
     /// Finds the first element in the collection that has an attribute matching the given
     /// attribute name, and returns the element as well as the attribute's value.
     @inlinable @_disfavoredOverload
