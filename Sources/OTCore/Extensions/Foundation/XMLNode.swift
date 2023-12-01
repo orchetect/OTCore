@@ -34,7 +34,7 @@ extension XMLNode {
     }
 }
 
-// MARK: - Collection Typing
+// MARK: - Sequence Typing
 
 extension Sequence where Element: XMLNode {
     /// **OTCore:**
@@ -46,7 +46,7 @@ extension Sequence where Element: XMLNode {
     }
 }
 
-// MARK: - Collection Filtering
+// MARK: - Sequence Filtering
 
 extension Sequence where Element: XMLNode {
     /// **OTCore:**
@@ -60,7 +60,7 @@ extension Sequence where Element: XMLNode {
     }
 }
 
-// MARK: - LazyCollection Filtering
+// MARK: - LazySequence Filtering
 
 extension LazySequence where Element: XMLNode {
     /// **OTCore:**

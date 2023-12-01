@@ -105,20 +105,56 @@ extension XMLElement {
     }
 }
 
-// MARK: - Collection Filtering
+// MARK: - Sequence Filtering
 
 extension Sequence where Element: XMLElement {
+    /// **OTCore:**
+    /// Filters elements that have an attribute matching the given `attribute` name and `value`.
+    /// Filter is performed lazily.
+    @inlinable @_disfavoredOverload
+    public func filter(
+        whereAttribute attributeName: String,
+        hasValue attributeValue: String
+    ) -> LazyFilterSequence<LazySequence<Self>.Elements> {
+        self.lazy.filter(whereAttribute: attributeName, hasValue: attributeValue)
+    }
+    
+    /// **OTCore:**
+    /// Filters elements that have an attribute matching the given `attribute` name and satisfies
+    /// the given predicate.
+    /// Filter is performed lazily.
+    @inlinable @_disfavoredOverload
+    public func filter(
+        whereAttribute attributeName: String,
+        _ isIncluded: @escaping (_ attributeValue: String) -> Bool
+    ) -> LazyFilterSequence<LazySequence<Self>.Elements> {
+        self.lazy.filter(whereAttribute: attributeName, isIncluded)
+    }
+    
+    /// **OTCore:**
+    /// Filters elements that have an attribute matching the given `attribute` name.
+    /// Filter is performed lazily.
+    @inlinable @_disfavoredOverload
+    public func filter(
+        withAttribute attributeName: String
+    ) -> LazyFilterSequence<LazySequence<Self>.Elements> {
+        self.lazy.filter { $0.attribute(forName: attributeName) != nil }
+    }
+}
+
+// MARK: - LazySequence Filtering
+
+extension LazySequence where Element: XMLElement {
     /// **OTCore:**
     /// Filters nodes that have an attribute matching the given `attribute` name and `value`.
     /// Filter is performed lazily.
     @inlinable @_disfavoredOverload
     public func filter(
         whereAttribute attributeName: String,
-        hasValue value: String
-    ) -> LazyFilterSequence<LazySequence<Self>.Elements> {
-        self.lazy.filter {
-            $0.attribute(forName: attributeName)?
-                .stringValue == value
+        hasValue attributeValue: String
+    ) -> LazyFilterSequence<LazySequence<Base>.Elements> {
+        filter {
+            $0.stringValue(forAttributeNamed: attributeName) == attributeValue
         }
     }
     
@@ -130,18 +166,31 @@ extension Sequence where Element: XMLElement {
     public func filter(
         whereAttribute attributeName: String,
         _ isIncluded: @escaping (_ attributeValue: String) -> Bool
-    ) -> LazyFilterSequence<LazySequence<Self>.Elements> {
-        self.lazy.filter(whereAttribute: attributeName, isIncluded)
+    ) -> LazyFilterSequence<LazySequence<Base>.Elements> {
+        filter {
+            guard let value = $0.stringValue(forAttributeNamed: attributeName)
+            else { return false }
+            
+            return isIncluded(value)
+        }
     }
-    
+}
+
+// MARK: - Sequence First
+
+extension Sequence where Element: XMLElement {
     /// **OTCore:**
-    /// Filters nodes that have an attribute matching the given `attribute` name.
+    /// Returns the first element that has an attribute matching the given `attribute` name and
+    /// `value`.
     /// Filter is performed lazily.
     @inlinable @_disfavoredOverload
-    public func filter(
-        withAttribute attributeName: String
-    ) -> LazyFilterSequence<LazySequence<Self>.Elements> {
-        self.lazy.filter { $0.attribute(forName: attributeName) != nil }
+    public func first(
+        whereAttribute attributeName: String,
+        hasValue attributeValue: String
+    ) -> Element? {
+        first {
+            $0.stringValue(forAttributeNamed: attributeName) == attributeValue
+        }
     }
     
     /// **OTCore:**
@@ -166,46 +215,11 @@ extension Sequence where Element: XMLElement {
     public func first(
         withAnyAttribute attributeNames: [String]
     ) -> Element? {
-        first { 
+        first {
             for attributeName in attributeNames {
                 if $0.attribute(forName: attributeName) != nil { return true }
             }
             return false
-        }
-    }
-}
-
-// MARK: - LazyCollection Filtering
-
-extension LazySequence where Element: XMLElement {
-    /// **OTCore:**
-    /// Filters nodes that have an attribute matching the given `attribute` name and `value`.
-    /// Filter is performed lazily.
-    @inlinable @_disfavoredOverload
-    public func filter(
-        whereAttribute attributeName: String,
-        hasValue value: String
-    ) -> LazyFilterSequence<LazySequence<Base>.Elements> {
-        filter {
-            $0.attribute(forName: attributeName)?
-                .stringValue == value
-        }
-    }
-    
-    /// **OTCore:**
-    /// Filters nodes that have an attribute matching the given `attribute` name and satisfies the
-    /// given predicate.
-    /// Filter is performed lazily.
-    @inlinable @_disfavoredOverload
-    public func filter(
-        whereAttribute attributeName: String,
-        _ isIncluded: @escaping (_ attributeValue: String) -> Bool
-    ) -> LazyFilterSequence<LazySequence<Base>.Elements> {
-        filter {
-            guard let value = $0.stringValue(forAttributeNamed: attributeName)
-            else { return false }
-            
-            return isIncluded(value)
         }
     }
 }
