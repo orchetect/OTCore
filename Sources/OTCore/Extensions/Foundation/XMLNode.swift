@@ -18,6 +18,13 @@ extension XMLNode {
     public var asElement: XMLElement? {
         self as? XMLElement
     }
+    
+    /// **OTCore:**
+    /// Returns `parent` typed as `XMLElement`.
+    @inlinable @_disfavoredOverload
+    public var parentElement: XMLElement? {
+        parent as? XMLElement
+    }
 }
 
 // MARK: - Collection Typing
