@@ -36,7 +36,7 @@ extension XMLNode {
 
 // MARK: - Collection Typing
 
-extension Collection where Element: XMLNode {
+extension Sequence where Element: XMLNode {
     /// **OTCore:**
     /// Returns the collection as a lazy iterator that compact maps to `XMLElement`.
     /// Mapping is performed lazily.
@@ -48,7 +48,7 @@ extension Collection where Element: XMLNode {
 
 // MARK: - Collection Filtering
 
-extension Collection where Element: XMLNode {
+extension Sequence where Element: XMLNode {
     /// **OTCore:**
     /// Filters by the given XML node name.
     /// Filter is performed lazily.
@@ -62,7 +62,7 @@ extension Collection where Element: XMLNode {
 
 // MARK: - LazyCollection Filtering
 
-extension LazyCollection where Element: XMLNode {
+extension LazySequence where Element: XMLNode {
     /// **OTCore:**
     /// Filters by the given XML node name.
     /// Filter is performed lazily.

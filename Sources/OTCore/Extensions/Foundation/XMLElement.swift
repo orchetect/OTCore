@@ -98,7 +98,7 @@ extension XMLElement {
 
 // MARK: - Collection Filtering
 
-extension Collection where Element: XMLElement {
+extension Sequence where Element: XMLElement {
     /// **OTCore:**
     /// Filters nodes that have an attribute matching the given `attribute` name and `value`.
     /// Filter is performed lazily.
@@ -158,7 +158,7 @@ extension Collection where Element: XMLElement {
 
 // MARK: - LazyCollection Filtering
 
-extension LazyCollection where Element: XMLElement {
+extension LazySequence where Element: XMLElement {
     /// **OTCore:**
     /// Filters nodes that have an attribute matching the given `attribute` name and `value`.
     /// Filter is performed lazily.
