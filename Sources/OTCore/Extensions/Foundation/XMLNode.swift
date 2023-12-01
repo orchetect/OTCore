@@ -74,4 +74,17 @@ extension LazySequence where Element: XMLNode {
     }
 }
 
+// MARK: - Sequence First
+
+extension Sequence where Element: XMLNode {
+    /// **OTCore:**
+    /// Returns the first element with the given XML node name.
+    @inlinable @_disfavoredOverload
+    public func first(
+        whereNodeNamed nodeName: String
+    ) -> Element? {
+        first { $0.name == nodeName }
+    }
+}
+
 #endif
