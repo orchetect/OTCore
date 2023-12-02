@@ -109,6 +109,16 @@ extension XMLElement {
 
 extension Sequence where Element: XMLElement {
     /// **OTCore:**
+    /// Filters by the given XML element name.
+    /// Filter is performed lazily.
+    @inlinable @_disfavoredOverload
+    public func filter(
+        whereElementNamed nodeName: String
+    ) -> LazyFilterSequence<LazySequence<Self>.Elements> {
+        self.lazy.filter(whereElementNamed: nodeName)
+    }
+    
+    /// **OTCore:**
     /// Filters elements that have an attribute matching the given `attribute` name and `value`.
     /// Filter is performed lazily.
     @inlinable @_disfavoredOverload
@@ -146,6 +156,16 @@ extension Sequence where Element: XMLElement {
 
 extension LazySequence where Element: XMLElement {
     /// **OTCore:**
+    /// Filters by the given XML element name.
+    /// Filter is performed lazily.
+    @inlinable @_disfavoredOverload
+    public func filter(
+        whereElementNamed nodeName: String
+    ) -> LazyFilterSequence<LazySequence<Base>.Elements> {
+        filter { $0.name == nodeName }
+    }
+    
+    /// **OTCore:**
     /// Filters nodes that have an attribute matching the given `attribute` name and `value`.
     /// Filter is performed lazily.
     @inlinable @_disfavoredOverload
@@ -179,6 +199,15 @@ extension LazySequence where Element: XMLElement {
 // MARK: - Sequence First
 
 extension Sequence where Element: XMLElement {
+    /// **OTCore:**
+    /// Returns the first element with the given XML node name.
+    @inlinable @_disfavoredOverload
+    public func first(
+        whereElementNamed nodeName: String
+    ) -> Element? {
+        first { $0.name == nodeName }
+    }
+    
     /// **OTCore:**
     /// Returns the first element that has an attribute matching the given `attribute` name and
     /// `value`.
