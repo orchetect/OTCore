@@ -16,6 +16,12 @@ public typealias LazyCompactMapSequence<Base: Sequence, Element> = LazyMapSequen
     Element
 >
 
+/// **OTCore:**
+/// A lazily filtered ``LazyCompactMapSequence``.
+public typealias LazyFilteredCompactMapSequence<Base: Sequence, Element> = LazyFilterSequence<
+    LazyCompactMapSequence<Base, Element>.Elements
+>
+
 // MARK: - Operators
 
 extension Collection where Self: RangeReplaceableCollection,
