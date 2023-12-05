@@ -88,6 +88,127 @@ extension XMLElement {
     }
 }
 
+extension XMLElement {
+    /// **OTCore:**
+    /// Get a `Bool` attribute value.
+    ///
+    /// Valid strings are "1" or "true" for `true` and "0" or "false" for `false`.
+    @_disfavoredOverload
+    public func getBool(forAttribute attributeName: String) -> Bool? {
+        guard let value = stringValue(forAttributeNamed: attributeName)
+        else { return nil }
+        
+        switch value {
+        case "0", "false", "FALSE": return false
+        case "1", "true", "TRUE": return true
+        default: return nil
+        }
+    }
+    
+    /// **OTCore:**
+    /// Set a `Bool` attribute value.
+    /// Adds or removes the attribute based on default behavior.
+    ///
+    /// Valid strings are "1" or "true" for `true` and "0" or "false" for `false`.
+    ///
+    /// - Parameters:
+    ///   - newValue: Value to set. If `nil`, attribute will be removed.
+    ///   - attributeName: Attribute name.
+    ///   - defaultValue: The value considered to be the default value if the attribute is not
+    ///     present. This value is used to determine behavior if `removeIfDefault` is `true`.
+    ///   - removeIfDefault: Remove the attribute if the `newValue` matches the `defaultValue`.
+    ///   - useInt: If `true`, writes value as an `Int` (`1` or `0`).
+    ///     If `false`, writes value as a `String` (`true` or `false`).
+    @_disfavoredOverload
+    public func set(
+        bool newValue: Bool?,
+        forAttribute attributeName: String,
+        defaultValue: Bool,
+        removeIfDefault: Bool = false,
+        useInt: Bool = false
+    ) {
+        guard let newValue = newValue else {
+            addAttribute(withName: attributeName, value: nil)
+            return
+        }
+        
+        if removeIfDefault, newValue == defaultValue {
+            addAttribute(withName: attributeName, value: nil)
+            return
+        }
+        
+        set(bool: newValue, forAttribute: attributeName, useInt: useInt)
+    }
+    
+    /// **OTCore:**
+    /// Set a `Bool` attribute value.
+    /// Explicitly adds the attribute if the value is non-nil.
+    ///
+    /// Valid strings are "1" or "true" for `true` and "0" or "false" for `false`.
+    ///
+    /// - Parameters:
+    ///   - newValue: Value to set. If `nil`, attribute will be removed.
+    ///   - attributeName: Attribute name.
+    ///   - useInt: If `true`, writes value as an `Int` (`1` or `0`).
+    ///     If `false`, writes value as a `String` (`true` or `false`).
+    @_disfavoredOverload
+    public func set(
+        bool newValue: Bool?,
+        forAttribute attributeName: String,
+        useInt: Bool = false
+    ) {
+        guard let newValue = newValue else {
+            addAttribute(withName: attributeName, value: nil)
+            return
+        }
+        
+        let newValueString: String
+        if useInt {
+            newValueString = newValue ? "1" : "0"
+        } else {
+            newValueString = newValue ? "true" : "false"
+        }
+        
+        addAttribute(withName: attributeName, value: newValueString)
+    }
+}
+
+extension XMLElement {
+    /// **OTCore:**
+    /// Get an `Int` attribute value.
+    @_disfavoredOverload
+    public func getInt(forAttribute attributeName: String) -> Int? {
+        stringValue(forAttributeNamed: attributeName)?.int
+    }
+    
+    /// **OTCore:**
+    /// Set an `Int` attribute value.
+    @_disfavoredOverload
+    public func set(int newValue: Int?, forAttribute attributeName: String) {
+        addAttribute(withName: attributeName, value: newValue?.string)
+    }
+}
+
+extension XMLElement {
+    /// **OTCore:**
+    /// Get a `URL` attribute value.
+    @_disfavoredOverload
+    public func getURL(forAttribute attributeName: String) -> URL? {
+        guard let value = stringValue(forAttributeNamed: attributeName)
+        else { return nil }
+        return URL(string: value)
+    }
+    
+    /// **OTCore:**
+    /// Set a `URL` attribute value.
+    @_disfavoredOverload
+    public func set(url newValue: URL?, forAttribute attributeName: String) {
+        addAttribute(withName: attributeName, value: newValue?.absoluteString)
+    }
+    
+    // TODO: differentiate absolute URL from relative URL?
+}
+
 // MARK: - Convenience Inits
 
 extension XMLElement {
