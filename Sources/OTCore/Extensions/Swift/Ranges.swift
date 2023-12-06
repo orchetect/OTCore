@@ -80,12 +80,14 @@ extension Range {
     }
 }
 
-extension Range where Bound: Strideable, Bound.Stride: SignedInteger {
+extension Range {
     /// **OTCore:**
     /// Returns `true` if base range contains the given range.
     @inlinable @_disfavoredOverload
     public func contains(_ other: Range<Bound>) -> Bool {
-        other.lowerBound >= lowerBound &&
+        guard !other.isEmpty else { return false }
+        
+        return other.lowerBound >= lowerBound &&
             other.upperBound <= upperBound
     }
 }
