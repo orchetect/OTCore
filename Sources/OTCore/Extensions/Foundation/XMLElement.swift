@@ -16,11 +16,16 @@ extension XMLElement {
     /// Iterates on all ancestors of the element, starting with the element's parent.
     /// Iterator is performed lazily.
     @_disfavoredOverload
-    public var ancestorElements: UnfoldSequence<XMLElement, XMLElement> {
-        sequence(state: self) { element in
-            guard let parent = element.parentElement else { return nil }
-            element = parent
-            return parent
+    public func ancestorElements(includingSelf: Bool) -> UnfoldSequence<XMLElement, (XMLElement, Bool)> {
+        sequence(state: (element: self, consumedSelf: false)) { state in
+            if includingSelf, !state.1 {
+                state.0 = self
+                state.1 = true
+                return state.0
+            }
+            guard let parent = state.0.parentElement else { return nil }
+            state.0 = parent
+            return state.0
         }
     }
     

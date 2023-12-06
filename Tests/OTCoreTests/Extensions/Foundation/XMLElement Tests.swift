@@ -14,7 +14,7 @@ final class Extensions_Foundation_XMLElement_Tests: XMLTestCase {
     override func setUp() { super.setUp() }
     override func tearDown() { super.tearDown() }
     
-    func testAncestors() throws {
+    func testAncestors_notIncludingSelf() throws {
         let loadxml = try Self.testXMLDocument()
         
         let tracklist = try Self.child(of: loadxml, named: "tracklist2")
@@ -22,9 +22,24 @@ final class Extensions_Foundation_XMLElement_Tests: XMLTestCase {
         let obj = try Self.child(of: list, named: "obj")
         let int = try Self.child(of: obj, named: "int")
         
-        let ancestors = Array(int.ancestorElements)
+        let ancestors = Array(int.ancestorElements(includingSelf: false))
         XCTAssertEqual(ancestors.count, 3)
-        dump(ancestors.map(\.name))
+        
+        XCTAssertEqual(ancestors.map(\.name), ["obj", "list", "tracklist2"])
+    }
+    
+    func testAncestors_IncludingSelf() throws {
+        let loadxml = try Self.testXMLDocument()
+        
+        let tracklist = try Self.child(of: loadxml, named: "tracklist2")
+        let list = try Self.child(of: tracklist, named: "list")
+        let obj = try Self.child(of: list, named: "obj")
+        let int = try Self.child(of: obj, named: "int")
+        
+        let ancestors = Array(int.ancestorElements(includingSelf: true))
+        XCTAssertEqual(ancestors.count, 4)
+        
+        XCTAssertEqual(ancestors.map(\.name), ["int", "obj", "list", "tracklist2"])
     }
     
     func testCollection_XMLNode_FilterAttribute() throws {
