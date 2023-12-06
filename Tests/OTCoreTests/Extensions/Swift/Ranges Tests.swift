@@ -111,33 +111,33 @@ class Extensions_Swift_Ranges_Tests: XCTestCase {
     }
     
     func testRange_contains_ClosedRange() {
-        XCTAssertTrue((1 ..< 10).contains(1 ...  1))
-        XCTAssertTrue((1 ..< 10).contains(1 ...  9))
+        XCTAssertTrue((1 ..< 10).contains(1 ... 1))
+        XCTAssertTrue((1 ..< 10).contains(1 ... 9))
         XCTAssertFalse((1 ..< 10).contains(1 ... 10))
         XCTAssertFalse((1 ..< 10).contains(10 ... 10))
         
-        XCTAssertFalse((1 ..< 10).contains(0 ...  0))
-        XCTAssertFalse((1 ..< 10).contains(0 ...  1))
-        XCTAssertFalse((1 ..< 10).contains(0 ...  2))
-        XCTAssertFalse((1 ..< 10).contains(0 ...  9))
+        XCTAssertFalse((1 ..< 10).contains(0 ... 0))
+        XCTAssertFalse((1 ..< 10).contains(0 ... 1))
+        XCTAssertFalse((1 ..< 10).contains(0 ... 2))
+        XCTAssertFalse((1 ..< 10).contains(0 ... 9))
         XCTAssertFalse((1 ..< 10).contains(0 ... 10))
         XCTAssertFalse((1 ..< 10).contains(9 ... 11))
         XCTAssertFalse((1 ..< 10).contains(10 ... 11))
         XCTAssertFalse((1 ..< 10).contains(11 ... 11))
         
-        XCTAssertFalse((1 ..< 10).contains(-1 ...  1))
+        XCTAssertFalse((1 ..< 10).contains(-1 ... 1))
     }
     
     func testRange_contains_Range() {
-        XCTAssertTrue((1 ..< 10).contains(1 ..<  1)) // empty, but in range
+        XCTAssertFalse((1 ..< 10).contains(1 ..< 1)) // empty
         XCTAssertTrue((1 ..< 10).contains(1 ..< 10)) // identical
         XCTAssertFalse((1 ..< 10).contains(1 ..< 11)) // 1...10
-        XCTAssertTrue((1 ..< 10).contains(10 ..< 10)) // empty, but in range
+        XCTAssertFalse((1 ..< 10).contains(10 ..< 10)) // empty
         XCTAssertFalse((1 ..< 10).contains(10 ..< 11)) // 10...10
 
-        XCTAssertFalse((1 ..< 10).contains(0 ..<  0)) // empty, out of range
-        XCTAssertFalse((1 ..< 10).contains(0 ..<  1)) // 0...0, out of range
-        XCTAssertFalse((1 ..< 10).contains(0 ..<  2)) // 0...1, lowerBound out of range
+        XCTAssertFalse((1 ..< 10).contains(0 ..< 0)) // empty, out of range
+        XCTAssertFalse((1 ..< 10).contains(0 ..< 1)) // 0...0, out of range
+        XCTAssertFalse((1 ..< 10).contains(0 ..< 2)) // 0...1, lowerBound out of range
         XCTAssertFalse((1 ..< 10).contains(0 ..< 10)) // 0...9, lowerBound out of range
         XCTAssertFalse((1 ..< 10).contains(9 ..< 11)) // 9...10
         XCTAssertFalse((1 ..< 10).contains(10 ..< 11)) // 10...10, out of range
