@@ -51,17 +51,15 @@ extension ClosedRange {
     }
 }
 
-extension ClosedRange where Bound: Strideable, Bound.Stride: SignedInteger {
+extension ClosedRange {
     /// **OTCore:**
     /// Returns `true` if base range contains the given range.
     @inlinable @_disfavoredOverload
     public func contains(_ other: Range<Bound>) -> Bool {
-        guard let unwrappedMax = self.max() else { return false }
-        
         guard !other.isEmpty else { return false }
         
         return other.lowerBound >= lowerBound &&
-            other.upperBound.advanced(by: -1) <= unwrappedMax
+            upperBound <= other.upperBound
     }
 }
 
