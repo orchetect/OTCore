@@ -245,6 +245,16 @@ extension Sequence where Element: XMLElement {
     }
     
     /// **OTCore:**
+    /// Filters by any of the given XML element names.
+    /// Filter is performed lazily.
+    @inlinable @_disfavoredOverload
+    public func filter(
+        whereElementNamed nodeNames: [String]
+    ) -> LazyFilterSequence<LazySequence<Self>.Elements> {
+        self.lazy.filter(whereElementNamed: nodeNames)
+    }
+    
+    /// **OTCore:**
     /// Filters elements that have an attribute matching the given `attribute` name and `value`.
     /// Filter is performed lazily.
     @inlinable @_disfavoredOverload
@@ -289,6 +299,19 @@ extension LazySequence where Element: XMLElement {
         whereElementNamed nodeName: String
     ) -> LazyFilterSequence<LazySequence<Base>.Elements> {
         filter { $0.name == nodeName }
+    }
+    
+    /// **OTCore:**
+    /// Filters by any of the given XML element names.
+    /// Filter is performed lazily.
+    @inlinable @_disfavoredOverload
+    public func filter(
+        whereElementNamed nodeNames: [String]
+    ) -> LazyFilterSequence<LazySequence<Base>.Elements> {
+        filter {
+            guard let name = $0.name else { return false }
+            return nodeNames.contains(name)
+        }
     }
     
     /// **OTCore:**
