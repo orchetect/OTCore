@@ -105,7 +105,7 @@ final class Extensions_Foundation_XMLElement_Tests: XMLTestCase {
         XCTAssertEqual(attrValue, "obj")
     }
     
-    func testFirstWithAnyAttribute() throws {
+    func testFirstWhereAnyAttribute() throws {
         let loadxml = try Self.testXMLDocument()
         
         let tracklist = try Self.child(of: loadxml, named: "tracklist2")
@@ -114,7 +114,7 @@ final class Extensions_Foundation_XMLElement_Tests: XMLTestCase {
         let obj2 = try Self.child(of: obj, named: "obj")
         
         let element = try XCTUnwrap(
-            obj2.childElements.first(withAnyAttribute: ["non-existent", "type"])
+            obj2.childElements.first(whereAnyAttribute: ["non-existent", "type"])
         )
         
         XCTAssertEqual(element.name, "list")

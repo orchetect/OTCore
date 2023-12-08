@@ -403,7 +403,7 @@ extension Sequence where Element: XMLElement {
     /// attribute names, and returns the element.
     @inlinable @_disfavoredOverload
     public func first(
-        withAnyAttribute attributeNames: [String]
+        whereAnyAttribute attributeNames: [String]
     ) -> Element? {
         first {
             for attributeName in attributeNames {
