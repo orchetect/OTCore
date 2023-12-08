@@ -358,6 +358,18 @@ extension Sequence where Element: XMLElement {
     }
     
     /// **OTCore:**
+    /// Returns the first element with any of the given XML node names.
+    @inlinable @_disfavoredOverload
+    public func first(
+        whereElementNamed nodeNames: [String]
+    ) -> Element? {
+        first {
+            guard let name = $0.name else { return false }
+            return nodeNames.contains(name)
+        }
+    }
+    
+    /// **OTCore:**
     /// Returns the first element that has an attribute matching the given `attribute` name and
     /// `value`.
     /// Filter is performed lazily.
