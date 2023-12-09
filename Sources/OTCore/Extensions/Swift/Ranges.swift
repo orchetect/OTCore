@@ -51,7 +51,7 @@ extension ClosedRange {
     }
 }
 
-extension ClosedRange {
+extension ClosedRange where Bound: Strideable, Bound.Stride: SignedInteger {
     /// **OTCore:**
     /// Returns `true` if base range contains the given range.
     @inlinable @_disfavoredOverload
@@ -59,7 +59,7 @@ extension ClosedRange {
         guard !other.isEmpty else { return false }
         
         return other.lowerBound >= lowerBound &&
-            upperBound <= other.upperBound
+            other.upperBound.advanced(by: -1) <= upperBound
     }
 }
 
