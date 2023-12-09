@@ -133,7 +133,7 @@ class Extensions_Swift_Ranges_Tests: XCTestCase {
     
     func testRange_contains_Range() {
         XCTAssertFalse((1 ..< 10).contains(1 ..< 1)) // empty
-        XCTAssertFalse((1 ..< 10).contains(3 ..< 8)) // 3...7
+        XCTAssertTrue((1 ..< 10).contains(3 ..< 8)) // 3...7
         XCTAssertTrue((1 ..< 10).contains(1 ..< 10)) // identical
         XCTAssertFalse((1 ..< 10).contains(1 ..< 11)) // 1...10
         XCTAssertFalse((1 ..< 10).contains(10 ..< 10)) // empty
