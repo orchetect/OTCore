@@ -39,6 +39,7 @@ extension Collection {
     /// sequential indices.
     ///
     /// For example: a collection with indices `2, 4, 5` could be accessed using indices `0, 1, 2`.
+    @_disfavoredOverload
     public var zeroIndexed: ZeroIndexedCollection<Self> {
         ZeroIndexedCollection(self)
     }
@@ -89,6 +90,7 @@ extension MutableCollection {
     /// sequential indices.
     ///
     /// For example: a collection with indices `2, 4, 5` could be accessed using indices `0, 1, 2`.
+    @_disfavoredOverload
     public var zeroIndexed: ZeroIndexedMutableCollection<Self> {
         ZeroIndexedMutableCollection(self)
     }
