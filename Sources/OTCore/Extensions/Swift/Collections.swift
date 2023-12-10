@@ -45,7 +45,9 @@ extension Set {
     /// **OTCore:**
     /// Syntactic sugar: Return a new set by inserting the contents of another set into the set.
     @inlinable @_disfavoredOverload
-    public static func + <S: Sequence<Element>>(lhs: Self, rhs: S) -> Self {
+    public static func + <S>(lhs: Self, rhs: S) -> Self 
+    where S: Sequence, S.Element == Element
+    {
         var copy = lhs
         copy.formUnion(rhs)
         return copy
@@ -54,7 +56,9 @@ extension Set {
     /// **OTCore:**
     /// Syntactic sugar: Insert the contents of another set into the set.
     @inlinable @_disfavoredOverload
-    public static func += <S: Sequence<Element>>(lhs: inout Self, rhs: S) {
+    public static func += <S>(lhs: inout Self, rhs: S)
+    where S: Sequence, S.Element == Element
+    {
         lhs.formUnion(rhs)
     }
 }
