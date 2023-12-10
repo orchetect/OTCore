@@ -34,6 +34,31 @@ Self: MutableCollection {
     }
 }
 
+extension Set {
+    /// **OTCore:**
+    /// Syntactic sugar: Insert an element to a set.
+    @inlinable @_disfavoredOverload
+    public static func += (lhs: inout Self, rhs: Element) {
+        lhs.insert(rhs)
+    }
+    
+    /// **OTCore:**
+    /// Syntactic sugar: Return a new set by inserting the contents of another set into the set.
+    @inlinable @_disfavoredOverload
+    public static func + <S: Sequence<Element>>(lhs: Self, rhs: S) -> Self {
+        var copy = lhs
+        copy.formUnion(rhs)
+        return copy
+    }
+    
+    /// **OTCore:**
+    /// Syntactic sugar: Insert the contents of another set into the set.
+    @inlinable @_disfavoredOverload
+    public static func += <S: Sequence<Element>>(lhs: inout Self, rhs: S) {
+        lhs.formUnion(rhs)
+    }
+}
+
 // MARK: - [safe:]
 
 // MutableCollection:
