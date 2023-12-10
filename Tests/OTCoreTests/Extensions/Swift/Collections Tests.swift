@@ -15,7 +15,7 @@ class Extensions_Swift_Collections_Tests: XCTestCase {
     
     // MARK: - Collection += Operator
     
-    func testOperator_PlusEquals() {
+    func testCollection_Operator_PlusEquals_Element() {
         // [String]
                                                   
         var arr1: [String] = []
@@ -27,6 +27,12 @@ class Extensions_Swift_Collections_Tests: XCTestCase {
         var arr2: [Int] = []
         arr2 += 2
         XCTAssertEqual(arr2, [2])
+        
+        // Set<Int>
+        
+        var set: Set<Int> = [3]
+        set += 1
+        XCTAssertEqual(set, [1, 3])
         
         // tuple
         
@@ -40,6 +46,18 @@ class Extensions_Swift_Collections_Tests: XCTestCase {
         var arr4: [[String]] = []
         arr4 += ["test"]
         XCTAssertEqual(arr4, [["test"]])
+    }
+    
+    func testSet_Operator_Plus_Set() {
+        var set: Set<Int> = [3]
+        set = set + Set([1, 2])
+        XCTAssertEqual(set, [1, 2, 3])
+    }
+    
+    func testSet_Operator_PlusEquals_Set() {
+        var set: Set<Int> = [3]
+        set += Set([1, 2])
+        XCTAssertEqual(set, [1, 2, 3])
     }
     
     // MARK: - [safe: Index]
