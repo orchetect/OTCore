@@ -1694,6 +1694,47 @@ class Extensions_Swift_Collections_Tests: XCTestCase {
             )
         }
     }
+    
+    func testSequence_mapDictionary() {
+        let array = [
+            "1. One",
+            "2. Two"
+        ]
+        
+        let mapped = array.mapDictionary {
+            (Int($0.prefix(1))!, $0.dropFirst(3))
+        }
+        
+        XCTAssertEqual(
+            mapped,
+            [
+                1: "One",
+                2: "Two"
+            ]
+        )
+    }
+    
+    func testSequence_compactMapDictionary() {
+        let array = [
+            "1. One",
+            "2. Two",
+            "3. Three"
+        ]
+        
+        let mapped: [Int: String] = array.compactMapDictionary {
+            let ref = Int($0.prefix(1))!
+            guard ref % 2 != 0 else { return nil }
+            return (Int($0.prefix(1))!, String($0.dropFirst(3)))
+        }
+        
+        XCTAssertEqual(
+            mapped,
+            [
+                1: "One",
+                3: "Three"
+            ]
+        )
+    }
 }
 
 #endif
