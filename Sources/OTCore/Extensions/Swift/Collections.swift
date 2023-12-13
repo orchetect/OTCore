@@ -1270,10 +1270,11 @@ extension Dictionary {
     // so `mapKeys` and `mapDictionary` methods are useful accompaniments
     
     /// **OTCore:**
-    /// Returns a new dictionary containing the values of this dictionary with the keys transformed by the given closure.
+    /// Returns a new dictionary containing the values of this dictionary with the keys transformed
+    /// by the given closure.
     @inlinable @_disfavoredOverload
     public func mapKeys<K: Hashable>(
-        _ transform: (Key) throws -> K
+        _ transform: (_ key: Key) throws -> K
     ) rethrows -> [K: Value] {
         try reduce(into: [:]) { partialResult, keyValuePair in
             let transformedKey = try transform(keyValuePair.0)
@@ -1282,11 +1283,11 @@ extension Dictionary {
     }
     
     /// **OTCore:**
-    /// Returns a new dictionary with key/value pairs transformed by the given closure.
+    /// Returns a new dictionary by transforming keys and values using a closure.
     /// Analogous to Swift's standard `.map` method.
     @inlinable @_disfavoredOverload
     public func mapDictionary<K: Hashable, V: Any>(
-        _ transform: (Key, Value) throws -> (K, V)
+        _ transform: (_ key: Key, _ value: Value) throws -> (K, V)
     ) rethrows -> [K: V] {
         try reduce(into: [:]) { partialResult, keyValuePair in
             let transformedKeyPair = try transform(keyValuePair.0, keyValuePair.1)
@@ -1295,15 +1296,44 @@ extension Dictionary {
     }
     
     /// **OTCore:**
-    /// Returns a new dictionary with key/value pairs transformed by the given closure.
+    /// Returns a new dictionary by transforming keys and values using a closure.
     /// Analogous to Swift's standard `.compactMap` method.
     @inlinable @_disfavoredOverload
     public func compactMapDictionary<K: Hashable, V: Any>(
-        _ transform: (Key, Value) throws -> (K, V)?
+        _ transform: (_ key: Key, _ value: Value) throws -> (K, V)?
     ) rethrows -> [K: V] {
         try reduce(into: [:]) { partialResult, keyValuePair in
             if let transformedKeyPair = try transform(keyValuePair.0, keyValuePair.1) {
                 partialResult[transformedKeyPair.0] = transformedKeyPair.1
+            }
+        }
+    }
+}
+
+extension Sequence {
+    /// **OTCore:**
+    /// Returns a new dictionary by mapping elements to key/value pairs.
+    /// Analogous to Swift's standard `.map` method.
+    @inlinable @_disfavoredOverload
+    public func mapDictionary<K: Hashable, V: Any>(
+        _ transform: (_ element: Element) throws -> (K, V)
+    ) rethrows -> [K: V] {
+        try reduce(into: [:]) { partialResult, element in
+            let keyPair = try transform(element)
+            partialResult[keyPair.0] = keyPair.1
+        }
+    }
+    
+    /// **OTCore:**
+    /// Returns a new dictionary by mapping elements to key/value pairs.
+    /// Analogous to Swift's standard `.compactMap` method.
+    @inlinable @_disfavoredOverload
+    public func compactMapDictionary<K: Hashable, V: Any>(
+        _ transform: (_ element: Element) throws -> (K, V)?
+    ) rethrows -> [K: V] {
+        try reduce(into: [:]) { partialResult, element in
+            if let keyPair = try transform(element) {
+                partialResult[keyPair.0] = keyPair.1
             }
         }
     }
