@@ -17,7 +17,7 @@ final class Extensions_Swift_Concurrency_Tests: XCTestCase {
     func testWithOrderedTaskGroup() async {
         let input = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"]
         
-        let output = await withOrderedTaskGroup(sequence: input) { element in
+        let output: [String] = await withOrderedTaskGroup(sequence: input) { element in
             usleep(UInt32.random(in: 1 ... 10) * 1000)
             return element
         }
