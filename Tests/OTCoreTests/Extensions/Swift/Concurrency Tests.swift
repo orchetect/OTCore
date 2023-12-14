@@ -9,7 +9,8 @@
 import XCTest
 import OTCore
 
-class Extensions_Swift_Concurrency_Tests: XCTestCase {
+@available(macOS 10.15, iOS 13.0.0, watchOS 6.0, tvOS 13.0, *)
+final class Extensions_Swift_Concurrency_Tests: XCTestCase {
     override func setUp() { super.setUp() }
     override func tearDown() { super.tearDown() }
     
