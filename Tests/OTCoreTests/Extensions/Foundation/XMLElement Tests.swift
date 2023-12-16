@@ -370,6 +370,23 @@ final class Extensions_Foundation_XMLElement_Tests: XMLTestCase {
         XCTAssertEqual(element.child(at: 0), child2)
     }
     
+    func testRemoveAllChildren() {
+        let element = XMLElement(name: "testname")
+        
+        let child1 = XMLElement(name: "child1", attributes: [("value", "123")])
+        let child2 = XMLElement(name: "child2", attributes: [("value", "456")])
+        let child3 = XMLElement(name: "child3", attributes: [("value", "789")])
+        element.addChild(child1)
+        element.addChild(child2)
+        element.addChild(child3)
+        
+        XCTAssertEqual(element.childCount, 3)
+        
+        element.removeAllChildren()
+        
+        XCTAssertEqual(element.childCount, 0)
+    }
+    
     func testXMLElement_InitNameAttributes() {
         let element = XMLElement(name: "testname", attributes: [
             ("key1", "value1"),
