@@ -214,6 +214,19 @@ extension XMLElement {
     // TODO: differentiate absolute URL from relative URL?
 }
 
+// MARK: - Children
+
+extension XMLElement {
+    /// **OTCore:**
+    /// Adds one or more child nodes at the end of the receiver’s current list of children.
+    @inlinable @_disfavoredOverload
+    public func addChildren<S: Sequence<XMLNode>>(_ children: S) {
+        for child in children {
+            addChild(child)
+        }
+    }
+}
+
 // MARK: - Convenience Inits
 
 extension XMLElement {
