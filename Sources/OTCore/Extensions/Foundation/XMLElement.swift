@@ -220,7 +220,7 @@ extension XMLElement {
     /// **OTCore:**
     /// Adds one or more child nodes at the end of the receiver’s current list of children.
     @inlinable @_disfavoredOverload
-    public func addChildren<S: Sequence<XMLNode>>(_ children: S) {
+    public func addChildren<S: Sequence>(_ children: S) where S.Element: XMLNode {
         for child in children {
             addChild(child)
         }
