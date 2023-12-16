@@ -246,6 +246,17 @@ extension XMLElement {
             removeChild(at: index)
         }
     }
+    
+    /// **OTCore:**
+    /// Removes all child nodes of the receiver.
+    ///
+    /// - Complexity: O(*n*), where *n* is the length of the collection.
+    @inlinable @_disfavoredOverload
+    public func removeAllChildren() {
+        while childCount > 0 {
+            removeChild(at: childCount - 1)
+        }
+    }
 }
 
 // MARK: - Convenience Inits
