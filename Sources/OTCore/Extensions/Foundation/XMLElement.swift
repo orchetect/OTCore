@@ -225,6 +225,27 @@ extension XMLElement {
             addChild(child)
         }
     }
+    
+    /// **OTCore:**
+    /// Removes the child nodes of the receiver that satisfy the given predicate.
+    ///
+    /// - Complexity: O(*n*), where *n* is the length of the collection.
+    @inlinable @_disfavoredOverload
+    public func removeChildren(
+        where shouldBeRemoved: (_ child: XMLElement) throws -> Bool
+    ) rethrows {
+        guard childCount > 0 else { return }
+        
+        let indicesToRemove = try childElements
+            .filter { try shouldBeRemoved($0) }
+            .map(\.index)
+            .sorted() // may be unnecessary
+            .reversed() // remove in order from last to first
+        
+        for index in indicesToRemove {
+            removeChild(at: index)
+        }
+    }
 }
 
 // MARK: - Convenience Inits
