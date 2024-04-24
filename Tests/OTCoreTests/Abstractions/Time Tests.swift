@@ -200,7 +200,7 @@ final class Abstractions_Time_Tests: XCTestCase {
         let t = Time(hours: 15, minutes: 46, seconds: 20, milliseconds: 49)
         
         Time.Format.allCases.forEach { fmt in
-            let str = {
+            let str: String = {
                 switch fmt {
                 case .shortest:     return "15:46:20"
                 case .hh_mm_ss:     return "15:46:20"
@@ -226,7 +226,7 @@ final class Abstractions_Time_Tests: XCTestCase {
         let t = Time(hours: 5, minutes: 6, seconds: 20)
         
         Time.Format.allCases.forEach { fmt in
-            let str = {
+            let str: String = {
                 switch fmt {
                 case .shortest:     return "5:06:20"
                 case .hh_mm_ss:     return "05:06:20"
@@ -252,7 +252,7 @@ final class Abstractions_Time_Tests: XCTestCase {
         let t = Time(hours: 0, minutes: 0, seconds: 0)
         
         Time.Format.allCases.forEach { fmt in
-            let str = {
+            let str: String = {
                 switch fmt {
                 case .shortest:     return "0:00"
                 case .hh_mm_ss:     return "00:00:00"
@@ -278,7 +278,7 @@ final class Abstractions_Time_Tests: XCTestCase {
         let t = Time(hours: 0, minutes: 0, seconds: 20, sign: .minus)
         
         Time.Format.allCases.forEach { fmt in
-            let str = {
+            let str: String = {
                 switch fmt {
                 case .shortest:     return "-0:20"
                 case .hh_mm_ss:     return "-00:00:20"
