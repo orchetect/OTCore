@@ -70,9 +70,12 @@ extension Time {
     /// Initialize from a time interval in seconds.
     @_disfavoredOverload
     public init(seconds: TimeInterval) {
+        let absSeconds = abs(seconds)
         let truncSeconds = Int(seconds)
+        let absTruncSeconds = abs(truncSeconds)
+        
         self.init(seconds: truncSeconds)
-        milliseconds = Int((seconds - Double(truncSeconds)) * 1000)
+        milliseconds = Int((absSeconds - Double(absTruncSeconds)) * 1000)
     }
 }
 
