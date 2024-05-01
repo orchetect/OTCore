@@ -1271,10 +1271,10 @@ where Element: Equatable {
     /// Replaces all occurrences of each element of a target collection with another element.
     /// - complexity: O(_number of sources_ * _number of instances_)
     @inlinable @_disfavoredOverload
-    public mutating func replace(
-        elementsIn sources: any Collection<Element>,
+    public mutating func replace<C>(
+        elementsIn sources: C,
         with newElement: Element
-    ) {
+    ) where C: Collection, C.Element == Element {
         for source in sources {
             // failsafe - don't replace if source and replacement are identical.
             // this avoids a potential infinite loop.
@@ -1293,10 +1293,10 @@ where Element: Equatable {
     /// replaced by another element.
     /// - complexity: O(_number of sources_ * _number of instances_)
     @inlinable @_disfavoredOverload
-    public func replacing(
-        elementsIn sources: any Collection<Element>,
+    public func replacing<C>(
+        elementsIn sources: C,
         with newElement: Element
-    ) -> Self {
+    ) -> Self where C: Collection, C.Element == Element {
         var mutable = self
         mutable.replace(elementsIn: sources, with: newElement)
         return mutable
@@ -1306,10 +1306,10 @@ where Element: Equatable {
     /// Replaces all occurrences of each element of a target collection with another collection.
     /// - complexity: O(_number of sources_ * _number of instances_)
     @inlinable @_disfavoredOverload
-    public mutating func replace(
-        elementsIn sources: any Collection<Element>,
-        with newElements: any Collection<Element>
-    ) {
+    public mutating func replace<Sources, NewElements>(
+        elementsIn sources: Sources,
+        with newElements: NewElements
+    ) where Sources: Collection, Sources.Element == Element, NewElements: Collection, NewElements.Element == Element {
         // early return - don't replace if source and replacement is identical.
         // this also avoids a potential infinite loop.
         guard !sources.elementsEqual(newElements) else { return }
@@ -1327,10 +1327,10 @@ where Element: Equatable {
     /// replaced by another collection.
     /// - complexity: O(_number of sources_ * _number of instances_)
     @inlinable @_disfavoredOverload
-    public func replacing(
-        elementsIn sources: any Collection<Element>,
-        with newElements: any Collection<Element>
-    ) -> Self {
+    public func replacing<Sources, NewElements>(
+        elementsIn sources: Sources,
+        with newElements: NewElements
+    ) -> Self where Sources: Collection, Sources.Element == Element, NewElements: Collection, NewElements.Element == Element {
         var mutable = self
         mutable.replace(elementsIn: sources, with: newElements)
         return mutable
