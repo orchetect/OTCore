@@ -39,30 +39,30 @@ class Abstractions_StringSanitizePathComponent_Tests: XCTestCase {
         
         // url last path component
         XCTAssertEqual(
-            URL(fileURLWithPath: "/Folder").appending(component: "").sanitizingLastPathComponent(for: fs, replacement: "-").path,
+            URL(fileURLWithPath: "/Folder").appendingPathComponent("").sanitizingLastPathComponent(for: fs, replacement: "-").path,
             "/Folder"
         )
         XCTAssertEqual(
-            URL(fileURLWithPath: "/Folder").appending(component: "Test/File.txt").sanitizingLastPathComponent(for: fs, replacement: "-").path,
+            URL(fileURLWithPath: "/Folder").appendingPathComponent("Test/File.txt").sanitizingLastPathComponent(for: fs, replacement: "-").path,
             "/Folder/Test/File.txt" // URL interprets `/` as a path delimiter
         )
         XCTAssertEqual(
-            URL(fileURLWithPath: "/Folder").appending(component: "Test//File.txt").sanitizingLastPathComponent(for: fs, replacement: "-").path,
+            URL(fileURLWithPath: "/Folder").appendingPathComponent("Test//File.txt").sanitizingLastPathComponent(for: fs, replacement: "-").path,
             "/Folder/Test//File.txt" // URL interprets `/` as a path delimiter
         )
         
         // Note: appending a null character to URL will cause a crash
         // XCTAssertEqual(
-        //     URL(fileURLWithPath: "/Folder").appending(component: "TestFile\0.txt").sanitizingLastPathComponent(for: fs, replacement: "-").path,
+        //     URL(fileURLWithPath: "/Folder").appendingPathComponent("TestFile\0.txt").sanitizingLastPathComponent(for: fs, replacement: "-").path,
         //     "/Folder/TestFile-.txt"
         // )
         // XCTAssertEqual(
-        //     URL(fileURLWithPath: "/Folder").appending(component: "Test/File\0.txt").sanitizingLastPathComponent(for: fs, replacement: "-").path,
+        //     URL(fileURLWithPath: "/Folder").appendingPathComponent("Test/File\0.txt").sanitizingLastPathComponent(for: fs, replacement: "-").path,
         //     "/Folder/Test-File-.txt"
         // )
         
         XCTAssertEqual(
-            URL(fileURLWithPath: "/Folder").appending(component: "Test:File.txt").sanitizingLastPathComponent(for: fs, replacement: "-").path,
+            URL(fileURLWithPath: "/Folder").appendingPathComponent("Test:File.txt").sanitizingLastPathComponent(for: fs, replacement: "-").path,
             "/Folder/Test-File.txt"
         )
     }
