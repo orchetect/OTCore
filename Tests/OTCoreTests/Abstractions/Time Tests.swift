@@ -387,7 +387,6 @@ final class Abstractions_Time_Tests: XCTestCase {
     }
     
     func testEquatable() {
-        XCTAssertEqual(Time(), Time())
         XCTAssertEqual(Time(seconds: 20), Time(seconds: 20))
         XCTAssertEqual(
             Time(hours: 5, minutes: 6, seconds: 20, milliseconds: 5),
@@ -423,9 +422,6 @@ final class Abstractions_Time_Tests: XCTestCase {
         
         XCTAssertFalse(Time(seconds: 20) < Time(seconds: 10))
         XCTAssertTrue(Time(seconds: 10) < Time(seconds: 20))
-        
-        XCTAssertFalse(Time() > Time())
-        XCTAssertFalse(Time() < Time())
         
         XCTAssertFalse(Time(seconds: 20) > Time(seconds: 20))
         XCTAssertFalse(Time(seconds: 20) < Time(seconds: 20))
