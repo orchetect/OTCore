@@ -1268,7 +1268,29 @@ extension Collection where Element: Equatable {
 extension RangeReplaceableCollection
 where Element: Equatable {
     /// **OTCore:**
-    /// Replaces all instances of any element of a collection of elements with the given replacement element.
+    /// Replaces all occurrences of each element of a target collection with another element.
+    /// - complexity: O(_number of sources_ * _number of instances_)
+    @inlinable @_disfavoredOverload
+    public mutating func replace(
+        elementsIn sources: any Collection<Element>,
+        with newElement: Element
+    ) {
+        for source in sources {
+            // failsafe - don't replace if source and replacement are identical.
+            // this avoids a potential infinite loop.
+            guard !sources.contains(newElement) else { continue }
+            
+            // TODO: could be more efficient
+            while let sourceIndex = firstIndex(of: source) {
+                // self[sourceIndex] = newElement // TODO: doesn't work; subscript is get-only
+                replaceSubrange(sourceIndex ... sourceIndex, with: [newElement])
+            }
+        }
+    }
+    
+    /// **OTCore:**
+    /// Returns a new collection in which all occurrences of each element of a target collection are
+    /// replaced by another element.
     /// - complexity: O(_number of sources_ * _number of instances_)
     @inlinable @_disfavoredOverload
     public func replacing(
@@ -1276,40 +1298,41 @@ where Element: Equatable {
         with newElement: Element
     ) -> Self {
         var mutable = self
-        
-        for source in sources {
-            // failsafe - don't replace if source and replacement is identical
-            guard !sources.contains(newElement) else { continue }
-            
-            // TODO: not very efficient
-            while let sourceIndex = mutable.firstIndex(of: source) {
-                mutable.replaceSubrange(sourceIndex ... sourceIndex, with: [newElement])
-                // TODO: mutable[sourceIndex] = newElement // doesn't work??
-            }
-        }
+        mutable.replace(elementsIn: sources, with: newElement)
         return mutable
     }
     
     /// **OTCore:**
-    /// Replaces all instances of any element of a collection of elements with the given replacement collection.
+    /// Replaces all occurrences of each element of a target collection with another collection.
+    /// - complexity: O(_number of sources_ * _number of instances_)
+    @inlinable @_disfavoredOverload
+    public mutating func replace(
+        elementsIn sources: any Collection<Element>,
+        with newElements: any Collection<Element>
+    ) {
+        // early return - don't replace if source and replacement is identical.
+        // this also avoids a potential infinite loop.
+        guard !sources.elementsEqual(newElements) else { return }
+        
+        for source in sources {
+            // TODO: could be more efficient
+            while let sourceIndex = firstIndex(of: source) {
+                replaceSubrange(sourceIndex ... sourceIndex, with: newElements)
+            }
+        }
+    }
+    
+    /// **OTCore:**
+    /// Returns a new collection in which all occurrences of each element of a target collection are
+    /// replaced by another collection.
     /// - complexity: O(_number of sources_ * _number of instances_)
     @inlinable @_disfavoredOverload
     public func replacing(
         elementsIn sources: any Collection<Element>,
         with newElements: any Collection<Element>
     ) -> Self {
-        guard !sources.elementsEqual(newElements) else { return self }
-        
         var mutable = self
-        
-        for source in sources {
-            // failsafe - don't replace if source and replacement is identical
-            
-            // TODO: not very efficient
-            while let sourceIndex = mutable.firstIndex(of: source) {
-                mutable.replaceSubrange(sourceIndex ... sourceIndex, with: newElements)
-            }
-        }
+        mutable.replace(elementsIn: sources, with: newElements)
         return mutable
     }
 }
