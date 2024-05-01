@@ -1263,6 +1263,57 @@ extension Collection where Element: Equatable {
     }
 }
 
+// MARK: - Replace
+
+extension RangeReplaceableCollection
+where Element: Equatable {
+    /// **OTCore:**
+    /// Replaces all instances of any element of a collection of elements with the given replacement element.
+    /// - complexity: O(_number of sources_ * _number of instances_)
+    @inlinable @_disfavoredOverload
+    public func replacing(
+        elementsIn sources: any Collection<Element>,
+        with newElement: Element
+    ) -> Self {
+        var mutable = self
+        
+        for source in sources {
+            // failsafe - don't replace if source and replacement is identical
+            guard !sources.contains(newElement) else { continue }
+            
+            // TODO: not very efficient
+            while let sourceIndex = mutable.firstIndex(of: source) {
+                mutable.replaceSubrange(sourceIndex ... sourceIndex, with: [newElement])
+                // TODO: mutable[sourceIndex] = newElement // doesn't work??
+            }
+        }
+        return mutable
+    }
+    
+    /// **OTCore:**
+    /// Replaces all instances of any element of a collection of elements with the given replacement collection.
+    /// - complexity: O(_number of sources_ * _number of instances_)
+    @inlinable @_disfavoredOverload
+    public func replacing(
+        elementsIn sources: any Collection<Element>,
+        with newElements: any Collection<Element>
+    ) -> Self {
+        guard !sources.elementsEqual(newElements) else { return self }
+        
+        var mutable = self
+        
+        for source in sources {
+            // failsafe - don't replace if source and replacement is identical
+            
+            // TODO: not very efficient
+            while let sourceIndex = mutable.firstIndex(of: source) {
+                mutable.replaceSubrange(sourceIndex ... sourceIndex, with: newElements)
+            }
+        }
+        return mutable
+    }
+}
+
 // MARK: - Dictionary map
 
 extension Dictionary {
