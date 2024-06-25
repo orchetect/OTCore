@@ -23,16 +23,6 @@ on:
   - cron: '30 11 * * *'   # once a day @ 11:30am UTC (4:30am PST)
 
 jobs: 
-  macOS-11:
-    name: macOS 11 Big Sur
-    runs-on: macos-11
-    steps:
-    - uses: actions/checkout@main
-    - name: Build
-      run: xcodebuild build -workspace ".swiftpm/xcode/package.xcworkspace" -scheme "OTCore-CI" -destination "generic/platform=macOS,name=Any Mac" | xcpretty && exit ${PIPESTATUS[0]}
-    - name: Unit Tests
-      run: xcodebuild test -workspace ".swiftpm/xcode/package.xcworkspace" -scheme "OTCore-CI" -destination "platform=macOS" | xcpretty && exit ${PIPESTATUS[0]}
-
   macOS-12:
     name: macOS 12 Monterey
     runs-on: macos-12
@@ -52,7 +42,27 @@ jobs:
       run: xcodebuild build -workspace ".swiftpm/xcode/package.xcworkspace" -scheme "OTCore-CI" -destination "generic/platform=macOS,name=Any Mac" | xcpretty && exit ${PIPESTATUS[0]}
     - name: Unit Tests
       run: xcodebuild test -workspace ".swiftpm/xcode/package.xcworkspace" -scheme "OTCore-CI" -destination "platform=macOS" | xcpretty && exit ${PIPESTATUS[0]}
-      
+
+  macOS-14:
+    name: macOS 14 Sonoma
+    runs-on: macos-14
+    steps:
+    - uses: actions/checkout@main
+    - name: Build
+      run: xcodebuild build -workspace ".swiftpm/xcode/package.xcworkspace" -scheme "OTCore-CI" -destination "generic/platform=macOS,name=Any Mac" | xcpretty && exit ${PIPESTATUS[0]}
+    - name: Unit Tests
+      run: xcodebuild test -workspace ".swiftpm/xcode/package.xcworkspace" -scheme "OTCore-CI" -destination "platform=macOS" | xcpretty && exit ${PIPESTATUS[0]}
+
+  macOS-14-arm:
+    name: macOS 14 Sonoma (arm64)
+    runs-on: macos-14-arm64
+    steps:
+    - uses: actions/checkout@main
+    - name: Build
+      run: xcodebuild build -workspace ".swiftpm/xcode/package.xcworkspace" -scheme "OTCore-CI" -destination "generic/platform=macOS,name=Any Mac" | xcpretty && exit ${PIPESTATUS[0]}
+    - name: Unit Tests
+      run: xcodebuild test -workspace ".swiftpm/xcode/package.xcworkspace" -scheme "OTCore-CI" -destination "platform=macOS" | xcpretty && exit ${PIPESTATUS[0]}
+
   macCatalyst:
     name: macCatalyst
     runs-on: macos-latest
