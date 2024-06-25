@@ -361,7 +361,7 @@ class Extensions_Foundation_URL_Tests: XCTestCase {
     func testTrashOrDelete() {
         // boilerplate
         
-        let temporaryDirectoryURL = FileManager.temporaryDirectoryCompat
+        let temporaryDirectoryURL = FileManager.default.temporaryDirectoryCompat
         
         // determine temporary URLs
         
@@ -423,7 +423,7 @@ class Extensions_Foundation_URL_Tests: XCTestCase {
     func testIsFinderAlias() {
         // boilerplate
         
-        let temporaryDirectoryURL = FileManager.temporaryDirectoryCompat
+        let temporaryDirectoryURL = FileManager.default.temporaryDirectoryCompat
         
         // determine temporary URLs
         
@@ -505,7 +505,7 @@ class Extensions_Foundation_URL_Tests: XCTestCase {
     func testSymlink() {
         // boilerplate
         
-        let temporaryDirectoryURL = FileManager.temporaryDirectoryCompat
+        let temporaryDirectoryURL = FileManager.default.temporaryDirectoryCompat
         
         // determine temporary URLs
         
@@ -612,8 +612,8 @@ class Extensions_Foundation_URL_Tests: XCTestCase {
         
         // FileManager
         
-        _ = FileManager.homeDirectoryForCurrentUserCompat
-        _ = FileManager.temporaryDirectoryCompat
+        _ = FileManager.default.homeDirectoryForCurrentUserCompat
+        _ = FileManager.default.temporaryDirectoryCompat
         
         #endif
     }

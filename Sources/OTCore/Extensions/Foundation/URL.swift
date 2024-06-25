@@ -382,10 +382,10 @@ extension FileManager {
     /// **OTCore:**
     /// Backwards compatible method for retrieving the current user's home directory, using the most recent API where possible.
     @_disfavoredOverload
-    public static var homeDirectoryForCurrentUserCompat: URL {
+    public var homeDirectoryForCurrentUserCompat: URL {
         if #available(OSX 10.12, *) {
             // only available on macOS
-            return FileManager.default.homeDirectoryForCurrentUser
+            return homeDirectoryForCurrentUser
         } else {
             // available on all Apple platforms
             return URL(fileURLWithPath: NSHomeDirectory(), isDirectory: true)
@@ -397,9 +397,9 @@ extension FileManager {
     /// **OTCore:**
     /// Backwards compatible method for retrieving a temporary folder from the system.
     @_disfavoredOverload
-    public static var temporaryDirectoryCompat: URL {
+    public var temporaryDirectoryCompat: URL {
         if #available(OSX 10.12, iOS 10.0, tvOS 10.0, watchOS 3.0, *) {
-            return FileManager.default.temporaryDirectory
+            return temporaryDirectory
         } else {
             return URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true)
         }
