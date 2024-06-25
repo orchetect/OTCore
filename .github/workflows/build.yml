@@ -52,17 +52,7 @@ jobs:
       run: xcodebuild build -workspace ".swiftpm/xcode/package.xcworkspace" -scheme "OTCore-CI" -destination "generic/platform=macOS,name=Any Mac" | xcpretty && exit ${PIPESTATUS[0]}
     - name: Unit Tests
       run: xcodebuild test -workspace ".swiftpm/xcode/package.xcworkspace" -scheme "OTCore-CI" -destination "platform=macOS" | xcpretty && exit ${PIPESTATUS[0]}
-
-  macOS-14-arm:
-    name: macOS 14 Sonoma (arm64)
-    runs-on: macos-14-arm64
-    steps:
-    - uses: actions/checkout@main
-    - name: Build
-      run: xcodebuild build -workspace ".swiftpm/xcode/package.xcworkspace" -scheme "OTCore-CI" -destination "generic/platform=macOS,name=Any Mac" | xcpretty && exit ${PIPESTATUS[0]}
-    - name: Unit Tests
-      run: xcodebuild test -workspace ".swiftpm/xcode/package.xcworkspace" -scheme "OTCore-CI" -destination "platform=macOS" | xcpretty && exit ${PIPESTATUS[0]}
-
+      
   macCatalyst:
     name: macCatalyst
     runs-on: macos-latest
