@@ -194,6 +194,35 @@ extension Decimal {
         self = rounded(rule, decimalPlaces: decimalPlaces)
     }
     
+    /// Alternative method for rounding a number to a fixed number of decimal places
+    /// that does not rely on `NSDecimalRound`.
+    ///
+    /// The Xcode 16.0 RC build had a bug where `NSDecimal*` methods could cause a crash.
+    /// However the bug appears to have been fixed for the GM release.
+    ///
+    /// See https://developer.apple.com/documentation/xcode-release-notes/xcode-16-release-notes#Foundation
+    ///
+    /// This method is not currently used, but its functionality was tested and it works as expected.
+    // private func _roundedAlternative(
+    //     _ rule: NSDecimalNumber.RoundingMode = .plain,
+    //     decimalPlaces: Int
+    // ) -> Self {
+    //     let fpRule: FloatingPointRoundingRule
+    //     switch rule {
+    //     case .plain: fpRule = .toNearestOrEven
+    //     case .down: fpRule = .down
+    //     case .up: fpRule = .up
+    //     case .bankers: fpRule = .toNearestOrEven // not identical, but close
+    //     @unknown default:
+    //         assertionFailure("Unknown rounding mode: \(rule). Defaulting to .toNearestOrEven.")
+    //         fpRule = .toNearestOrEven
+    //     }
+    //
+    //     let double = abs((self as NSDecimalNumber).doubleValue)
+    //     let significand = Decimal((double * pow(10, Double(decimalPlaces))).rounded(fpRule))
+    //     return Decimal(sign: sign, exponent: -decimalPlaces, significand: significand)
+    // }
+    
     /// **OTCore:**
     /// Replaces this value by truncating it to `decimalPlaces` number of decimal places.
     @_disfavoredOverload
