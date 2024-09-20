@@ -94,6 +94,10 @@ public struct IPAddress {
     }
 }
 
+extension IPAddress: Identifiable {
+    public var id: String { address }
+}
+
 extension IPAddress {
     /// **OTCore:**
     /// IP Address validation result returned by ``IPAddress``.
@@ -112,6 +116,10 @@ extension IPAddress {
     public enum ValidationError: Error {
         case invalid
     }
+}
+
+extension IPAddress.IPAddressType: Identifiable {
+    public var id: Self { self }
 }
 
 #endif

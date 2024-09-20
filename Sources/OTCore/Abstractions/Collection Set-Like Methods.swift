@@ -162,3 +162,7 @@ extension Collection where Self: RangeReplaceableCollection,
         }
     }
 }
+
+extension CollectionPosition: Identifiable {
+    public var id: Self { self }
+}

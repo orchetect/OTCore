@@ -117,6 +117,10 @@ extension Time: Comparable {
 
 extension Time: Hashable { }
 
+extension Time: Identifiable {
+    public var id: Self { self }
+}
+
 extension Time {
     /// **OTCore:**
     /// Returns the time as a formatted string.
@@ -252,4 +256,8 @@ extension Time {
         /// S.sss
         case s_sss
     }
+}
+
+extension Time.Format: Identifiable {
+    public var id: Self { self }
 }

@@ -76,6 +76,10 @@ public struct EmailAddress {
     }
 }
 
+extension EmailAddress: Identifiable {
+    public var id: String { email }
+}
+
 // MARK: - API Changes in 1.4.4
 
 extension String {

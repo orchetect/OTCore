@@ -20,6 +20,10 @@ public enum FileSystemFormat: Equatable, Hashable, CaseIterable {
     // case fat32
 }
 
+extension FileSystemFormat: Identifiable {
+    public var id: Self { self }
+}
+
 extension String {
     /// **OTCore:**
     /// Sanitizes illegal characters in a path component based on the specified file system(s).
