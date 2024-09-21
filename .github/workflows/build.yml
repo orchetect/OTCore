@@ -48,6 +48,8 @@ jobs:
     runs-on: macos-14
     steps:
     - uses: actions/checkout@main
+      with:
+        xcode-version: latest-stable # Useful when a newer version of Xcode is available in the GitHub host environment, but has not been made default yet by GitHubX
     - name: Build
       run: xcodebuild build -workspace ".swiftpm/xcode/package.xcworkspace" -scheme "OTCore-CI" -destination "generic/platform=macOS,name=Any Mac" | xcpretty && exit ${PIPESTATUS[0]}
     - name: Unit Tests
@@ -58,6 +60,8 @@ jobs:
     runs-on: macos-latest
     steps:
     - uses: actions/checkout@main
+      with:
+        xcode-version: latest-stable # Useful when a newer version of Xcode is available in the GitHub host environment, but has not been made default yet by GitHubX
     - name: Build
       run: xcodebuild build -workspace ".swiftpm/xcode/package.xcworkspace" -scheme "OTCore-CI" -destination "generic/platform=macOS,variant=Mac Catalyst,name=Any Mac" | xcpretty && exit ${PIPESTATUS[0]}
     - name: Unit Tests
@@ -68,6 +72,8 @@ jobs:
     runs-on: macos-latest # this must be macos, GitHub does not offer iOS directly but we can use xcodebuild
     steps:
     - uses: actions/checkout@main
+      with:
+        xcode-version: latest-stable # Useful when a newer version of Xcode is available in the GitHub host environment, but has not been made default yet by GitHubX
     - name: iPhone 12 Simulator - Build
       run: xcodebuild build -workspace ".swiftpm/xcode/package.xcworkspace" -scheme "OTCore-CI" -destination "generic/platform=iOS Simulator,name=Any iOS Device" | xcpretty && exit ${PIPESTATUS[0]}
     - name: iPhone 12 Simulator - Unit Tests
@@ -78,6 +84,8 @@ jobs:
     runs-on: macos-latest # this must be macos, GitHub does not offer tvOS directly but we can use xcodebuild
     steps:
     - uses: actions/checkout@main
+      with:
+        xcode-version: latest-stable # Useful when a newer version of Xcode is available in the GitHub host environment, but has not been made default yet by GitHubX
     - name: Apple TV - Build
       run: xcodebuild build -workspace ".swiftpm/xcode/package.xcworkspace" -scheme "OTCore-CI" -destination "generic/platform=tvOS Simulator,name=Any tvOS Simulator Device" | xcpretty && exit ${PIPESTATUS[0]}
     - name: Apple TV - Unit Tests
@@ -88,6 +96,8 @@ jobs:
     runs-on: macos-latest # this must be macos, GitHub does not offer watchOS directly but we can use xcodebuild
     steps:
     - uses: actions/checkout@main
+      with:
+        xcode-version: latest-stable # Useful when a newer version of Xcode is available in the GitHub host environment, but has not been made default yet by GitHubX
     - name: Apple Watch - Build
       run: xcodebuild build -workspace ".swiftpm/xcode/package.xcworkspace" -scheme "OTCore-CI" -destination "generic/platform=watchOS Simulator,name=Any watchOS Simulator Device" | xcpretty && exit ${PIPESTATUS[0]}
     - name: Apple Watch - Unit Tests
