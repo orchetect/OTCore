@@ -23,26 +23,6 @@ on:
   - cron: '30 11 * * *'   # once a day @ 11:30am UTC (4:30am PST)
 
 jobs: 
-  macOS-12:
-    name: macOS 12 Monterey
-    runs-on: macos-12
-    steps:
-    - uses: actions/checkout@main
-    - name: Build
-      run: xcodebuild build -workspace ".swiftpm/xcode/package.xcworkspace" -scheme "OTCore-CI" -destination "generic/platform=macOS,name=Any Mac" | xcpretty && exit ${PIPESTATUS[0]}
-    - name: Unit Tests
-      run: xcodebuild test -workspace ".swiftpm/xcode/package.xcworkspace" -scheme "OTCore-CI" -destination "platform=macOS" | xcpretty && exit ${PIPESTATUS[0]}
-      
-  macOS-13:
-    name: macOS 13 Ventura
-    runs-on: macos-13
-    steps:
-    - uses: actions/checkout@main
-    - name: Build
-      run: xcodebuild build -workspace ".swiftpm/xcode/package.xcworkspace" -scheme "OTCore-CI" -destination "generic/platform=macOS,name=Any Mac" | xcpretty && exit ${PIPESTATUS[0]}
-    - name: Unit Tests
-      run: xcodebuild test -workspace ".swiftpm/xcode/package.xcworkspace" -scheme "OTCore-CI" -destination "platform=macOS" | xcpretty && exit ${PIPESTATUS[0]}
-
   macOS-14:
     name: macOS 14 Sonoma
     runs-on: macos-14
