@@ -27,7 +27,7 @@ In your Package.swift file:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/orchetect/OTCore", from: "1.5.0")
+    .package(url: "https://github.com/orchetect/OTCore", from: "1.6.0")
 ]
 ```
 
@@ -35,7 +35,7 @@ dependencies: [
 
 Most methods are implemented as category methods so they are generally discoverable.
 
-All methods have inline help explaining their purpose and basic usage examples.
+All methods are documented with inline help explaining their purpose and basic usage examples.
 
 ## Author
 
