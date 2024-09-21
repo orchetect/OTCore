@@ -71,7 +71,9 @@ extension Bool {
 
 // MARK: - ExpressibleByIntegerLiteral
 
-extension Bool: ExpressibleByIntegerLiteral {
+// Add exported ExpressibleByIntegerLiteral conformance to `Bool`.
+// Will remove in future if Apple adds 1st-party conformance.
+extension Bool: @retroactive ExpressibleByIntegerLiteral {
     /// **OTCore:**
     /// Value > 0 produces `true`.
     @inline(__always) @_disfavoredOverload

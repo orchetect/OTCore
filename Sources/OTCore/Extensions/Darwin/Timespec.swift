@@ -89,7 +89,9 @@ extension timespec {
     }
 }
 
-extension timespec: Equatable {
+// Add exported Equatable conformance to `timespec`.
+// Will remove in future if Apple adds 1st-party conformance.
+extension timespec: @retroactive Equatable {
     // **OTCore**
     @inlinable @_disfavoredOverload
     public static func == (lhs: Self, rhs: Self) -> Bool {
@@ -98,7 +100,9 @@ extension timespec: Equatable {
     }
 }
 
-extension timespec: Comparable {
+// Add exported Comparable conformance to `timespec`.
+// Will remove in future if Apple adds 1st-party conformance.
+extension timespec: @retroactive Comparable {
     // **OTCore**
     @inlinable @_disfavoredOverload
     public static func < (lhs: timespec, rhs: timespec) -> Bool {
