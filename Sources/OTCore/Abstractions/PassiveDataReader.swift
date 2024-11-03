@@ -13,7 +13,7 @@ import Foundation
 /// Usage:
 ///
 ///     var data = Data( ... )
-///     var dr = DataReader { $0(&data) }
+///     var dr = PassiveDataReader { $0(&data) }
 ///
 ///     if let bytes = dr.read(bytes: 4) { ... }
 ///

@@ -10,7 +10,7 @@ import Foundation
 
 /// **OTCore:**
 /// IP Address Format Validation.
-public struct IPAddress {
+public struct IPAddress: Sendable {
     /// **OTCore:**
     /// IP Address.
     public var address: String = ""
@@ -101,7 +101,7 @@ extension IPAddress {
 extension IPAddress {
     /// **OTCore:**
     /// IP Address validation result returned by ``IPAddress``.
-    public enum IPAddressType {
+    public enum IPAddressType: Sendable {
         /// **OTCore:**
         /// Valid IPv4 address.
         case ipV4

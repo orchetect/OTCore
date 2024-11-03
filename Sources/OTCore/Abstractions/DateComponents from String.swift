@@ -211,7 +211,7 @@ extension DateComponents {
     /// **OTCore:**
     /// Date string mask.
     /// (Currently only supports `YYYYMMDD` but will support more basic formats in the future.)
-    public enum StringMask {
+    public enum StringMask: Sendable {
         case YYYYMMDD
     }
     

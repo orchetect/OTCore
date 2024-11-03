@@ -44,7 +44,15 @@ class Logging_Log_Tests: XCTestCase {
         let logger = OSLogger {
             $0.coerceInfoAndDebugToDefault = true
         }
-        logger.enabled = true
+        XCTAssertEqual(logger.config.coerceInfoAndDebugToDefault, true)
+        
+        let logger2 = OSLogger(enabled: false)
+            .configure {
+                $0.coerceInfoAndDebugToDefault = true
+            }
+        XCTAssertEqual(logger2.config.coerceInfoAndDebugToDefault, true)
+        
+        _ = logger.enabled
     }
     
     /// This test is only useful with Thread Sanitizer on.

@@ -8,7 +8,7 @@
 
 /// **OTCore:**
 /// File system cases.
-public enum FileSystemFormat: Equatable, Hashable, CaseIterable {
+public enum FileSystemFormat: Equatable, Hashable, CaseIterable, Sendable {
     /// HFS+ (Apple)
     case hfsPlus
     

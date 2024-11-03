@@ -8,7 +8,7 @@
 
 /// **OTCore:**
 /// Describes a position behavior within a Collection use in some of the additional methods.
-public enum CollectionPosition {
+public enum CollectionPosition: Sendable {
     /// Default behavior (as described in the calling function)
     case `default`
     

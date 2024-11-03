@@ -114,17 +114,17 @@ extension UserDefaults {
 ///     var pref = 1 // will be clamped to 5
 ///
 @propertyWrapper
-public struct UserDefaultsStorage<Value, StorageValue> where StorageValue: UserDefaultsStorable {
+public struct UserDefaultsStorage<Value, StorageValue>: @unchecked Sendable where StorageValue: UserDefaultsStorable {
     private let key: String
-    private let defaultValue: Any
-    public var storage: UserDefaults
+    private let defaultValue: @Sendable () -> Value
+    public let storage: UserDefaults
     
-    private let getTransformation: ((_ storedValue: StorageValue) -> Value?)
-    private let setTransformation: ((_ newValue: Value) -> StorageValue?)
+    private let getTransformation: @Sendable (_ storedValue: StorageValue) -> Value?
+    private let setTransformation: @Sendable (_ newValue: Value) -> StorageValue?
     
     private let computedOnly: Bool
-    private let getTransformationComputedOnly: ((_ storedValue: StorageValue?) -> Value)
-    private let setTransformationComputedOnly: ((_ newValue: Value) -> StorageValue)
+    private let getTransformationComputedOnly: @Sendable (_ storedValue: StorageValue?) -> Value
+    private let setTransformationComputedOnly: @Sendable (_ newValue: Value) -> StorageValue
     
     // note: "defaultValue as! Value" is guaranteed to work because it's only used
     // where the value is known to be of type Value.
@@ -145,10 +145,10 @@ public struct UserDefaultsStorage<Value, StorageValue> where StorageValue: UserD
                 return getTransformationComputedOnly(value)
             }
             guard let value = value else {
-                return defaultValue as! Value
+                return defaultValue()
             }
             let processed = getTransformation(value)
-            return processed ?? defaultValue as! Value
+            return processed ?? defaultValue()
         }
         set {
             var processedValue: StorageValue?
@@ -171,7 +171,7 @@ public struct UserDefaultsStorage<Value, StorageValue> where StorageValue: UserD
                     processedValue = setTransformationComputedOnly(newValue)
                 } else {
                     processedValue = setTransformation(newValue)
-                        ?? setTransformation(defaultValue as! Value)
+                        ?? setTransformation(defaultValue())
                 }
             }
             
@@ -190,7 +190,7 @@ public struct UserDefaultsStorage<Value, StorageValue> where StorageValue: UserD
         key: String,
         storage: UserDefaults = .standard
     ) where Value == StorageValue {
-        self.defaultValue = defaultValue
+        self.defaultValue = { defaultValue }
         self.key = key
         self.storage = storage
         
@@ -217,7 +217,7 @@ public struct UserDefaultsStorage<Value, StorageValue> where StorageValue: UserD
         
         let rangeBounds = range.getAbsoluteBounds()
         
-        let closure: (Value) -> Value = {
+        let closure: @Sendable (Value) -> Value = {
             Clamped<Value>.clamping(
                 $0,
                 min: rangeBounds.min,
@@ -229,7 +229,7 @@ public struct UserDefaultsStorage<Value, StorageValue> where StorageValue: UserD
         setTransformation = closure
         
         // clamp initial value
-        self.defaultValue = closure(defaultValue)
+        self.defaultValue = { closure(defaultValue) }
         
         // not used
         computedOnly = false
@@ -244,7 +244,7 @@ public struct UserDefaultsStorage<Value, StorageValue> where StorageValue: UserD
     public init(
         wrappedValue defaultValue: Value,
         key: String,
-        validation closure: @escaping (_ value: Value) -> Value,
+        validation closure: @Sendable @escaping (_ value: Value) -> Value,
         storage: UserDefaults = .standard
     ) where Value == StorageValue {
         self.key = key
@@ -258,7 +258,7 @@ public struct UserDefaultsStorage<Value, StorageValue> where StorageValue: UserD
         setTransformationComputedOnly = { $0 }
         
         // validate initial value
-        self.defaultValue = closure(defaultValue)
+        self.defaultValue = { closure(defaultValue) }
         
         // update stored value
         let readValue = wrappedValue
@@ -274,7 +274,7 @@ public struct UserDefaultsStorage<Value, StorageValue> where StorageValue: UserD
         key: String,
         storage: UserDefaults = .standard
     ) where Value: Codable, StorageValue == String {
-        self.defaultValue = defaultValue
+        self.defaultValue = { defaultValue }
         self.key = key
         self.storage = storage
         
@@ -306,15 +306,15 @@ public struct UserDefaultsStorage<Value, StorageValue> where StorageValue: UserD
     public init(
         wrappedValue defaultValue: Value,
         key: String,
-        get getTransformation: @escaping (_ storedValue: StorageValue) -> Value?,
-        set setTransformation: @escaping (_ newValue: Value) -> StorageValue?,
+        get getTransformation: @Sendable @escaping (_ storedValue: StorageValue) -> Value?,
+        set setTransformation: @Sendable @escaping (_ newValue: Value) -> StorageValue?,
         storage: UserDefaults = .standard
     ) {
         self.key = key
         self.storage = storage
         self.getTransformation = getTransformation
         self.setTransformation = setTransformation
-        self.defaultValue = defaultValue
+        self.defaultValue = { defaultValue }
         
         // not used
         computedOnly = false
@@ -330,8 +330,8 @@ public struct UserDefaultsStorage<Value, StorageValue> where StorageValue: UserD
     /// type.
     public init(
         key: String,
-        get getTransformation: @escaping (_ storedValue: StorageValue?) -> Value,
-        set setTransformation: @escaping (_ newValue: Value) -> StorageValue,
+        get getTransformation: @Sendable @escaping (_ storedValue: StorageValue?) -> Value,
+        set setTransformation: @Sendable @escaping (_ newValue: Value) -> StorageValue,
         storage: UserDefaults = .standard
     ) {
         computedOnly = true
@@ -345,7 +345,7 @@ public struct UserDefaultsStorage<Value, StorageValue> where StorageValue: UserD
         self.getTransformation = { _ in nil }
         self.setTransformation = { _ in nil }
         // safe because we ensure to not use this property when computedOnly == true
-        self.defaultValue = Void.self
+        self.defaultValue = { fatalError() }
     }
 }
 
@@ -365,7 +365,7 @@ extension UserDefaultsStorage where Value: ExpressibleByNilLiteral {
     
     public init(
         key: String,
-        validation closure: @escaping (_ value: Value) -> Value,
+        validation closure: @Sendable @escaping (_ value: Value) -> Value,
         storage: UserDefaults = .standard
     ) where Value == StorageValue {
         self.init(
@@ -397,8 +397,8 @@ extension UserDefaultsStorage where Value: ExpressibleByNilLiteral {
     /// type.
     public init(
         key: String,
-        get getTransformation: @escaping (_ storedValue: StorageValue) -> Value?,
-        set setTransformation: @escaping (_ newValue: Value) -> StorageValue?,
+        get getTransformation: @Sendable @escaping (_ storedValue: StorageValue) -> Value?,
+        set setTransformation: @Sendable @escaping (_ newValue: Value) -> StorageValue?,
         storage: UserDefaults = .standard
     ) {
         self.init(

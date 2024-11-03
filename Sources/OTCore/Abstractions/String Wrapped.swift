@@ -17,18 +17,18 @@ extension String {
     @inlinable @_disfavoredOverload
     public func wrapped(with prefixAndSuffix: StringWrappedEnclosingType) -> String {
         switch prefixAndSuffix {
-        case .parentheses:      return "(" + self + ")"
-        case .brackets:         return "[" + self + "]"
-        case .braces:           return "{" + self + "}"
-        case .angleBrackets:    return "<" + self + ">"
-        case .singleQuotes:     return "'" + self + "'"
-        case .quotes:           return "\"" + self + "\""
+        case .parentheses:   return "(" + self + ")"
+        case .brackets:      return "[" + self + "]"
+        case .braces:        return "{" + self + "}"
+        case .angleBrackets: return "<" + self + ">"
+        case .singleQuotes:  return "'" + self + "'"
+        case .quotes:        return "\"" + self + "\""
         }
     }
     
     /// **OTCore:**
     /// Type describing a pair of enclosing brackets/braces or similar characters that are different for prefix and suffix.
-    public enum StringWrappedEnclosingType {
+    public enum StringWrappedEnclosingType: Sendable {
         /// ( ) a.k.a. parens
         case parentheses
         

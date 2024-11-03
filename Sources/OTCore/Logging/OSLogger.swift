@@ -34,14 +34,14 @@ import os.log
 /// **OTCore:**
 /// Centralized logging via os_log.
 @available(macOS 10.12, iOS 10.0, watchOS 3.0, tvOS 10.0, *)
-public class OSLogger {
+public final class OSLogger: Sendable {
     /// **OTCore:**
     /// Set to `false` to suppress all logging.
     @inline(__always)
-    public var enabled: Bool
+    public let enabled: Bool
     
     @inline(__always)
-    public var config: Config
+    public let config: Config
     
     /// **OTCore:**
     /// Initialize a new `OSLogger` instance.
@@ -470,7 +470,7 @@ extension OSLogger {
     
     /// **OTCore:**
     /// Log tokens for assembling log messages.
-    public enum LogToken {
+    public enum LogToken: Sendable {
         case message
         case emoji(padding: OptionalPadding)
         
@@ -483,7 +483,7 @@ extension OSLogger {
         case space
         case string(String)
         
-        public enum OptionalPadding {
+        public enum OptionalPadding: Sendable {
             case none
             case leading
             case trailing
@@ -496,7 +496,7 @@ extension OSLogger {
 extension OSLogger {
     /// **OTCore:**
     /// Configuration settings for `OSLogger`.
-    public struct Config {
+    public struct Config: Sendable {
         /// **OTCore:**
         /// Sets the default `OSLog` to use.
         ///
@@ -516,7 +516,7 @@ extension OSLogger {
         
         // MARK: Level Settings
         
-        public struct LevelSettings {
+        public struct LevelSettings: Sendable {
             /// **OTCore:**
             /// Set the emoji used for the `.emoji` LogToken.
             @inline(__always)
@@ -612,14 +612,17 @@ extension OSLogger {
     /// **OTCore:**
     /// Initialize a new instance while modifying the logger configuration in a closure.
     public convenience init(_ configuration: (inout Config) -> Void) {
-        self.init()
+        var config = Config()
         configuration(&config)
+        self.init(config: config)
     }
     
     /// **OTCore:**
     /// Modify logger configuration within a closure.
-    public func configure(_ block: (inout Config) -> Void) {
-        block(&config)
+    public func configure(_ configuration: (inout Config) -> Void) -> OSLogger {
+        var config = Config()
+        configuration(&config)
+        return OSLogger(enabled: enabled, config: config)
     }
 }
 

@@ -9,7 +9,7 @@ import Foundation
 /// **OTCore:**
 /// Property wrapper that clamps the wrapped value to a given range.
 @propertyWrapper
-public struct Clamped<Value> where Value: Comparable {
+public struct Clamped<Value>: Sendable where Value: Comparable, Value: Sendable {
     var min: Value?
     var max: Value?
     private var value: Value

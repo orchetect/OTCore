@@ -121,6 +121,8 @@ extension Time: Identifiable {
     public var id: Self { self }
 }
 
+extension Time: Sendable { }
+
 extension Time {
     /// **OTCore:**
     /// Returns the time as a formatted string.
@@ -261,3 +263,5 @@ extension Time {
 extension Time.Format: Identifiable {
     public var id: Self { self }
 }
+
+extension Time.Format: Sendable { }
