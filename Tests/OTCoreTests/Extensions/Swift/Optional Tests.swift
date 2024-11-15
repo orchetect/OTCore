@@ -49,6 +49,20 @@ class Extensions_Swift_Optional_Tests: XCTestCase {
         
         XCTAssertEqual(val2.ifNil(2), 2)
     }
+    
+    func testOptionalProperty() {
+        var val: Int? = 1
+        
+        XCTAssertEqual(val.optional, 1)
+        
+        val.optional = 2
+        
+        XCTAssertEqual(val.optional, 2)
+        
+        val.optional = nil
+        
+        XCTAssertEqual(val.optional, nil)
+    }
 }
 
 #endif
