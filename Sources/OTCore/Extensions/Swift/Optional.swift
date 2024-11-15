@@ -14,7 +14,7 @@ public protocol OTCoreOptionalTyped {
     /// **OTCore:**
     /// Semantic workaround used to enable extensions on types such as `Type<T>?
     @inlinable @_disfavoredOverload
-    var optional: Wrapped? { get }
+    var optional: Wrapped? { get set }
 }
 
 extension OTCoreOptionalTyped {
@@ -29,7 +29,8 @@ extension OTCoreOptionalTyped {
 extension Optional: OTCoreOptionalTyped {
     @inlinable @_disfavoredOverload
     public var optional: Wrapped? {
-        self
+        get { self }
+        set { self = newValue }
     }
 }
 
