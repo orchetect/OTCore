@@ -12,8 +12,8 @@ extension DispatchGroup {
     /// **OTCore:**
     /// A thin DispatchGroup wrapper that only publicly allows `leave()` to be called.
     /// Not meant to be instanced directly. Use `DispatchGroup.sync{}` instead.
-    public class ThinDispatchGroup {
-        fileprivate var group = DispatchGroup()
+    public final class ThinDispatchGroup: @unchecked Sendable {
+        fileprivate let group = DispatchGroup()
         private var leaveCalled = false
         
         fileprivate init() { }
@@ -64,7 +64,7 @@ extension DispatchGroup {
     @_disfavoredOverload
     public static func sync(
         asyncOn dispatchQueue: DispatchQueue,
-        _ block: @escaping (ThinDispatchGroup) -> Void
+        _ block: @Sendable @escaping (ThinDispatchGroup) -> Void
     ) {
         let g = ThinDispatchGroup()
         
@@ -119,7 +119,7 @@ extension DispatchGroup {
     public static func sync(
         asyncOn dispatchQueue: DispatchQueue,
         timeout: DispatchTimeInterval,
-        _ block: @escaping (ThinDispatchGroup) -> Void
+        _ block: @Sendable @escaping (ThinDispatchGroup) -> Void
     ) -> DispatchTimeoutResult {
         let time = DispatchTime.now() + timeout
         
@@ -145,8 +145,8 @@ extension DispatchGroup {
     /// **OTCore:**
     /// A thin DispatchGroup wrapper capable of returning a value, that only publicly allows `leave(withValue:)` to be called.
     /// Not meant to be instanced directly. Use `DispatchGroup.sync{}` instead.
-    public class ThinReturnValueDispatchGroup<ReturnValue> {
-        fileprivate var group = DispatchGroup()
+    public final class ThinReturnValueDispatchGroup<ReturnValue>: @unchecked Sendable {
+        fileprivate let group = DispatchGroup()
         fileprivate var returnValue: ReturnValue!
         private var leaveCalled = false
         
@@ -200,7 +200,7 @@ extension DispatchGroup {
     @_disfavoredOverload
     public static func sync<T>(
         asyncOn dispatchQueue: DispatchQueue,
-        _ block: @escaping (ThinReturnValueDispatchGroup<T>) -> Void
+        _ block: @Sendable @escaping (ThinReturnValueDispatchGroup<T>) -> Void
     ) -> T {
         let g = ThinReturnValueDispatchGroup<T>()
         
@@ -272,7 +272,7 @@ extension DispatchGroup {
     public static func sync<T>(
         asyncOn dispatchQueue: DispatchQueue,
         timeout: DispatchTimeInterval,
-        _ block: @escaping (ThinReturnValueDispatchGroup<T>) -> Void
+        _ block: @Sendable @escaping (ThinReturnValueDispatchGroup<T>) -> Void
     ) -> DispatchSyncTimeoutResult<T> {
         let time = DispatchTime.now() + timeout
         

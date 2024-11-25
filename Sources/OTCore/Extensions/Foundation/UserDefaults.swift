@@ -116,15 +116,15 @@ extension UserDefaults {
 @propertyWrapper
 public struct UserDefaultsStorage<Value, StorageValue>: @unchecked Sendable where StorageValue: UserDefaultsStorable {
     private let key: String
-    private let defaultValue: @Sendable () -> Value
+    private let defaultValue: () -> Value
     public let storage: UserDefaults
     
-    private let getTransformation: @Sendable (_ storedValue: StorageValue) -> Value?
-    private let setTransformation: @Sendable (_ newValue: Value) -> StorageValue?
+    private let getTransformation: (_ storedValue: StorageValue) -> Value?
+    private let setTransformation: (_ newValue: Value) -> StorageValue?
     
     private let computedOnly: Bool
-    private let getTransformationComputedOnly: @Sendable (_ storedValue: StorageValue?) -> Value
-    private let setTransformationComputedOnly: @Sendable (_ newValue: Value) -> StorageValue
+    private let getTransformationComputedOnly: (_ storedValue: StorageValue?) -> Value
+    private let setTransformationComputedOnly: (_ newValue: Value) -> StorageValue
     
     // note: "defaultValue as! Value" is guaranteed to work because it's only used
     // where the value is known to be of type Value.
@@ -217,7 +217,7 @@ public struct UserDefaultsStorage<Value, StorageValue>: @unchecked Sendable wher
         
         let rangeBounds = range.getAbsoluteBounds()
         
-        let closure: @Sendable (Value) -> Value = {
+        let closure: (Value) -> Value = {
             Clamped<Value>.clamping(
                 $0,
                 min: rangeBounds.min,
@@ -244,7 +244,7 @@ public struct UserDefaultsStorage<Value, StorageValue>: @unchecked Sendable wher
     public init(
         wrappedValue defaultValue: Value,
         key: String,
-        validation closure: @Sendable @escaping (_ value: Value) -> Value,
+        validation closure: @escaping (_ value: Value) -> Value,
         storage: UserDefaults = .standard
     ) where Value == StorageValue {
         self.key = key
@@ -306,8 +306,8 @@ public struct UserDefaultsStorage<Value, StorageValue>: @unchecked Sendable wher
     public init(
         wrappedValue defaultValue: Value,
         key: String,
-        get getTransformation: @Sendable @escaping (_ storedValue: StorageValue) -> Value?,
-        set setTransformation: @Sendable @escaping (_ newValue: Value) -> StorageValue?,
+        get getTransformation: @escaping (_ storedValue: StorageValue) -> Value?,
+        set setTransformation: @escaping (_ newValue: Value) -> StorageValue?,
         storage: UserDefaults = .standard
     ) {
         self.key = key
@@ -330,8 +330,8 @@ public struct UserDefaultsStorage<Value, StorageValue>: @unchecked Sendable wher
     /// type.
     public init(
         key: String,
-        get getTransformation: @Sendable @escaping (_ storedValue: StorageValue?) -> Value,
-        set setTransformation: @Sendable @escaping (_ newValue: Value) -> StorageValue,
+        get getTransformation: @escaping (_ storedValue: StorageValue?) -> Value,
+        set setTransformation: @escaping (_ newValue: Value) -> StorageValue,
         storage: UserDefaults = .standard
     ) {
         computedOnly = true
@@ -365,7 +365,7 @@ extension UserDefaultsStorage where Value: ExpressibleByNilLiteral {
     
     public init(
         key: String,
-        validation closure: @Sendable @escaping (_ value: Value) -> Value,
+        validation closure: @escaping (_ value: Value) -> Value,
         storage: UserDefaults = .standard
     ) where Value == StorageValue {
         self.init(
@@ -397,8 +397,8 @@ extension UserDefaultsStorage where Value: ExpressibleByNilLiteral {
     /// type.
     public init(
         key: String,
-        get getTransformation: @Sendable @escaping (_ storedValue: StorageValue) -> Value?,
-        set setTransformation: @Sendable @escaping (_ newValue: Value) -> StorageValue?,
+        get getTransformation: @escaping (_ storedValue: StorageValue) -> Value?,
+        set setTransformation: @escaping (_ newValue: Value) -> StorageValue?,
         storage: UserDefaults = .standard
     ) {
         self.init(
@@ -413,7 +413,7 @@ extension UserDefaultsStorage where Value: ExpressibleByNilLiteral {
 
 // MARK: - UserDefaults Compatible Storage Types
 
-public protocol UserDefaultsStorable { }
+public protocol UserDefaultsStorable where Self: Sendable { }
 
 extension String: UserDefaultsStorable { }
 extension Int: UserDefaultsStorable { }
@@ -427,12 +427,12 @@ extension Array: UserDefaultsStorable where Element: UserDefaultsStorable { }
 extension Dictionary: UserDefaultsStorable where Key == String, Value: UserDefaultsStorable { }
 extension Optional: UserDefaultsStorable where Wrapped: UserDefaultsStorable { }
 
-extension NSString: UserDefaultsStorable { }
-extension NSData: UserDefaultsStorable { }
-extension NSDate: UserDefaultsStorable { }
-extension NSNumber: UserDefaultsStorable { }
-extension NSArray: UserDefaultsStorable { }
-extension NSDictionary: UserDefaultsStorable { }
+// extension NSString: UserDefaultsStorable { }
+// extension NSData: UserDefaultsStorable { }
+// extension NSDate: UserDefaultsStorable { }
+// extension NSNumber: UserDefaultsStorable { }
+// extension NSArray: UserDefaultsStorable { }
+// extension NSDictionary: UserDefaultsStorable { }
 
 // MARK: - API Changes in 1.4.6
 

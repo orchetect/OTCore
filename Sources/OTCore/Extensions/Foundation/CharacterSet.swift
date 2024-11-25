@@ -73,17 +73,17 @@ extension CharacterSet {
     /// **OTCore:**
     /// English consonant letters, omitting vowels.
     @_disfavoredOverload
-    public static var consonants = CharacterSet.letters.subtracting(Self.vowels)
+    public static let consonants = CharacterSet.letters.subtracting(Self.vowels)
     
     /// **OTCore:**
     /// English vowel letters (a, e, i, o, u) including all cases and diacritic variants.
     @_disfavoredOverload
-    public static var vowels = lowercaseVowels.union(uppercaseVowels)
+    public static let vowels = lowercaseVowels.union(uppercaseVowels)
     
     /// **OTCore:**
     /// English lowercase vowel letters (a, e, i, o, u) including diacritic variants.
     @_disfavoredOverload
-    public static var lowercaseVowels = CharacterSet(
+    public static let lowercaseVowels = CharacterSet(
         charactersIn:
         "aàáâäæãåā" + "ª" + "ăąǟǻȁȃȧᵃḁạảấầẩẫậắằẳẵặ"
             + "eèéêëēėę" + "ĕėěȅȇȩᵉḕḗḙḛḝẹẻẽếềểễệ"
@@ -95,7 +95,7 @@ extension CharacterSet {
     /// **OTCore:**
     /// English uppercase vowel letters (a, e, i, o, u) including diacritic variants.
     @_disfavoredOverload
-    public static var uppercaseVowels = CharacterSet(
+    public static let uppercaseVowels = CharacterSet(
         charactersIn:
         "AÀÁÂÄÆÃÅĀ" + "ĂĄǞǺȀȂȦᴬḀẠẢẤẦẨẪẬẮẰẲẴẶ"
             + "EÈÉÊËĒĖĘ" + "ĔĖĚȄȆȨᴱḔḖḘḚḜẸẺẼẾỀỀỂỄỆ"

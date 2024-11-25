@@ -14,9 +14,10 @@
 public func withOrderedTaskGroup<Base: Sequence, ResultElement>(
     sequence: Base,
     priority: TaskPriority? = nil,
-    elementTask: @escaping (_ element: Base.Element) async -> ResultElement
-) async -> [ResultElement] where /* Base.Element: Sendable, */ ResultElement: Sendable {
-    await withTaskGroup(of: (Int, ResultElement).self) { group in
+    isolation: isolated (any Actor)? = #isolation,
+    elementTask: @Sendable @escaping @isolated(any) (_ element: Base.Element) async -> ResultElement
+) async -> [ResultElement] where Base.Element: Sendable, ResultElement: Sendable {
+    await withTaskGroup(of: (Int, ResultElement).self, isolation: isolation) { group in
         for (number, element) in sequence.enumerated() {
             group.addTask(priority: priority) {
                 await (number, elementTask(element))

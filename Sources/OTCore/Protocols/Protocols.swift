@@ -8,7 +8,7 @@
 
 /// **OTCore:**
 /// Enum describing endianness when stored in data form.
-public enum NumberEndianness {
+public enum NumberEndianness: Sendable {
     case platformDefault
     case littleEndian
     case bigEndian
