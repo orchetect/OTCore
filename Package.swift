@@ -1,4 +1,4 @@
-// swift-tools-version:5.3
+// swift-tools-version:6.0
 
 import PackageDescription
 
@@ -8,7 +8,7 @@ let package = Package(
         // certain features of the library are marked @available only on newer versions of OSes,
         // but a platforms spec here determines what base platforms
         // the library is currently supported on
-        .macOS(.v10_12), .iOS(.v9), .tvOS(.v9), .watchOS(.v2)
+        .macOS(.v10_15), .iOS(.v13), .tvOS(.v13), .watchOS(.v6)
     ],
     products: [
         .library(
