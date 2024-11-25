@@ -101,13 +101,15 @@ extension Globals {
         @available(macOS 10.6, macCatalyst 13, iOS 2, tvOS 9, *)
         @available(watchOS, unavailable)
         public static var name: String {
-            #if os(macOS)
-            return Host.current().localizedName ?? ""
-            #elseif os(iOS) || os(tvOS)
-            return UIDevice.current.name
-            #else
-            fatalError("Not implemented on this platform yet.")
-            #endif
+            get async {
+                #if os(macOS)
+                return Host.current().localizedName ?? ""
+                #elseif os(iOS) || os(tvOS)
+                return await UIDevice.current.name
+                #else
+                fatalError("Not implemented on this platform yet.")
+                #endif
+            }
         }
         
         #if os(macOS)
