@@ -4,8 +4,6 @@
 //  © 2022 Steffan Andrews • Licensed under MIT License
 //
 
-#if shouldTestCurrentPlatform
-
 #if canImport(UIKit)
 import UIKit
 #endif
@@ -379,5 +377,3 @@ class Abstractions_Transformable_Tests: XCTestCase {
         #endif
     }
 }
-
-#endif

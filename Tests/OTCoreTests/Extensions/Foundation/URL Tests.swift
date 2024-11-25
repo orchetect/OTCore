@@ -4,8 +4,6 @@
 //  © 2022 Steffan Andrews • Licensed under MIT License
 //
 
-#if shouldTestCurrentPlatform
-
 import XCTest
 @testable import OTCore
 
@@ -618,5 +616,3 @@ class Extensions_Foundation_URL_Tests: XCTestCase {
         #endif
     }
 }
-
-#endif

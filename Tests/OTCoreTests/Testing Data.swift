@@ -4,8 +4,6 @@
 //  © 2022 Steffan Andrews • Licensed under MIT License
 //
 
-#if shouldTestCurrentPlatform
-
 // MARK: - Shared constants and objects for tests
 
 /// Test enum for use in unit tests
@@ -44,5 +42,3 @@ enum fooEnum: Hashable, CustomStringConvertible {
         lhs.internalHash == rhs.internalHash
     }
 }
-
-#endif

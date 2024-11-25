@@ -4,8 +4,6 @@
 //  © 2022 Steffan Andrews • Licensed under MIT License
 //
 
-#if shouldTestCurrentPlatform
-
 import XCTest
 import OTCore
 
@@ -166,5 +164,3 @@ class Abstractions_CollectionSetLikeMethods_Tests: XCTestCase {
         XCTAssertEqual(arr1, [.foo(1), .one, .two, .three])
     }
 }
-
-#endif

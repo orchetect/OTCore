@@ -4,8 +4,6 @@
 //  © 2022 Steffan Andrews • Licensed under MIT License
 //
 
-#if shouldTestCurrentPlatform
-
 import XCTest
 @testable import OTCore
 
@@ -163,5 +161,3 @@ class Extensions_Darwin_Timespec_Tests: XCTestCase {
         )
     }
 }
-
-#endif

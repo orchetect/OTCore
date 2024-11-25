@@ -4,8 +4,6 @@
 //  © 2022 Steffan Andrews • Licensed under MIT License
 //
 
-#if shouldTestCurrentPlatform
-
 import XCTest
 @testable import OTCore
 
@@ -97,7 +95,7 @@ class Extensions_Foundation_FloatingPointAndFoundation_Tests: XCTestCase {
         
         // float80
         // (we need more thorough unit test here for Float80 because it's internally using a custom implementation)
-#if !(arch(arm64) || arch(arm) || os(watchOS)) // Float80 is now removed for ARM
+        #if !(arch(arm64) || arch(arm) || os(watchOS)) // Float80 is now removed for ARM
         XCTAssertEqual(Float80(1.62456).string(decimalPlaces: -1), "2")
         XCTAssertEqual(Float80(1.62456).string(decimalPlaces:  0), "2")
         XCTAssertEqual(Float80(1.62456).string(decimalPlaces:  1), "1.6")
@@ -127,7 +125,7 @@ class Extensions_Foundation_FloatingPointAndFoundation_Tests: XCTestCase {
         XCTAssertEqual(Float80.nan.string(decimalPlaces: 2), "nan")
         XCTAssertEqual(Float80.signalingNaN.string(decimalPlaces: 2), "nan")
         XCTAssertEqual(Float80.infinity.string(decimalPlaces: 2), "inf")
-#endif
+        #endif
         
         // cgfloat
         XCTAssertEqual(CGFloat(1.62456).string(decimalPlaces: 1), "1.6")
@@ -136,5 +134,3 @@ class Extensions_Foundation_FloatingPointAndFoundation_Tests: XCTestCase {
         XCTAssertEqual(CGFloat.infinity.string(decimalPlaces: 2), "inf")
     }
 }
-
-#endif

@@ -4,8 +4,6 @@
 //  © 2022 Steffan Andrews • Licensed under MIT License
 //
 
-#if shouldTestCurrentPlatform
-
 import XCTest
 import OTCore
 
@@ -275,5 +273,3 @@ class Abstractions_DataReader_Tests: XCTestCase {
         }
     }
 }
-
-#endif

@@ -4,8 +4,9 @@
 //  © 2022 Steffan Andrews • Licensed under MIT License
 //
 
-#if shouldTestCurrentPlatform && canImport(AppKit)
+#if canImport(AppKit)
 
+import AppKit
 import XCTest
 @testable import OTCore
 

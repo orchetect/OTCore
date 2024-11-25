@@ -4,8 +4,6 @@
 //  © 2022 Steffan Andrews • Licensed under MIT License
 //
 
-#if shouldTestCurrentPlatform
-
 import XCTest
 @testable import OTCore
 
@@ -88,5 +86,3 @@ class Extensions_Darwin_FloatingPointAndDarwin_Tests: XCTestCase {
         XCTAssertEqual(17.5.fraction, 0.5)
     }
 }
-
-#endif

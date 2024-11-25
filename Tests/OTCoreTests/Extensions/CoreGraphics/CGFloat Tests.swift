@@ -4,8 +4,6 @@
 //  © 2022 Steffan Andrews • Licensed under MIT License
 //
 
-#if shouldTestCurrentPlatform
-
 import XCTest
 @testable import OTCore
 
@@ -60,5 +58,3 @@ class Extensions_CoreGraphics_CGFloat_Tests: XCTestCase {
     
     // StringProtocol.cgFloat is tested in "FloatingPoint Tests.swift"
 }
-
-#endif

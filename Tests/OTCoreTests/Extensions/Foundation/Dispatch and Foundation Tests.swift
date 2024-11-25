@@ -4,8 +4,6 @@
 //  © 2022 Steffan Andrews • Licensed under MIT License
 //
 
-#if shouldTestCurrentPlatform
-
 import XCTest
 @testable import OTCore
 
@@ -27,5 +25,3 @@ class Extensions_Foundation_DispatchAndFoundation_Tests: XCTestCase {
         XCTAssertNil(DispatchTimeInterval.never.timeInterval)
     }
 }
-
-#endif

@@ -4,8 +4,6 @@
 //  © 2022 Steffan Andrews • Licensed under MIT License
 //
 
-#if shouldTestCurrentPlatform
-
 import XCTest
 import OTCore
 
@@ -71,5 +69,3 @@ class Abstractions_IPAddress_Tests: XCTestCase {
         XCTAssertNil(IPAddress("1200:0000:AB00:1234:O000:2552:7777:1313"))
     }
 }
-
-#endif

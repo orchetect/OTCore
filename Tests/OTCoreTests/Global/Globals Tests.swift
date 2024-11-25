@@ -4,8 +4,6 @@
 //  © 2022 Steffan Andrews • Licensed under MIT License
 //
 
-#if shouldTestCurrentPlatform
-
 import XCTest
 import OTCore
 
@@ -75,5 +73,3 @@ class Global_Globals_Tests: XCTestCase {
         )
     }
 }
-
-#endif

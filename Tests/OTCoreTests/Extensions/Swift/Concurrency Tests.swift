@@ -4,8 +4,6 @@
 //  © 2022 Steffan Andrews • Licensed under MIT License
 //
 
-#if shouldTestCurrentPlatform
-
 import XCTest
 import OTCore
 
@@ -25,5 +23,3 @@ final class Extensions_Swift_Concurrency_Tests: XCTestCase {
         XCTAssertEqual(input, output)
     }
 }
-
-#endif

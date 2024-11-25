@@ -4,8 +4,6 @@
 //  © 2022 Steffan Andrews • Licensed under MIT License
 //
 
-#if shouldTestCurrentPlatform
-
 import XCTest
 import OTCore
 import OSLog
@@ -241,5 +239,3 @@ extension OSLog {
         category: "General"
     )
 }
-
-#endif

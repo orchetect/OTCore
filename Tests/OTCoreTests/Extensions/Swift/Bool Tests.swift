@@ -4,8 +4,6 @@
 //  © 2022 Steffan Andrews • Licensed under MIT License
 //
 
-#if shouldTestCurrentPlatform
-
 import XCTest
 import OTCore
 
@@ -74,5 +72,3 @@ class Extensions_Swift_Bool_Tests: XCTestCase {
         XCTAssertEqual(123.boolValue, true)
     }
 }
-
-#endif

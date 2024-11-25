@@ -4,8 +4,6 @@
 //  © 2022 Steffan Andrews • Licensed under MIT License
 //
 
-#if shouldTestCurrentPlatform
-
 import XCTest
 @testable import OTCore
 
@@ -37,5 +35,3 @@ class Extensions_Foundation_IntegersAndFoundation_Tests: XCTestCase {
         XCTAssertEqual(UInt64(1).string(paddedTo: 1), "1")
     }
 }
-
-#endif

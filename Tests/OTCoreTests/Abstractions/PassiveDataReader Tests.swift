@@ -4,8 +4,6 @@
 //  © 2022 Steffan Andrews • Licensed under MIT License
 //
 
-#if shouldTestCurrentPlatform
-
 import XCTest
 import OTCore
 
@@ -331,5 +329,3 @@ class Abstractions_PassiveDataReader_Tests: XCTestCase {
         XCTAssertEqual(getByte, 0x02)
     }
 }
-
-#endif

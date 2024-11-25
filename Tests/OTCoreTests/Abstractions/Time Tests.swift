@@ -4,8 +4,6 @@
 //  © 2024 Steffan Andrews • Licensed under MIT License
 //
 
-#if shouldTestCurrentPlatform
-
 import XCTest
 /* @testable */ import OTCore
 
@@ -427,5 +425,3 @@ final class Abstractions_Time_Tests: XCTestCase {
         XCTAssertFalse(Time(seconds: 20) < Time(seconds: 20))
     }
 }
-
-#endif

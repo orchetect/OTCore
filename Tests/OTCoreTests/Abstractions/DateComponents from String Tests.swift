@@ -4,8 +4,6 @@
 //  © 2022 Steffan Andrews • Licensed under MIT License
 //
 
-#if shouldTestCurrentPlatform
-
 import XCTest
 import OTCore
 
@@ -218,5 +216,3 @@ class Abstractions_DateComponentsFromString_Tests: XCTestCase {
         )
     }
 }
-
-#endif

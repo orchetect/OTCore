@@ -4,8 +4,6 @@
 //  © 2022 Steffan Andrews • Licensed under MIT License
 //
 
-#if shouldTestCurrentPlatform
-
 import XCTest
 import OTCore
 import XCTestUtils
@@ -91,5 +89,3 @@ class Algorithms_CollectionBinarySearch_Tests: XCTestCase {
         XCTAssertEqual([-4, -3, -2, 3, 4, 6].binarySearch(forValue: 6), 5 ... 5)
     }
 }
-
-#endif

@@ -4,8 +4,6 @@
 //  © 2022 Steffan Andrews • Licensed under MIT License
 //
 
-#if shouldTestCurrentPlatform
-
 import XCTest
 import OTCore
 
@@ -37,5 +35,3 @@ class Abstractions_Validated_Tests: XCTestCase {
         XCTAssertEqual(someStruct.value, 10)
     }
 }
-
-#endif

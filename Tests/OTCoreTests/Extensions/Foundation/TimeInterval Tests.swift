@@ -4,8 +4,6 @@
 //  © 2022 Steffan Andrews • Licensed under MIT License
 //
 
-#if shouldTestCurrentPlatform
-
 import XCTest
 @testable import OTCore
 
@@ -19,5 +17,3 @@ class Extensions_Foundation_TimeInterval_Tests: XCTestCase {
         XCTAssertEqual(ti, TimeInterval(1.234_567_891))
     }
 }
-
-#endif

@@ -4,8 +4,6 @@
 //  © 2022 Steffan Andrews • Licensed under MIT License
 //
 
-#if shouldTestCurrentPlatform
-
 import XCTest
 import OTCore
 
@@ -83,5 +81,3 @@ class Abstractions_ZeroIndexedCollection_Tests: XCTestCase {
         XCTAssertEqual(coll[4], "E")
     }
 }
-
-#endif

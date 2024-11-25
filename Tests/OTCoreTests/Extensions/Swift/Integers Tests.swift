@@ -4,8 +4,6 @@
 //  © 2022 Steffan Andrews • Licensed under MIT License
 //
 
-#if shouldTestCurrentPlatform
-
 import XCTest
 import OTCore
 
@@ -583,5 +581,3 @@ class Extensions_Swift_Integers_Tests: XCTestCase {
         XCTAssertEqual((-205).numberOfDigits, 3)
     }
 }
-
-#endif

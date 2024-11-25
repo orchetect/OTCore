@@ -4,8 +4,6 @@
 //  © 2022 Steffan Andrews • Licensed under MIT License
 //
 
-#if shouldTestCurrentPlatform
-
 import XCTest
 import OTCore
 
@@ -209,5 +207,3 @@ class Abstractions_Clamped_Tests: XCTestCase {
         XCTAssertEqual(someStruct.value, Int.max)
     }
 }
-
-#endif

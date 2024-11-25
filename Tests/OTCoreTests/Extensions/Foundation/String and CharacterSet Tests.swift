@@ -4,8 +4,6 @@
 //  © 2022 Steffan Andrews • Licensed under MIT License
 //
 
-#if shouldTestCurrentPlatform
-
 import XCTest
 @testable import OTCore
 
@@ -255,5 +253,3 @@ class Extensions_Foundation_StringAndCharacterSet_Tests: XCTestCase {
         XCTAssertFalse("!@#$ [],.".contains(any: .letters, .decimalDigits))
     }
 }
-
-#endif
