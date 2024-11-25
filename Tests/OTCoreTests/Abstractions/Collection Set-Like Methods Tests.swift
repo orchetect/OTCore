@@ -32,7 +32,7 @@ class Abstractions_CollectionSetLikeMethods_Tests: XCTestCase {
     func testArraySetFunctionality_Update_UniqueAssociatedValues() {
         // .update
         
-        var arr: [fooEnum] = [.foo(1), .foo(2), .foo(3)]
+        var arr: [FooEnum] = [.foo(1), .foo(2), .foo(3)]
         
         arr.update(with: .foo(1))
         XCTAssertEqual(arr, [.foo(1), .foo(2), .foo(3)])
@@ -56,7 +56,7 @@ class Abstractions_CollectionSetLikeMethods_Tests: XCTestCase {
     func testArraySetFunctionality_Update_NonUniqueAssociatedValues() {
         // .update
         
-        var arr: [fooEnum] = [.foo(1), .fooB(1), .one]
+        var arr: [FooEnum] = [.foo(1), .fooB(1), .one]
         
         arr.update(with: .fooB(1))
         XCTAssertEqual(
@@ -143,7 +143,7 @@ class Abstractions_CollectionSetLikeMethods_Tests: XCTestCase {
     func testArraySetFunctionality_Union() {
         // .union
         
-        var arr1: [fooEnum] = []
+        var arr1: [FooEnum] = []
         
         arr1 = [.foo(1), .one]
         var arr2 = arr1.union([.foo(2), .one, .two, .three])

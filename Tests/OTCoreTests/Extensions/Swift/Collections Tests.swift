@@ -1173,7 +1173,7 @@ class Extensions_Swift_Collections_Tests: XCTestCase {
     func testSetUnion() {
         // .union
         
-        var set: Set<fooEnum> = [.fooB(1), .one]
+        var set: Set<FooEnum> = [.fooB(1), .one]
         
         let setA = set.union([.fooB(2), .two])
         XCTAssertEqual(
