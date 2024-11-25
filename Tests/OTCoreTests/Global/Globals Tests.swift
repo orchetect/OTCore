@@ -4,20 +4,18 @@
 //  © 2022 Steffan Andrews • Licensed under MIT License
 //
 
-import XCTest
+import Foundation
+import Testing
 import OTCore
 
-class Global_Globals_Tests: XCTestCase {
-    override func setUp() { super.setUp() }
-    override func tearDown() { super.tearDown() }
-    
-    func testBundle() {
+@Suite struct Global_Globals_Tests {
+    @Test func testBundle() {
         // this test could break in future versions of Xcode/XCTest
         // but we'll test what 'known values' we can here
         
-        XCTAssertEqual(Globals.MainBundle.name, "xctest")
+        #expect(Globals.MainBundle.name == "xctest")
         
-        XCTAssertEqual(Globals.MainBundle.bundleID, "com.apple.dt.xctest.tool")
+        #expect(Globals.MainBundle.bundleID == "com.apple.dt.xctest.tool")
         
         // XCTest in Xcode 12 and earlier doesn't return a value
         // So there isn't a meaningful way to test this
@@ -29,13 +27,13 @@ class Global_Globals_Tests: XCTestCase {
         // So there isn't a meaningful way to test this
         //   Xcode 12.4 == 0
         //   Xcode 13   == 13
-        XCTAssert(Globals.MainBundle.versionMajor > -1)
+        #expect(Globals.MainBundle.versionMajor > -1)
         
         // XCTest appears to always return a non-empty value
-        XCTAssertTrue(Globals.MainBundle.versionBuildNumber != "")
+        #expect(Globals.MainBundle.versionBuildNumber != "")
     }
     
-    func testSystem() {
+    @Test func testSystem() async {
         // values cannot be tested explicitly since they vary by system
         
         #if os(macOS)
@@ -44,31 +42,31 @@ class Global_Globals_Tests: XCTestCase {
         _ = Globals.System.fullUserName
         #endif
         
-        XCTAssert(Globals.System.osVersion != "")
+        #expect(Globals.System.osVersion != "")
         
         #if !os(watchOS)
-        XCTAssert(Globals.System.name != "")
+        #expect(await Globals.System.name != "")
         #endif
         
         #if os(macOS)
-        XCTAssertNotNil(Globals.System.serialNumber)
+        #expect(Globals.System.serialNumber != nil)
         
-        XCTAssertNotNil(Globals.System.hardwareUUID)
+        #expect(Globals.System.hardwareUUID != nil)
         #endif
     }
     
-    func testBundle_infoDictionaryString() {
+    @Test func testBundle_infoDictionaryString() {
         // String key name
         
-        XCTAssertEqual(
-            Bundle.main.infoDictionaryString(key: kCFBundleIdentifierKey as String),
+        #expect(
+            Bundle.main.infoDictionaryString(key: kCFBundleIdentifierKey as String) ==
             "com.apple.dt.xctest.tool"
         )
         
         // CFString key name
         
-        XCTAssertEqual(
-            Bundle.main.infoDictionaryString(key: kCFBundleIdentifierKey),
+        #expect(
+            Bundle.main.infoDictionaryString(key: kCFBundleIdentifierKey) ==
             "com.apple.dt.xctest.tool"
         )
     }
