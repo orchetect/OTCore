@@ -326,6 +326,7 @@ class Abstractions_Transformable_Tests: XCTestCase {
         _ = Optional(CGPoint(x: 5, y: 8))?.transformed { "\($0)" }
     }
     
+    @MainActor
     func testPlatforms_Transform() {
         // all platforms
         

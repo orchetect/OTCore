@@ -14,6 +14,7 @@ class Extensions_AppKit_NSEvent_Tests: XCTestCase {
     override func setUp() { super.setUp() }
     override func tearDown() { super.tearDown() }
     
+    @MainActor
     func testLocationInView() {
         let view = NSView(frame: NSRect())
         let subview = NSView(frame: NSRect())

@@ -6,17 +6,23 @@
 
 #if shouldTestCurrentPlatform
 
-import XCTest
+import Foundation
+import Testing
 @testable import OTCore
 
-fileprivate var ud: UserDefaults!
+fileprivate let domain = "com.orchetect.otcore.userdefaultstests"
 
-class Extensions_Foundation_UserDefaults_Tests: XCTestCase {
-    fileprivate let domain = "com.orchetect.otcore.userdefaultstests"
+extension UserDefaults {
+    fileprivate static var testSuite: UserDefaults {
+        UserDefaults(suiteName: domain)!
+    }
+}
+
+@Suite(.serialized)
+struct Extensions_Foundation_UserDefaults_Tests {
+    let ud = UserDefaults.testSuite
     
-    override func setUp() {
-        super.setUp()
-        
+    init() throws {
         // since we are accessing actual UserDefaults for these tests,
         // we need to ensure resiliency and do not mutate them
         
@@ -24,35 +30,19 @@ class Extensions_Foundation_UserDefaults_Tests: XCTestCase {
         
         // just in case, remove suite in case it wasn't cleaned up properly
         UserDefaults.standard.removePersistentDomain(forName: domain)
-        
-        // set up new UserDefaults suite
-        ud = UserDefaults(suiteName: domain)
-        
-        guard ud != nil else {
-            XCTFail("Could not set up UserDefaults suite for testing.")
-            return
-        }
     }
     
-    override func tearDown() {
-        super.tearDown()
-        
-        // clean up
-        UserDefaults.standard.removePersistentDomain(forName: domain)
-    }
-    
-    func testOptionalGetters() {
+    @Test func optionalGetters() {
         // push sample data to volatile user defaults
         
         // prep sample key/value data
         
-        let dict: [String: Any] =
-            [
-                "someInt": 123,
-                "someDouble": 123.456,
-                "someFloat": Float(0.123456),
-                "someBool": true
-            ]
+        let dict: [String: Any] = [
+            "someInt": 123,
+            "someDouble": 123.456,
+            "someFloat": Float(0.123456),
+            "someBool": true
+        ]
         
         for (key, value) in dict {
             ud.setValue(value, forKey: key)
@@ -62,50 +52,50 @@ class Extensions_Foundation_UserDefaults_Tests: XCTestCase {
         
         // existent values
         
-        XCTAssertEqual(ud.integerOptional(forKey: "someInt"), 123)
-        XCTAssertEqual(ud.doubleOptional(forKey: "someDouble"), 123.456)
-        XCTAssertEqual(ud.floatOptional(forKey: "someFloat"), 0.123456)
-        XCTAssertEqual(ud.boolOptional(forKey: "someBool"), true)
+        #expect(ud.integerOptional(forKey: "someInt") == 123)
+        #expect(ud.doubleOptional(forKey: "someDouble") == 123.456)
+        #expect(ud.floatOptional(forKey: "someFloat") == 0.123456)
+        #expect(ud.boolOptional(forKey: "someBool") == true)
         
         // non-existent values
         
-        XCTAssertNil(ud.integerOptional(forKey: "does_not_exist"))
-        XCTAssertNil(ud.doubleOptional(forKey: "does_not_exist"))
-        XCTAssertNil(ud.floatOptional(forKey: "does_not_exist"))
-        XCTAssertNil(ud.boolOptional(forKey: "does_not_exist"))
+        #expect(ud.integerOptional(forKey: "does_not_exist") == nil)
+        #expect(ud.doubleOptional(forKey: "does_not_exist") == nil)
+        #expect(ud.floatOptional(forKey: "does_not_exist") == nil)
+        #expect(ud.boolOptional(forKey: "does_not_exist") == nil)
         
         // key exists?
-        XCTAssertTrue(ud.exists(key: "someInt"))
-        XCTAssertTrue(ud.exists(key: "someDouble"))
-        XCTAssertTrue(ud.exists(key: "someFloat"))
-        XCTAssertTrue(ud.exists(key: "someBool"))
-        XCTAssertFalse(ud.exists(key: "does_not_exist"))
+        #expect(ud.exists(key: "someInt"))
+        #expect(ud.exists(key: "someDouble"))
+        #expect(ud.exists(key: "someFloat"))
+        #expect(ud.exists(key: "someBool"))
+        #expect(!ud.exists(key: "does_not_exist"))
     }
     
-    func testUserDefaultsStorage_Defaulted_NoPreviousValue() {
+    @Test func userDefaultsStorage_Defaulted_NoPreviousValue() {
         struct DummyPrefs {
             static let prefKey = "defaultedPref"
             
-            @UserDefaultsStorage(key: prefKey, storage: ud)
+            @UserDefaultsStorage(key: prefKey, storage: .testSuite)
             var pref = 2
         }
         
         var dummyPrefs = DummyPrefs()
         
-        XCTAssertEqual(ud.integer(forKey: DummyPrefs.prefKey), 2)
-        XCTAssertEqual(dummyPrefs.pref, 2)
+        #expect(ud.integer(forKey: DummyPrefs.prefKey) == 2)
+        #expect(dummyPrefs.pref == 2)
         
         dummyPrefs.pref = 4
         
-        XCTAssertEqual(ud.integer(forKey: DummyPrefs.prefKey), 4)
-        XCTAssertEqual(dummyPrefs.pref, 4)
+        #expect(ud.integer(forKey: DummyPrefs.prefKey) == 4)
+        #expect(dummyPrefs.pref == 4)
     }
     
-    func testUserDefaultsStorage_Defaulted_HasPreviousValue() {
+    @Test func userDefaultsStorage_Defaulted_HasPreviousValue() {
         struct DummyPrefs {
             static let prefKey = "defaultedPref"
             
-            @UserDefaultsStorage(key: prefKey, storage: ud)
+            @UserDefaultsStorage(key: prefKey, storage: .testSuite)
             var pref = 2
         }
         
@@ -114,45 +104,45 @@ class Extensions_Foundation_UserDefaults_Tests: XCTestCase {
         
         var dummyPrefs = DummyPrefs()
         
-        XCTAssertEqual(ud.integer(forKey: DummyPrefs.prefKey), 6)
-        XCTAssertEqual(dummyPrefs.pref, 6)
+        #expect(ud.integer(forKey: DummyPrefs.prefKey) == 6)
+        #expect(dummyPrefs.pref == 6)
         
         dummyPrefs.pref = 4
         
-        XCTAssertEqual(ud.integer(forKey: DummyPrefs.prefKey), 4)
-        XCTAssertEqual(dummyPrefs.pref, 4)
+        #expect(ud.integer(forKey: DummyPrefs.prefKey) == 4)
+        #expect(dummyPrefs.pref == 4)
     }
     
-    func testUserDefaultsStorage_NonDefaulted_NoPreviousValue() {
+    @Test func userDefaultsStorage_NonDefaulted_NoPreviousValue() {
         struct DummyPrefs {
             static let prefKey = "nonDefaultedPref"
             
-            @UserDefaultsStorage(key: prefKey, storage: ud)
+            @UserDefaultsStorage(key: prefKey, storage: .testSuite)
             var pref: String?
         }
         
         var dummyPrefs = DummyPrefs()
         
-        XCTAssertEqual(ud.string(forKey: DummyPrefs.prefKey), nil)
-        XCTAssertEqual(dummyPrefs.pref, nil)
+        #expect(ud.string(forKey: DummyPrefs.prefKey) == nil)
+        #expect(dummyPrefs.pref == nil)
         
         dummyPrefs.pref = "A String"
         
-        XCTAssertEqual(ud.string(forKey: DummyPrefs.prefKey), "A String")
-        XCTAssertEqual(dummyPrefs.pref, "A String")
-        XCTAssertEqual(dummyPrefs.pref!, "A String") // proves it's an Optional type
+        #expect(ud.string(forKey: DummyPrefs.prefKey) == "A String")
+        #expect(dummyPrefs.pref == "A String")
+        #expect(dummyPrefs.pref! == "A String") // proves it's an Optional type
         
         dummyPrefs.pref = nil
         
-        XCTAssertEqual(ud.string(forKey: DummyPrefs.prefKey), nil)
-        XCTAssertEqual(dummyPrefs.pref, nil)
+        #expect(ud.string(forKey: DummyPrefs.prefKey) == nil)
+        #expect(dummyPrefs.pref == nil)
     }
     
-    func testUserDefaultsStorage_NonDefaulted_HasPreviousValue() {
+    @Test func userDefaultsStorage_NonDefaulted_HasPreviousValue() {
         struct DummyPrefs {
             static let prefKey = "nonDefaultedPref"
             
-            @UserDefaultsStorage(key: prefKey, storage: ud)
+            @UserDefaultsStorage(key: prefKey, storage: .testSuite)
             var pref: String?
         }
         
@@ -161,66 +151,66 @@ class Extensions_Foundation_UserDefaults_Tests: XCTestCase {
         
         var dummyPrefs = DummyPrefs()
         
-        XCTAssertEqual(ud.string(forKey: DummyPrefs.prefKey), "Pre-Existing String")
-        XCTAssertEqual(dummyPrefs.pref, "Pre-Existing String")
+        #expect(ud.string(forKey: DummyPrefs.prefKey) == "Pre-Existing String")
+        #expect(dummyPrefs.pref == "Pre-Existing String")
         
         dummyPrefs.pref = "A String"
         
-        XCTAssertEqual(ud.string(forKey: DummyPrefs.prefKey), "A String")
-        XCTAssertEqual(dummyPrefs.pref, "A String")
-        XCTAssertEqual(dummyPrefs.pref!, "A String") // proves it's an Optional type
+        #expect(ud.string(forKey: DummyPrefs.prefKey) == "A String")
+        #expect(dummyPrefs.pref == "A String")
+        #expect(dummyPrefs.pref! == "A String") // proves it's an Optional type
         
         dummyPrefs.pref = nil
         
-        XCTAssertEqual(ud.string(forKey: DummyPrefs.prefKey), nil)
-        XCTAssertEqual(dummyPrefs.pref, nil)
+        #expect(ud.string(forKey: DummyPrefs.prefKey) == nil)
+        #expect(dummyPrefs.pref == nil)
     }
     
-    func testUserDefaultsStorage_Defaulted_Clamped_NoPreviousValue() {
+    @Test func userDefaultsStorage_Defaulted_Clamped_NoPreviousValue() {
         struct DummyPrefs {
             static let prefKey = "clampedPref"
             
-            @UserDefaultsStorage(key: prefKey, clamped: 5 ... 10, storage: ud)
+            @UserDefaultsStorage(key: prefKey, clamped: 5 ... 10, storage: .testSuite)
             var pref = 1
         }
         
         var dummyPrefs = DummyPrefs()
         
         // default value clamped
-        XCTAssertEqual(ud.integer(forKey: DummyPrefs.prefKey), 5)
-        XCTAssertEqual(dummyPrefs.pref, 5)
+        #expect(ud.integer(forKey: DummyPrefs.prefKey) == 5)
+        #expect(dummyPrefs.pref == 5)
         
         dummyPrefs.pref = 2
         
-        XCTAssertEqual(ud.integer(forKey: DummyPrefs.prefKey), 5)
-        XCTAssertEqual(dummyPrefs.pref, 5)
+        #expect(ud.integer(forKey: DummyPrefs.prefKey) == 5)
+        #expect(dummyPrefs.pref == 5)
             
         dummyPrefs.pref = 5
         
-        XCTAssertEqual(ud.integer(forKey: DummyPrefs.prefKey), 5)
-        XCTAssertEqual(dummyPrefs.pref, 5)
+        #expect(ud.integer(forKey: DummyPrefs.prefKey) == 5)
+        #expect(dummyPrefs.pref == 5)
         
         dummyPrefs.pref = 6
         
-        XCTAssertEqual(ud.integer(forKey: DummyPrefs.prefKey), 6)
-        XCTAssertEqual(dummyPrefs.pref, 6)
+        #expect(ud.integer(forKey: DummyPrefs.prefKey) == 6)
+        #expect(dummyPrefs.pref == 6)
         
         dummyPrefs.pref = 10
         
-        XCTAssertEqual(ud.integer(forKey: DummyPrefs.prefKey), 10)
-        XCTAssertEqual(dummyPrefs.pref, 10)
+        #expect(ud.integer(forKey: DummyPrefs.prefKey) == 10)
+        #expect(dummyPrefs.pref == 10)
         
         dummyPrefs.pref = 11
         
-        XCTAssertEqual(ud.integer(forKey: DummyPrefs.prefKey), 10)
-        XCTAssertEqual(dummyPrefs.pref, 10)
+        #expect(ud.integer(forKey: DummyPrefs.prefKey) == 10)
+        #expect(dummyPrefs.pref == 10)
     }
     
-    func testUserDefaultsStorage_Defaulted_Clamped_HasPreviousValue() {
+    @Test func userDefaultsStorage_Defaulted_Clamped_HasPreviousValue() {
         struct DummyPrefs {
             static let prefKey = "clampedPref"
             
-            @UserDefaultsStorage(key: prefKey, clamped: 5 ... 10, storage: ud)
+            @UserDefaultsStorage(key: prefKey, clamped: 5 ... 10, storage: .testSuite)
             var pref = 1
         }
         
@@ -230,43 +220,43 @@ class Extensions_Foundation_UserDefaults_Tests: XCTestCase {
         var dummyPrefs = DummyPrefs()
         
         // default value clamped
-        XCTAssertEqual(ud.integer(forKey: DummyPrefs.prefKey), 10)
-        XCTAssertEqual(dummyPrefs.pref, 10)
+        #expect(ud.integer(forKey: DummyPrefs.prefKey) == 10)
+        #expect(dummyPrefs.pref == 10)
         
         dummyPrefs.pref = 2
         
-        XCTAssertEqual(ud.integer(forKey: DummyPrefs.prefKey), 5)
-        XCTAssertEqual(dummyPrefs.pref, 5)
+        #expect(ud.integer(forKey: DummyPrefs.prefKey) == 5)
+        #expect(dummyPrefs.pref == 5)
         
         dummyPrefs.pref = 5
         
-        XCTAssertEqual(ud.integer(forKey: DummyPrefs.prefKey), 5)
-        XCTAssertEqual(dummyPrefs.pref, 5)
+        #expect(ud.integer(forKey: DummyPrefs.prefKey) == 5)
+        #expect(dummyPrefs.pref == 5)
         
         dummyPrefs.pref = 6
         
-        XCTAssertEqual(ud.integer(forKey: DummyPrefs.prefKey), 6)
-        XCTAssertEqual(dummyPrefs.pref, 6)
+        #expect(ud.integer(forKey: DummyPrefs.prefKey) == 6)
+        #expect(dummyPrefs.pref == 6)
         
         dummyPrefs.pref = 10
         
-        XCTAssertEqual(ud.integer(forKey: DummyPrefs.prefKey), 10)
-        XCTAssertEqual(dummyPrefs.pref, 10)
+        #expect(ud.integer(forKey: DummyPrefs.prefKey) == 10)
+        #expect(dummyPrefs.pref == 10)
         
         dummyPrefs.pref = 11
         
-        XCTAssertEqual(ud.integer(forKey: DummyPrefs.prefKey), 10)
-        XCTAssertEqual(dummyPrefs.pref, 10)
+        #expect(ud.integer(forKey: DummyPrefs.prefKey) == 10)
+        #expect(dummyPrefs.pref == 10)
     }
     
-    func testUserDefaultsStorage_Defaulted_Validated_NoPreviousValue() {
+    @Test func userDefaultsStorage_Defaulted_Validated_NoPreviousValue() {
         struct DummyPrefs {
             static let prefKey = "validatedPref"
             
             @UserDefaultsStorage(
                 key: prefKey,
                 validation: { $0.clamped(to: 5 ... 10) },
-                storage: ud
+                storage: .testSuite
             )
             var pref = 1
         }
@@ -274,43 +264,43 @@ class Extensions_Foundation_UserDefaults_Tests: XCTestCase {
         var dummyPrefs = DummyPrefs()
         
         // default value clamped
-        XCTAssertEqual(ud.integer(forKey: DummyPrefs.prefKey), 5)
-        XCTAssertEqual(dummyPrefs.pref, 5)
+        #expect(ud.integer(forKey: DummyPrefs.prefKey) == 5)
+        #expect(dummyPrefs.pref == 5)
         
         dummyPrefs.pref = 2
         
-        XCTAssertEqual(ud.integer(forKey: DummyPrefs.prefKey), 5)
-        XCTAssertEqual(dummyPrefs.pref, 5)
+        #expect(ud.integer(forKey: DummyPrefs.prefKey) == 5)
+        #expect(dummyPrefs.pref == 5)
         
         dummyPrefs.pref = 5
         
-        XCTAssertEqual(ud.integer(forKey: DummyPrefs.prefKey), 5)
-        XCTAssertEqual(dummyPrefs.pref, 5)
+        #expect(ud.integer(forKey: DummyPrefs.prefKey) == 5)
+        #expect(dummyPrefs.pref == 5)
         
         dummyPrefs.pref = 6
         
-        XCTAssertEqual(ud.integer(forKey: DummyPrefs.prefKey), 6)
-        XCTAssertEqual(dummyPrefs.pref, 6)
+        #expect(ud.integer(forKey: DummyPrefs.prefKey) == 6)
+        #expect(dummyPrefs.pref == 6)
         
         dummyPrefs.pref = 10
         
-        XCTAssertEqual(ud.integer(forKey: DummyPrefs.prefKey), 10)
-        XCTAssertEqual(dummyPrefs.pref, 10)
+        #expect(ud.integer(forKey: DummyPrefs.prefKey) == 10)
+        #expect(dummyPrefs.pref == 10)
         
         dummyPrefs.pref = 11
         
-        XCTAssertEqual(ud.integer(forKey: DummyPrefs.prefKey), 10)
-        XCTAssertEqual(dummyPrefs.pref, 10)
+        #expect(ud.integer(forKey: DummyPrefs.prefKey) == 10)
+        #expect(dummyPrefs.pref == 10)
     }
     
-    func testUserDefaultsStorage_Defaulted_Validated_HasPreviousValue() {
+    @Test func userDefaultsStorage_Defaulted_Validated_HasPreviousValue() {
         struct DummyPrefs {
             static let prefKey = "validatedPref"
             
             @UserDefaultsStorage(
                 key: prefKey,
                 validation: { $0.clamped(to: 5 ... 10) },
-                storage: ud
+                storage: .testSuite
             )
             var pref = 1
         }
@@ -321,36 +311,36 @@ class Extensions_Foundation_UserDefaults_Tests: XCTestCase {
         var dummyPrefs = DummyPrefs()
         
         // default value validated
-        XCTAssertEqual(ud.integer(forKey: DummyPrefs.prefKey), 10)
-        XCTAssertEqual(dummyPrefs.pref, 10)
+        #expect(ud.integer(forKey: DummyPrefs.prefKey) == 10)
+        #expect(dummyPrefs.pref == 10)
         
         dummyPrefs.pref = 2
         
-        XCTAssertEqual(ud.integer(forKey: DummyPrefs.prefKey), 5)
-        XCTAssertEqual(dummyPrefs.pref, 5)
+        #expect(ud.integer(forKey: DummyPrefs.prefKey) == 5)
+        #expect(dummyPrefs.pref == 5)
         
         dummyPrefs.pref = 5
         
-        XCTAssertEqual(ud.integer(forKey: DummyPrefs.prefKey), 5)
-        XCTAssertEqual(dummyPrefs.pref, 5)
+        #expect(ud.integer(forKey: DummyPrefs.prefKey) == 5)
+        #expect(dummyPrefs.pref == 5)
         
         dummyPrefs.pref = 6
         
-        XCTAssertEqual(ud.integer(forKey: DummyPrefs.prefKey), 6)
-        XCTAssertEqual(dummyPrefs.pref, 6)
+        #expect(ud.integer(forKey: DummyPrefs.prefKey) == 6)
+        #expect(dummyPrefs.pref == 6)
         
         dummyPrefs.pref = 10
         
-        XCTAssertEqual(ud.integer(forKey: DummyPrefs.prefKey), 10)
-        XCTAssertEqual(dummyPrefs.pref, 10)
+        #expect(ud.integer(forKey: DummyPrefs.prefKey) == 10)
+        #expect(dummyPrefs.pref == 10)
         
         dummyPrefs.pref = 11
         
-        XCTAssertEqual(ud.integer(forKey: DummyPrefs.prefKey), 10)
-        XCTAssertEqual(dummyPrefs.pref, 10)
+        #expect(ud.integer(forKey: DummyPrefs.prefKey) == 10)
+        #expect(dummyPrefs.pref == 10)
     }
     
-    func testUserDefaultsStorage_Defaulted_GetSet_NoPreviousValue() {
+    @Test func userDefaultsStorage_Defaulted_GetSet_NoPreviousValue() {
         struct DummyPrefs {
             static let prefKey = "transformedPref"
             
@@ -358,7 +348,7 @@ class Extensions_Foundation_UserDefaults_Tests: XCTestCase {
                 key: prefKey,
                 get: { Int($0) },
                 set: { $0 < 5 ? "\($0)" : nil },
-                storage: ud
+                storage: .testSuite
             )
             var pref: Int = 1
         }
@@ -366,22 +356,22 @@ class Extensions_Foundation_UserDefaults_Tests: XCTestCase {
         var dummyPrefs = DummyPrefs()
         
         // default value
-        XCTAssertEqual(ud.integer(forKey: DummyPrefs.prefKey), 1)
-        XCTAssertEqual(dummyPrefs.pref, 1)
+        #expect(ud.integer(forKey: DummyPrefs.prefKey) == 1)
+        #expect(dummyPrefs.pref == 1)
         
         dummyPrefs.pref = 2
         
-        XCTAssertEqual(ud.integer(forKey: DummyPrefs.prefKey), 2)
-        XCTAssertEqual(dummyPrefs.pref, 2)
+        #expect(ud.integer(forKey: DummyPrefs.prefKey) == 2)
+        #expect(dummyPrefs.pref == 2)
         
         dummyPrefs.pref = 10
         
         // reverts to default since value of 10 will return nil from set closure
-        XCTAssertEqual(ud.integer(forKey: DummyPrefs.prefKey), 1)
-        XCTAssertEqual(dummyPrefs.pref, 1)
+        #expect(ud.integer(forKey: DummyPrefs.prefKey) == 1)
+        #expect(dummyPrefs.pref == 1)
     }
     
-    func testUserDefaultsStorage_Defaulted_GetSet_HasPreviousValue() {
+    @Test func userDefaultsStorage_Defaulted_GetSet_HasPreviousValue() {
         struct DummyPrefs {
             static let prefKey = "transformedPref"
             
@@ -389,7 +379,7 @@ class Extensions_Foundation_UserDefaults_Tests: XCTestCase {
                 key: prefKey,
                 get: { Int($0) },
                 set: { $0 < 8 ? "\($0)" : nil },
-                storage: ud
+                storage: .testSuite
             )
             var pref: Int = 1
         }
@@ -400,16 +390,16 @@ class Extensions_Foundation_UserDefaults_Tests: XCTestCase {
         var dummyPrefs = DummyPrefs()
         
         // default value
-        XCTAssertEqual(ud.integer(forKey: DummyPrefs.prefKey), 6)
-        XCTAssertEqual(dummyPrefs.pref, 6)
+        #expect(ud.integer(forKey: DummyPrefs.prefKey) == 6)
+        #expect(dummyPrefs.pref == 6)
         
         dummyPrefs.pref = 4
         
-        XCTAssertEqual(ud.integer(forKey: DummyPrefs.prefKey), 4)
-        XCTAssertEqual(dummyPrefs.pref, 4)
+        #expect(ud.integer(forKey: DummyPrefs.prefKey) == 4)
+        #expect(dummyPrefs.pref == 4)
     }
     
-    func testUserDefaultsStorage_NonDefaulted_GetSet_NoPreviousValue() {
+    @Test func userDefaultsStorage_NonDefaulted_GetSet_NoPreviousValue() {
         struct DummyPrefs {
             static let prefKey = "nonDefaultedTransformedPref"
             
@@ -417,7 +407,7 @@ class Extensions_Foundation_UserDefaults_Tests: XCTestCase {
                 key: prefKey,
                 get: { Int($0) },
                 set: { $0 != nil ? "\($0!)" : nil },
-                storage: ud
+                storage: .testSuite
             )
             var pref: Int?
         }
@@ -425,21 +415,21 @@ class Extensions_Foundation_UserDefaults_Tests: XCTestCase {
         var dummyPrefs = DummyPrefs()
         
         // default value
-        XCTAssertEqual(ud.integerOptional(forKey: DummyPrefs.prefKey), nil)
-        XCTAssertEqual(dummyPrefs.pref, nil)
+        #expect(ud.integerOptional(forKey: DummyPrefs.prefKey) == nil)
+        #expect(dummyPrefs.pref == nil)
         
         dummyPrefs.pref = 2
         
-        XCTAssertEqual(ud.integerOptional(forKey: DummyPrefs.prefKey), 2)
-        XCTAssertEqual(dummyPrefs.pref, 2)
+        #expect(ud.integerOptional(forKey: DummyPrefs.prefKey) == 2)
+        #expect(dummyPrefs.pref == 2)
         
         dummyPrefs.pref = nil
         
-        XCTAssertEqual(ud.integerOptional(forKey: DummyPrefs.prefKey), nil)
-        XCTAssertEqual(dummyPrefs.pref, nil)
+        #expect(ud.integerOptional(forKey: DummyPrefs.prefKey) == nil)
+        #expect(dummyPrefs.pref == nil)
     }
     
-    func testUserDefaultsStorage_NonDefaulted_GetSet_HasPreviousValue() {
+    @Test func userDefaultsStorage_NonDefaulted_GetSet_HasPreviousValue() {
         struct DummyPrefs {
             static let prefKey = "nonDefaultedTransformedPref"
             
@@ -447,7 +437,7 @@ class Extensions_Foundation_UserDefaults_Tests: XCTestCase {
                 key: prefKey,
                 get: { Int($0) },
                 set: { $0 != nil ? "\($0!)" : nil },
-                storage: ud
+                storage: .testSuite
             )
             var pref: Int?
         }
@@ -458,16 +448,16 @@ class Extensions_Foundation_UserDefaults_Tests: XCTestCase {
         var dummyPrefs = DummyPrefs()
         
         // default value
-        XCTAssertEqual(ud.integer(forKey: DummyPrefs.prefKey), 6)
-        XCTAssertEqual(dummyPrefs.pref, 6)
+        #expect(ud.integer(forKey: DummyPrefs.prefKey) == 6)
+        #expect(dummyPrefs.pref == 6)
         
         dummyPrefs.pref = 4
         
-        XCTAssertEqual(ud.integer(forKey: DummyPrefs.prefKey), 4)
-        XCTAssertEqual(dummyPrefs.pref, 4)
+        #expect(ud.integer(forKey: DummyPrefs.prefKey) == 4)
+        #expect(dummyPrefs.pref == 4)
     }
     
-    func testUserDefaultsStorage_ComputedOnly_Generic() {
+    @Test func userDefaultsStorage_ComputedOnly_Generic() {
         struct DummyPrefs {
             static let prefKey = "computedOnlyPref"
             
@@ -476,7 +466,7 @@ class Extensions_Foundation_UserDefaults_Tests: XCTestCase {
                 key: prefKey,
                 get: { $0 != nil ? Int($0!) ?? 0 : 0 },
                 set: { "\($0)" },
-                storage: ud
+                storage: .testSuite
             )
             private var pref1: Int
             
@@ -487,7 +477,7 @@ class Extensions_Foundation_UserDefaults_Tests: XCTestCase {
                     storedValue != nil ? Int(storedValue!) ?? 0 : 0
                 },
                 set: { (newValue: Int) -> String in "\(newValue)" },
-                storage: ud
+                storage: .testSuite
             )
             private var pref2: Int
         }
@@ -495,7 +485,7 @@ class Extensions_Foundation_UserDefaults_Tests: XCTestCase {
         _ = DummyPrefs() // forces property wrappers to init
     }
     
-    func testUserDefaultsStorage_ComputedOnly_NoPreviousValue() {
+    @Test func userDefaultsStorage_ComputedOnly_NoPreviousValue() {
         struct DummyPrefs {
             static let prefKey = "computedOnlyPref"
             
@@ -503,7 +493,7 @@ class Extensions_Foundation_UserDefaults_Tests: XCTestCase {
                 key: prefKey,
                 get: { $0 != nil ? Int($0!) ?? -1 : -1 },
                 set: { "\($0)" },
-                storage: ud
+                storage: .testSuite
             )
             var pref: Int
         }
@@ -511,16 +501,16 @@ class Extensions_Foundation_UserDefaults_Tests: XCTestCase {
         var dummyPrefs = DummyPrefs()
         
         // default value
-        XCTAssertEqual(ud.integerOptional(forKey: DummyPrefs.prefKey), nil)
-        XCTAssertEqual(dummyPrefs.pref, -1)
+        #expect(ud.integerOptional(forKey: DummyPrefs.prefKey) == nil)
+        #expect(dummyPrefs.pref == -1)
         
         dummyPrefs.pref = 4
         
-        XCTAssertEqual(ud.integerOptional(forKey: DummyPrefs.prefKey), 4)
-        XCTAssertEqual(dummyPrefs.pref, 4)
+        #expect(ud.integerOptional(forKey: DummyPrefs.prefKey) == 4)
+        #expect(dummyPrefs.pref == 4)
     }
     
-    func testUserDefaultsStorage_ComputedOnly_Optional_NoPreviousValue() {
+    @Test func userDefaultsStorage_ComputedOnly_Optional_NoPreviousValue() {
         struct DummyPrefs {
             static let prefKey = "computedOnlyOptionalPref"
             
@@ -528,7 +518,7 @@ class Extensions_Foundation_UserDefaults_Tests: XCTestCase {
                 key: prefKey,
                 get: { $0 != nil ? Int($0!) ?? -1 : -1 },
                 set: { "\($0 ?? -1)" },
-                storage: ud
+                storage: .testSuite
             )
             var pref: Int?
         }
@@ -536,21 +526,21 @@ class Extensions_Foundation_UserDefaults_Tests: XCTestCase {
         var dummyPrefs = DummyPrefs()
         
         // default value
-        XCTAssertEqual(ud.integerOptional(forKey: DummyPrefs.prefKey), nil)
-        XCTAssertEqual(dummyPrefs.pref, -1)
+        #expect(ud.integerOptional(forKey: DummyPrefs.prefKey) == nil)
+        #expect(dummyPrefs.pref == -1)
         
         dummyPrefs.pref = 4
         
-        XCTAssertEqual(ud.integerOptional(forKey: DummyPrefs.prefKey), 4)
-        XCTAssertEqual(dummyPrefs.pref, 4)
+        #expect(ud.integerOptional(forKey: DummyPrefs.prefKey) == 4)
+        #expect(dummyPrefs.pref == 4)
         
         dummyPrefs.pref = nil
         
-        XCTAssertEqual(ud.integerOptional(forKey: DummyPrefs.prefKey), nil)
-        XCTAssertEqual(dummyPrefs.pref, -1)
+        #expect(ud.integerOptional(forKey: DummyPrefs.prefKey) == nil)
+        #expect(dummyPrefs.pref == -1)
     }
     
-    func testUserDefaultsStorage_ComputedOnly_HasPreviousValue() {
+    @Test func userDefaultsStorage_ComputedOnly_HasPreviousValue() {
         struct DummyPrefs {
             static let prefKey = "computedOnlyPref"
             
@@ -558,7 +548,7 @@ class Extensions_Foundation_UserDefaults_Tests: XCTestCase {
                 key: prefKey,
                 get: { $0 != nil ? Int($0!) ?? -1 : -1 },
                 set: { "\($0)" },
-                storage: ud
+                storage: .testSuite
             )
             var pref: Int
         }
@@ -569,16 +559,16 @@ class Extensions_Foundation_UserDefaults_Tests: XCTestCase {
         ud.set("6", forKey: DummyPrefs.prefKey)
         
         // default value
-        XCTAssertEqual(ud.integerOptional(forKey: DummyPrefs.prefKey), 6)
-        XCTAssertEqual(dummyPrefs.pref, 6)
+        #expect(ud.integerOptional(forKey: DummyPrefs.prefKey) == 6)
+        #expect(dummyPrefs.pref == 6)
         
         dummyPrefs.pref = 4
         
-        XCTAssertEqual(ud.integerOptional(forKey: DummyPrefs.prefKey), 4)
-        XCTAssertEqual(dummyPrefs.pref, 4)
+        #expect(ud.integerOptional(forKey: DummyPrefs.prefKey) == 4)
+        #expect(dummyPrefs.pref == 4)
     }
     
-    func testUserDefaultsStorage_ComputedOnly_Optional_HasPreviousValue() {
+    @Test func userDefaultsStorage_ComputedOnly_Optional_HasPreviousValue() {
         struct DummyPrefs {
             static let prefKey = "computedOnlyOptionalPref"
             
@@ -586,7 +576,7 @@ class Extensions_Foundation_UserDefaults_Tests: XCTestCase {
                 key: prefKey,
                 get: { $0 != nil ? Int($0!) ?? -1 : -1 },
                 set: { "\($0 ?? -1)" },
-                storage: ud
+                storage: .testSuite
             )
             var pref: Int?
             
@@ -594,7 +584,7 @@ class Extensions_Foundation_UserDefaults_Tests: XCTestCase {
                 key: "myPref",
                 get: { Int($0 ?? "") ?? 0 },
                 set: { "\($0)" },
-                storage: ud
+                storage: .testSuite
             )
             var myPref: Int
         }
@@ -605,21 +595,21 @@ class Extensions_Foundation_UserDefaults_Tests: XCTestCase {
         ud.set("6", forKey: DummyPrefs.prefKey)
         
         // default value
-        XCTAssertEqual(ud.integerOptional(forKey: DummyPrefs.prefKey), 6)
-        XCTAssertEqual(dummyPrefs.pref, 6)
+        #expect(ud.integerOptional(forKey: DummyPrefs.prefKey) == 6)
+        #expect(dummyPrefs.pref == 6)
         
         dummyPrefs.pref = 4
         
-        XCTAssertEqual(ud.integerOptional(forKey: DummyPrefs.prefKey), 4)
-        XCTAssertEqual(dummyPrefs.pref, 4)
+        #expect(ud.integerOptional(forKey: DummyPrefs.prefKey) == 4)
+        #expect(dummyPrefs.pref == 4)
         
         dummyPrefs.pref = nil
         
-        XCTAssertEqual(ud.integerOptional(forKey: DummyPrefs.prefKey), nil)
-        XCTAssertEqual(dummyPrefs.pref, -1)
+        #expect(ud.integerOptional(forKey: DummyPrefs.prefKey) == nil)
+        #expect(dummyPrefs.pref == -1)
     }
     
-    func testUserDefaultsStorage_ComputedOnly_URL_HasPreviousValue() {
+    @Test func userDefaultsStorage_ComputedOnly_URL_HasPreviousValue() {
         struct DummyPrefs {
             static let prefKey = "urlPref"
             
@@ -635,7 +625,7 @@ class Extensions_Foundation_UserDefaults_Tests: XCTestCase {
                 set: { newValue in
                     newValue.path
                 },
-                storage: ud
+                storage: .testSuite
             )
             var pref: URL
         }
@@ -643,44 +633,44 @@ class Extensions_Foundation_UserDefaults_Tests: XCTestCase {
         var dummyPrefs = DummyPrefs()
         
         // default value
-        XCTAssertEqual(dummyPrefs.pref.absoluteString, "file:///default")
+        #expect(dummyPrefs.pref.absoluteString == "file:///default")
         
         // set raw value
         ud.set("/Some/Path/file.txt", forKey: DummyPrefs.prefKey)
-        XCTAssertEqual(dummyPrefs.pref.absoluteString, "file:///Some/Path/file.txt")
+        #expect(dummyPrefs.pref.absoluteString == "file:///Some/Path/file.txt")
         
         // set using property wrapper
         dummyPrefs.pref = URL(fileURLWithPath: "/New/Path/newfile.txt")
-        XCTAssertEqual(dummyPrefs.pref.absoluteString, "file:///New/Path/newfile.txt")
+        #expect(dummyPrefs.pref.absoluteString == "file:///New/Path/newfile.txt")
     }
     
     // MARK: URL
     
-    func testUserDefaultsStorage_URL_Defaulted_NoPreviousValue() {
+    @Test func userDefaultsStorage_URL_Defaulted_NoPreviousValue() {
         struct DummyPrefs {
             static let prefKey = "urlPref"
             
-            @UserDefaultsStorage(key: prefKey, storage: ud)
+            @UserDefaultsStorage(key: prefKey, storage: .testSuite)
             var pref: URL = URL(fileURLWithPath: "/")
         }
         
         var dummyPrefs = DummyPrefs()
         
         // default value
-        XCTAssertEqual(ud.string(forKey: DummyPrefs.prefKey), "file:///")
-        XCTAssertEqual(dummyPrefs.pref, URL(fileURLWithPath: "/"))
+        #expect(ud.string(forKey: DummyPrefs.prefKey) == "file:///")
+        #expect(dummyPrefs.pref == URL(fileURLWithPath: "/"))
         
         dummyPrefs.pref = URL(string: "https://www.google.com/test")!
         
-        XCTAssertEqual(ud.string(forKey: DummyPrefs.prefKey), "https://www.google.com/test")
-        XCTAssertEqual(dummyPrefs.pref, URL(string: "https://www.google.com/test")!)
+        #expect(ud.string(forKey: DummyPrefs.prefKey) == "https://www.google.com/test")
+        #expect(dummyPrefs.pref == URL(string: "https://www.google.com/test")!)
     }
     
-    func testUserDefaultsStorage_URL_Defaulted_HasPreviousValue() {
+    @Test func userDefaultsStorage_URL_Defaulted_HasPreviousValue() {
         struct DummyPrefs {
             static let prefKey = "urlPref"
             
-            @UserDefaultsStorage(key: prefKey, storage: ud)
+            @UserDefaultsStorage(key: prefKey, storage: .testSuite)
             var pref: URL = URL(fileURLWithPath: "/")
         }
         
@@ -689,50 +679,50 @@ class Extensions_Foundation_UserDefaults_Tests: XCTestCase {
         // set a pre-existing value
         ud.set(URL(fileURLWithPath: "/test/").absoluteString, forKey: DummyPrefs.prefKey)
         
-        XCTAssertEqual(ud.string(forKey: DummyPrefs.prefKey), "file:///test/")
-        XCTAssertEqual(dummyPrefs.pref, URL(fileURLWithPath: "/test/"))
+        #expect(ud.string(forKey: DummyPrefs.prefKey) == "file:///test/")
+        #expect(dummyPrefs.pref == URL(fileURLWithPath: "/test/"))
         
         dummyPrefs.pref = URL(string: "https://www.google.com/test")!
         
-        XCTAssertEqual(ud.string(forKey: DummyPrefs.prefKey), "https://www.google.com/test")
-        XCTAssertEqual(dummyPrefs.pref, URL(string: "https://www.google.com/test")!)
+        #expect(ud.string(forKey: DummyPrefs.prefKey) == "https://www.google.com/test")
+        #expect(dummyPrefs.pref == URL(string: "https://www.google.com/test")!)
     }
     
-    func testUserDefaultsStorage_URL_NonDefaulted_Optional_NoPreviousValue() {
+    @Test func userDefaultsStorage_URL_NonDefaulted_Optional_NoPreviousValue() {
         struct DummyPrefs {
             static let prefKey = "urlPref"
             
-            @UserDefaultsStorage(key: prefKey, storage: ud)
+            @UserDefaultsStorage(key: prefKey, storage: .testSuite)
             var pref: URL?
         }
         
         var dummyPrefs = DummyPrefs()
         
         // default value
-        XCTAssertEqual(ud.string(forKey: DummyPrefs.prefKey), nil)
-        XCTAssertEqual(dummyPrefs.pref, nil)
+        #expect(ud.string(forKey: DummyPrefs.prefKey) == nil)
+        #expect(dummyPrefs.pref == nil)
         
         dummyPrefs.pref = URL(fileURLWithPath: "/")
         
-        XCTAssertEqual(ud.string(forKey: DummyPrefs.prefKey), "file:///")
-        XCTAssertEqual(dummyPrefs.pref, URL(fileURLWithPath: "/"))
+        #expect(ud.string(forKey: DummyPrefs.prefKey) == "file:///")
+        #expect(dummyPrefs.pref == URL(fileURLWithPath: "/"))
         
         dummyPrefs.pref = URL(string: "https://www.google.com/test")!
         
-        XCTAssertEqual(ud.string(forKey: DummyPrefs.prefKey), "https://www.google.com/test")
-        XCTAssertEqual(dummyPrefs.pref, URL(string: "https://www.google.com/test")!)
+        #expect(ud.string(forKey: DummyPrefs.prefKey) == "https://www.google.com/test")
+        #expect(dummyPrefs.pref == URL(string: "https://www.google.com/test")!)
         
         dummyPrefs.pref = nil
         
-        XCTAssertEqual(ud.string(forKey: DummyPrefs.prefKey), nil)
-        XCTAssertEqual(dummyPrefs.pref, nil)
+        #expect(ud.string(forKey: DummyPrefs.prefKey) == nil)
+        #expect(dummyPrefs.pref == nil)
     }
     
-    func testUserDefaultsStorage_URL_NonDefaulted_Optional_HasPreviousValue() {
+    @Test func userDefaultsStorage_URL_NonDefaulted_Optional_HasPreviousValue() {
         struct DummyPrefs {
             static let prefKey = "urlPref"
             
-            @UserDefaultsStorage(key: prefKey, storage: ud)
+            @UserDefaultsStorage(key: prefKey, storage: .testSuite)
             var pref: URL?
         }
         
@@ -741,98 +731,97 @@ class Extensions_Foundation_UserDefaults_Tests: XCTestCase {
         // set a pre-existing value
         ud.set(URL(fileURLWithPath: "/test/").absoluteString, forKey: DummyPrefs.prefKey)
         
-        XCTAssertEqual(ud.string(forKey: DummyPrefs.prefKey), "file:///test/")
-        XCTAssertEqual(dummyPrefs.pref, URL(fileURLWithPath: "/test/"))
+        #expect(ud.string(forKey: DummyPrefs.prefKey) == "file:///test/")
+        #expect(dummyPrefs.pref == URL(fileURLWithPath: "/test/"))
         
         dummyPrefs.pref = URL(fileURLWithPath: "/")
         
-        XCTAssertEqual(ud.string(forKey: DummyPrefs.prefKey), "file:///")
-        XCTAssertEqual(dummyPrefs.pref, URL(fileURLWithPath: "/"))
+        #expect(ud.string(forKey: DummyPrefs.prefKey) == "file:///")
+        #expect(dummyPrefs.pref == URL(fileURLWithPath: "/"))
         
         dummyPrefs.pref = URL(string: "https://www.google.com/test")!
         
-        XCTAssertEqual(ud.string(forKey: DummyPrefs.prefKey), "https://www.google.com/test")
-        XCTAssertEqual(dummyPrefs.pref, URL(string: "https://www.google.com/test")!)
+        #expect(ud.string(forKey: DummyPrefs.prefKey) == "https://www.google.com/test")
+        #expect(dummyPrefs.pref == URL(string: "https://www.google.com/test")!)
         
         dummyPrefs.pref = nil
         
-        XCTAssertEqual(ud.string(forKey: DummyPrefs.prefKey), nil)
-        XCTAssertEqual(dummyPrefs.pref, nil)
+        #expect(ud.string(forKey: DummyPrefs.prefKey) == nil)
+        #expect(dummyPrefs.pref == nil)
     }
     
     // MARK: Date
     
     @available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *) // needed for Date.advanced(by:)
-    func testUserDefaultsStorage_Date_Defaulted_NoPreviousValue() {
+    @Test func userDefaultsStorage_Date_Defaulted_NoPreviousValue() {
         struct DummyPrefs {
             static let prefKey = "datePref"
             
             static let date = Date()
             
-            @UserDefaultsStorage(key: prefKey, storage: ud)
+            @UserDefaultsStorage(key: prefKey, storage: .testSuite)
             var pref: Date = date
         }
         
         var dummyPrefs = DummyPrefs()
         
         // default value
-        XCTAssertEqual(ud.value(forKey: DummyPrefs.prefKey) as? Date, DummyPrefs.date)
-        XCTAssertEqual(dummyPrefs.pref, DummyPrefs.date)
+        #expect(ud.value(forKey: DummyPrefs.prefKey) as? Date == DummyPrefs.date)
+        #expect(dummyPrefs.pref == DummyPrefs.date)
         
         dummyPrefs.pref = DummyPrefs.date.advanced(by: 10)
         
-        XCTAssertEqual(ud.value(forKey: DummyPrefs.prefKey) as? Date,
-                       DummyPrefs.date.advanced(by: 10))
-        XCTAssertEqual(dummyPrefs.pref, DummyPrefs.date.advanced(by: 10))
+        #expect(ud.value(forKey: DummyPrefs.prefKey) as? Date == DummyPrefs.date.advanced(by: 10))
+        #expect(dummyPrefs.pref == DummyPrefs.date.advanced(by: 10))
     }
     
     // MARK: Double
     
-    func testUserDefaultsStorage_Double_Defaulted_NoPreviousValue() {
+    @Test func userDefaultsStorage_Double_Defaulted_NoPreviousValue() {
         struct DummyPrefs {
             static let prefKey = "doublePref"
             
-            @UserDefaultsStorage(key: prefKey, storage: ud)
+            @UserDefaultsStorage(key: prefKey, storage: .testSuite)
             var pref: Double = 2.0
         }
         
         var dummyPrefs = DummyPrefs()
         
         // default value
-        XCTAssertEqual(ud.double(forKey: DummyPrefs.prefKey), 2.0)
-        XCTAssertEqual(dummyPrefs.pref, 2.0)
+        #expect(ud.double(forKey: DummyPrefs.prefKey) == 2.0)
+        #expect(dummyPrefs.pref == 2.0)
         
         dummyPrefs.pref = 5.0
         
-        XCTAssertEqual(ud.double(forKey: DummyPrefs.prefKey), 5.0)
-        XCTAssertEqual(dummyPrefs.pref, 5.0)
+        #expect(ud.double(forKey: DummyPrefs.prefKey) == 5.0)
+        #expect(dummyPrefs.pref == 5.0)
     }
     
     // MARK: Float
     
-    func testUserDefaultsStorage_Float_Defaulted_NoPreviousValue() {
+    @Test func userDefaultsStorage_Float_Defaulted_NoPreviousValue() {
         struct DummyPrefs {
             static let prefKey = "floatPref"
             
-            @UserDefaultsStorage(key: prefKey, storage: ud)
+            @UserDefaultsStorage(key: prefKey, storage: .testSuite)
             var pref: Float = 2.0
         }
         
         var dummyPrefs = DummyPrefs()
         
         // default value
-        XCTAssertEqual(ud.float(forKey: DummyPrefs.prefKey), 2.0)
-        XCTAssertEqual(dummyPrefs.pref, 2.0)
+        #expect(ud.float(forKey: DummyPrefs.prefKey) == 2.0)
+        #expect(dummyPrefs.pref == 2.0)
         
         dummyPrefs.pref = 5.0
         
-        XCTAssertEqual(ud.float(forKey: DummyPrefs.prefKey), 5.0)
-        XCTAssertEqual(dummyPrefs.pref, 5.0)
+        #expect(ud.float(forKey: DummyPrefs.prefKey) == 5.0)
+        #expect(dummyPrefs.pref == 5.0)
     }
     
     // MARK: Codable
     
-    func testUserDefaultsStorage_Codable_NonDefaulted_Optional_NoPreviousValue() {
+    @Test func userDefaultsStorage_Codable_NonDefaulted_Optional_NoPreviousValue() {
         struct Prefs: Codable, Equatable {
             var someString: String
             var someInt: Int
@@ -856,28 +845,28 @@ class Extensions_Foundation_UserDefaults_Tests: XCTestCase {
                 nestedStruct: .init(nestedInt: 456, nestedString: "test")
             )
             
-            @UserDefaultsStorage(key: prefKey, storage: ud)
+            @UserDefaultsStorage(key: prefKey, storage: .testSuite)
             var pref: Prefs?
         }
         
         var dummyPrefs = DummyPrefs()
         
         // default value
-        XCTAssertNil(ud.string(forKey: DummyPrefs.prefKey))
-        XCTAssertNil(dummyPrefs.pref)
+        #expect(ud.string(forKey: DummyPrefs.prefKey) == nil)
+        #expect(dummyPrefs.pref == nil)
         
         dummyPrefs.pref = DummyPrefs.prefsTemplate
         
-        XCTAssertNotNil(ud.string(forKey: DummyPrefs.prefKey))
-        XCTAssertEqual(dummyPrefs.pref, DummyPrefs.prefsTemplate)
+        #expect(ud.string(forKey: DummyPrefs.prefKey) != nil)
+        #expect(dummyPrefs.pref == DummyPrefs.prefsTemplate)
         
         dummyPrefs.pref = nil
         
-        XCTAssertNil(ud.string(forKey: DummyPrefs.prefKey))
-        XCTAssertNil(dummyPrefs.pref)
+        #expect(ud.string(forKey: DummyPrefs.prefKey) == nil)
+        #expect(dummyPrefs.pref == nil)
     }
     
-    func testUserDefaultsStorage_Codable_Defaulted_NoPreviousValue() {
+    @Test func userDefaultsStorage_Codable_Defaulted_NoPreviousValue() {
         struct Prefs: Codable, Equatable {
             var someString: String
             var someInt: Int
@@ -901,62 +890,62 @@ class Extensions_Foundation_UserDefaults_Tests: XCTestCase {
                 nestedStruct: .init(nestedInt: 456, nestedString: "test")
             )
             
-            @UserDefaultsStorage(key: prefKey, storage: ud)
+            @UserDefaultsStorage(key: prefKey, storage: .testSuite)
             var pref: Prefs = prefsTemplate
         }
         
         var dummyPrefs = DummyPrefs()
         
         // default value
-        XCTAssertNil(ud.string(forKey: DummyPrefs.prefKey))
-        XCTAssertEqual(dummyPrefs.pref, DummyPrefs.prefsTemplate)
+        #expect(ud.string(forKey: DummyPrefs.prefKey) == nil)
+        #expect(dummyPrefs.pref == DummyPrefs.prefsTemplate)
         
         dummyPrefs.pref = DummyPrefs.prefsTemplate
         
-        XCTAssertNotNil(ud.string(forKey: DummyPrefs.prefKey))
-        XCTAssertEqual(dummyPrefs.pref, DummyPrefs.prefsTemplate)
+        #expect(ud.string(forKey: DummyPrefs.prefKey) != nil)
+        #expect(dummyPrefs.pref == DummyPrefs.prefsTemplate)
     }
     
     /// Test that a primitive type that already conforms to Codable is stored normally and
     /// not by using the Codable inits on `@UserDefaultsStorage`.
-    func testUserDefaultsStorage_String_NonCodable() {
+    @Test func userDefaultsStorage_String_NonCodable() {
         struct DummyPrefs {
             static let prefKey = "stringPref"
             
-            @UserDefaultsStorage(key: prefKey, storage: ud)
+            @UserDefaultsStorage(key: prefKey, storage: .testSuite)
             var pref: String = "A"
         }
         
         var dummyPrefs = DummyPrefs()
         
-        XCTAssertEqual(ud.string(forKey: DummyPrefs.prefKey), "A")
-        XCTAssertEqual(dummyPrefs.pref, "A")
+        #expect(ud.string(forKey: DummyPrefs.prefKey) == "A")
+        #expect(dummyPrefs.pref == "A")
         
         dummyPrefs.pref = "ABC"
         
-        XCTAssertEqual(ud.string(forKey: DummyPrefs.prefKey), "ABC")
-        XCTAssertEqual(dummyPrefs.pref, "ABC")
+        #expect(ud.string(forKey: DummyPrefs.prefKey) == "ABC")
+        #expect(dummyPrefs.pref == "ABC")
     }
     
     /// Test that a primitive type that already conforms to Codable is stored normally and
     /// not by using the Codable inits on `@UserDefaultsStorage`.
-    func testUserDefaultsStorage_String_Optional_NonCodable() {
+    @Test func userDefaultsStorage_String_Optional_NonCodable() {
         struct DummyPrefs {
             static let prefKey = "stringPref"
             
-            @UserDefaultsStorage(key: prefKey, storage: ud)
+            @UserDefaultsStorage(key: prefKey, storage: .testSuite)
             var pref: String?
         }
         
         var dummyPrefs = DummyPrefs()
         
-        XCTAssertNil(ud.string(forKey: DummyPrefs.prefKey))
-        XCTAssertNil(dummyPrefs.pref)
+        #expect(ud.string(forKey: DummyPrefs.prefKey) == nil)
+        #expect(dummyPrefs.pref == nil)
         
         dummyPrefs.pref = "ABC"
         
-        XCTAssertEqual(ud.string(forKey: DummyPrefs.prefKey), "ABC")
-        XCTAssertEqual(dummyPrefs.pref, "ABC")
+        #expect(ud.string(forKey: DummyPrefs.prefKey) == "ABC")
+        #expect(dummyPrefs.pref == "ABC")
     }
 }
 
