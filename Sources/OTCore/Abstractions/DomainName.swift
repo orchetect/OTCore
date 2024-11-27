@@ -4,16 +4,16 @@
 //  © 2024 Steffan Andrews • Licensed under MIT License
 //
 
-/// A type representing a domain name (ie: `www.apple.com`, `apple.com`, `sub.domain.apple.com`).
+/// A type representing a domain name (ie: `apple.com`, `www.apple.com`, `sub.domain.www.zzz`).
 public struct DomainName {
     /// Individual domain name components (domain name split by period (`.`) characters).
     public let components: [String]
     
-    /// The number of trailing components included in the domain extension.
+    /// The number of domain extension components included in the domain extension.
     ///
     /// For example:
-    /// - `"www.apple.com"` would have one component (`"com"`).
-    /// - `"www.apple.co.uk"` would have two components (`"co"` and `"uk"`).
+    /// - `"www.apple.com"` would have `1` component (`"com"`).
+    /// - `"www.apple.co.uk"` would have `2` components (`"co"` and `"uk"`).
     public let extensionComponentCount: Int
     
     /// Initialize a new instance from a domain name string.
@@ -22,7 +22,7 @@ public struct DomainName {
         extensionComponentCount = Self.extensionComponentCount(inDomainComponents: components)
     }
     
-    /// Initialize a new instance a domain name components (domain name split by period (`.`) characters).
+    /// Initialize a new instance from domain name components (domain name split by period (`.`) characters).
     public init(components: [String]) {
         self.components = components
         extensionComponentCount = Self.extensionComponentCount(inDomainComponents: components)
@@ -53,8 +53,8 @@ extension DomainName {
     ///
     /// For example:
     /// - `"apple.com"` or `"apple.co.uk"` returns `""`
-    /// -`"www.apple.com"` or `"www.apple.co.uk"` returns `"www"`
-    /// -`"zzz.www.apple.com"` returns `"zzz.www"`
+    /// - `"www.apple.com"` or `"www.apple.co.uk"` returns `"www"`
+    /// - `"zzz.www.apple.com"` returns `"zzz.www"`
     public var prefix: String {
         prefixComponents.joined(separator: ".")
     }
@@ -63,8 +63,8 @@ extension DomainName {
     ///
     /// For example:
     /// - `"apple.com"` or `"apple.co.uk"` returns `[]`
-    /// -`"www.apple.com"` or `"www.apple.co.uk"` returns `["www"]`
-    /// -`"zzz.www.apple.com"` returns `["zzz", "www"]`
+    /// - `"www.apple.com"` or `"www.apple.co.uk"` returns `["www"]`
+    /// - `"zzz.www.apple.com"` returns `["zzz", "www"]`
     public var prefixComponents: [String] {
         let prefixCount = max(0, components.count - (extensionComponentCount + 1))
         return Array(components.prefix(prefixCount))
