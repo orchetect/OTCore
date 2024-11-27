@@ -142,7 +142,13 @@ extension DomainName {
             "art",
             "net",
             "tm",
-            "soc"
+            "soc",
+            // No longer available
+            "conf",
+            "gw",
+            "info",
+            "otc",
+            "telememo"
         ],
         
         // Australia
@@ -355,11 +361,14 @@ extension DomainName {
             "yk"
         ],
         
-        // France (TODO: Not exhaustive)
+        // France
         "fr": [
             "acovat",
             "aeroport",
-            "veterinaire"
+            "veterinaire",
+            "tm",
+            "com",
+            "asso"
         ],
         
         // Hungary
@@ -399,6 +408,11 @@ extension DomainName {
             "erotika",
             "sex",
             "szex"
+        ],
+        
+        // Netherlands
+        "nl": [
+            "co"
         ],
         
         // New Zealand
@@ -1032,6 +1046,29 @@ extension DomainName {
             "mp",
             "pr",
             "vi"
+        ],
+        
+        // Yugoslavia
+        "yu": [
+            "ac",
+            "co",
+            "org",
+            "cg"
+        ],
+        
+        // Zambia:
+        "zm": [
+            "ac",
+            "biz",
+            "co",
+            "com",
+            "edu",
+            "gov",
+            "info",
+            "mil",
+            "net",
+            "org",
+            "sch"
         ]
     ]
     
