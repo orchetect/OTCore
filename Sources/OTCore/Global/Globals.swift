@@ -98,8 +98,7 @@ extension Globals {
         
         /// **OTCore:**
         /// On macOS, returns Mac computer name. On iOS/tvOS, returns device name.
-        @available(macOS 10.6, macCatalyst 13, iOS 2, tvOS 9, *)
-        @available(watchOS, unavailable)
+        @available(macOS 10.6, macCatalyst 13, iOS 2, tvOS 9, watchOS 1, visionOS 1, *)
         public static var name: String {
             get async {
                 #if os(macOS)
