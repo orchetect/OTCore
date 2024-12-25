@@ -106,8 +106,13 @@ extension Globals {
                 return Host.current().localizedName ?? ""
                 #elseif os(iOS) || os(tvOS)
                 return await UIDevice.current.name
+                #elseif os(watchOS)
+                return "Apple Watch"
+                #elseif os(visionOS)
+                return "Vision Pro"
                 #else
-                fatalError("Not implemented on this platform yet.")
+                assertionFailure("Not implemented on this platform yet.")
+                return "Device"
                 #endif
             }
         }

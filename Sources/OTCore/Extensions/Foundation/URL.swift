@@ -211,7 +211,7 @@ extension URL {
         
         // platform-specific logic
         
-        #if os(macOS) || targetEnvironment(macCatalyst) || os(iOS)
+        #if os(macOS) || targetEnvironment(macCatalyst) || os(iOS) || os(visionOS)
         
         if #available(macOS 10.8, iOS 11.0, *) {
             // move file to trash

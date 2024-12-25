@@ -44,9 +44,7 @@ import OTCore
         
         #expect(Globals.System.osVersion != "")
         
-        #if !os(watchOS)
         #expect(await Globals.System.name != "")
-        #endif
         
         #if os(macOS)
         #expect(Globals.System.serialNumber != nil)
