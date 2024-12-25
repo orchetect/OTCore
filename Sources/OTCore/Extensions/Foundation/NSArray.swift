@@ -11,7 +11,10 @@ import Foundation
 extension NSArray {
     /// **OTCore:**
     /// Access collection indexes safely.
-    /// `NSArray/NSMutableArray` indexes are always zero-based and sequential (0...). Therefore, a `[safePosition:]` subscript is unnecessary, as this `[safe:]` subscript fills both roles.
+    ///
+    /// > Note:
+    /// > `NSArray/NSMutableArray` indexes are always zero-based and sequential (0...).
+    /// > Therefore, a `[safePosition:]` subscript is unnecessary, as this subscript fills both roles.
     ///
     /// Example:
     ///
@@ -28,7 +31,10 @@ extension NSArray {
 extension NSMutableArray {
     /// **OTCore:**
     /// Access collection indexes safely.
-    /// `NSArray/NSMutableArray` indexes are always zero-based and sequential (0...). Therefore, a `[safePosition:]` subscript is unnecessary, as this `[safeMutable:]` subscript fills both roles.
+    ///
+    /// > Note:
+    /// > `NSArray/NSMutableArray` indexes are always zero-based and sequential (0...).
+    /// > Therefore, a `[safePosition:]` subscript is unnecessary, as this subscript fills both roles.
     ///
     /// Get: if index does not exist (out-of-bounds), `nil` is returned.
     ///
