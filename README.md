@@ -1,6 +1,6 @@
 # OTCore
 
-[![CI Build Status](https://github.com/orchetect/OTCore/actions/workflows/build.yml/badge.svg)](https://github.com/orchetect/OTCore/actions/workflows/build.yml) [![Platforms - macOS 10.15+ | iOS 13+ | tvOS 13+ | watchOS 6+ | visionOS 1+](https://img.shields.io/badge/platforms-macOS%2010.15+%20|%20iOS%2013+%20|%20tvOS%2013+%20|%20watchOS%206+%20|%20visionOS%201+-lightgrey.svg?style=flat)](https://developer.apple.com/swift) ![Swift 5.3-6.0](https://img.shields.io/badge/Swift-5.3–6.0-orange.svg?style=flat) [![Xcode 16+](https://img.shields.io/badge/Xcode-16+-blue.svg?style=flat)](https://developer.apple.com/swift) [![License: MIT](http://img.shields.io/badge/license-MIT-lightgrey.svg?style=flat)](https://github.com/orchetect/OTCore/blob/main/LICENSE)
+[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Forchetect%2FOTCore%2Fbadge%3Ftype%3Dplatforms)](https://swiftpackageindex.com/orchetect/OTCore) [![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Forchetect%2FOTCore%2Fbadge%3Ftype%3Dswift-versions)](https://swiftpackageindex.com/orchetect/OTCore) [![Xcode 16](https://img.shields.io/badge/Xcode-16-blue.svg?style=flat)](https://developer.apple.com/swift) [![License: MIT](http://img.shields.io/badge/license-MIT-lightgrey.svg?style=flat)](https://github.com/orchetect/OTCore/blob/main/LICENSE)
 
 Multi-platform Swift shared code module with useful extension methods on standard library types.
 
@@ -10,15 +10,12 @@ The library has full unit test coverage and is actively used in production.
 
 ### Dependency within an Application
 
-1. Add the package to your Xcode project using Swift Package Manager
+1. Add the package to your Xcode project using Swift Package Manager using `https://github.com/orchetect/OTCore` as the URL.
 
-   - Select File → Swift Packages → Add Package Dependency
-   - Add package using  `https://github.com/orchetect/OTCore` as the URL.
-
-2. Import the module in your *.swift files where needed.
+2. Import the module files where needed. It's recommended to use the `internal` access level if used in a package so that it is not exported to the user of your package.
 
    ```swift
-   import OTCore
+   internal import OTCore
    ```
 
 ### Dependency within a Swift Package
@@ -27,7 +24,7 @@ In your Package.swift file:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/orchetect/OTCore", from: "1.6.0")
+    .package(url: "https://github.com/orchetect/OTCore", from: "1.7.2")
 ]
 ```
 
