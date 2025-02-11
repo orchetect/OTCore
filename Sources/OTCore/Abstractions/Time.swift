@@ -278,6 +278,9 @@ extension Time: CustomStringConvertible {
 // MARK: - Static Constructors {
 
 extension Time {
+    /// Current system time.
+    public static var now: Time { Time() }
+    
     /// Zero time (`0:00`).
     public static let zero = Time(hours: 0, minutes: 0, seconds: 0, milliseconds: 0, sign: .plus)
 }
