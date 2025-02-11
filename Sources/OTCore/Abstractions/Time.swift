@@ -275,6 +275,13 @@ extension Time: CustomStringConvertible {
     }
 }
 
+// MARK: - Static Constructors {
+
+extension Time {
+    /// Zero time (`0:00`).
+    public static let zero = Time(hours: 0, minutes: 0, seconds: 0, milliseconds: 0, sign: .plus)
+}
+
 // MARK: - Format
 
 extension Time {
