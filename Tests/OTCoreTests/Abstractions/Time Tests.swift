@@ -194,6 +194,85 @@ final class Abstractions_Time_Tests: XCTestCase {
         XCTAssertEqual("\(t)", "5:46:20")
     }
     
+    func testInitString() {
+        // main components
+        XCTAssert(Time(string: "0") == Time(hours: 0, minutes: 0, seconds: 0))
+        XCTAssert(Time(string: "00") == Time(hours: 0, minutes: 0, seconds: 0))
+        XCTAssert(Time(string: "1") == Time(hours: 0, minutes: 0, seconds: 1))
+        XCTAssert(Time(string: "10") == Time(hours: 0, minutes: 0, seconds: 10))
+        XCTAssert(Time(string: "123") == Time(hours: 0, minutes: 0, seconds: 123))
+        XCTAssert(Time(string: "0:00") == Time(hours: 0, minutes: 0, seconds: 0))
+        XCTAssert(Time(string: "0:01") == Time(hours: 0, minutes: 0, seconds: 1))
+        XCTAssert(Time(string: "1:00") == Time(hours: 0, minutes: 1, seconds: 0))
+        XCTAssert(Time(string: "1:01") == Time(hours: 0, minutes: 1, seconds: 1))
+        XCTAssert(Time(string: "01:00") == Time(hours: 0, minutes: 1, seconds: 0))
+        XCTAssert(Time(string: "10:00") == Time(hours: 0, minutes: 10, seconds: 0))
+        XCTAssert(Time(string: "12:34") == Time(hours: 0, minutes: 12, seconds: 34))
+        XCTAssert(Time(string: "1:00:00") == Time(hours: 1, minutes: 0, seconds: 0))
+        XCTAssert(Time(string: "01:00:00") == Time(hours: 1, minutes: 0, seconds: 0))
+        XCTAssert(Time(string: "12:34:56") == Time(hours: 12, minutes: 34, seconds: 56))
+        XCTAssert(Time(string: "123:45:56") == Time(hours: 123, minutes: 45, seconds: 56))
+        
+        // with milliseconds
+        XCTAssert(Time(string: "0.000") == Time(hours: 0, minutes: 0, seconds: 0, milliseconds: 000))
+        XCTAssert(Time(string: "00.000") == Time(hours: 0, minutes: 0, seconds: 0, milliseconds: 000))
+        XCTAssert(Time(string: "1.123") == Time(hours: 0, minutes: 0, seconds: 1, milliseconds: 123))
+        XCTAssert(Time(string: "10.000") == Time(hours: 0, minutes: 0, seconds: 10, milliseconds: 000))
+        XCTAssert(Time(string: "0:00.000") == Time(hours: 0, minutes: 0, seconds: 0, milliseconds: 000))
+        XCTAssert(Time(string: "0:01.123") == Time(hours: 0, minutes: 0, seconds: 1, milliseconds: 123))
+        XCTAssert(Time(string: "1:00.000") == Time(hours: 0, minutes: 1, seconds: 0, milliseconds: 000))
+        XCTAssert(Time(string: "1:01.123") == Time(hours: 0, minutes: 1, seconds: 1, milliseconds: 123))
+        XCTAssert(Time(string: "01:00.000") == Time(hours: 0, minutes: 1, seconds: 0, milliseconds: 000))
+        XCTAssert(Time(string: "10:00.123") == Time(hours: 0, minutes: 10, seconds: 0, milliseconds: 123))
+        XCTAssert(Time(string: "12:34.123") == Time(hours: 0, minutes: 12, seconds: 34, milliseconds: 123))
+        XCTAssert(Time(string: "1:00:00.000") == Time(hours: 1, minutes: 0, seconds: 0, milliseconds: 000))
+        XCTAssert(Time(string: "01:00:00.000") == Time(hours: 1, minutes: 0, seconds: 0, milliseconds: 000))
+        XCTAssert(Time(string: "12:34:56.123") == Time(hours: 12, minutes: 34, seconds: 56, milliseconds: 123))
+        XCTAssert(Time(string: "123:45:56.123") == Time(hours: 123, minutes: 45, seconds: 56, milliseconds: 123))
+        
+        // negative
+        XCTAssert(Time(string: "-0:00") == Time(hours: 0, minutes: 0, seconds: 0, sign: .minus))
+        XCTAssert(Time(string: "-0:01") == Time(hours: 0, minutes: 0, seconds: 1, sign: .minus))
+        XCTAssert(Time(string: "-123:45:56") == Time(hours: 123, minutes: 45, seconds: 56, milliseconds: 000, sign: .minus))
+        XCTAssert(Time(string: "-123:45:56.123") == Time(hours: 123, minutes: 45, seconds: 56, milliseconds: 123, sign: .minus))
+        
+        // invalid / edge cases
+        XCTAssert(Time(string: "") == nil)
+        XCTAssert(Time(string: ":") == nil)
+        XCTAssert(Time(string: ".") == nil)
+        XCTAssert(Time(string: ":.") == nil)
+        XCTAssert(Time(string: "::") == nil)
+        XCTAssert(Time(string: "::.") == nil)
+        XCTAssert(Time(string: " ") == nil)
+        XCTAssert(Time(string: "-") == nil)
+        XCTAssert(Time(string: "-:") == nil)
+        XCTAssert(Time(string: " 123:45:56.123") == nil)
+        XCTAssert(Time(string: "123:45:56.123 ") == nil)
+        XCTAssert(Time(string: " 123:45:56.123 ") == nil)
+        XCTAssert(Time(string: "A") == nil)
+        XCTAssert(Time(string: "A:BC") == nil)
+        XCTAssert(Time(string: "-A") == nil)
+        XCTAssert(Time(string: "-A:BC") == nil)
+        XCTAssert(Time(string: "A.BCD") == nil)
+        XCTAssert(Time(string: "A:BC.DEF") == nil)
+        XCTAssert(Time(string: "--0:00") == nil)
+        XCTAssert(Time(string: "0:00:00:000") == nil)
+        XCTAssert(Time(string: "0.00.00.000") == nil)
+        XCTAssert(Time(string: "0::00::00.000") == nil)
+        XCTAssert(Time(string: "0::00::00..000") == nil)
+        XCTAssert(Time(string: "0:00:00..000") == nil)
+        
+        // allowable edge cases
+        XCTAssert(Time(string: "123") != nil)
+        XCTAssert(Time(string: "123.456") != nil)
+        XCTAssert(Time(string: "0:123") != nil)
+        XCTAssert(Time(string: "0:123.456") != nil)
+        XCTAssert(Time(string: "123:45") != nil)
+        XCTAssert(Time(string: "123:45.456") != nil)
+        XCTAssert(Time(string: "123:456") != nil)
+        XCTAssert(Time(string: "123:456.789") != nil)
+    }
+    
     func testTimeStringValueA() {
         let t = Time(hours: 15, minutes: 46, seconds: 20, milliseconds: 49)
         
