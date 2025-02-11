@@ -124,6 +124,68 @@ extension Time: Identifiable {
 extension Time: Sendable { }
 
 extension Time {
+    /// Initialize from a time interval string.
+    public init?(string: String) {
+        // "00:00:00.000" is 12 characters
+        guard string.count <= 20 else { return nil }
+        
+        var string = string
+        
+        if string.first == "-" {
+            string = String(string.dropFirst())
+            sign = .minus
+        }
+        
+        var mainComponents: [String] = [""]
+        var ms: String?
+        
+        for char in string {
+            if CharacterSet.decimalDigits.contains(char) {
+                if ms != nil {
+                    ms?.append(char)
+                } else if mainComponents.count <= 3 {
+                    let lastIndex = mainComponents.endIndex.advanced(by: -1)
+                    mainComponents[lastIndex].append(char)
+                } else {
+                    return nil
+                }
+            } else if char == ":", mainComponents.count < 3, ms == nil {
+                mainComponents += ""
+            } else if char == ".", ms == nil {
+                ms = ""
+            } else {
+                return nil
+            }
+        }
+        
+        // process main components
+        
+        guard mainComponents.allSatisfy({ !$0.isEmpty }) else { return nil }
+        guard (1 ... 3).contains(mainComponents.count) else { return nil }
+        
+        switch mainComponents.count {
+        case 1: // S
+            seconds = Int(mainComponents[0]) ?? 0
+        case 2: // M:SS
+            minutes = Int(mainComponents[0]) ?? 0
+            seconds = Int(mainComponents[1]) ?? 0
+        case 3: // H:MM:SS
+            hours = Int(mainComponents[0]) ?? 0
+            minutes = Int(mainComponents[1]) ?? 0
+            seconds = Int(mainComponents[2]) ?? 0
+        default:
+            // should never happen
+            return nil
+        }
+        
+        // process milliseconds
+        
+        if let ms {
+            guard !ms.isEmpty else { return nil }
+            milliseconds = Int(ms) ?? 0
+        }
+    }
+    
     /// **OTCore:**
     /// Returns the time as a formatted string.
     public func stringValue(format: Format = .shortest) -> String {
