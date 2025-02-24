@@ -19,7 +19,7 @@ let package = Package(
     ],
     dependencies: [
         // testing-only dependency
-        .package(url: "https://github.com/orchetect/XCTestUtils", from: "1.1.1")
+        .package(url: "https://github.com/orchetect/XCTestUtils", from: "1.1.2")
     ],
     targets: [
         .target(
