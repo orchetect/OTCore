@@ -43,6 +43,8 @@ extension DomainName: CustomStringConvertible {
     }
 }
 
+extension DomainName: Sendable { }
+
 extension DomainName {
     /// Returns the full domain name string including all components.
     public var string: String {

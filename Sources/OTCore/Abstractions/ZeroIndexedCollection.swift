@@ -33,6 +33,8 @@ extension ZeroIndexedCollection: Collection {
     }
 }
 
+extension ZeroIndexedCollection: Sendable where Base: Sendable, Base.Index: Sendable { }
+
 extension Collection {
     /// **OTCore:**
     /// Returns a view on the collection that translates the base collection's indices to zero-based
@@ -83,6 +85,8 @@ extension ZeroIndexedMutableCollection: MutableCollection {
         }
     }
 }
+
+extension ZeroIndexedMutableCollection: Sendable where Base: Sendable, Base.Index: Sendable { }
 
 extension MutableCollection {
     /// **OTCore:**
@@ -139,6 +143,8 @@ extension ZeroIndexedRangeReplaceableCollection: RangeReplaceableCollection {
         base = .init()
     }
 }
+
+extension ZeroIndexedRangeReplaceableCollection: Sendable where Base: Sendable, Base.Index: Sendable { }
 
 extension RangeReplaceableCollection {
     /// **OTCore:**

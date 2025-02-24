@@ -8,7 +8,7 @@ import Foundation
 
 /// **OTCore:**
 /// Utility to facilitate sequential reading of bytes.
-public struct DataReader: Sendable {
+public struct DataReader {
     public let base: Data
     
     public init(_ data: Data) {
@@ -102,3 +102,5 @@ public struct DataReader: Sendable {
         return (data: returnBytes, advanceCount: count)
     }
 }
+
+extension DataReader: Sendable { }

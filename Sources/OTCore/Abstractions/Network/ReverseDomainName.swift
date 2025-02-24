@@ -47,6 +47,7 @@ extension ReverseDomainName: CustomStringConvertible {
         string
     }
 }
+extension ReverseDomainName: Sendable { }
 
 extension ReverseDomainName {
     /// Returns the full reverse-notation domain name string including all components.

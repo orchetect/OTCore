@@ -49,9 +49,7 @@ public struct Time {
         self.milliseconds = milliseconds
         self.sign = sign
     }
-}
-
-extension Time {
+    
     /// Initialize from a time interval in seconds.
     public init(seconds: Int) {
         sign = seconds < 0 ? .minus : .plus
@@ -77,9 +75,7 @@ extension Time {
         self.init(seconds: truncSeconds)
         milliseconds = Int((absSeconds - Double(absTruncSeconds)) * 1000)
     }
-}
-
-extension Time {
+    
     /// Initialize from a time interval in milliseconds.
     public init(milliseconds: Int) {
         sign = milliseconds < 0 ? .minus : .plus

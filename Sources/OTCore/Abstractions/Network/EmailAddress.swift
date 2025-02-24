@@ -10,7 +10,7 @@ import Foundation
 
 /// **OTCore:**
 /// Email Address Format Validation.
-public struct EmailAddress: Sendable {
+public struct EmailAddress {
     /// **OTCore:**
     /// Email address.
     public let email: String
@@ -79,6 +79,8 @@ public struct EmailAddress: Sendable {
 extension EmailAddress: Identifiable {
     public var id: String { email }
 }
+
+extension EmailAddress: Sendable { }
 
 // MARK: - API Changes in 1.4.4
 

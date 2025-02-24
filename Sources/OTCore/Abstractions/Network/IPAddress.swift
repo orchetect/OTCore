@@ -10,7 +10,7 @@ import Foundation
 
 /// **OTCore:**
 /// IP Address Format Validation.
-public struct IPAddress: Sendable {
+public struct IPAddress {
     /// **OTCore:**
     /// IP Address.
     public var address: String = ""
@@ -37,6 +37,8 @@ public struct IPAddress: Sendable {
 extension IPAddress: Identifiable {
     public var id: String { address }
 }
+
+extension IPAddress: Sendable { }
 
 // MARK: - Validation
 
