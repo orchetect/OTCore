@@ -356,6 +356,34 @@ class Extensions_Foundation_URL_Tests: XCTestCase {
         XCTAssertTrue(folder.isFolder!)
     }
     
+    func testRestoreFileURLCase_HomeDirectory() throws {
+        // guaranteed to exist
+        let folder = URL(fileURLWithPath: NSHomeDirectory())
+        let lowercased = try XCTUnwrap(URL(string: folder.absoluteString.lowercased()))
+        XCTAssert(folder.absoluteString != lowercased.absoluteString)
+        var reformed = lowercased
+        reformed.restoreFileURLCase()
+        XCTAssert(folder.absoluteString == reformed.absoluteString)
+    }
+    
+    func testRestoringFileURLCase_HomeDirectory() throws {
+        // guaranteed to exist
+        let folder = URL(fileURLWithPath: NSHomeDirectory())
+        let lowercased = try XCTUnwrap(URL(string: folder.absoluteString.lowercased()))
+        XCTAssert(folder.absoluteString != lowercased.absoluteString)
+        let reformed = lowercased.restoringFileURLCase()
+        XCTAssert(folder.absoluteString == reformed.absoluteString)
+    }
+    
+    func testRestoringFileURLCase_RootDirectory() throws {
+        // guaranteed to exist
+        let folder = URL(fileURLWithPath: NSOpenStepRootDirectory())
+        let lowercased = try XCTUnwrap(URL(string: folder.absoluteString.lowercased()))
+        XCTAssert(folder.absoluteString == lowercased.absoluteString) // no letter characters in root path
+        let reformed = lowercased.restoringFileURLCase()
+        XCTAssert(folder.absoluteString == reformed.absoluteString)
+    }
+    
     func testTrashOrDelete() {
         // boilerplate
         
