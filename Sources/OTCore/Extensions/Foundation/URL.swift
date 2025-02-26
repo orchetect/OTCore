@@ -190,6 +190,23 @@ extension URL {
     }
     
     /// **OTCore:**
+    /// Updates the URL with its file system path on disk, restoring character case in the process.
+    ///
+    /// For example, if a file named `File.txt` exists on the desktop of a user named `John Doe`, the input URL:
+    ///
+    /// `file:///users/johndoe/desktop/file.txt`
+    ///
+    /// Would be updated as:
+    ///
+    /// `file:///Users/JohnDoe/Desktop/File.txt`
+    ///
+    /// If the file does not exist or the URL is not a file URL, the URL will remain unmodified.
+    @_disfavoredOverload
+    public mutating func restoreFileURLCase() {
+        self = restoringFileURLCase()
+    }
+    
+    /// **OTCore:**
     /// Returns the URL by returning its file system path on disk, restoring character case in the process.
     ///
     /// For example, if a file named `File.txt` exists on the desktop of a user named `John Doe`, the input URL:
