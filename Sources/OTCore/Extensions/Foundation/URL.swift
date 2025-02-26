@@ -188,6 +188,40 @@ extension URL {
         try? resourceValues(forKeys: [URLResourceKey.isDirectoryKey])
             .isDirectory
     }
+    
+    /// **OTCore:**
+    /// Returns the URL by returning its file system path on disk, restoring character case in the process.
+    ///
+    /// For example, if a file named `File.txt` exists on the desktop of a user named `John Doe`, the input URL:
+    ///
+    /// `file:///users/johndoe/desktop/file.txt`
+    ///
+    /// Would be returned as:
+    ///
+    /// `file:///Users/JohnDoe/Desktop/File.txt`
+    ///
+    /// If the file does not exist or the URL is not a file URL, the URL will be returned unmodified.
+    @_disfavoredOverload
+    public func restoringFileURLCase() -> URL {
+        guard isFileURL else { return self }
+        
+        let folder = deletingLastPathComponent()
+        guard folder.isFolder == true else { return self }
+        
+        // TODO: there is probably a more efficient way to achieve this other than enumerating folder contents, but this works
+        guard let enumerator = FileManager.default
+            .enumerator(at: folder, includingPropertiesForKeys: [.nameKey, .pathKey])
+        else { return self }
+        
+        while let fileURL = enumerator.nextObject() as? URL {
+            enumerator.skipDescendants()
+            // crude, but it works in English locales
+            if fileURL.path.lowercased() == path.lowercased() {
+                return fileURL
+            }
+        }
+        return self
+    }
 }
 
 // MARK: - File operations
