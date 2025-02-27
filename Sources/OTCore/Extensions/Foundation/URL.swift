@@ -215,6 +215,27 @@ extension URL {
         let newURL = URL(fileURLWithPath: canonicalPath)
         return newURL
     }
+    
+    /// **OTCore:**
+    /// Returns `true` if the URL points to the same file system node as another URL.
+    /// This is more reliable than comparing simple equality of two `URL` instances, as this method will
+    /// account for mismatched case and will resolve the URLs as needed in order to perform the comparison.
+    ///
+    /// - Throws: Error if one or both URLs are not file URLs, or there was a problem reading the file system.
+    @_disfavoredOverload
+    public func isEqualFileNode(as otherFileURL: URL) throws -> Bool {
+        guard isFileURL, otherFileURL.isFileURL else { throw CocoaError(.fileNoSuchFile) }
+        
+        // see https://stackoverflow.com/a/66968423/2805570 for in-depth explainer
+        
+        guard let lhs = try? resourceValues(forKeys: [.fileResourceIdentifierKey])
+            .fileResourceIdentifier,
+              let rhs = try? otherFileURL.resourceValues(forKeys: [.fileResourceIdentifierKey])
+            .fileResourceIdentifier
+        else { throw CocoaError(.fileReadUnknown) }
+        
+        return lhs.isEqual(rhs)
+    }
 }
 
 // MARK: - File operations
