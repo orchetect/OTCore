@@ -191,6 +191,15 @@ extension URL {
     }
     
     /// **OTCore:**
+    /// Updates the URL with its canonical file system path on disk.
+    ///
+    /// If the file does not exist or the URL is not a file URL, the URL will remain unmodified.
+    @_disfavoredOverload
+    public mutating func canonicalizeFileURL() throws {
+        self = try canonicalizingFileURL()
+    }
+    
+    /// **OTCore:**
     /// Returns the URL by returning its canonical file system path on disk.
     ///
     /// If the file does not exist or the URL is not a file URL, the URL will be returned unmodified.
