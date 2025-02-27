@@ -356,32 +356,57 @@ class Extensions_Foundation_URL_Tests: XCTestCase {
         XCTAssertTrue(folder.isFolder!)
     }
     
-    func testRestoreFileURLCase_HomeDirectory() throws {
-        // guaranteed to exist
-        let folder = URL(fileURLWithPath: NSHomeDirectory())
-        let lowercased = try XCTUnwrap(URL(string: folder.absoluteString.lowercased()))
-        XCTAssert(folder.absoluteString != lowercased.absoluteString)
+    func testCanonicalizeFileURL() throws {
+        // write temp file including a mix of uppercase and lowercase letters
+        let file = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("\(UUID().uuidString)-TeSt123AbC.txt")
+        try "\(Date())".write(to: file, atomically: true, encoding: .utf8)
+        XCTAssert(file.fileExists)
+        
+        let lowercased = try XCTUnwrap(URL(string: file.absoluteString.lowercased()))
+        XCTAssertNotEqual(file.absoluteString, lowercased.absoluteString)
         var reformed = lowercased
-        reformed.restoreFileURLCase()
-        XCTAssert(folder.absoluteString == reformed.absoluteString)
+        try reformed.canonicalizeFileURL()
+        
+        // adjust original URL for comparison. path canonicalization adds `/private` to temporary directory path.
+        let prefixString = "file:///var/"
+        let originalFileString = file.absoluteString
+        let originalFileStringRange = originalFileString.startIndex ..< originalFileString.index(originalFileString.startIndex, offsetBy: prefixString.count)
+        let adjustedOriginalFileString = originalFileString
+            .replacingOccurrences(of: prefixString, with: "file:///private/var/", range: originalFileStringRange)
+        
+        XCTAssertEqual(adjustedOriginalFileString, reformed.absoluteString)
     }
     
-    func testRestoringFileURLCase_HomeDirectory() throws {
-        // guaranteed to exist
-        let folder = URL(fileURLWithPath: NSHomeDirectory())
-        let lowercased = try XCTUnwrap(URL(string: folder.absoluteString.lowercased()))
-        XCTAssert(folder.absoluteString != lowercased.absoluteString)
-        let reformed = lowercased.restoringFileURLCase()
-        XCTAssert(folder.absoluteString == reformed.absoluteString)
+    func testCanonicalizingFileURL() throws {
+        // write temp file including a mix of uppercase and lowercase letters
+        let file = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("\(UUID().uuidString)-TeSt123AbC.txt")
+        try "\(Date())".write(to: file, atomically: true, encoding: .utf8)
+        XCTAssert(file.fileExists)
+        
+        let lowercased = try XCTUnwrap(URL(string: file.absoluteString.lowercased()))
+        XCTAssertNotEqual(file.absoluteString, lowercased.absoluteString)
+        let reformed = try lowercased.canonicalizingFileURL()
+        
+        // adjust original URL for comparison. path canonicalization adds `/private` to temporary directory path.
+        let prefixString = "file:///var/"
+        let originalFileString = file.absoluteString
+        let originalFileStringRange = originalFileString.startIndex ..< originalFileString.index(originalFileString.startIndex, offsetBy: prefixString.count)
+        let adjustedOriginalFileString = originalFileString
+            .replacingOccurrences(of: prefixString, with: "file:///private/var/", range: originalFileStringRange)
+        
+        XCTAssertEqual(adjustedOriginalFileString, reformed.absoluteString)
     }
     
-    func testRestoringFileURLCase_RootDirectory() throws {
-        // guaranteed to exist
-        let folder = URL(fileURLWithPath: NSOpenStepRootDirectory())
-        let lowercased = try XCTUnwrap(URL(string: folder.absoluteString.lowercased()))
-        XCTAssert(folder.absoluteString == lowercased.absoluteString) // no letter characters in root path
-        let reformed = lowercased.restoringFileURLCase()
-        XCTAssert(folder.absoluteString == reformed.absoluteString)
+    func testIsEqualFileNode() throws {
+        // write temp file including a mix of uppercase and lowercase letters
+        let file = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("\(UUID().uuidString)-TeSt123AbC.txt")
+        try "\(Date())".write(to: file, atomically: true, encoding: .utf8)
+        XCTAssert(file.fileExists)
+        
+        let lowercased = try XCTUnwrap(URL(string: file.absoluteString.lowercased()))
+        XCTAssertNotEqual(file.absoluteString, lowercased.absoluteString)
+        
+        XCTAssert(try file.isEqualFileNode(as: lowercased))
     }
     
     func testTrashOrDelete() {
