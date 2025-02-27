@@ -356,9 +356,11 @@ class Extensions_Foundation_URL_Tests: XCTestCase {
         XCTAssertTrue(folder.isFolder!)
     }
     
+    #if os(macOS)
     func testCanonicalizeFileURL() throws {
         // write temp file including a mix of uppercase and lowercase letters
-        let file = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("\(UUID().uuidString)-TeSt123AbC.txt")
+        let file = FileManager.default.temporaryDirectory
+            .appendingPathComponent("\(UUID().uuidString)-TeSt123AbC.txt")
         try "\(Date())".write(to: file, atomically: true, encoding: .utf8)
         XCTAssert(file.fileExists)
         
@@ -371,12 +373,14 @@ class Extensions_Foundation_URL_Tests: XCTestCase {
         let prefixString = "file:///var/"
         let originalFileString = file.absoluteString
         let originalFileStringRange = originalFileString.startIndex ..< originalFileString.index(originalFileString.startIndex, offsetBy: prefixString.count)
-        let adjustedOriginalFileString = originalFileString
+        let prefixedOriginalFileString = originalFileString
             .replacingOccurrences(of: prefixString, with: "file:///private/var/", range: originalFileStringRange)
         
-        XCTAssertEqual(adjustedOriginalFileString, reformed.absoluteString)
+        XCTAssertEqual(prefixedOriginalFileString, reformed.absoluteString)
     }
+    #endif
     
+    #if os(macOS)
     func testCanonicalizingFileURL() throws {
         // write temp file including a mix of uppercase and lowercase letters
         let file = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("\(UUID().uuidString)-TeSt123AbC.txt")
@@ -391,12 +395,14 @@ class Extensions_Foundation_URL_Tests: XCTestCase {
         let prefixString = "file:///var/"
         let originalFileString = file.absoluteString
         let originalFileStringRange = originalFileString.startIndex ..< originalFileString.index(originalFileString.startIndex, offsetBy: prefixString.count)
-        let adjustedOriginalFileString = originalFileString
+        let prefixedOriginalFileString = originalFileString
             .replacingOccurrences(of: prefixString, with: "file:///private/var/", range: originalFileStringRange)
         
-        XCTAssertEqual(adjustedOriginalFileString, reformed.absoluteString)
+        XCTAssertEqual(prefixedOriginalFileString, reformed.absoluteString)
     }
+    #endif
     
+    #if os(macOS)
     func testIsEqualFileNode() throws {
         // write temp file including a mix of uppercase and lowercase letters
         let file = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("\(UUID().uuidString)-TeSt123AbC.txt")
@@ -408,6 +414,7 @@ class Extensions_Foundation_URL_Tests: XCTestCase {
         
         XCTAssert(try file.isEqualFileNode(as: lowercased))
     }
+    #endif
     
     func testTrashOrDelete() {
         // boilerplate
