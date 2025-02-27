@@ -182,11 +182,29 @@ extension URL {
     /// **OTCore:**
     /// Returns whether the file URL path is a folder.
     ///
-    /// - Will return `nil` if the URL is not a properly formatted file URL, or there was a problem querying the URL's file system attributes.
+    /// - Will return `nil` if the URL is not a properly formatted file URL, or there was a problem querying
+    ///   the URL's file system attributes.
     @_disfavoredOverload
     public var isFolder: Bool? {
         try? resourceValues(forKeys: [URLResourceKey.isDirectoryKey])
             .isDirectory
+    }
+    
+    /// **OTCore:**
+    /// Returns the URL by returning its canonical file system path on disk.
+    ///
+    /// If the file does not exist or the URL is not a file URL, the URL will be returned unmodified.
+    @_disfavoredOverload
+    public func canonicalizingFileURL() throws -> URL {
+        guard isFileURL else { throw CocoaError(.fileNoSuchFile) }
+        
+        // see https://stackoverflow.com/a/66968423/2805570 for in-depth explainer
+        
+        guard let canonicalPath = try resourceValues(forKeys: [.canonicalPathKey]).canonicalPath else {
+            throw CocoaError(.fileReadUnknown)
+        }
+        let newURL = URL(fileURLWithPath: canonicalPath)
+        return newURL
     }
 }
 
@@ -211,7 +229,7 @@ extension URL {
         
         // platform-specific logic
         
-        #if os(macOS) || targetEnvironment(macCatalyst) || os(iOS) || os(visionOS)
+#if os(macOS) || targetEnvironment(macCatalyst) || os(iOS) || os(visionOS)
         
         if #available(macOS 10.8, iOS 11.0, *) {
             // move file to trash
@@ -221,12 +239,12 @@ extension URL {
             do {
                 try FileManager.default.trashItem(at: self, resultingItemURL: &resultingURL)
             } catch {
-                #if os(macOS)
+#if os(macOS)
                 throw error
-                #else
+#else
                 // .trashItem has permissions issues on iOS; ignore and return without throwing
                 return nil
-                #endif
+#endif
             }
             
             return resultingURL?.absoluteURL
@@ -238,21 +256,21 @@ extension URL {
             return nil
         }
         
-        #elseif os(tvOS)
+#elseif os(tvOS)
         
         // tvOS has no Trash - just delete the file
         
         try __delFile(url: self)
         return nil
         
-        #elseif os(watchOS)
+#elseif os(watchOS)
         
         // watchOS has no Trash - just delete the file
-            
+        
         try __delFile(url: self)
         return nil
         
-        #endif
+#endif
     }
 }
 
@@ -273,11 +291,11 @@ extension URL {
     @_disfavoredOverload
     public func createFinderAlias(at url: URL) throws {
         let data = try
-            bookmarkData(
-                options: .suitableForBookmarkFile,
-                includingResourceValuesForKeys: nil,
-                relativeTo: nil
-            )
+        bookmarkData(
+            options: .suitableForBookmarkFile,
+            includingResourceValuesForKeys: nil,
+            relativeTo: nil
+        )
         
         try URL.writeBookmarkData(data, to: url)
     }
@@ -377,7 +395,7 @@ extension URL {
 // MARK: - Folders
 
 extension FileManager {
-    #if os(macOS)
+#if os(macOS)
     
     /// **OTCore:**
     /// Backwards compatible method for retrieving the current user's home directory, using the most recent API where possible.
@@ -392,7 +410,7 @@ extension FileManager {
         }
     }
     
-    #endif
+#endif
     
     /// **OTCore:**
     /// Backwards compatible method for retrieving a temporary folder from the system.
