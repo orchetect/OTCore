@@ -194,6 +194,15 @@ extension URL {
     /// Updates the URL with its canonical file system path on disk.
     ///
     /// If the file does not exist or the URL is not a file URL, the URL will remain unmodified.
+    ///
+    /// > Note:
+    /// > This method is only available on macOS as the API required is not available on other platforms.
+    ///
+    /// - Throws: Error if the URL is not a file URL, or there was a problem reading the file system.
+    @available(iOS, unavailable)
+    @available(tvOS, unavailable)
+    @available(watchOS, unavailable)
+    @available(visionOS, unavailable)
     @_disfavoredOverload
     public mutating func canonicalizeFileURL() throws {
         self = try canonicalizingFileURL()
@@ -203,16 +212,25 @@ extension URL {
     /// Returns the URL by returning its canonical file system path on disk.
     ///
     /// If the file does not exist or the URL is not a file URL, the URL will be returned unmodified.
+    ///
+    /// > Note:
+    /// > This method is only available on macOS as the API required is not available on other platforms.
+    ///
+    /// - Throws: Error if the URL is not a file URL, or there was a problem reading the file system.
+    @available(iOS, unavailable)
+    @available(tvOS, unavailable)
+    @available(watchOS, unavailable)
+    @available(visionOS, unavailable)
     @_disfavoredOverload
     public func canonicalizingFileURL() throws -> URL {
         guard isFileURL else { throw CocoaError(.fileNoSuchFile) }
         
         // see https://stackoverflow.com/a/66968423/2805570 for in-depth explainer
         
-        guard let canonicalPath = try resourceValues(forKeys: [.canonicalPathKey]).canonicalPath else {
+        guard let newPath = try resourceValues(forKeys: [.canonicalPathKey]).canonicalPath else {
             throw CocoaError(.fileReadUnknown)
         }
-        let newURL = URL(fileURLWithPath: canonicalPath)
+        let newURL = URL(fileURLWithPath: newPath)
         return newURL
     }
     
@@ -221,7 +239,14 @@ extension URL {
     /// This is more reliable than comparing simple equality of two `URL` instances, as this method will
     /// account for mismatched case and will resolve the URLs as needed in order to perform the comparison.
     ///
+    /// > Note:
+    /// > This method is only available on macOS as the API required is not available on other platforms.
+    ///
     /// - Throws: Error if one or both URLs are not file URLs, or there was a problem reading the file system.
+    @available(iOS, unavailable)
+    @available(tvOS, unavailable)
+    @available(watchOS, unavailable)
+    @available(visionOS, unavailable)
     @_disfavoredOverload
     public func isEqualFileNode(as otherFileURL: URL) throws -> Bool {
         guard isFileURL, otherFileURL.isFileURL else { throw CocoaError(.fileNoSuchFile) }
