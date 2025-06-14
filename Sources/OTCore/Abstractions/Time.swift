@@ -197,8 +197,9 @@ extension Time {
     private func absStringValue(format: Format = .shortest) -> String {
         switch format {
         case .shortest:
-            if hours > 0 { return absStringValue(format: .h_mm_ss) }
-            return absStringValue(format: .m_ss)
+            return hours > 0
+                ? absStringValue(format: .h_mm_ss)
+                : absStringValue(format: .m_ss)
             
         case .hh_mm_ss:
             return "\(hPadded):\(mPadded):\(sPadded)"
@@ -282,6 +283,22 @@ extension Time {
         case .seconds: seconds = newValue
         case .milliseconds: milliseconds = newValue
         }
+    }
+    
+    /// Returns the string value of the given time component, optionally applying standard padding.
+    public func stringValue(of component: Component, padded: Bool = false) -> String {
+        switch component {
+        case .hours: padded ? hPadded : "\(hours)"
+        case .minutes: padded ? mPadded : "\(minutes)"
+        case .seconds: padded ? sPadded : "\(seconds)"
+        case .milliseconds: padded ? msPadded : "\(milliseconds)"
+        }
+    }
+    
+    /// Returns the string value of the given time component, formatted for the given time string ``Format``.
+    public func stringValue(of component: Component, format: Format) -> String {
+        let isPadded = format.isPadded(for: component)
+        return stringValue(of: component, padded: isPadded)
     }
 }
 
@@ -374,3 +391,101 @@ extension Time.Format: Identifiable {
 }
 
 extension Time.Format: Sendable { }
+
+extension Time.Format {
+    func isPadded(for component: Time.Component) -> Bool {
+        switch self {
+        case .shortest:
+            switch component {
+            case .hours: false
+            case .minutes: false
+            case .seconds: true
+            case .milliseconds: true
+            }
+        case .hh_mm_ss:
+            switch component {
+            case .hours: true
+            case .minutes: true
+            case .seconds: true
+            case .milliseconds: true
+            }
+        case .h_mm_ss:
+            switch component {
+            case .hours: false
+            case .minutes: true
+            case .seconds: true
+            case .milliseconds: true
+            }
+        case .mm_ss:
+            switch component {
+            case .hours: false
+            case .minutes: true
+            case .seconds: true
+            case .milliseconds: true
+            }
+        case .m_ss:
+            switch component {
+            case .hours: false
+            case .minutes: false
+            case .seconds: true
+            case .milliseconds: true
+            }
+        case .ss:
+            switch component {
+            case .hours: false
+            case .minutes: false
+            case .seconds: true
+            case .milliseconds: true
+            }
+        case .s:
+            switch component {
+            case .hours: false
+            case .minutes: false
+            case .seconds: false
+            case .milliseconds: true
+            }
+        case .hh_mm_ss_sss:
+            switch component {
+            case .hours: true
+            case .minutes: true
+            case .seconds: true
+            case .milliseconds: true
+            }
+        case .h_mm_ss_sss:
+            switch component {
+            case .hours: false
+            case .minutes: true
+            case .seconds: true
+            case .milliseconds: true
+            }
+        case .mm_ss_sss:
+            switch component {
+            case .hours: false
+            case .minutes: true
+            case .seconds: true
+            case .milliseconds: true
+            }
+        case .m_ss_sss:
+            switch component {
+            case .hours: false
+            case .minutes: false
+            case .seconds: true
+            case .milliseconds: true
+            }
+        case .ss_sss:
+            switch component {
+            case .hours: false
+            case .minutes: false
+            case .seconds: true
+            case .milliseconds: true
+            }
+        case .s_sss:
+            switch component {
+            case .hours: false
+            case .minutes: false
+            case .seconds: false
+            case .milliseconds: true
+            }
+        }
+    }
+}
