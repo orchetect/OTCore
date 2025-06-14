@@ -281,6 +281,25 @@ extension Time {
     public static let zero = Time(hours: 0, minutes: 0, seconds: 0, milliseconds: 0, sign: .plus)
 }
 
+// MARK: - Component
+
+extension Time {
+    public enum Component {
+        case hours
+        case minutes
+        case seconds
+        case milliseconds
+    }
+}
+
+extension Time.Component: Equatable { }
+
+extension Time.Component: Hashable { }
+
+extension Time.Component: CaseIterable { }
+
+extension Time.Component: Sendable { }
+
 // MARK: - Format
 
 extension Time {
