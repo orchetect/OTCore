@@ -263,6 +263,28 @@ extension Time {
     }
 }
 
+extension Time {
+    /// Returns the value of the given time component.
+    public func value(of component: Component) -> Int {
+        switch component {
+        case .hours: hours
+        case .minutes: minutes
+        case .seconds: seconds
+        case .milliseconds: milliseconds
+        }
+    }
+    
+    /// Sets the value of the given time component.
+    public mutating func setValue(of component: Component, to newValue: Int) {
+        switch component {
+        case .hours: hours = newValue
+        case .minutes: minutes = newValue
+        case .seconds: seconds = newValue
+        case .milliseconds: milliseconds = newValue
+        }
+    }
+}
+
 // MARK: - CustomStringConvertible
 
 extension Time: CustomStringConvertible {
