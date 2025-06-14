@@ -517,6 +517,45 @@ final class Abstractions_Time_Tests: XCTestCase {
         XCTAssertEqual(time.value(of: .milliseconds), 950)
     }
     
+    func testStringValueOfComponentPadded() {
+        XCTAssertEqual(Time(seconds: 0).stringValue(of: .hours, padded: false), "0")
+        XCTAssertEqual(Time(seconds: 0).stringValue(of: .minutes, padded: false), "0")
+        XCTAssertEqual(Time(seconds: 0).stringValue(of: .seconds, padded: false), "0")
+        XCTAssertEqual(Time(seconds: 0).stringValue(of: .milliseconds, padded: false), "0")
+        
+        XCTAssertEqual(Time(seconds: 0).stringValue(of: .hours, padded: true), "00")
+        XCTAssertEqual(Time(seconds: 0).stringValue(of: .minutes, padded: true), "00")
+        XCTAssertEqual(Time(seconds: 0).stringValue(of: .seconds, padded: true), "00")
+        XCTAssertEqual(Time(seconds: 0).stringValue(of: .milliseconds, padded: true), "000")
+        
+        XCTAssertEqual(Time(seconds: 4547.050).stringValue(of: .hours, padded: false), "1")
+        XCTAssertEqual(Time(seconds: 4547.050).stringValue(of: .minutes, padded: false), "15")
+        XCTAssertEqual(Time(seconds: 4547.050).stringValue(of: .seconds, padded: false), "47")
+        XCTAssertEqual(Time(seconds: 4547.050).stringValue(of: .milliseconds, padded: false), "50")
+        
+        XCTAssertEqual(Time(seconds: 4547.050).stringValue(of: .hours, padded: true), "01")
+        XCTAssertEqual(Time(seconds: 4547.050).stringValue(of: .minutes, padded: true), "15")
+        XCTAssertEqual(Time(seconds: 4547.050).stringValue(of: .seconds, padded: true), "47")
+        XCTAssertEqual(Time(seconds: 4547.050).stringValue(of: .milliseconds, padded: true), "050")
+    }
+    
+    func testStringValueOfComponentForFormat() {
+        XCTAssertEqual(Time(seconds: 0).stringValue(of: .hours, format: .shortest), "0")
+        XCTAssertEqual(Time(seconds: 0).stringValue(of: .minutes, format: .shortest), "0")
+        XCTAssertEqual(Time(seconds: 0).stringValue(of: .seconds, format: .shortest), "00")
+        XCTAssertEqual(Time(seconds: 0).stringValue(of: .milliseconds, format: .shortest), "000")
+        
+        XCTAssertEqual(Time(seconds: 4547.050).stringValue(of: .hours, format: .h_mm_ss_sss), "1")
+        XCTAssertEqual(Time(seconds: 4547.050).stringValue(of: .minutes, format: .h_mm_ss_sss), "15")
+        XCTAssertEqual(Time(seconds: 4547.050).stringValue(of: .seconds, format: .h_mm_ss_sss), "47")
+        XCTAssertEqual(Time(seconds: 4547.050).stringValue(of: .milliseconds, format: .h_mm_ss_sss), "050")
+        
+        XCTAssertEqual(Time(seconds: 4547.050).stringValue(of: .hours, format: .hh_mm_ss_sss), "01")
+        XCTAssertEqual(Time(seconds: 4547.050).stringValue(of: .minutes, format: .hh_mm_ss_sss), "15")
+        XCTAssertEqual(Time(seconds: 4547.050).stringValue(of: .seconds, format: .hh_mm_ss_sss), "47")
+        XCTAssertEqual(Time(seconds: 4547.050).stringValue(of: .milliseconds, format: .hh_mm_ss_sss), "050")
+    }
+    
     func testEquatable() {
         XCTAssertEqual(Time(seconds: 20), Time(seconds: 20))
         XCTAssertEqual(
