@@ -19,6 +19,10 @@ public enum CollectionPosition: Sendable {
     case end
 }
 
+extension CollectionPosition: Equatable { }
+
+extension CollectionPosition: Hashable { }
+
 // RangeReplaceableCollection:
 //   insert, append, remove
 // MutableCollection:
