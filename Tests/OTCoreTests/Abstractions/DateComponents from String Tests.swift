@@ -205,6 +205,7 @@ class Abstractions_DateComponentsFromString_Tests: XCTestCase {
         XCTAssertNil(parsed)
     }
     
+    #if compiler(>=6.2) // Swift 6.2 Foundation required
     func testDateComponentsParseStrategy() throws {
         // TODO: have to make this a guard statement with XCTest as it doesn't play nice with @available attributes on test functions, but when migrating to Swift Testing this can transition to being a @availble keyword on the test func
         guard #available(macOS 26.0, iOS 26.0, tvOS 26.0, watchOS 26.0, visionOS 26.0, *) // DateComponents(_, strategy:) requirement
@@ -217,6 +218,7 @@ class Abstractions_DateComponentsFromString_Tests: XCTestCase {
         XCTAssertEqual(parsed.month,   3)
         XCTAssertEqual(parsed.day,     26)
     }
+    #endif
     
     @available(macOS 12.0, iOS 15.0, tvOS 15.0, watchOS 8.0, *)
     func testDateParseStrategy() throws {
