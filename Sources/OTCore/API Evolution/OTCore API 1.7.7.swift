@@ -4,10 +4,17 @@
 //  © 2024 Steffan Andrews • Licensed under MIT License
 //
 
-// MARK: - URL.swift
-
 #if canImport(Foundation)
 import Foundation
+
+// MARK: - IPAddress.swift
+
+extension IPAddress {
+    @available(*, deprecated, renamed: "Version")
+    public typealias IPAddressType = Version
+}
+
+// MARK: - Data.swift
 
 extension Collection where Element == UInt8 {
     /// **OTCore:**

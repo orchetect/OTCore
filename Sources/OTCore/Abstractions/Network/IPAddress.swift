@@ -17,7 +17,7 @@ public struct IPAddress {
 	
     /// **OTCore:**
     /// Validated IP address format.
-    public var format: IPAddressType
+    public var format: Version
     
     /// **OTCore:**
     /// IP Address Format Validation.
@@ -56,7 +56,7 @@ extension IPAddress {
     
     /// Internal:
     /// Performs validation on the IP address.
-    static func validate(address: String) throws -> IPAddressType {
+    static func validate(address: String) throws -> Version {
         // first test for IPv4
         if try NSRegularExpression(pattern: Self.IPv4Pattern, options: [])
             .matches(
@@ -98,12 +98,12 @@ extension IPAddress {
     }
 }
 
-// MARK: - IPAddressType
+// MARK: - Version
 
 extension IPAddress {
     /// **OTCore:**
     /// IP Address validation result returned by ``IPAddress``.
-    public enum IPAddressType: Sendable {
+    public enum Version: Sendable {
         /// **OTCore:**
         /// Valid IPv4 address.
         case ipV4
@@ -120,7 +120,7 @@ extension IPAddress {
     }
 }
 
-extension IPAddress.IPAddressType: Identifiable {
+extension IPAddress.Version: Identifiable {
     public var id: Self { self }
 }
 
