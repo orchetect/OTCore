@@ -48,7 +48,6 @@ extension DateComponents {
     /// > ```
     public init?<S: StringProtocol>(fuzzy string: S) {
         self.init()
-        calendar = .current // required if converted to `Date` type later on
         
         var year = 0
         var month = 0
