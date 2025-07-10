@@ -59,12 +59,11 @@ class Abstractions_StringSanitizePathComponent_Tests: XCTestCase {
             let sanitizedURL = url.sanitizingLastPathComponent(for: fs, replacement: "-")
             XCTAssertEqual(sanitizedURL.pathComponents, ["/", "Folder", "Test", "File.txt"])
             XCTAssertEqual(sanitizedURL.lastPathComponent, "File.txt")
-            #if os(macOS)
-            // URL seems to preserve sequential path separators, but omits empty path components from `pathComponents`
-            XCTAssertEqual(sanitizedURL.path, "/Folder/Test//File.txt")
-            #elseif os(iOS) || os(tvOS) || os(watchOS) || os(visionOS)
-            XCTAssertEqual(sanitizedURL.path, "/Folder/Test/File.txt")
-            #endif
+            if URL.preservesSequentialSeparators {
+                XCTAssertEqual(sanitizedURL.path, "/Folder/Test//File.txt")
+            } else {
+                XCTAssertEqual(sanitizedURL.path, "/Folder/Test/File.txt")
+            }
         }
         
         do {
@@ -74,12 +73,11 @@ class Abstractions_StringSanitizePathComponent_Tests: XCTestCase {
             let sanitizedURL = url.sanitizingLastPathComponent(for: fs, replacement: "-")
             XCTAssertEqual(sanitizedURL.pathComponents, ["/", "Folder", "Test", "File.txt"])
             XCTAssertEqual(sanitizedURL.lastPathComponent, "File.txt")
-            #if os(macOS)
-            // URL seems to preserve sequential path separators, but omits empty path components from `pathComponents`
-            XCTAssertEqual(sanitizedURL.path, "/Folder/Test//File.txt")
-            #elseif os(iOS) || os(tvOS) || os(watchOS) || os(visionOS)
-            XCTAssertEqual(sanitizedURL.path, "/Folder/Test/File.txt")
-            #endif
+            if URL.preservesSequentialSeparators {
+                XCTAssertEqual(sanitizedURL.path, "/Folder/Test//File.txt")
+            } else {
+                XCTAssertEqual(sanitizedURL.path, "/Folder/Test/File.txt")
+            }
         }
         
         // Note: appending a null character to URL will cause a crash
@@ -106,4 +104,19 @@ class Abstractions_StringSanitizePathComponent_Tests: XCTestCase {
             "/Folder/Test-File.txt"
         )
     }
+}
+
+extension URL {
+    // URL has slightly different sequential path separator behavior depending on platform and version
+    fileprivate static let preservesSequentialSeparators: Bool = {
+        #if os(macOS)
+        true
+        #elseif os(iOS) || os(tvOS) || os(watchOS) || os(visionOS)
+        if #available(iOS 26, tvOS 26, watchOS 26, visionOS 26, *) {
+            false
+        } else {
+            true
+        }
+        #endif
+    }()
 }
