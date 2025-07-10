@@ -37,30 +37,72 @@ class Abstractions_StringSanitizePathComponent_Tests: XCTestCase {
         
         // url last path component
         XCTAssertEqual(
-            URL(fileURLWithPath: "/Folder").appendingPathComponent("").sanitizingLastPathComponent(for: fs, replacement: "-").path,
+            URL(fileURLWithPath: "/Folder")
+                .appendingPathComponent("")
+                .sanitizingLastPathComponent(for: fs, replacement: "-")
+                .path,
             "/Folder"
         )
         XCTAssertEqual(
-            URL(fileURLWithPath: "/Folder").appendingPathComponent("Test/File.txt").sanitizingLastPathComponent(for: fs, replacement: "-").path,
-            "/Folder/Test/File.txt" // URL interprets `/` as a path delimiter
+            URL(fileURLWithPath: "/Folder")
+                .appendingPathComponent("Test/File.txt") // URL interprets `/` as a path delimiter
+                .sanitizingLastPathComponent(for: fs, replacement: "-")
+                .path,
+            "/Folder/Test/File.txt"
         )
-        XCTAssertEqual(
-            URL(fileURLWithPath: "/Folder").appendingPathComponent("Test//File.txt").sanitizingLastPathComponent(for: fs, replacement: "-").path,
-            "/Folder/Test//File.txt" // URL interprets `/` as a path delimiter
-        )
+        
+        do {
+            let url = URL(fileURLWithPath: "/Folder")
+                .appendingPathComponent("Test//File.txt") // URL interprets `//` as a single path delimiter
+            XCTAssertEqual(url.pathComponents, ["/", "Folder", "Test", "File.txt"])
+            XCTAssertEqual(url.lastPathComponent, "File.txt")
+            let sanitizedURL = url.sanitizingLastPathComponent(for: fs, replacement: "-")
+            XCTAssertEqual(sanitizedURL.pathComponents, ["/", "Folder", "Test", "File.txt"])
+            XCTAssertEqual(sanitizedURL.lastPathComponent, "File.txt")
+            #if os(macOS)
+            // URL seems to preserve sequential path separators, but omits empty path components from `pathComponents`
+            XCTAssertEqual(sanitizedURL.path, "/Folder/Test//File.txt")
+            #elseif os(iOS) || os(tvOS) || os(watchOS) || os(visionOS)
+            XCTAssertEqual(sanitizedURL.path, "/Folder/Test/File.txt")
+            #endif
+        }
+        
+        do {
+            let url = URL(fileURLWithPath: "/Folder/Test//File.txt") // URL interprets `//` as a single path delimiter
+            XCTAssertEqual(url.pathComponents, ["/", "Folder", "Test", "File.txt"])
+            XCTAssertEqual(url.lastPathComponent, "File.txt")
+            let sanitizedURL = url.sanitizingLastPathComponent(for: fs, replacement: "-")
+            XCTAssertEqual(sanitizedURL.pathComponents, ["/", "Folder", "Test", "File.txt"])
+            XCTAssertEqual(sanitizedURL.lastPathComponent, "File.txt")
+            #if os(macOS)
+            // URL seems to preserve sequential path separators, but omits empty path components from `pathComponents`
+            XCTAssertEqual(sanitizedURL.path, "/Folder/Test//File.txt")
+            #elseif os(iOS) || os(tvOS) || os(watchOS) || os(visionOS)
+            XCTAssertEqual(sanitizedURL.path, "/Folder/Test/File.txt")
+            #endif
+        }
         
         // Note: appending a null character to URL will cause a crash
         // XCTAssertEqual(
-        //     URL(fileURLWithPath: "/Folder").appendingPathComponent("TestFile\0.txt").sanitizingLastPathComponent(for: fs, replacement: "-").path,
+        //     URL(fileURLWithPath: "/Folder")
+        //         .appendingPathComponent("TestFile\0.txt")
+        //         .sanitizingLastPathComponent(for: fs, replacement: "-")
+        //         .path,
         //     "/Folder/TestFile-.txt"
         // )
         // XCTAssertEqual(
-        //     URL(fileURLWithPath: "/Folder").appendingPathComponent("Test/File\0.txt").sanitizingLastPathComponent(for: fs, replacement: "-").path,
+        //     URL(fileURLWithPath: "/Folder")
+        //         .appendingPathComponent("Test/File\0.txt")
+        //         .sanitizingLastPathComponent(for: fs, replacement: "-")
+        //         .path,
         //     "/Folder/Test-File-.txt"
         // )
         
         XCTAssertEqual(
-            URL(fileURLWithPath: "/Folder").appendingPathComponent("Test:File.txt").sanitizingLastPathComponent(for: fs, replacement: "-").path,
+            URL(fileURLWithPath: "/Folder")
+                .appendingPathComponent("Test:File.txt")
+                .sanitizingLastPathComponent(for: fs, replacement: "-")
+                .path,
             "/Folder/Test-File.txt"
         )
     }
