@@ -16,7 +16,8 @@ extension NSEvent {
     @MainActor
     public func location(in view: NSView) -> NSPoint {
         // Apple docs:
-        // "With NSMouseMoved and possibly other events, the event can have a nil window (that is, the window property contains nil). In this case, locationInWindow returns the event location in screen coordinates."
+        // "With NSMouseMoved and possibly other events, the event can have a nil window (that is, the window property contains nil).
+        // In this case, locationInWindow returns the event location in screen coordinates."
         
         view.convert(locationInWindow, from: nil)
     }

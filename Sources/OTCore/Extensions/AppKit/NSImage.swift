@@ -9,6 +9,7 @@
 import AppKit
 
 extension NSImage {
+    /// **OTCore:**
     /// Compress image and write image file to disk.
     ///
     /// - Parameters:
