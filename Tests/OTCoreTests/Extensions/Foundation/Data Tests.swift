@@ -712,9 +712,9 @@ class Extensions_Foundation_Data_Tests: XCTestCase {
         XCTAssertEqual(convertedString, sourceString)
     }
     
-    // MARK: - Bytes
+    // MARK: - toUInt8Bytes
     
-    func testDataBytes() {
+    func testDataUInt8Bytes() {
         let sourceBytes: [UInt8] = [1, 2, 3]
         
         // Collection -> Data
@@ -723,6 +723,6 @@ class Extensions_Foundation_Data_Tests: XCTestCase {
         
         // Data -> Collection
         
-        XCTAssertEqual(Data(sourceBytes).bytes, [1, 2, 3])
+        XCTAssertEqual(Data(sourceBytes).toUInt8Bytes(), [1, 2, 3])
     }
 }

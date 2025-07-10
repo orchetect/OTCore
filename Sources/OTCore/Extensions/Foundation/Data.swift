@@ -481,10 +481,10 @@ extension Collection where Element == UInt8 {
 
 extension Data {
     /// **OTCore:**
-    /// Returns an array of bytes.
+    /// Returns an array of `UInt8` bytes.
     /// Same as `[UInt8](self)`
     @_disfavoredOverload
-    public var bytes: [UInt8] {
+    public func toUInt8Bytes() -> [UInt8] {
         [UInt8](self)
     }
 }
