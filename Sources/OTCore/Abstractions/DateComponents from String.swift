@@ -44,7 +44,7 @@ extension DateComponents {
     /// > A ParseStrategy is also available using the same text parsing algorithm.
     /// >
     /// > ```swift
-    /// > let components = try DateComponents("Oct 21 2020", strategy: .fuzzyDateString)
+    /// > let components = try DateComponents("Oct 21 2020", strategy: .fuzzyDate)
     /// > ```
     public init?<S: StringProtocol>(fuzzy string: S) {
         self.init()
@@ -264,7 +264,7 @@ extension ParseStrategy where ParseOutput == DateComponents,
 {
     /// **OTCore:**
     /// Parse a date string heuristically in a variety of formats involving month and day, and optionally year.
-    public static var fuzzyDateString: FuzzyDateComponentsStringParseStrategy<ParseInput> {
+    public static var fuzzyDate: FuzzyDateComponentsStringParseStrategy<ParseInput> {
         FuzzyDateComponentsStringParseStrategy()
     }
 }
@@ -275,12 +275,12 @@ extension ParseStrategy where ParseOutput == DateComponents,
 {
     /// **OTCore:**
     /// Parse a date string heuristically in a variety of formats involving month and day, and optionally year.
-    public static var fuzzyDateString: FuzzyDateComponentsStringParseStrategy<ParseInput> {
+    public static var fuzzyDate: FuzzyDateComponentsStringParseStrategy<ParseInput> {
         FuzzyDateComponentsStringParseStrategy()
     }
 }
 
-// MARK: - FuzzyDateStringParseStrategy
+// MARK: - fuzzyDateParseStrategy
 
 /// **OTCore:**
 /// Parse a date string heuristically in a variety of formats involving month and day, and optionally year.
@@ -310,7 +310,7 @@ extension ParseStrategy where ParseOutput == DateComponents,
 /// - "21Oct2020"
 /// - "2020Oct21"
 @available(macOS 12.0, iOS 15.0, tvOS 15.0, watchOS 8.0, *)
-public struct FuzzyDateStringParseStrategy<ParseInput>: ParseStrategy, Sendable where ParseInput: StringProtocol {
+public struct fuzzyDateParseStrategy<ParseInput>: ParseStrategy, Sendable where ParseInput: StringProtocol {
     public func parse(_ value: ParseInput) throws -> Date {
         guard let dc = DateComponents(fuzzy: value)
         else {
@@ -333,23 +333,23 @@ public struct FuzzyDateStringParseStrategy<ParseInput>: ParseStrategy, Sendable 
 
 @available(macOS 12.0, iOS 15.0, tvOS 15.0, watchOS 8.0, *)
 extension ParseStrategy where ParseOutput == Date,
-                              Self == FuzzyDateStringParseStrategy<String>
+                              Self == fuzzyDateParseStrategy<String>
 {
     /// **OTCore:**
     /// Parse a date string heuristically in a variety of formats involving month and day, and optionally year.
-    public static var fuzzyDateString: FuzzyDateStringParseStrategy<ParseInput> {
-        FuzzyDateStringParseStrategy()
+    public static var fuzzyDate: fuzzyDateParseStrategy<ParseInput> {
+        fuzzyDateParseStrategy()
     }
 }
 
 @available(macOS 12.0, iOS 15.0, tvOS 15.0, watchOS 8.0, *)
 extension ParseStrategy where ParseOutput == Date,
-                              Self == FuzzyDateStringParseStrategy<Substring>
+                              Self == fuzzyDateParseStrategy<Substring>
 {
     /// **OTCore:**
     /// Parse a date string heuristically in a variety of formats involving month and day, and optionally year.
-    public static var fuzzyDateString: FuzzyDateStringParseStrategy<ParseInput> {
-        FuzzyDateStringParseStrategy()
+    public static var fuzzyDate: fuzzyDateParseStrategy<ParseInput> {
+        fuzzyDateParseStrategy()
     }
 }
 
