@@ -12,6 +12,11 @@ import Foundation
 extension IPAddress {
     @available(*, deprecated, renamed: "Version")
     public typealias IPAddressType = Version
+    
+    @available(*, deprecated, renamed: "version")
+    public var format: IPAddressType {
+        version
+    }
 }
 
 // MARK: - Data.swift

@@ -15,11 +15,11 @@ class Abstractions_IPAddress_Tests: XCTestCase {
         // MARK: IPv4
         
         // valid unspecified
-        XCTAssertEqual(IPAddress("0.0.0.0")?.format, .ipV4)
+        XCTAssertEqual(IPAddress("0.0.0.0")?.version, .ipV4)
         
-        XCTAssertEqual(IPAddress("10.0.0.100")?.format, .ipV4)
-        XCTAssertEqual(IPAddress("255.255.255.255")?.format, .ipV4)
-        XCTAssertEqual(IPAddress("001.001.001.001")?.format, .ipV4)
+        XCTAssertEqual(IPAddress("10.0.0.100")?.version, .ipV4)
+        XCTAssertEqual(IPAddress("255.255.255.255")?.version, .ipV4)
+        XCTAssertEqual(IPAddress("001.001.001.001")?.version, .ipV4)
         
         XCTAssertNil(IPAddress("..."))
         XCTAssertNil(IPAddress(" . . . "))
@@ -37,29 +37,29 @@ class Abstractions_IPAddress_Tests: XCTestCase {
         // MARK: IPv6
         
         // local loopback address
-        XCTAssertEqual(IPAddress("::1")?.format, .ipV6)
+        XCTAssertEqual(IPAddress("::1")?.version, .ipV6)
         
         // valid unspecified
-        XCTAssertEqual(IPAddress("::")?.format, .ipV6)
+        XCTAssertEqual(IPAddress("::")?.version, .ipV6)
         
         // includes interface component
         XCTAssertEqual(
-            IPAddress("fe80::479:5a0d:bf0f:130%en0")?.format,
+            IPAddress("fe80::479:5a0d:bf0f:130%en0")?.version,
             .ipV6
         )
         
         // includes interface component
         XCTAssertEqual(
-            IPAddress("fe80::c6a:a089:1eec:80a7%awdl0")?.format,
+            IPAddress("fe80::c6a:a089:1eec:80a7%awdl0")?.version,
             .ipV6
         )
-        XCTAssertEqual(IPAddress("2001:470:9b36:1::2")?.format, .ipV6)
-        XCTAssertEqual(IPAddress("2001:cdba:0000:0000:0000:0000:3257:9652")?.format, .ipV6)
-        XCTAssertEqual(IPAddress("2001:cdba:0:0:0:0:3257:9652")?.format, .ipV6)
-        XCTAssertEqual(IPAddress("2001:db8:85a3::8a2e:370:7334")?.format, .ipV6)
+        XCTAssertEqual(IPAddress("2001:470:9b36:1::2")?.version, .ipV6)
+        XCTAssertEqual(IPAddress("2001:cdba:0000:0000:0000:0000:3257:9652")?.version, .ipV6)
+        XCTAssertEqual(IPAddress("2001:cdba:0:0:0:0:3257:9652")?.version, .ipV6)
+        XCTAssertEqual(IPAddress("2001:db8:85a3::8a2e:370:7334")?.version, .ipV6)
         
         // IPv4 address mapped to IPv6
-        XCTAssertEqual(IPAddress("::ffff:192.0.2.128")?.format, .ipV6)
+        XCTAssertEqual(IPAddress("::ffff:192.0.2.128")?.version, .ipV6)
         
         XCTAssertNil(IPAddress("::_"))
         

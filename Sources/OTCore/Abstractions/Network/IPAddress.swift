@@ -17,7 +17,7 @@ public struct IPAddress {
 	
     /// **OTCore:**
     /// Validated IP address format.
-    public var format: Version
+    public var version: Version
     
     /// **OTCore:**
     /// IP Address Format Validation.
@@ -30,7 +30,7 @@ public struct IPAddress {
             return nil
         }
         
-        format = validatedFormat
+        version = validatedFormat
     }
 }
 
