@@ -41,6 +41,7 @@ extension DateComponents {
     @_disfavoredOverload
     public init?(string: String) {
         self.init()
+        calendar = .current // required if converted to `Date` type later on
         
         var year = 0
         var month = 0
