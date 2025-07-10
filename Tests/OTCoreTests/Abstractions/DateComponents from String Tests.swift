@@ -218,6 +218,12 @@ class Abstractions_DateComponentsFromString_Tests: XCTestCase {
         XCTAssertEqual(parsed.day,     26)
     }
     
+    @available(macOS 12.0, iOS 15.0, tvOS 15.0, watchOS 8.0, *)
+    func testDateParseStrategy() throws {
+        let parsed = try Date("Mar 26, 2019", strategy: .fuzzyDateString)
+        XCTAssertEqual(parsed.timeIntervalSince1970, 1553583600.0)
+    }
+    
     func testDateComponents_StringWithMask() {
         // empty/nil components
         

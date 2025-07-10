@@ -280,6 +280,79 @@ extension ParseStrategy where ParseOutput == DateComponents,
     }
 }
 
+// MARK: - FuzzyDateStringParseStrategy
+
+/// **OTCore:**
+/// Parse a date string heuristically in a variety of formats involving month and day, and optionally year.
+///
+/// Only produces day, month and year components.
+///
+/// Acceptable formats include:
+///
+/// - "10-21-20" (or "10/21/20")
+/// - "21-10-20" (or "21/10/20")
+///
+/// - "2020-10-21" (or "2020/10/21")
+/// - "2020-21-10" (or "2020/21/10")
+/// - "10-21-2020" (or "10/21/2020")
+/// - "21-10-2020" (or "21/10/2020")
+///
+/// - "2020-Oct-21" (or "2020/Oct/21")
+/// - "2020-21-Oct" (or "2020/21/Oct")
+///
+/// - "Oct 21 2020"
+/// - "October 21 2020"
+/// - "Oct 21, 2020"
+/// - "October 21, 2020"
+/// - "21 Oct 2020"
+/// - "21 October 2020"
+///
+/// - "21Oct2020"
+/// - "2020Oct21"
+@available(macOS 12.0, iOS 15.0, tvOS 15.0, watchOS 8.0, *)
+public struct FuzzyDateStringParseStrategy<ParseInput>: ParseStrategy, Sendable where ParseInput: StringProtocol {
+    public func parse(_ value: ParseInput) throws -> Date {
+        guard let dc = DateComponents(fuzzy: value)
+        else {
+            throw ParseError.parseFailed
+        }
+        guard let date = dc.date
+        else {
+            throw ParseError.dateConversionFailed
+        }
+        return date
+    }
+    
+    public init() { }
+    
+    public enum ParseError: Error {
+        case parseFailed
+        case dateConversionFailed
+    }
+}
+
+@available(macOS 12.0, iOS 15.0, tvOS 15.0, watchOS 8.0, *)
+extension ParseStrategy where ParseOutput == Date,
+                              Self == FuzzyDateStringParseStrategy<String>
+{
+    /// **OTCore:**
+    /// Parse a date string heuristically in a variety of formats involving month and day, and optionally year.
+    public static var fuzzyDateString: FuzzyDateStringParseStrategy<ParseInput> {
+        FuzzyDateStringParseStrategy()
+    }
+}
+
+@available(macOS 12.0, iOS 15.0, tvOS 15.0, watchOS 8.0, *)
+extension ParseStrategy where ParseOutput == Date,
+                              Self == FuzzyDateStringParseStrategy<Substring>
+{
+    /// **OTCore:**
+    /// Parse a date string heuristically in a variety of formats involving month and day, and optionally year.
+    public static var fuzzyDateString: FuzzyDateStringParseStrategy<ParseInput> {
+        FuzzyDateStringParseStrategy()
+    }
+}
+
 // MARK: - .string(withMask:)
 
 extension DateComponents {
