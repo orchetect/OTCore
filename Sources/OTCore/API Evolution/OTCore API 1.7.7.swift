@@ -9,6 +9,17 @@
 #if canImport(Foundation)
 import Foundation
 
+extension Collection where Element == UInt8 {
+    /// **OTCore:**
+    /// Same as `Data(self)`.
+    /// Returns a Data object using the array as bytes.
+    @_disfavoredOverload
+    @available(*, deprecated, renamed: "toData()")
+    public var data: Data {
+        toData()
+    }
+}
+
 extension Data {
     /// **OTCore:**
     /// Returns an array of bytes.

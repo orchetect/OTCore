@@ -471,10 +471,10 @@ extension Data {
 
 extension Collection where Element == UInt8 {
     /// **OTCore:**
-    /// Same as `Data(self)`
     /// Returns a Data object using the array as bytes.
+    /// Same as `Data(self)`.
     @_disfavoredOverload
-    public var data: Data {
+    public func toData() -> Data {
         Data(self)
     }
 }

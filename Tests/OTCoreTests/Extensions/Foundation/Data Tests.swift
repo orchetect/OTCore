@@ -719,7 +719,7 @@ class Extensions_Foundation_Data_Tests: XCTestCase {
         
         // Collection -> Data
         
-        XCTAssertEqual(sourceBytes.data, Data([1, 2, 3]))
+        XCTAssertEqual(sourceBytes.toData(), Data([1, 2, 3]))
         
         // Data -> Collection
         
