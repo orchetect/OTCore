@@ -38,8 +38,15 @@ extension DateComponents {
     ///
     /// - "21Oct2020"
     /// - "2020Oct21"
-    @_disfavoredOverload
-    public init?(string: String) {
+    ///
+    /// > Note:
+    /// >
+    /// > A ParseStrategy is also available using the same text parsing algorithm.
+    /// >
+    /// > ```swift
+    /// > let components = try DateComponents("Oct 21 2020", strategy: .fuzzyDateString)
+    /// > ```
+    public init?<S: StringProtocol>(fuzzy string: S) {
         self.init()
         calendar = .current // required if converted to `Date` type later on
         
@@ -202,7 +209,7 @@ extension String {
     /// Attempts to parse Year, Month and Day components from an unformatted date string using simple heuristics.
     @_disfavoredOverload
     public var dateComponents: DateComponents? {
-        DateComponents(string: self)
+        DateComponents(fuzzy: self)
     }
 }
 

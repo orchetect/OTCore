@@ -12,6 +12,13 @@ class Abstractions_DateComponentsFromString_Tests: XCTestCase {
     override func tearDown() { super.tearDown() }
     
     func testDateComponents_Init_String() {
+        let parsed = DateComponents(fuzzy: "Mar 26, 2019")
+        XCTAssertEqual(parsed?.year,    2019)
+        XCTAssertEqual(parsed?.month,   3)
+        XCTAssertEqual(parsed?.day,     26)
+    }
+    
+    func testStringParsing() {
         var parsed: DateComponents?
         
         // test basic delimiters: space , . / \
