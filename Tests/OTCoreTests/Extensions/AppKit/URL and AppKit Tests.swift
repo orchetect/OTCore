@@ -18,7 +18,7 @@ class Extensions_AppKit_URLAndAppKit_Tests: XCTestCase {
         // on most, if not all, systems this should produce a value
         
         let url = URL(fileURLWithPath: "/")
-        let fileIcon = url.icon
+        let fileIcon = url.fileIcon
         XCTAssertNotNil(fileIcon)
     }
 }

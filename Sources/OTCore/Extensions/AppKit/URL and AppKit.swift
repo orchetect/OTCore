@@ -16,7 +16,7 @@ extension URL {
     /// Returns nil if URL is not a file URL or if file does not exist.
     /// Thread-safe.
     @_disfavoredOverload
-    public var icon: NSImage? {
+    public var fileIcon: NSImage? {
         guard isFileURL, fileExists else { return nil }
         
         return NSWorkspace.shared.icon(forFile: path)

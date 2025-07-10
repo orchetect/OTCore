@@ -84,4 +84,24 @@ extension DateComponents {
         self.init(fuzzy: string)
     }
 }
+
+// MARK: - URL and AppKit.swift
+
+#if os(macOS)
+import AppKit
+
+extension URL {
+    /// **OTCore:**
+    /// Returns the icon that represents the given file, folder, application, etc.
+    /// Returns nil if URL is not a file URL or if file does not exist.
+    /// Thread-safe.
+    @_disfavoredOverload
+    @available(*, deprecated, renamed: "fileIcon")
+    public var icon: NSImage? {
+        fileIcon
+    }
+}
+
+#endif
+
 #endif
