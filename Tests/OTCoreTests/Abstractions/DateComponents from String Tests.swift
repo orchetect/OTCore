@@ -205,6 +205,19 @@ class Abstractions_DateComponentsFromString_Tests: XCTestCase {
         XCTAssertNil(parsed)
     }
     
+    func testDateComponentsParseStrategy() throws {
+        // TODO: have to make this a guard statement with XCTest as it doesn't play nice with @available attributes on test functions, but when migrating to Swift Testing this can transition to being a @availble keyword on the test func
+        guard #available(macOS 26.0, iOS 26.0, tvOS 26.0, watchOS 26.0, visionOS 26.0, *) // DateComponents(_, strategy:) requirement
+        else {
+            throw XCTSkip("Not available on this platform.")
+        }
+        
+        let parsed = try DateComponents("Mar 26, 2019", strategy: .fuzzyDateString)
+        XCTAssertEqual(parsed.year,    2019)
+        XCTAssertEqual(parsed.month,   3)
+        XCTAssertEqual(parsed.day,     26)
+    }
+    
     func testDateComponents_StringWithMask() {
         // empty/nil components
         
