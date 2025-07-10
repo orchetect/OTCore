@@ -309,12 +309,18 @@ extension ParseStrategy where ParseOutput == DateComponents,
 /// - "21Oct2020"
 /// - "2020Oct21"
 @available(macOS 12.0, iOS 15.0, tvOS 15.0, watchOS 8.0, *)
-public struct fuzzyDateParseStrategy<ParseInput>: ParseStrategy, Sendable where ParseInput: StringProtocol {
+public struct FuzzyDateParseStrategy<ParseInput>: ParseStrategy, Sendable where ParseInput: StringProtocol {
+    public var calendar: Calendar
+    public var timeZone: TimeZone
+    
     public func parse(_ value: ParseInput) throws -> Date {
-        guard let dc = DateComponents(fuzzy: value)
+        guard var dc = DateComponents(fuzzy: value)
         else {
             throw ParseError.parseFailed
         }
+        dc.calendar = calendar
+        dc.timeZone = timeZone
+        
         guard let date = dc.date
         else {
             throw ParseError.dateConversionFailed
@@ -322,7 +328,13 @@ public struct fuzzyDateParseStrategy<ParseInput>: ParseStrategy, Sendable where 
         return date
     }
     
-    public init() { }
+    public init(
+        calendar: Calendar = .current,
+        timeZone: TimeZone = .current
+    ) {
+        self.calendar = calendar
+        self.timeZone = timeZone
+    }
     
     public enum ParseError: Error {
         case parseFailed
@@ -332,23 +344,29 @@ public struct fuzzyDateParseStrategy<ParseInput>: ParseStrategy, Sendable where 
 
 @available(macOS 12.0, iOS 15.0, tvOS 15.0, watchOS 8.0, *)
 extension ParseStrategy where ParseOutput == Date,
-                              Self == fuzzyDateParseStrategy<String>
+                              Self == FuzzyDateParseStrategy<String>
 {
     /// **OTCore:**
     /// Parse a date string heuristically in a variety of formats involving month and day, and optionally year.
-    public static var fuzzyDate: fuzzyDateParseStrategy<ParseInput> {
-        fuzzyDateParseStrategy()
+    public static func fuzzyDate(
+        calendar: Calendar = .current,
+        timeZone: TimeZone = .current
+    ) -> FuzzyDateParseStrategy<ParseInput> {
+        FuzzyDateParseStrategy(calendar: calendar, timeZone: timeZone)
     }
 }
 
 @available(macOS 12.0, iOS 15.0, tvOS 15.0, watchOS 8.0, *)
 extension ParseStrategy where ParseOutput == Date,
-                              Self == fuzzyDateParseStrategy<Substring>
+                              Self == FuzzyDateParseStrategy<Substring>
 {
     /// **OTCore:**
     /// Parse a date string heuristically in a variety of formats involving month and day, and optionally year.
-    public static var fuzzyDate: fuzzyDateParseStrategy<ParseInput> {
-        fuzzyDateParseStrategy()
+    public static func fuzzyDate(
+        calendar: Calendar = .current,
+        timeZone: TimeZone = .current
+    ) -> FuzzyDateParseStrategy<ParseInput> {
+        FuzzyDateParseStrategy(calendar: calendar, timeZone: timeZone)
     }
 }
 
