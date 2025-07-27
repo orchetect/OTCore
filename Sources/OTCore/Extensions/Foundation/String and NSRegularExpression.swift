@@ -12,7 +12,7 @@ import Foundation
 
 extension StringProtocol {
     /// **OTCore:**
-    /// Returns an array of RegEx matches
+    /// Returns an array of RegEx matches.
     @_disfavoredOverload
     public func regexMatches(
         pattern: String,
@@ -62,7 +62,7 @@ extension StringProtocol {
     }
     
     /// **OTCore:**
-    /// Returns a string from a tokenized string of RegEx matches
+    /// Returns a string from a tokenized string of RegEx matches.
     @_disfavoredOverload
     public func regexMatches(
         pattern: String,
@@ -105,7 +105,10 @@ extension StringProtocol {
     }
     
     /// **OTCore:**
-    /// Returns capture groups from regex matches. If any capture group is not matched it will be `nil`.
+    /// Returns capture groups from regex matches.
+    /// The first element in the returned array is a full match.
+    /// Subsequent array elements are capture groups.
+    /// If any capture group is not matched it will be `nil`.
     @_disfavoredOverload
     public func regexMatches(
         captureGroupsFromPattern: String,
