@@ -264,6 +264,19 @@ extension Time {
             self = Time(seconds: newValue)
         }
     }
+    
+    /// Get or set the time interval in milliseconds.
+    public var millisecondsInterval: Int {
+        get {
+            let ms = (totalMinutes * 60 * 1000)
+                + (seconds * 1000)
+                + milliseconds
+            return sign == .plus ? ms : -ms
+        }
+        set {
+            self = Time(milliseconds: newValue)
+        }
+    }
 }
 
 extension Time {
