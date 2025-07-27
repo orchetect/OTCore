@@ -33,6 +33,21 @@ class Extensions_Foundation_StringAndNSRegularExpression_Tests: XCTestCase {
         )
     }
     
+    /// Ensure that using a Substring as the input string works as expected.
+    func testRegExPattern_InSubString() {
+        let regPattern = "^([0-9]+)X([0-9]+)$"
+        
+        let str: String = " 123X456 "
+        let subStr: Substring = str[
+            str.index(str.startIndex, offsetBy: 1) ..< str.index(str.startIndex, offsetBy: 8)
+        ]
+        
+        XCTAssertEqual(
+            subStr.regexMatches(pattern: regPattern),
+            ["123X456"]
+        )
+    }
+    
     func testRegExPatternReplacement() {
         let regPattern = "[0-9]+"
         
@@ -58,6 +73,24 @@ class Extensions_Foundation_StringAndNSRegularExpression_Tests: XCTestCase {
                 replacementTemplate: "$0-some"
             ),
             "Thé 45-some smiling 😀 túrkêÿs åte →●₩√【】♞‱ 9-some Şandwiches."
+        )
+    }
+    
+    /// Ensure that using a Substring as the input string works as expected.
+    func testRegExPatternReplacement_InSubString() {
+        let regPattern = "^([0-9]+)X([0-9]+)$"
+        
+        let str: String = " 123X456 "
+        let subStr: Substring = str[
+            str.index(str.startIndex, offsetBy: 1) ..< str.index(str.startIndex, offsetBy: 8)
+        ]
+        
+        XCTAssertEqual(
+            subStr.regexMatches(
+                pattern: regPattern, 
+                replacementTemplate: "A$1B$2C"
+            ),
+            "A123B456C"
         )
     }
     
@@ -94,6 +127,21 @@ class Extensions_Foundation_StringAndNSRegularExpression_Tests: XCTestCase {
                 Optional("Śtřįng 😀→●₩√【】♞‱"),
                 Optional("1234")
             ]
+        )
+    }
+    
+    /// Ensure that using a Substring as the input string works as expected.
+    func testRegExCaptureGroups_InSubString() {
+        let regPattern = "^([0-9]+)X([0-9]+)$"
+        
+        let str: String = " 123X456 "
+        let subStr: Substring = str[
+            str.index(str.startIndex, offsetBy: 1) ..< str.index(str.startIndex, offsetBy: 8)
+        ]
+        
+        XCTAssertEqual(
+            subStr.regexMatches(captureGroupsFromPattern: regPattern),
+            ["123X456", "123", "456"]
         )
     }
 }
