@@ -508,6 +508,8 @@ extension Time.Format {
 // MARK: Math
 
 extension Time {
+    // MARK: - Add
+    
     public static func + (lhs: Self, rhs: Time) -> Time {
         let ms = lhs.millisecondsInterval + rhs.millisecondsInterval
         return Time(milliseconds: ms)
@@ -517,6 +519,8 @@ extension Time {
         lhs = lhs + rhs
     }
     
+    // MARK: - Subtract
+    
     public static func - (lhs: Self, rhs: Time) -> Time {
         let ms = lhs.millisecondsInterval - rhs.millisecondsInterval
         return Time(milliseconds: ms)
@@ -524,5 +528,45 @@ extension Time {
     
     public static func -= (lhs: inout Self, rhs: Time) {
         lhs = lhs - rhs
+    }
+    
+    // MARK: - Multiply
+    
+    public static func * <T: FixedWidthInteger>(lhs: Self, rhs: T) -> Time {
+        let ms = lhs.millisecondsInterval * Int(rhs)
+        return Time(milliseconds: ms)
+    }
+    
+    public static func *= (lhs: inout Self, rhs: some FixedWidthInteger) {
+        lhs = lhs * rhs
+    }
+    
+    public static func * <T: BinaryFloatingPoint>(lhs: Self, rhs: T) -> Time {
+        let ms = T(lhs.millisecondsInterval) * rhs
+        return Time(milliseconds: Int(ms))
+    }
+    
+    public static func *= <T: BinaryFloatingPoint>(lhs: inout Self, rhs: T) {
+        lhs = lhs * rhs
+    }
+    
+    // MARK: - Divide
+    
+    public static func / <T: FixedWidthInteger>(lhs: Self, rhs: T) -> Time {
+        let ms = lhs.millisecondsInterval / Int(rhs)
+        return Time(milliseconds: ms)
+    }
+    
+    public static func /= (lhs: inout Self, rhs: some FixedWidthInteger) {
+        lhs = lhs / rhs
+    }
+    
+    public static func / <F: BinaryFloatingPoint>(lhs: Self, rhs: F) -> Time {
+        let ms = F(lhs.millisecondsInterval) / rhs
+        return Time(milliseconds: Int(ms))
+    }
+    
+    public static func /= <T: BinaryFloatingPoint>(lhs: inout Self, rhs: T) {
+        lhs = lhs / rhs
     }
 }
