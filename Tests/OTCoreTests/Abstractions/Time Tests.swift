@@ -414,7 +414,7 @@ final class Abstractions_Time_Tests: XCTestCase {
         )
     }
     
-    func testIntervalMillisecondsGet() {
+    func testMillisecondsIntervalGet() {
         XCTAssertEqual(
             Time(hours: 0, minutes: 0, seconds: 0).millisecondsInterval,
             0
@@ -437,7 +437,7 @@ final class Abstractions_Time_Tests: XCTestCase {
     }
     
     func testIntervalSetA() {
-        var t = Time(seconds: 20)
+        var t = Time(hours: 1, minutes: 2, seconds: 3, milliseconds: 4)
         
         t.interval = 50
         
@@ -449,7 +449,7 @@ final class Abstractions_Time_Tests: XCTestCase {
     }
     
     func testIntervalSetB() {
-        var t = Time(seconds: 20)
+        var t = Time(hours: 1, minutes: 2, seconds: 3, milliseconds: 4)
         
         t.interval = 18380.005
         
@@ -461,7 +461,7 @@ final class Abstractions_Time_Tests: XCTestCase {
     }
     
     func testIntervalSetC() {
-        var t = Time(seconds: 20)
+        var t = Time(hours: 1, minutes: 2, seconds: 3, milliseconds: 4)
         
         t.interval = 0.0
         
@@ -473,9 +473,57 @@ final class Abstractions_Time_Tests: XCTestCase {
     }
     
     func testIntervalSetD() {
-        var t = Time(seconds: 20)
+        var t = Time(hours: 1, minutes: 2, seconds: 3, milliseconds: 4)
         
         t.interval = -40.0
+        
+        XCTAssertEqual(t.hours, 0)
+        XCTAssertEqual(t.minutes, 0)
+        XCTAssertEqual(t.seconds, 40)
+        XCTAssertEqual(t.milliseconds, 0)
+        XCTAssertEqual(t.sign, .minus)
+    }
+    
+    func testMillisecondsIntervalSetA() {
+        var t = Time(hours: 1, minutes: 2, seconds: 3, milliseconds: 4)
+        
+        t.millisecondsInterval = 50_000
+        
+        XCTAssertEqual(t.hours, 0)
+        XCTAssertEqual(t.minutes, 0)
+        XCTAssertEqual(t.seconds, 50)
+        XCTAssertEqual(t.milliseconds, 0)
+        XCTAssertEqual(t.sign, .plus)
+    }
+    
+    func testMillisecondsIntervalSetB() {
+        var t = Time(hours: 1, minutes: 2, seconds: 3, milliseconds: 4)
+        
+        t.millisecondsInterval = 18_380_005
+        
+        XCTAssertEqual(t.hours, 5)
+        XCTAssertEqual(t.minutes, 6)
+        XCTAssertEqual(t.seconds, 20)
+        XCTAssertEqual(t.milliseconds, 5)
+        XCTAssertEqual(t.sign, .plus)
+    }
+    
+    func testMillisecondsIntervalSetC() {
+        var t = Time(hours: 1, minutes: 2, seconds: 3, milliseconds: 4)
+        
+        t.millisecondsInterval = 0
+        
+        XCTAssertEqual(t.hours, 0)
+        XCTAssertEqual(t.minutes, 0)
+        XCTAssertEqual(t.seconds, 0)
+        XCTAssertEqual(t.milliseconds, 0)
+        XCTAssertEqual(t.sign, .plus)
+    }
+    
+    func testMillisecondsIntervalSetD() {
+        var t = Time(hours: 1, minutes: 2, seconds: 3, milliseconds: 4)
+        
+        t.millisecondsInterval = -40_000
         
         XCTAssertEqual(t.hours, 0)
         XCTAssertEqual(t.minutes, 0)
@@ -616,5 +664,105 @@ final class Abstractions_Time_Tests: XCTestCase {
         
         XCTAssertFalse(Time(seconds: 20) > Time(seconds: 20))
         XCTAssertFalse(Time(seconds: 20) < Time(seconds: 20))
+    }
+    
+    func testAdd() {
+        XCTAssertEqual(
+            Time(hours: 5, minutes: 6, seconds: 20, milliseconds: 5)
+                + Time(hours: 1, minutes: 2, seconds: 3, milliseconds: 4),
+            Time(hours: 6, minutes: 8, seconds: 23, milliseconds: 9)
+        )
+        
+        XCTAssertEqual(
+            Time(hours: 5, minutes: 6, seconds: 20, milliseconds: 5)
+                + Time(hours: 1, minutes: 2, seconds: 3, milliseconds: 4 + 1000),
+            Time(hours: 6, minutes: 8, seconds: 23 + 1, milliseconds: 9)
+        )
+        
+        XCTAssertEqual(
+            Time(hours: 5, minutes: 6, seconds: 20, milliseconds: 5)
+                + Time.zero,
+            Time(hours: 5, minutes: 6, seconds: 20, milliseconds: 5)
+        )
+        
+        XCTAssertEqual(
+            Time(hours: 4, minutes: 59, seconds: 59, milliseconds: 999)
+                + Time(milliseconds: 1),
+            Time(hours: 5, minutes: 0, seconds: 00, milliseconds: 0)
+        )
+        
+        XCTAssertEqual(
+            Time(hours: 5, minutes: 0, seconds: 00, milliseconds: 0)
+                + Time(milliseconds: -1),
+            Time(hours: 4, minutes: 59, seconds: 59, milliseconds: 999)
+        )
+        
+        XCTAssertEqual(
+            Time.zero
+                + Time(milliseconds: -1),
+            Time(hours: 0, minutes: 0, seconds: 0, milliseconds: 1, sign: .minus)
+        )
+    }
+    
+    func testAddAssign() {
+        var time = Time.zero
+        
+        time += .zero
+        XCTAssertEqual(time, .zero)
+        
+        time += Time(hours: 4, minutes: 59, seconds: 59, milliseconds: 999)
+        XCTAssertEqual(time, Time(hours: 4, minutes: 59, seconds: 59, milliseconds: 999))
+        
+        time += Time(milliseconds: 1)
+        XCTAssertEqual(time, Time(hours: 5, minutes: 0, seconds: 00, milliseconds: 0))
+        
+        time += Time(milliseconds: -1)
+        XCTAssertEqual(time, Time(hours: 4, minutes: 59, seconds: 59, milliseconds: 999))
+    }
+    
+    func testSubtract() {
+        XCTAssertEqual(
+            Time(hours: 5, minutes: 6, seconds: 20, milliseconds: 5)
+                - Time(hours: 1, minutes: 2, seconds: 3, milliseconds: 4),
+            Time(hours: 4, minutes: 4, seconds: 17, milliseconds: 1)
+        )
+        
+        XCTAssertEqual(
+            Time(hours: 5, minutes: 6, seconds: 20, milliseconds: 5)
+                - Time(hours: 1, minutes: 2, seconds: 3, milliseconds: 4 + 1000),
+            Time(hours: 4, minutes: 4, seconds: 16, milliseconds: 1)
+        )
+        
+        XCTAssertEqual(
+            Time(hours: 5, minutes: 6, seconds: 20, milliseconds: 5)
+                - Time.zero,
+            Time(hours: 5, minutes: 6, seconds: 20, milliseconds: 5)
+        )
+        
+        XCTAssertEqual(
+            Time(hours: 5, minutes: 0, seconds: 00, milliseconds: 0)
+                - Time(milliseconds: 1),
+            Time(hours: 4, minutes: 59, seconds: 59, milliseconds: 999)
+        )
+        
+        XCTAssertEqual(
+            Time.zero
+                - Time(milliseconds: 1),
+            Time(hours: 0, minutes: 0, seconds: 0, milliseconds: 1, sign: .minus)
+        )
+    }
+    
+    func testSubtrackAssign() {
+        var time = Time.zero
+        
+        time -= .zero
+        XCTAssertEqual(time, .zero)
+        
+        time = Time(hours: 5, minutes: 0, seconds: 00, milliseconds: 0)
+        time -= Time(milliseconds: 1)
+        XCTAssertEqual(time, Time(hours: 4, minutes: 59, seconds: 59, milliseconds: 999))
+        
+        time -= Time(milliseconds: -1)
+        XCTAssertEqual(time, Time(hours: 5, minutes: 0, seconds: 00, milliseconds: 0))
     }
 }
