@@ -51,7 +51,6 @@ final class Abstractions_Time_Tests: XCTestCase {
         XCTAssertEqual(t.sign, .plus)
     }
     
-    
     func testTimeHMS_Negative() {
         // basic
         
@@ -412,6 +411,28 @@ final class Abstractions_Time_Tests: XCTestCase {
         XCTAssertEqual(
             Time(hours: 5, minutes: 6, seconds: 20, milliseconds: 5, sign: .minus).interval,
             -18380.005
+        )
+    }
+    
+    func testIntervalMillisecondsGet() {
+        XCTAssertEqual(
+            Time(hours: 0, minutes: 0, seconds: 0).millisecondsInterval,
+            0
+        )
+        
+        XCTAssertEqual(
+            Time(hours: 5, minutes: 6, seconds: 20).millisecondsInterval,
+            18380000
+        )
+        
+        XCTAssertEqual(
+            Time(hours: 5, minutes: 6, seconds: 20, milliseconds: 5).millisecondsInterval,
+            18380005
+        )
+        
+        XCTAssertEqual(
+            Time(hours: 5, minutes: 6, seconds: 20, milliseconds: 5, sign: .minus).millisecondsInterval,
+            -18380005
         )
     }
     
