@@ -51,7 +51,7 @@ public struct Time {
     }
     
     /// Initialize from a time interval in seconds.
-    public init(seconds: Int) {
+    public init(seconds: Int, milliseconds: Int = 0) {
         sign = seconds < 0 ? .minus : .plus
         
         let seconds = abs(seconds)
@@ -63,6 +63,8 @@ public struct Time {
             minutes = (seconds / 60) % 60
             self.seconds = seconds % 60
         }
+        
+        self.milliseconds = milliseconds
     }
     
     /// Initialize from a time interval in seconds.
