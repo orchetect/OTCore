@@ -26,10 +26,11 @@ extension StringProtocol {
             )
             
             func runRegEx(in source: String) -> [NSTextCheckingResult] {
-                regex.matches(
+                let range = NSMakeRange(0, (nsString as String).utf16.count)
+                return regex.matches(
                     in: source,
                     options: matchesOptions,
-                    range: NSMakeRange(0, (nsString as String).utf16.count)
+                    range: range
                 )
             }
             
@@ -120,10 +121,14 @@ extension StringProtocol {
             let result: [SubSequence?]
             
             func runRegEx(in source: String) -> [SubSequence?] {
+                let searchRange = NSMakeRange(
+                    source.utf16.startIndex.utf16Offset(in: source),
+                    source.utf16.count
+                )
                 let results = regex.matches(
                     in: source,
                     options: matchesOptions,
-                    range: NSMakeRange(0, source.utf16.count)
+                    range: searchRange
                 )
                 
                 var matches: [SubSequence?] = []
@@ -135,8 +140,9 @@ extension StringProtocol {
                         if nsRange.location == NSNotFound {
                             matches.append(nil)
                         } else {
-                            let lb = self.utf16.index(source.startIndex, offsetBy: nsRange.lowerBound)
-                            let ub = self.utf16.index(source.startIndex, offsetBy: nsRange.upperBound)
+                            let selfOffset = self.utf16.startIndex.utf16Offset(in: self)
+                            let lb = self.utf16.index(self.startIndex, offsetBy: selfOffset + nsRange.lowerBound)
+                            let ub = self.utf16.index(self.startIndex, offsetBy: selfOffset + nsRange.upperBound)
                             
                             let subString = self[lb ..< ub]
                             matches.append(subString)
