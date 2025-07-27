@@ -765,4 +765,50 @@ final class Abstractions_Time_Tests: XCTestCase {
         time -= Time(milliseconds: -1)
         XCTAssertEqual(time, Time(hours: 5, minutes: 0, seconds: 00, milliseconds: 0))
     }
+    
+    func testMultiplyAssign() {
+        var time = Time.zero
+        
+        time *= 0 // int
+        XCTAssertEqual(time, .zero)
+        
+        time *= 0.0 // floating-point
+        XCTAssertEqual(time, .zero)
+        
+        time = Time(hours: 4, minutes: 59, seconds: 59, milliseconds: 999)
+        time *= 2 // int
+        XCTAssertEqual(time, Time(hours: 9, minutes: 59, seconds: 59, milliseconds: 998))
+        
+        time = Time(hours: 1, minutes: 30, seconds: 0, milliseconds: 0)
+        time *= 2.5 // floating-point
+        XCTAssertEqual(time, Time(hours: 3, minutes: 45, seconds: 00, milliseconds: 0))
+        
+        time = Time(hours: 1, minutes: 30, seconds: 0, milliseconds: 0)
+        time *= 0.5 // floating-point
+        XCTAssertEqual(time, Time(hours: 0, minutes: 45, seconds: 00, milliseconds: 0))
+        
+        time = Time(hours: 1, minutes: 30, seconds: 0, milliseconds: 0)
+        time *= -0.5 // floating-point
+        XCTAssertEqual(time, Time(hours: 0, minutes: 45, seconds: 00, milliseconds: 0, sign: .minus))
+    }
+    
+    func testDivideAssign() {
+        var time = Time.zero
+        
+        time = Time(hours: 9, minutes: 59, seconds: 59, milliseconds: 998)
+        time /= 2 // int
+        XCTAssertEqual(time, Time(hours: 4, minutes: 59, seconds: 59, milliseconds: 999))
+        
+        time = Time(hours: 3, minutes: 45, seconds: 00, milliseconds: 0)
+        time /= 2.5 // floating-point
+        XCTAssertEqual(time, Time(hours: 1, minutes: 30, seconds: 0, milliseconds: 0))
+        
+        time = Time(hours: 0, minutes: 45, seconds: 00, milliseconds: 0)
+        time /= 0.5 // floating-point
+        XCTAssertEqual(time, Time(hours: 1, minutes: 30, seconds: 0, milliseconds: 0))
+        
+        time = Time(hours: 1, minutes: 30, seconds: 0, milliseconds: 0)
+        time /= -0.5 // floating-point
+        XCTAssertEqual(time, Time(hours: 3, minutes: 0, seconds: 00, milliseconds: 0, sign: .minus))
+    }
 }
