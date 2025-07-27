@@ -504,3 +504,25 @@ extension Time.Format {
         }
     }
 }
+
+// MARK: Math
+
+extension Time {
+    public static func + (lhs: Self, rhs: Time) -> Time {
+        let ms = lhs.millisecondsInterval + rhs.millisecondsInterval
+        return Time(milliseconds: ms)
+    }
+    
+    public static func += (lhs: inout Self, rhs: Time) {
+        lhs = lhs + rhs
+    }
+    
+    public static func - (lhs: Self, rhs: Time) -> Time {
+        let ms = lhs.millisecondsInterval - rhs.millisecondsInterval
+        return Time(milliseconds: ms)
+    }
+    
+    public static func -= (lhs: inout Self, rhs: Time) {
+        lhs = lhs - rhs
+    }
+}
