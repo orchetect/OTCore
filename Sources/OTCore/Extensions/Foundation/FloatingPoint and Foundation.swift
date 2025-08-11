@@ -18,8 +18,10 @@ extension Float80: FloatingPointHighPrecisionStringConvertible { }
 #endif
 
 /// Internal - cached
-fileprivate let ZeroCharacterSet   = CharacterSet(charactersIn: "0")
-fileprivate let PeriodCharacterSet = CharacterSet(charactersIn: ".")
+extension CharacterSet {
+    fileprivate static let zero = CharacterSet(charactersIn: "0")
+    fileprivate static let period = CharacterSet(charactersIn: ".")
+}
 
 extension FloatingPoint where Self: CVarArg,
                               Self: FloatingPointHighPrecisionStringConvertible {
@@ -28,7 +30,7 @@ extension FloatingPoint where Self: CVarArg,
     @_disfavoredOverload
     public var stringValueHighPrecision: String {
         var formatted = String(format: "%.100f", self)
-            .trimmingCharacters(in: ZeroCharacterSet)
+            .trimmingCharacters(in: .zero)
         
         if formatted.prefix(1) == "." { formatted = "0\(formatted)" }
         
@@ -90,12 +92,12 @@ extension Float80 {
         }
         
         return (splitComponents[0])
-        + "."
-        + splitComponents[1].padding(
-            toLength: decimalPlaces,
-            withPad: "0",
-            startingAt: 0
-        )
+            + "."
+            + splitComponents[1].padding(
+                toLength: decimalPlaces,
+                withPad: "0",
+                startingAt: 0
+            )
     }
 }
 #endif
