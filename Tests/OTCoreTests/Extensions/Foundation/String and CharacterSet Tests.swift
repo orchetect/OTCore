@@ -125,7 +125,7 @@ class Extensions_Foundation_StringAndCharacterSet_Tests: XCTestCase {
         
         XCTAssertEqual(
             "abcdefg 12345678 abcdefg 12345678"
-                .only(characters: "def456"),
+                .only(charactersIn: "def456"),
             "def456def456"
         )
         
@@ -150,7 +150,7 @@ class Extensions_Foundation_StringAndCharacterSet_Tests: XCTestCase {
         
         XCTAssertEqual(
             "💚test_123,456. 789"
-                .only(characters: "abcdefghijklmnopqrstuvwxyz1234567890"),
+                .only(charactersIn: "abcdefghijklmnopqrstuvwxyz1234567890"),
             "test123456789"
         )
     }
