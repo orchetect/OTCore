@@ -223,9 +223,9 @@ class Extensions_Foundation_StringAndCharacterSet_Tests: XCTestCase {
         XCTAssertTrue("abcABC123àÀ".isOnly(.alphanumerics))
         XCTAssertFalse("abcABC123!@#".isOnly(.alphanumerics))
         
-        XCTAssertTrue("bcA2".isOnly(characters: "abcABC123"))
-        XCTAssertFalse("abcABC123!@#".isOnly(characters: "abcABC123"))
-        XCTAssertFalse("abcABC123!@#".isOnly(characters: ""))
+        XCTAssertTrue("bcA2".isOnly(charactersIn: "abcABC123"))
+        XCTAssertFalse("abcABC123!@#".isOnly(charactersIn: "abcABC123"))
+        XCTAssertFalse("abcABC123!@#".isOnly(charactersIn: ""))
     }
     
     func testContainsOnlyCharacterSets() {
@@ -241,9 +241,9 @@ class Extensions_Foundation_StringAndCharacterSet_Tests: XCTestCase {
         XCTAssertTrue("abcABC123àÀ!@#$".contains(any: .alphanumerics))
         XCTAssertFalse("!@#$ [],.".contains(any: .alphanumerics))
         
-        XCTAssertTrue("abcABC123àÀ!@#$".contains(anyCharacters: "abc!"))
-        XCTAssertFalse("!@#$ [],.".contains(anyCharacters: "abc"))
-        XCTAssertFalse("!@#$ [],.".contains(anyCharacters: ""))
+        XCTAssertTrue("abcABC123àÀ!@#$".contains(anyCharactersIn: "abc!"))
+        XCTAssertFalse("!@#$ [],.".contains(anyCharactersIn: "abc"))
+        XCTAssertFalse("!@#$ [],.".contains(anyCharactersIn: ""))
     }
     
     func testContainsAnyCharacterSets() {
