@@ -13,11 +13,10 @@ extension NSScreen {
     /// Returns the screen that currently contains the user's mouse pointer.
     @_disfavoredOverload
     public static var screenWithMouseCursor: NSScreen {
-        NSScreen.screens
-            .first {
-                NSMouseInRect(NSEvent.mouseLocation, $0.frame, false)
-            }
-            ?? NSScreen.screens[0] // index 0 is virtually guaranteed to exist
+        .screens
+            .first { NSMouseInRect(NSEvent.mouseLocation, $0.frame, false) }
+            ?? .main
+            ?? .screens[0] // index 0 is virtually guaranteed to exist
     }
     
     /// **OTCore:**
