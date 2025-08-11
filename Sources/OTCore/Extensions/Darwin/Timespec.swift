@@ -36,7 +36,7 @@ public func clock_gettime_monotonic_raw() -> timespec {
     var uptime = timespec()
     
     if clock_gettime(CLOCK_MONOTONIC_RAW, &uptime) != 0 {
-        fatalError("Could not execute clock_gettime, errno: \(errno)")
+        assertionFailure("clock_gettime failed")
     }
     
     return uptime
