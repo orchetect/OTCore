@@ -113,8 +113,8 @@ extension StringProtocol {
     /// **OTCore:**
     /// Returns a string preserving only characters from the passed string and removing all other characters.
     @_disfavoredOverload
-    public func only(characters: String) -> String {
-        only(CharacterSet(charactersIn: characters))
+    public func only(charactersIn string: String) -> String {
+        only(CharacterSet(charactersIn: string))
     }
     
     /// **OTCore:**

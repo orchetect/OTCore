@@ -37,6 +37,12 @@ extension CGPoint {
 // MARK: - String and CharacterSet.swift
 
 extension StringProtocol {
+    @available(*, deprecated, renamed: "only(charactersIn:)")
+    @_disfavoredOverload
+    public func only(characters: String) -> String {
+        only(charactersIn: characters)
+    }
+    
     @available(*, deprecated, renamed: "isOnly(charactersIn:)")
     @_disfavoredOverload
     public func isOnly(characters: String) -> Bool {
