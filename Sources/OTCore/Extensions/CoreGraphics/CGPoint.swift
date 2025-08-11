@@ -8,22 +8,6 @@
 
 import CoreGraphics
 
-// AppKit contains Core Graphics
-#if canImport(AppKit)
-
-import Foundation
-
-extension CGPoint {
-    /// **OTCore:**
-    /// Returns the `CGPoint` as a `NSPoint` (toll-free bridged).
-    @inline(__always) @_disfavoredOverload
-    public var nsPoint: NSPoint {
-        self as NSPoint
-    }
-}
-
-#endif
-
 extension CGPoint {
     /// **OTCore:**
     /// Returns the point with the X value inverted on its axis.
