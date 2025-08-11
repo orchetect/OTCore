@@ -33,6 +33,7 @@ extension CharacterSet {
     /// Returns true if the `CharacterSet` contains the given `Character`.
     @_disfavoredOverload
     public func contains(_ character: Character) -> Bool {
+        // TODO: this may not be correct, it could match scalars non-sequentially
         character
             .unicodeScalars
             .allSatisfy(contains(_:))
