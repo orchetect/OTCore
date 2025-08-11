@@ -29,22 +29,22 @@ extension String {
     /// **OTCore:**
     /// Type describing a pair of enclosing brackets/braces or similar characters that are different for prefix and suffix.
     public enum StringWrappedEnclosingType: Sendable {
-        /// ( ) a.k.a. parens
+        /// `( )` a.k.a. parens
         case parentheses
         
-        /// [ ] a.k.a. square brackets
+        /// `[ ]` a.k.a. square brackets
         case brackets
         
-        /// { } a.k.a. curly braces
+        /// `{ }` a.k.a. curly braces
         case braces
         
-        /// < >
+        /// `< >`
         case angleBrackets
         
-        /// ' '
+        /// `' '`
         case singleQuotes
         
-        /// " "
+        /// `" "`
         case quotes
     }
     

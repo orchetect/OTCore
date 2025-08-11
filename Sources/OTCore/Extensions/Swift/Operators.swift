@@ -9,7 +9,7 @@
 infix operator %: MultiplicationPrecedence
 
 /// **OTCore:**
-/// Operator performing `.truncatingRemainder(dividingBy:)`
+/// Operator performing `truncatingRemainder(dividingBy:)`.
 @_disfavoredOverload
 public func % <T: FloatingPoint>(lhs: T, rhs: T) -> T {
     lhs.truncatingRemainder(dividingBy: rhs)

@@ -13,15 +13,16 @@ extension NSArray {
     /// Access collection indexes safely.
     ///
     /// > Note:
-    /// > `NSArray/NSMutableArray` indexes are always zero-based and sequential (0...).
+    /// > `NSArray/NSMutableArray` indexes are always zero-based and sequential (`0...`).
     /// > Therefore, a `[safePosition:]` subscript is unnecessary, as this subscript fills both roles.
     ///
     /// Example:
     ///
-    ///     let arr = [1, 2, 3] as NSArray
-    ///     arr[safe: 0] // Optional(1)
-    ///     arr[safe: 9] // nil
-    ///
+    /// ```swift
+    /// let arr = [1, 2, 3] as NSArray
+    /// arr[safe: 0] // Optional(1)
+    /// arr[safe: 9] // nil
+    /// ```
     @_disfavoredOverload
     public subscript(safe index: Int) -> Any? {
         (0 ..< count).contains(index) ? self[index] : nil
@@ -33,7 +34,7 @@ extension NSMutableArray {
     /// Access collection indexes safely.
     ///
     /// > Note:
-    /// > `NSArray/NSMutableArray` indexes are always zero-based and sequential (0...).
+    /// > `NSArray/NSMutableArray` indexes are always zero-based and sequential (`0...`).
     /// > Therefore, a `[safePosition:]` subscript is unnecessary, as this subscript fills both roles.
     ///
     /// Get: if index does not exist (out-of-bounds), `nil` is returned.
@@ -42,10 +43,11 @@ extension NSMutableArray {
     ///
     /// Example:
     ///
-    ///     let arr = [1, 2, 3] as NSMutableArray
-    ///     arr[safeMutable: 0] // Optional(1)
-    ///     arr[safeMutable: 9] // nil
-    ///
+    /// ```swift
+    /// let arr = [1, 2, 3] as NSMutableArray
+    /// arr[safeMutable: 0] // Optional(1)
+    /// arr[safeMutable: 9] // nil
+    /// ```
     @_disfavoredOverload
     public subscript(safeMutable index: Int) -> Any? {
         get {

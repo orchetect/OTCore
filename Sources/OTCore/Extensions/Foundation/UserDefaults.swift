@@ -12,7 +12,7 @@ extension UserDefaults {
     // custom optional methods for core data types that don't intrinsically support optionals yet
     
     /// **OTCore:**
-    /// Convenience method to wrap the built-in `.integer(forKey:)` method in an optional returning nil if the key doesn't exist.
+    /// Convenience method to wrap the built-in `integer(forKey:)` method in an optional returning `nil` if the key doesn't exist.
     @_disfavoredOverload
     public func integerOptional(forKey key: String) -> Int? {
         guard object(forKey: key) != nil else { return nil }
@@ -20,7 +20,7 @@ extension UserDefaults {
     }
     
     /// **OTCore:**
-    /// Convenience method to wrap the built-in `.double(forKey:)` method in an optional returning nil if the key doesn't exist.
+    /// Convenience method to wrap the built-in `double(forKey:)` method in an optional returning `nil` if the key doesn't exist.
     @_disfavoredOverload
     public func doubleOptional(forKey key: String) -> Double? {
         guard object(forKey: key) != nil else { return nil }
@@ -28,7 +28,7 @@ extension UserDefaults {
     }
     
     /// **OTCore:**
-    /// Convenience method to wrap the built-in `.float(forKey:)` method in an optional returning nil if the key doesn't exist.
+    /// Convenience method to wrap the built-in `float(forKey:)` method in an optional returning `nil` if the key doesn't exist.
     @_disfavoredOverload
     public func floatOptional(forKey key: String) -> Float? {
         guard object(forKey: key) != nil else { return nil }
@@ -36,7 +36,7 @@ extension UserDefaults {
     }
     
     /// **OTCore:**
-    /// Convenience method to wrap the built-in `.bool(forKey:)` method in an optional returning nil if the key doesn't exist.
+    /// Convenience method to wrap the built-in `bool(forKey:)` method in an optional returning `nil` if the key doesn't exist.
     @_disfavoredOverload
     public func boolOptional(forKey key: String) -> Bool? {
         guard object(forKey: key) != nil else { return nil }
@@ -58,61 +58,72 @@ extension UserDefaults {
 /// **OTCore:**
 /// Read and write the value of a `UserDefaults` key.
 ///
-/// If a defaults suite is not specified, `.standard` will be used.
+/// If a defaults suite is not specified, `standard` will be used.
 ///
 /// If a default value is provided, the `Value` will be treated as a non-Optional with a default.
 ///
-///     @UserDefaultsStorage(key: "myPref")
-///     var myPref: Bool = true
+/// ```swift
+/// @UserDefaultsStorage(key: "myPref")
+/// var myPref: Bool = true
+/// ```
 ///
 /// If no default is provided, the `Value` will be treated as an Optional.
 ///
-///     @UserDefaultsStorage(key: "myPref")
-///     var myPref: Bool?
+/// ```swift
+/// @UserDefaultsStorage(key: "myPref")
+/// var myPref: Bool?
+/// ```
 ///
 /// A different type than the underlying storage type can be used.
 /// Both `get` and `set` closures allow for custom transform code.
-/// If either closure returns nil, the default value of 1 will be used.
+/// If either closure returns `nil`, the default value of `1` will be used.
 ///
-///     // Stored as a `String`, but the var is an `Int`.
-///     // get closure: transform `String` into `Int`
-///     // set closure: transform `Int` into `String`
-///     @UserDefaultsStorage(
-///         key: "myPref",
-///         get: { Int($0) },
-///         set: { "\($0)" }
-///     )
-///     var myPref: Int = 1
+/// ```swift
+/// // Stored as a `String`, but the var is an `Int`.
+/// // get closure: transform `String` into `Int`
+/// // set closure: transform `Int` into `String`
+/// @UserDefaultsStorage(
+///     key: "myPref",
+///     get: { Int($0) },
+///     set: { "\($0)" }
+/// )
+/// var myPref: Int = 1
+/// ```
 ///
 /// A non-defaulted declaration relies on the closures to process the values with no default.
 ///
-///     // Stored as a `String`, but the var is an `Int`.
-///     // get closure: transform `String?` into `Int`
-///     // set closure: transform `Int` into `String`
-///     @UserDefaultsStorage(
-///         key: "myPref",
-///         get: { Int($0 ?? "") ?? 0 },
-///         set: { "\($0)" }
-///     )
-///     var myPref: Int
+/// ```swift
+/// // Stored as a `String`, but the var is an `Int`.
+/// // get closure: transform `String?` into `Int`
+/// // set closure: transform `Int` into `String`
+/// @UserDefaultsStorage(
+///     key: "myPref",
+///     get: { Int($0 ?? "") ?? 0 },
+///     set: { "\($0)" }
+/// )
+/// var myPref: Int
+/// ```
 ///
 /// Additional conveniences are available through specific parameters.
 ///
 /// A special value validation closure is available when the value type matches the stored value
 /// type.
 ///
-///     @UserDefaultsStorage(
-///         key: "myPref",
-///         validation: { $0.trimmingCharacters(in: .whitespaces) },
-///     )
-///     var pref = "  test  " // will be stored as "test"
+/// ```swift
+/// @UserDefaultsStorage(
+///     key: "myPref",
+///     validation: { $0.trimmingCharacters(in: .whitespaces) },
+/// )
+/// var pref = "  test  " // will be stored as "test"
+/// ```
 ///
 /// A special value clamping closure is available when the value type matches the stored value
 /// type. Any types (not just integers) that can form a range can be clamped.
 ///
-///     @UserDefaultsStorage(key: "myPref", clamped: 5 ... 10)
-///     var pref = 1 // will be clamped to 5
-///
+/// ```swift
+/// @UserDefaultsStorage(key: "myPref", clamped: 5 ... 10)
+/// var pref = 1 // will be clamped to 5
+/// ```
 @propertyWrapper
 public struct UserDefaultsStorage<Value, StorageValue>: @unchecked Sendable where StorageValue: UserDefaultsStorable {
     private let key: String

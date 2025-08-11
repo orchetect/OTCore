@@ -155,7 +155,7 @@ extension String {
 
 extension StringProtocol {
     /// **OTCore:**
-    /// Returns a new SubSequence, removing the prefix if it matches.
+    /// Returns a new `SubSequence` removing the prefix if it matches.
     @inlinable @_disfavoredOverload
     public func removingPrefix<T: StringProtocol>(_ prefix: T) -> SubSequence {
         hasPrefix(prefix)
@@ -164,7 +164,7 @@ extension StringProtocol {
     }
     
     /// **OTCore:**
-    /// Returns a new SubSequence, removing the suffix if it matches.
+    /// Returns a new `SubSequence` removing the suffix if it matches.
     @inlinable @_disfavoredOverload
     public func removingSuffix<T: StringProtocol>(_ suffix: T) -> SubSequence {
         hasSuffix(suffix)
@@ -200,8 +200,9 @@ extension String {
 ///
 /// Also accessible through the string interpolation variant:
 ///
-///     "\(object, ifNil: "Object is nil.")"
-///
+/// ```swift
+/// "\(object, ifNil: "Object is nil.")"
+/// ```
 @inlinable @_disfavoredOverload
 public func optionalString(
     describing object: Any?,
@@ -246,7 +247,7 @@ extension DefaultStringInterpolation {
 
 extension Substring {
     /// **OTCore:**
-    /// Same as `String(self)`
+    /// Same as `String(self)`.
     /// (Functional convenience method)
     @inlinable @_disfavoredOverload
     public var string: String {
@@ -256,7 +257,7 @@ extension Substring {
 
 extension Character {
     /// **OTCore:**
-    /// Same as `String(self)`
+    /// Same as `String(self)`.
     /// (Functional convenience method)
     @inlinable @_disfavoredOverload
     public var string: String {

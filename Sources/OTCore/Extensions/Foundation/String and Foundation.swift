@@ -24,7 +24,7 @@ extension StringProtocol {
     }
     
     /// **OTCore:**
-    /// Same as `.range(of: find, options: .backwards)`
+    /// Same as `range(of: find, options: .backwards)`
     /// (Functional convenience method)
     @_disfavoredOverload
     public func range<T: StringProtocol>(backwards find: T) -> Range<Index>? {
@@ -32,7 +32,7 @@ extension StringProtocol {
     }
     
     /// **OTCore:**
-    /// Same as `.range(of: find, options: [.caseInsensitiveSearch, .backwards])`
+    /// Same as `range(of: find, options: [.caseInsensitiveSearch, .backwards])`
     /// (Functional convenience method)
     @_disfavoredOverload
     public func range<T: StringProtocol>(backwardsCaseInsensitive find: T) -> Range<Index>? {

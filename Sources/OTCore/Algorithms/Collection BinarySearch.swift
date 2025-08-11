@@ -10,7 +10,7 @@ extension ArraySlice where Element: Comparable {
     /// **OTCore:**
     /// Performs a binary search algorithm.
     ///
-    /// - If the value is found, a single-count range is returned with the index (ie: 4...4).
+    /// - If the value is found, a single-count range is returned with the index (ie: `4 ... 4`).
     ///
     /// - If the value is not found, a 2-count range is returned with the two neighboring indexes below and above the search value.
     ///
@@ -18,12 +18,14 @@ extension ArraySlice where Element: Comparable {
     ///
     /// Example:
     ///
-    ///     [1,2,3,4,5].binarySearch(forValue: 3)  // 2...2
-    ///     [1,2,4,5,6].binarySearch(forValue: 3)  // 1...2
-    ///     [1,2,3,4,5].binarySearch(forValue: 10) // nil
-    ///     [].binarySearch(forValue: 10)          // nil
+    /// ```swift
+    /// [1,2,3,4,5].binarySearch(forValue: 3)  // 2 ... 2
+    /// [1,2,4,5,6].binarySearch(forValue: 3)  // 1 ... 2
+    /// [1,2,3,4,5].binarySearch(forValue: 10) // nil
+    /// [].binarySearch(forValue: 10)          // nil
+    /// ```
     ///
-    /// - warning: The base array must be `.sorted()` prior to invoking this method or it will not function as intended.
+    /// - warning: The base array must be `sorted()` prior to invoking this method or it will not function as intended.
     @_disfavoredOverload
     public func binarySearch(
         forValue searchElement: Element
@@ -60,7 +62,7 @@ extension Array where Element: Comparable {
     /// **OTCore:**
     /// Performs a binary search algorithm.
     ///
-    /// - If the value is found, a single-count range is returned with the index (ie: 4...4).
+    /// - If the value is found, a single-count range is returned with the index (ie: `4 ... 4`).
     ///
     /// - If the value is not found, a 2-count range is returned with the two neighboring indexes below and above the search value.
     ///
@@ -68,12 +70,14 @@ extension Array where Element: Comparable {
     ///
     /// Example:
     ///
-    ///     [1,2,3,4,5].binarySearch(forValue: 3)  // 2...2
-    ///     [1,2,4,5,6].binarySearch(forValue: 3)  // 1...2
-    ///     [1,2,3,4,5].binarySearch(forValue: 10) // nil
-    ///     [].binarySearch(forValue: 10)          // nil
+    /// ```swift
+    /// [1,2,3,4,5].binarySearch(forValue: 3)  // 2 ... 2
+    /// [1,2,4,5,6].binarySearch(forValue: 3)  // 1 ... 2
+    /// [1,2,3,4,5].binarySearch(forValue: 10) // nil
+    /// [].binarySearch(forValue: 10)          // nil
+    /// ```
     ///
-    /// - warning: The base array must be `.sorted()` prior to invoking this method or it will not function as intended.
+    /// - warning: The base array must be `sorted()` prior to invoking this method or it will not function as intended.
     @_disfavoredOverload
     public func binarySearch(
         forValue searchElement: Element

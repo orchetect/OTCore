@@ -12,7 +12,7 @@ import Foundation
 
 extension StringProtocol {
     /// **OTCore:**
-    /// Encode a utf8 String to Base64
+    /// Encode a UTF-8 String to Base64.
     @inlinable @_disfavoredOverload
     public var base64EncodedString: String {
         Data(utf8).base64EncodedString()
@@ -21,7 +21,7 @@ extension StringProtocol {
 
 extension String {
     /// **OTCore:**
-    /// Decode a utf8 String from Base64. Returns `nil` if unsuccessful.
+    /// Decode a UTF-8 String from Base64. Returns `nil` if unsuccessful.
     @inlinable @_disfavoredOverload
     public var base64DecodedString: String? {
         guard let data = Data(base64Encoded: self) else { return nil }
@@ -32,7 +32,7 @@ extension String {
 
 extension Substring {
     /// **OTCore:**
-    /// Decode a utf8 String from Base64. Returns `nil` if unsuccessful.
+    /// Decode a UTF-8 String from Base64. Returns `nil` if unsuccessful.
     @inlinable @_disfavoredOverload
     public var base64DecodedString: String? {
         guard let data = Data(base64Encoded: String(self)) else { return nil }

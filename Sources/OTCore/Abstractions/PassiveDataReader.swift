@@ -12,11 +12,12 @@ import Foundation
 ///
 /// Usage:
 ///
-///     var data = Data( ... )
-///     var dr = PassiveDataReader { $0(&data) }
+/// ```swift
+/// var data = Data( ... )
+/// var dr = PassiveDataReader { $0(&data) }
 ///
-///     if let bytes = dr.read(bytes: 4) { ... }
-///
+/// if let bytes = dr.read(bytes: 4) { ... }
+/// ```
 public struct PassiveDataReader<D: DataProtocol> {
     public typealias DataAccess = (inout D) -> Void
     public typealias Closure = (_ block: DataAccess) -> Void
@@ -131,7 +132,7 @@ public struct PassiveDataReader<D: DataProtocol> {
 
 extension PassiveDataReader {
     /// **OTCore:**
-    /// Error returned by `PassiveDataReader` methods.
+    /// Error returned by ``PassiveDataReader`` methods.
     public enum ReadError: Error {
         case pastEndOfStream
         case invalidByteCount
@@ -140,7 +141,7 @@ extension PassiveDataReader {
 
 extension DataProtocol {
     /// **OTCore:**
-    /// Accesses the data by providing a `PassiveDataReader` instance to a closure.
+    /// Accesses the data by providing a ``PassiveDataReader`` instance to a closure.
     @_disfavoredOverload @discardableResult
     public func withDataReader<Result>(
         _ block: (_ dataReader: inout PassiveDataReader<Self>) throws -> Result

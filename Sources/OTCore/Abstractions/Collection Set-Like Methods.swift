@@ -8,20 +8,26 @@
 
 /// **OTCore:**
 /// Describes a position behavior within a Collection use in some of the additional methods.
-public enum CollectionPosition: Sendable {
-    /// Default behavior (as described in the calling function)
+public enum CollectionPosition {
+    /// Default behavior (as described in the calling function).
     case `default`
     
-    /// Start of the collection
+    /// Start of the collection.
     case start
     
-    /// End of the collection
+    /// End of the collection.
     case end
 }
 
 extension CollectionPosition: Equatable { }
 
 extension CollectionPosition: Hashable { }
+
+extension CollectionPosition: Sendable { }
+
+extension CollectionPosition: Identifiable {
+    public var id: Self { self }
+}
 
 // RangeReplaceableCollection:
 //   insert, append, remove
@@ -165,8 +171,4 @@ extension Collection where Self: RangeReplaceableCollection,
             update(with: $0, position: .default)
         }
     }
-}
-
-extension CollectionPosition: Identifiable {
-    public var id: Self { self }
 }

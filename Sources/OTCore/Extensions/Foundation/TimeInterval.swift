@@ -9,8 +9,9 @@
 import Foundation
 
 extension TimeInterval {
+    // TODO: should remove this since TimeInterval is an alias for Double and this init may be ambiguous.
     /// **OTCore:**
-    /// Convenience constructor from `timespec`
+    /// Convenience constructor from `timespec`.
     @inlinable @_disfavoredOverload
     public init(_ time: timespec) {
         self = time.doubleValue

@@ -500,7 +500,7 @@ extension OSLogger {
         /// **OTCore:**
         /// Sets the default `OSLog` to use.
         ///
-        /// It is highly recommended to define a custom `OSLog` and not use the `.default` (which does not post bundleID/subsystem information to the Console).
+        /// It is highly recommended to define a custom `OSLog` and not use the `default` (which does not post bundleID/subsystem information to the Console).
         @inline(__always)
         public var defaultLog: OSLog
         
@@ -510,7 +510,9 @@ extension OSLogger {
         public var defaultTemplate: OSLogger.LogTemplate
         
         /// **OTCore:**
-        /// When enabled, all `.debug` and `.info` log level messages will be coerced to be `.default` log level. This allows them to be printed to the system Console log. Otherwise by default, logging calls to OSLog will not print `.debug` or `.info` level messages to the Console log.
+        /// When enabled, all `debug` and `info` log level messages will be coerced to be `default` log level.
+        /// This allows them to be printed to the system Console log.
+        /// Otherwise by default, logging calls to OSLog will not print `debug` or `info` level messages to the Console log.
         @inline(__always)
         public var coerceInfoAndDebugToDefault: Bool = false
         
@@ -518,19 +520,19 @@ extension OSLogger {
         
         public struct LevelSettings: Sendable {
             /// **OTCore:**
-            /// Set the emoji used for the `.emoji` LogToken.
+            /// Set the emoji used for the `emoji` LogToken.
             @inline(__always)
             public var emoji: Character?
             
             /// **OTCore:**
             /// Set the log used for this log level.
-            /// If `nil`, the `.defaultLog` Config property will be used.
+            /// If `nil`, the `defaultLog` Config property will be used.
             @inline(__always)
             public var log: OSLog?
         }
         
         /// **OTCore:**
-        /// Settings for the `.debug` log level.
+        /// Settings for the `debug` log level.
         @inline(__always)
         public var levelDebug = LevelSettings(
             emoji: "🔷",
@@ -538,7 +540,7 @@ extension OSLogger {
         )
         
         /// **OTCore:**
-        /// Settings for the `.info` log level.
+        /// Settings for the `info` log level.
         @inline(__always)
         public var levelInfo = LevelSettings(
             emoji: "💬",
@@ -546,7 +548,7 @@ extension OSLogger {
         )
         
         /// **OTCore:**
-        /// Settings for the `.default` log level.
+        /// Settings for the `default` log level.
         @inline(__always)
         public var levelDefault = LevelSettings(
             emoji: "💬",
@@ -554,7 +556,7 @@ extension OSLogger {
         )
         
         /// **OTCore:**
-        /// Settings for the `.error` log level.
+        /// Settings for the `error` log level.
         @inline(__always)
         public var levelError = LevelSettings(
             emoji: "⚠️",
@@ -562,7 +564,7 @@ extension OSLogger {
         )
         
         /// **OTCore:**
-        /// Settings for the `.fault` log level.
+        /// Settings for the `fault` log level.
         @inline(__always)
         public var levelFault = LevelSettings(
             emoji: "🛑",

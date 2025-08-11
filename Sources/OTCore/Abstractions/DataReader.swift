@@ -18,6 +18,7 @@ public struct DataReader {
     /// Current byte index of read offset.
     public internal(set) var readOffset = 0
     
+    // TODO: Remove in future OTCore release
     /// Current byte index of read offset.
     @available(
         *,

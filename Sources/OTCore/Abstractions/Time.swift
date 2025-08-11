@@ -21,8 +21,10 @@ public struct Time {
     /// Milliseconds component.
     public var milliseconds = 0
     
+    /// Sign (indicating positive or negative time duration).
     public var sign: FloatingPointSign = .plus
     
+    /// **OTCore:**
     /// Initialize with current system time.
     public init() {
         let date = Date()
@@ -34,6 +36,7 @@ public struct Time {
         milliseconds = calendar.component(.nanosecond, from: date) / 1_000_000
     }
     
+    /// **OTCore:**
     /// Initialize with discrete time component values.
     /// Note: negative values may cause undefined behavior.
     public init(
@@ -50,6 +53,7 @@ public struct Time {
         self.sign = sign
     }
     
+    /// **OTCore:**
     /// Initialize from a time interval in seconds.
     public init(seconds: Int, milliseconds: Int = 0) {
         sign = seconds < 0 ? .minus : .plus
@@ -67,6 +71,7 @@ public struct Time {
         self.milliseconds = milliseconds
     }
     
+    /// **OTCore:**
     /// Initialize from a time interval in seconds.
     @_disfavoredOverload
     public init(seconds: TimeInterval) {
@@ -78,6 +83,7 @@ public struct Time {
         milliseconds = Int((absSeconds - Double(absTruncSeconds)) * 1000)
     }
     
+    /// **OTCore:**
     /// Initialize from a time interval in milliseconds.
     public init(milliseconds: Int) {
         sign = milliseconds < 0 ? .minus : .plus
@@ -94,6 +100,7 @@ public struct Time {
         }
     }
 	
+    /// **OTCore:**
     /// Initialize from a time interval in milliseconds.
     @_disfavoredOverload
     public init(milliseconds: Double) {
@@ -102,12 +109,14 @@ public struct Time {
 }
 
 extension Time: Equatable {
+    /// **OTCore:**
     public static func == (lhs: Self, rhs: Self) -> Bool {
         lhs.interval == rhs.interval
     }
 }
 
 extension Time: Comparable {
+    /// **OTCore:**
     public static func < (lhs: Self, rhs: Self) -> Bool {
         lhs.interval < rhs.interval
     }
@@ -122,6 +131,7 @@ extension Time: Identifiable {
 extension Time: Sendable { }
 
 extension Time {
+    /// **OTCore:**
     /// Initialize from a time interval string.
     public init?(string: String) {
         // "00:00:00.000" is 12 characters
@@ -195,6 +205,7 @@ extension Time {
         }
     }
     
+    /// **OTCore:**
     /// Returns the absolute time (without sign) as a formatted string.
     private func absStringValue(format: Format = .shortest) -> String {
         switch format {
@@ -252,6 +263,7 @@ extension Time {
 }
 
 extension Time {
+    /// **OTCore:**
     /// Get or set the time interval in seconds.
     public var interval: TimeInterval {
         get {
@@ -265,6 +277,7 @@ extension Time {
         }
     }
     
+    /// **OTCore:**
     /// Get or set the time interval in milliseconds.
     public var millisecondsInterval: Int {
         get {
@@ -280,6 +293,7 @@ extension Time {
 }
 
 extension Time {
+    /// **OTCore:**
     /// Returns the value of the given time component.
     public func value(of component: Component) -> Int {
         switch component {
@@ -290,6 +304,7 @@ extension Time {
         }
     }
     
+    /// **OTCore:**
     /// Sets the value of the given time component.
     public mutating func setValue(of component: Component, to newValue: Int) {
         switch component {
@@ -300,6 +315,7 @@ extension Time {
         }
     }
     
+    /// **OTCore:**
     /// Returns the string value of the given time component, optionally applying standard padding.
     public func stringValue(of component: Component, padded: Bool = false) -> String {
         switch component {
@@ -310,6 +326,7 @@ extension Time {
         }
     }
     
+    /// **OTCore:**
     /// Returns the string value of the given time component, formatted for the given time string ``Format``.
     public func stringValue(of component: Component, format: Format) -> String {
         let isPadded = format.isPadded(for: component)
@@ -328,9 +345,11 @@ extension Time: CustomStringConvertible {
 // MARK: - Static Constructors {
 
 extension Time {
+    /// **OTCore:**
     /// Current system time.
     public static var now: Time { Time() }
     
+    /// **OTCore:**
     /// Zero time (`0:00`).
     public static let zero = Time(hours: 0, minutes: 0, seconds: 0, milliseconds: 0, sign: .plus)
 }
@@ -338,6 +357,8 @@ extension Time {
 // MARK: - Component
 
 extension Time {
+    /// **OTCore:**
+    /// Individual time component.
     public enum Component {
         case hours
         case minutes

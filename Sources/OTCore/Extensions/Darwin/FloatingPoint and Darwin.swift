@@ -12,7 +12,7 @@ import Darwin
 
 extension FloatingPoint {
     /// **OTCore:**
-    /// Same as `ceil()`
+    /// Same as `ceil(self)`.
     /// (Functional convenience method)
     @inlinable @_disfavoredOverload
     public var ceiling: Self {
@@ -20,7 +20,7 @@ extension FloatingPoint {
     }
     
     /// **OTCore:**
-    /// Same as `floor()`
+    /// Same as `floor(self)`.
     /// (Functional convenience method)
     @inlinable @_disfavoredOverload
     public var floor: Self {
@@ -34,7 +34,7 @@ extension FloatingPoint {
 
 extension Double: FloatingPointPowerComputable {
     /// **OTCore:**
-    /// Same as `pow()`
+    /// Same as `pow()`.
     /// (Functional convenience method)
     @inlinable @_disfavoredOverload
     public func power(_ exponent: Double) -> Double {
@@ -44,7 +44,7 @@ extension Double: FloatingPointPowerComputable {
 
 extension Float: FloatingPointPowerComputable {
     /// **OTCore:**
-    /// Same as `powf()`
+    /// Same as `powf()`.
     /// (Functional convenience method)
     @inlinable @_disfavoredOverload
     public func power(_ exponent: Float) -> Float {
@@ -55,7 +55,7 @@ extension Float: FloatingPointPowerComputable {
 #if !(arch(arm64) || arch(arm) || os(watchOS)) // Float80 is now removed for ARM
 extension Float80: FloatingPointPowerComputable {
     /// **OTCore:**
-    /// Same as `powl()`
+    /// Same as `powl()`.
     /// (Functional convenience method)
     @inlinable @_disfavoredOverload
     public func power(_ exponent: Float80) -> Float80 {
@@ -70,7 +70,7 @@ extension FloatingPoint where Self: FloatingPointPowerComputable {
     /// **OTCore:**
     /// Replaces this value by truncating it to `decimalPlaces` number of decimal places.
     ///
-    /// If `decimalPlaces` <= 0, then `trunc(self)` is returned.
+    /// If `decimalPlaces <= 0`, then `trunc(self)` is returned.
     @_disfavoredOverload
     public mutating func truncate(decimalPlaces: Int) {
         self = truncated(decimalPlaces: decimalPlaces)
@@ -79,7 +79,7 @@ extension FloatingPoint where Self: FloatingPointPowerComputable {
     /// **OTCore:**
     /// Truncates decimal places to `decimalPlaces` number of decimal places.
     ///
-    /// If `decimalPlaces` <= 0, then `trunc(self)` is returned.
+    /// If `decimalPlaces <= 0`, then `trunc(self)` is returned.
     @_disfavoredOverload
     public func truncated(decimalPlaces: Int) -> Self {
         if decimalPlaces < 1 {
@@ -93,7 +93,7 @@ extension FloatingPoint where Self: FloatingPointPowerComputable {
 
 extension FloatingPoint {
     /// **OTCore:**
-    /// Similar to `Int.quotientAndRemainder(dividingBy:)` from the standard Swift library.
+    /// Similar to `Int.quotientAndRemainder(dividingBy:)` from the Swift standard library.
     @_disfavoredOverload
     public func quotientAndRemainder(dividingBy rhs: Self) -> (quotient: Self, remainder: Self) {
         let calculation = self / rhs
@@ -105,8 +105,8 @@ extension FloatingPoint {
     /// **OTCore:**
     /// Returns both integral part and fractional part.
     ///
-    /// - Note: This method is more computationally efficient than calling both `.integral` and
-    ///   `.fraction` properties separately unless you only require one or the other.
+    /// - Note: This method is more computationally efficient than calling both `integral` and
+    ///   `fraction` properties separately unless you only require one or the other.
     ///
     /// This method can result in a non-trivial loss of precision for the fractional part.
     @inlinable @_disfavoredOverload
@@ -117,14 +117,14 @@ extension FloatingPoint {
     }
     
     /// **OTCore:**
-    /// Returns the integral part (digits before the decimal point)
+    /// Returns the integral part (digits before the decimal point).
     @inlinable @_disfavoredOverload
     public var integral: Self {
         integralAndFraction.integral
     }
     
     /// **OTCore:**
-    /// Returns the fractional part (digits after the decimal point)
+    /// Returns the fractional part (digits after the decimal point).
     ///
     /// - Note: this method can result in a non-trivial loss of precision for the fractional part.
     @inlinable @_disfavoredOverload

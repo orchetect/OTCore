@@ -7,7 +7,7 @@
 // MARK: - Sanitize Path Component
 
 /// **OTCore:**
-/// File system cases.
+/// File system formats.
 public enum FileSystemFormat: Equatable, Hashable, CaseIterable, Sendable {
     /// HFS+ (Apple)
     case hfsPlus

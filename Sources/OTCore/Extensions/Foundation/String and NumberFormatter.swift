@@ -9,7 +9,7 @@
 import Foundation
 
 extension DefaultStringInterpolation {
-    /// Cache to improve performance, implicitly lazy (as a global static declaration)
+    /// Cache to improve performance, implicitly lazy (as a global static declaration).
     ///
     /// ***** Note: This may not be thread-safe if called from more than one thread simultaneously. *****
     fileprivate static let siNumFormatter = NumberFormatter()
@@ -19,8 +19,10 @@ extension DefaultStringInterpolation {
     ///
     /// Example:
     ///
-    ///     "There are \(3, format: .spellOut) apples"
-    ///     // == "There are three apples"
+    /// ```swift
+    /// "There are \(3, format: .spellOut) apples"
+    /// // == "There are three apples"
+    /// ```
     ///
     /// - warning: This may not be thread-safe if called from more than one thread simultaneously.
     @_disfavoredOverload

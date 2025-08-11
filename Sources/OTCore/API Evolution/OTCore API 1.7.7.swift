@@ -93,7 +93,7 @@ import AppKit
 extension URL {
     /// **OTCore:**
     /// Returns the icon that represents the given file, folder, application, etc.
-    /// Returns nil if URL is not a file URL or if file does not exist.
+    /// Returns `nil` if URL is not a file URL or if file does not exist.
     /// Thread-safe.
     @_disfavoredOverload
     @available(*, deprecated, renamed: "fileIcon")

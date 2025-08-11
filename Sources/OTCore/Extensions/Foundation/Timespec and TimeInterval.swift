@@ -36,9 +36,9 @@ extension timespec {
 
 extension timespec {
     /// **OTCore:**
-    /// Return a `TimeInterval`
+    /// Returns a `TimeInterval`.
     @inlinable @_disfavoredOverload
-    public var doubleValue: TimeInterval {
+    public var doubleValue: TimeInterval { // TODO: rename to `timeInterval` or `toTimeInterval()`
         Double(tv_sec) + (Double(tv_nsec) / 1_000_000_000)
     }
 }

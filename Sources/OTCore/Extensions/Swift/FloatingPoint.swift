@@ -178,7 +178,7 @@ extension BinaryFloatingPoint {
 
 extension BinaryFloatingPoint {
     /// **OTCore:**
-    /// Returns true if > 0.0
+    /// Returns `true` if > 0.0
     @inline(__always) @_disfavoredOverload
     public var boolValue: Bool { self > 0.0 }
 }
@@ -189,7 +189,7 @@ extension FloatingPoint where Self: FloatingPointPowerComputable {
     /// **OTCore:**
     /// Rounds to `decimalPlaces` number of decimal places using rounding `rule`.
     ///
-    /// If `decimalPlaces` <= 0, trunc(self) is returned.
+    /// If `decimalPlaces <= 0`, `trunc(self)` is returned.
     @_disfavoredOverload
     public func rounded(
         _ rule: FloatingPointRoundingRule = .toNearestOrAwayFromZero,
@@ -207,7 +207,7 @@ extension FloatingPoint where Self: FloatingPointPowerComputable {
     /// **OTCore:**
     /// Replaces this value by rounding it to `decimalPlaces` number of decimal places using rounding `rule`.
     ///
-    /// If `decimalPlaces` <= 0, `trunc(self)` is used.
+    /// If `decimalPlaces <= 0,` `trunc(self)` is used.
     @_disfavoredOverload
     public mutating func round(
         _ rule: FloatingPointRoundingRule = .toNearestOrAwayFromZero,
@@ -227,19 +227,21 @@ extension FloatingPoint {
     ///
     /// Example:
     ///
-    ///     (-2.0).wrapped(around: -1.0...3.0) // 3.0
-    ///     (-1.0).wrapped(around: -1.0...3.0) // -1.0
-    ///        0.0.wrapped(around: -1.0...3.0) // 0.0
-    ///        1.0.wrapped(around: -1.0...3.0) // 1.0
-    ///        2.0.wrapped(around: -1.0...3.0) // 2.0
-    ///        3.0.wrapped(around: -1.0...3.0) // 3.0
-    ///        4.0.wrapped(around: -1.0...3.0) // -1.0
-    ///        5.0.wrapped(around: -1.0...3.0) // 0.0
-    ///        6.0.wrapped(around: -1.0...3.0) // 1.0
-    ///        7.0.wrapped(around: -1.0...3.0) // 2.0
-    ///        8.0.wrapped(around: -1.0...3.0) // 3.0
-    ///        9.0.wrapped(around: -1.0...3.0) // -1.0
-    ///
+    /// ```swift
+    /// (-2.0).wrapped(around: -1.0...3.0) // 3.0
+    /// (-1.0).wrapped(around: -1.0...3.0) // -1.0
+    ///    0.0.wrapped(around: -1.0...3.0) // 0.0
+    ///    1.0.wrapped(around: -1.0...3.0) // 1.0
+    ///    2.0.wrapped(around: -1.0...3.0) // 2.0
+    ///    3.0.wrapped(around: -1.0...3.0) // 3.0
+    ///    4.0.wrapped(around: -1.0...3.0) // -1.0
+    ///    5.0.wrapped(around: -1.0...3.0) // 0.0
+    ///    6.0.wrapped(around: -1.0...3.0) // 1.0
+    ///    7.0.wrapped(around: -1.0...3.0) // 2.0
+    ///    8.0.wrapped(around: -1.0...3.0) // 3.0
+    ///    9.0.wrapped(around: -1.0...3.0) // -1.0
+    /// ```
+    /// 
     /// - parameter range: integer range, allowing negative and positive bounds.
     @inlinable @_disfavoredOverload
     public func wrapped(around range: ClosedRange<Self>) -> Self {

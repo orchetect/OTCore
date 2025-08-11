@@ -29,7 +29,7 @@ import Darwin
 ///
 /// This is preferable to using `mach_absolute_time()` since it is macOS-only.
 ///
-/// - returns: `timespec(tv_sec: Int, tv_nsec: Int)` where `tv_sec` is seconds and `tc_nsec` is nanoseconds.
+/// - returns: `timespec` where `tv_sec` is seconds and `tv_nsec` is nanoseconds.
 @available(OSX 10.12, iOS 10.0, tvOS 10.0, watchOS 3.0, *)
 @inlinable @_disfavoredOverload
 public func clock_gettime_monotonic_raw() -> timespec {
@@ -92,7 +92,7 @@ extension timespec {
 // Add exported Equatable conformance to `timespec`.
 // Will remove in future if Apple adds 1st-party conformance.
 extension timespec: @retroactive Equatable {
-    // **OTCore**
+    /// **OTCore**
     @inlinable @_disfavoredOverload
     public static func == (lhs: Self, rhs: Self) -> Bool {
         lhs.tv_sec == rhs.tv_sec &&
@@ -103,7 +103,7 @@ extension timespec: @retroactive Equatable {
 // Add exported Comparable conformance to `timespec`.
 // Will remove in future if Apple adds 1st-party conformance.
 extension timespec: @retroactive Comparable {
-    // **OTCore**
+    /// **OTCore**
     @inlinable @_disfavoredOverload
     public static func < (lhs: timespec, rhs: timespec) -> Bool {
         if lhs.tv_sec < rhs.tv_sec { return true }

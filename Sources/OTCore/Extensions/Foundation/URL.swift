@@ -12,36 +12,38 @@ import Foundation
 
 extension URL {
     /// **OTCore:**
-    /// Returns true if the URL begins with the given base URL exactly.
+    /// Returns `true` if the URL begins with the given base URL exactly.
     ///
     /// ie:
     ///
-    ///     // url: "file:///temp1/temp2/file.txt"
+    /// ```swift
+    /// // url: "file:///temp1/temp2/file.txt"
     ///
-    ///     let url2 = URL(string: "file:///temp1/temp2/")!
-    ///     url.hasPrefix(url: url2) // == true
+    /// let url2 = URL(string: "file:///temp1/temp2/")!
+    /// url.hasPrefix(url: url2) // == true
     ///
-    ///     let url2 = URL(string: "file:///wrong/")!
-    ///     url.hasPrefix(url: url2) // == false
-    ///
+    /// let url2 = URL(string: "file:///wrong/")!
+    /// url.hasPrefix(url: url2) // == false
+    /// ```
     @_disfavoredOverload
     public func hasPrefix(url base: URL) -> Bool {
         absoluteString.starts(with: base.absoluteString)
     }
     
     /// **OTCore:**
-    /// Returns true if the URL path components begin with the specified components.
+    /// Returns `true` if the URL path components begin with the specified components.
     ///
     /// ie:
     ///
-    ///     // url: "file:///temp1/temp2/file.txt"
+    /// ```swift
+    /// // url: "file:///temp1/temp2/file.txt"
     ///
-    ///     url.hasPathComponents(prefix: ["/", "temp1"])
-    ///     // == true
+    /// url.hasPathComponents(prefix: ["/", "temp1"])
+    /// // == true
     ///
-    ///     url.hasPathComponents(prefix: ["/", "wrong"])
-    ///     // == false
-    ///
+    /// url.hasPathComponents(prefix: ["/", "wrong"])
+    /// // == false
+    /// ```
     @_disfavoredOverload
     public func hasPathComponents(prefix base: [String]) -> Bool {
         pathComponents.starts(with: base)
@@ -52,14 +54,15 @@ extension URL {
     ///
     /// ie:
     ///
-    ///     // url: "file:///temp1/temp2/file.txt"
+    /// ```swift
+    /// // url: "file:///temp1/temp2/file.txt"
     ///
-    ///     url.pathComponents(removingBase: "file:///temp1/")
-    ///     // == ["temp2", "file.txt"]
+    /// url.pathComponents(removingBase: "file:///temp1/")
+    /// // == ["temp2", "file.txt"]
     ///
-    ///     url.pathComponents(removingBase: "file:///wrong/")
-    ///     // == nil
-    ///
+    /// url.pathComponents(removingBase: "file:///wrong/")
+    /// // == nil
+    /// ```
     @_disfavoredOverload
     public func pathComponents(removingBase base: URL) -> [String]? {
         guard !base.pathComponents.isEmpty else { return [] }
@@ -73,14 +76,15 @@ extension URL {
     ///
     /// ie:
     ///
-    ///     // url: "file:///temp1/temp2/file.txt"
+    /// ```swift
+    /// // url: "file:///temp1/temp2/file.txt"
     ///
-    ///     url.pathComponents(removingBase: ["/", "temp1"])
-    ///     // == ["temp2", "file.txt"]
+    /// url.pathComponents(removingBase: ["/", "temp1"])
+    /// // == ["temp2", "file.txt"]
     ///
-    ///     url.pathComponents(removingBase: ["/", "wrong"])
-    ///     // == nil
-    ///
+    /// url.pathComponents(removingBase: ["/", "wrong"])
+    /// // == nil
+    /// ```
     @_disfavoredOverload
     public func pathComponents(removingPrefix base: [String]) -> [String]? {
         guard !base.isEmpty else { return [] }
@@ -95,14 +99,15 @@ extension URL {
     ///
     /// ie:
     ///
-    ///     let url = URL(string: "file:///temp1/temp2/file.txt")
-    ///     let base = URL(string: "file:///temp1/")
+    /// ```swift
+    /// let url = URL(string: "file:///temp1/temp2/file.txt")
+    /// let base = URL(string: "file:///temp1/")
     ///
-    ///     let rel = url.relative(to: base)
-    ///     rel.absoluteString // == "file:///temp1/temp2/file.txt"
-    ///     rel.baseURL?.absoluteString // == "file:///temp1/"
-    ///     rel.relativeString // == "temp2/file.txt"
-    ///
+    /// let rel = url.relative(to: base)
+    /// rel.absoluteString // == "file:///temp1/temp2/file.txt"
+    /// rel.baseURL?.absoluteString // == "file:///temp1/"
+    /// rel.relativeString // == "temp2/file.txt"
+    /// ```
     @_disfavoredOverload
     public func relative(to base: URL) -> Self {
         guard let relPath = pathComponents(removingBase: base)?.joined(separator: "/"),
@@ -170,7 +175,7 @@ extension URL {
 extension URL {
     /// **OTCore:**
     /// Returns whether the file/folder exists.
-    /// Convenience proxy for Foundation `.fileExists` method.
+    /// Convenience proxy for Foundation `fileExists` method.
     ///
     /// - Will return `false` if used on a symlink and the symlink's original file does not exist.
     /// - Will still return `true` if used on an alias and the alias' original file does not exist.
@@ -284,7 +289,7 @@ extension URL {
         
         // platform-specific logic
         
-#if os(macOS) || targetEnvironment(macCatalyst) || os(iOS) || os(visionOS)
+        #if os(macOS) || targetEnvironment(macCatalyst) || os(iOS) || os(visionOS)
         
         if #available(macOS 10.8, iOS 11.0, *) {
             // move file to trash
@@ -294,12 +299,12 @@ extension URL {
             do {
                 try FileManager.default.trashItem(at: self, resultingItemURL: &resultingURL)
             } catch {
-#if os(macOS)
+                #if os(macOS)
                 throw error
-#else
+                #else
                 // .trashItem has permissions issues on iOS; ignore and return without throwing
                 return nil
-#endif
+                #endif
             }
             
             return resultingURL?.absoluteURL
@@ -311,21 +316,21 @@ extension URL {
             return nil
         }
         
-#elseif os(tvOS)
+        #elseif os(tvOS)
         
         // tvOS has no Trash - just delete the file
         
         try __delFile(url: self)
         return nil
         
-#elseif os(watchOS)
-        
+        #elseif os(watchOS)
+            
         // watchOS has no Trash - just delete the file
         
         try __delFile(url: self)
         return nil
         
-#endif
+        #endif
     }
 }
 

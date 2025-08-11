@@ -13,29 +13,29 @@ import UIKit
 // MARK: - Global bundle properties
 
 /// **OTCore:**
-/// Global convenience properties
+/// Global convenience properties.
 public enum Globals {
-    /// General main bundle-related
+    /// General main bundle-related.
     public enum MainBundle {
         /// **OTCore:**
         /// Returns the name of the current executable.
         public static let name: String = Bundle.main
             .infoDictionaryString(key: kCFBundleNameKey)
-            ?? ""
+                ?? ""
         
         /// **OTCore:**
         /// Returns the current executable's bundle ID.
         /// Returns an empty string in case of failure.
         public static let bundleID: String = Bundle.main
             .bundleIdentifier
-            ?? ""
+                ?? ""
         
         /// **OTCore:**
         /// Returns the value of the current executable's Info.plist `CFBundleShortVersionString` key.
         /// Returns an empty string in case of failure or if the key does not exist in the bundle's Info.plist.
         public static let versionShort: String = Bundle.main
             .infoDictionaryString(key: "CFBundleShortVersionString")
-            ?? ""
+                ?? ""
         
         /// **OTCore:**
         /// Returns the major version number from the value of the current executable's Info.plist `CFBundleShortVersionString` key.
@@ -47,10 +47,11 @@ public enum Globals {
         ) ?? 0
         
         /// **OTCore:**
-        /// Returns the value from the app bundle's `kCFBundleVersionKey` key
+        /// Returns the value from the app bundle's `kCFBundleVersionKey` key.
+        /// Returns an empty string in case of failure or if the key does not exist in the bundle's Info.plist.
         public static let versionBuildNumber: String = Bundle.main
             .infoDictionaryString(key: kCFBundleVersionKey)
-            ?? ""
+                ?? ""
     }
 }
 

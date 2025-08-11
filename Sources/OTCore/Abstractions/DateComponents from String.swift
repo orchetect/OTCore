@@ -382,7 +382,7 @@ extension DateComponents {
     
     /// **OTCore:**
     /// Returns `DateComponents` as a flat YYYYMMDD date string.
-    /// Values default to 0 if nil.
+    /// Values default to 0 if `nil`.
     public func string(withMask: StringMask) -> String {
         switch withMask {
         case .YYYYMMDD:

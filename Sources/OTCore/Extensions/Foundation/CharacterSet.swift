@@ -84,8 +84,7 @@ extension CharacterSet {
     /// **OTCore:**
     /// English lowercase vowel letters (a, e, i, o, u) including diacritic variants.
     @_disfavoredOverload
-    public static let lowercaseVowels = CharacterSet(
-        charactersIn:
+    public static let lowercaseVowels = CharacterSet(charactersIn:
         "aàáâäæãåā" + "ª" + "ăąǟǻȁȃȧᵃḁạảấầẩẫậắằẳẵặ"
             + "eèéêëēėę" + "ĕėěȅȇȩᵉḕḗḙḛḝẹẻẽếềểễệ"
             + "iîïíīįì" + "ĩĭįıǐȉȋᵢḭḯỉịⁱ"
@@ -96,8 +95,7 @@ extension CharacterSet {
     /// **OTCore:**
     /// English uppercase vowel letters (a, e, i, o, u) including diacritic variants.
     @_disfavoredOverload
-    public static let uppercaseVowels = CharacterSet(
-        charactersIn:
+    public static let uppercaseVowels = CharacterSet(charactersIn:
         "AÀÁÂÄÆÃÅĀ" + "ĂĄǞǺȀȂȦᴬḀẠẢẤẦẨẪẬẮẰẲẴẶ"
             + "EÈÉÊËĒĖĘ" + "ĔĖĚȄȆȨᴱḔḖḘḚḜẸẺẼẾỀỀỂỄỆ"
             + "IÎÏÍĪĮÌ" + "ĨĬĮİǏȈȊᴵḬḮỈỊ"

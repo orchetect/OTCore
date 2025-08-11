@@ -11,7 +11,7 @@ import Foundation
 extension DispatchGroup {
     /// **OTCore:**
     /// A thin DispatchGroup wrapper that only publicly allows `leave()` to be called.
-    /// Not meant to be instanced directly. Use `DispatchGroup.sync{}` instead.
+    /// Not meant to be instanced directly. Use `DispatchGroup.sync { }` instead.
     public final class ThinDispatchGroup: @unchecked Sendable {
         fileprivate let group = DispatchGroup()
         private var leaveCalled = false
@@ -27,16 +27,18 @@ extension DispatchGroup {
     
     /// **OTCore:**
     /// Convenience DispatchGroup-wrapping method to run async code synchronously.
-    /// You must call `.leave()` once within the body of the closure.
+    /// You must call `leave()` once within the body of the closure.
     ///
     /// Example:
     ///
-    ///     DispatchGroup.sync { g in
-    ///         someAsyncMethod {
-    ///             g.leave()
-    ///         }
+    /// ```swift
+    /// DispatchGroup.sync { g in
+    ///     someAsyncMethod {
+    ///         g.leave()
     ///     }
-    ///     print("someAsyncMethod is done.")
+    /// }
+    /// print("someAsyncMethod is done.")
+    /// ```
     @_disfavoredOverload
     public static func sync(
         _ block: (ThinDispatchGroup) -> Void
@@ -51,16 +53,18 @@ extension DispatchGroup {
     
     /// **OTCore:**
     /// Convenience DispatchGroup-wrapping method to run code synchronously with the block being executed on the specified dispatch queue.
-    /// You must call `.leave()` once within the body of the closure.
+    /// You must call `leave()` once within the body of the closure.
     ///
     /// Example:
     ///
-    ///     DispatchGroup.sync(asyncOn: .global()) { g in
-    ///         someAsyncMethod {
-    ///             g.leave()
-    ///         }
+    /// ```swift
+    /// DispatchGroup.sync(asyncOn: .global()) { g in
+    ///     someAsyncMethod {
+    ///         g.leave()
     ///     }
-    ///     print("someAsyncMethod is done.")
+    /// }
+    /// print("someAsyncMethod is done.")
+    /// ```
     @_disfavoredOverload
     public static func sync(
         asyncOn dispatchQueue: DispatchQueue,
@@ -77,16 +81,18 @@ extension DispatchGroup {
     
     /// **OTCore:**
     /// Convenience DispatchGroup-wrapping method to run async code synchronously with a timeout period.
-    /// You must call `.leave()` once within the body of the closure.
+    /// You must call `leave()` once within the body of the closure.
     ///
     /// Example:
     ///
-    ///     DispatchGroup.sync(timeout: .seconds(10)) { g in
-    ///         someAsyncMethod {
-    ///             g.leave()
-    ///         }
+    /// ```swift
+    /// DispatchGroup.sync(timeout: .seconds(10)) { g in
+    ///     someAsyncMethod {
+    ///         g.leave()
     ///     }
-    ///     print("someAsyncMethod is done or timed out.")
+    /// }
+    /// print("someAsyncMethod is done or timed out.")
+    /// ```
     @discardableResult @_disfavoredOverload
     public static func sync(
         timeout: DispatchTimeInterval,
@@ -104,17 +110,19 @@ extension DispatchGroup {
     
     /// **OTCore:**
     /// Convenience DispatchGroup-wrapping method to run async code synchronously with a timeout period with the block being executed on the specified dispatch queue.
-    /// You must call `.leave()` once within the body of the closure.
+    /// You must call `leave()` once within the body of the closure.
     ///
     /// Example:
     ///
-    ///     DispatchGroup.sync(asyncOn: .global(),
-    ///                        timeout: .seconds(10)) { g in
-    ///         someAsyncMethod {
-    ///             g.leave()
-    ///         }
+    /// ```swift
+    /// DispatchGroup.sync(asyncOn: .global(),
+    ///                    timeout: .seconds(10)) { g in
+    ///     someAsyncMethod {
+    ///         g.leave()
     ///     }
-    ///     print("someAsyncMethod is done or timed out.")
+    /// }
+    /// print("someAsyncMethod is done or timed out.")
+    /// ```
     @discardableResult @_disfavoredOverload
     public static func sync(
         asyncOn dispatchQueue: DispatchQueue,
@@ -162,16 +170,18 @@ extension DispatchGroup {
     
     /// **OTCore:**
     /// Convenience DispatchGroup-wrapping method to run async code synchronously and return a value.
-    /// You must call `.leave(withValue:)` once within the body of the closure.
+    /// You must call `leave(withValue:)` once within the body of the closure.
     ///
     /// Example:
     ///
-    ///     let returnValue = DispatchGroup.sync { g in
-    ///         someAsyncMethod { someValue in
-    ///             g.leave(withValue: someValue)
-    ///         }
+    /// ```swift
+    /// let returnValue = DispatchGroup.sync { g in
+    ///     someAsyncMethod { someValue in
+    ///         g.leave(withValue: someValue)
     ///     }
-    ///     print(returnValue) // prints contents of someValue
+    /// }
+    /// print(returnValue) // prints contents of someValue
+    /// ```
     @_disfavoredOverload
     public static func sync<T>(
         _ block: (ThinReturnValueDispatchGroup<T>) -> Void
@@ -187,16 +197,18 @@ extension DispatchGroup {
     
     /// **OTCore:**
     /// Convenience DispatchGroup-wrapping method to run async code synchronously and return a value with the block being executed on the specified dispatch queue.
-    /// You must call `.leave(withValue:)` once within the body of the closure.
+    /// You must call `leave(withValue:)` once within the body of the closure.
     ///
     /// Example:
     ///
-    ///     let returnValue = DispatchGroup.sync { g in
-    ///         someAsyncMethod { someValue in
-    ///             g.leave(withValue: someValue)
-    ///         }
+    /// ```swift
+    /// let returnValue = DispatchGroup.sync { g in
+    ///     someAsyncMethod { someValue in
+    ///         g.leave(withValue: someValue)
     ///     }
-    ///     print(returnValue) // prints contents of someValue
+    /// }
+    /// print(returnValue) // prints contents of someValue
+    /// ```
     @_disfavoredOverload
     public static func sync<T>(
         asyncOn dispatchQueue: DispatchQueue,
@@ -215,22 +227,23 @@ extension DispatchGroup {
     
     /// **OTCore:**
     /// Convenience DispatchGroup-wrapping method to run async code synchronously and return a value with a timeout period.
-    /// You must call `.leave(withValue:)` once within the body of the closure.
+    /// You must call `leave(withValue:)` once within the body of the closure.
     ///
     /// Example:
     ///
-    ///     let returnValue = DispatchGroup.sync(timeout: .seconds: 10) { g in
-    ///         someAsyncMethod { someValue in
-    ///             g.leave(withValue: someValue)
-    ///         }
+    /// ```swift
+    /// let returnValue = DispatchGroup.sync(timeout: .seconds: 10) { g in
+    ///     someAsyncMethod { someValue in
+    ///         g.leave(withValue: someValue)
     ///     }
-    ///     switch returnValue {
-    ///     case .success(value):
-    ///         print(returnValue) // prints contents of someValue
-    ///     case .timedOut:
-    ///         // operation timed out
-    ///     }
-    ///
+    /// }
+    /// switch returnValue {
+    /// case .success(value):
+    ///     print(returnValue) // prints contents of someValue
+    /// case .timedOut:
+    ///     // operation timed out
+    /// }
+    /// ```
     @_disfavoredOverload
     public static func sync<T>(
         timeout: DispatchTimeInterval,
@@ -253,21 +266,22 @@ extension DispatchGroup {
     
     /// **OTCore:**
     /// Convenience DispatchGroup-wrapping method to run async code synchronously and return a value with a timeout period with the block being executed on the specified dispatch queue.
-    /// You must call `.leave(withValue:)` once within the body of the closure.
+    /// You must call `leave(withValue:)` once within the body of the closure.
     ///
     /// Example:
     ///
-    ///     let returnValue = DispatchGroup.sync(asyncOn: .global(),
-    ///                                          timeout: .seconds: 10) { g in
-    ///         g.leave(withValue: someValue)
-    ///     }
-    ///     switch returnValue {
-    ///     case .success(value):
-    ///         print(returnValue) // prints contents of someValue
-    ///     case .timedOut:
-    ///         // operation timed out
-    ///     }
-    ///
+    /// ```swift
+    /// let returnValue = DispatchGroup.sync(asyncOn: .global(),
+    ///                                      timeout: .seconds: 10) { g in
+    ///     g.leave(withValue: someValue)
+    /// }
+    /// switch returnValue {
+    /// case .success(value):
+    ///     print(returnValue) // prints contents of someValue
+    /// case .timedOut:
+    ///     // operation timed out
+    /// }
+    /// ```
     @_disfavoredOverload
     public static func sync<T>(
         asyncOn dispatchQueue: DispatchQueue,

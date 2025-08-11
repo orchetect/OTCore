@@ -9,8 +9,9 @@
 import AppKit
 
 extension NSPasteboard.PasteboardType {
+    // TODO: Remove in future OTCore release.
     /// **OTCore:**
-    /// Can use in place of `.fileURL` when building for platforms earlier than macOS 10.13.
+    /// Can use in place of `fileURL` when building for platforms earlier than macOS 10.13.
     @available(
         *,
         deprecated,

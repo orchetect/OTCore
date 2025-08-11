@@ -30,7 +30,7 @@ extension NumberEndianness {
 // MARK: - FloatingPointPowerComputable
 
 /// **OTCore:**
-/// Protocol allowing implementation of convenience method `.power(_ exponent:)`
+/// Protocol allowing implementation of convenience method `power(_ exponent:)`.
 /// - warning: (Internal use. Do not use this protocol.)
 public protocol FloatingPointPowerComputable {
     func power(_ exponent: Self) -> Self
@@ -39,7 +39,7 @@ public protocol FloatingPointPowerComputable {
 // MARK: - FloatingPointHighPrecisionStringConvertible
 
 /// **OTCore:**
-/// Protocol allowing implementation of convenience method `.stringValueHighPrecision`
+/// Protocol allowing implementation of convenience method `stringValueHighPrecision`.
 /// - warning: (Internal use. Do not use this protocol.)
 public protocol FloatingPointHighPrecisionStringConvertible {
     var stringValueHighPrecision: String { get }

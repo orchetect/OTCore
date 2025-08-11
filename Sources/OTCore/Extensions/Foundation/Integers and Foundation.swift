@@ -12,7 +12,7 @@ import Foundation
 
 extension BinaryInteger {
     /// **OTCore:**
-    /// Convenience method to return a String, padded to `paddedTo` number of leading zeros
+    /// Convenience method to return a String, padded to `paddedTo` number of leading zeros.
     @inlinable @_disfavoredOverload
     public func string(paddedTo: Int) -> String {
         if let cVarArg = self as? CVarArg {

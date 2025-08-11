@@ -25,8 +25,8 @@ import Foundation
 
 extension Data {
     /// **OTCore:**
-    /// Returns an Int64 value from Data
-    /// Returns nil if Data is not the correct length.
+    /// Returns an Int64 value from Data.
+    /// Returns `nil` if Data is not the correct length.
     @_disfavoredOverload
     public func toInt(from endianness: NumberEndianness = .platformDefault) -> Int? {
         toNumber(from: endianness, toType: Int.self)
@@ -38,7 +38,7 @@ extension Data {
 extension Data {
     /// **OTCore:**
     /// Returns a Int8 value from Data (stored as two's complement).
-    /// Returns nil if Data is not the correct length.
+    /// Returns `nil` if Data is not the correct length.
     @_disfavoredOverload
     public func toInt8() -> Int8? {
         guard count == 1 else { return nil }
@@ -55,8 +55,8 @@ extension Data {
 
 extension Data {
     /// **OTCore:**
-    /// Returns an Int16 value from Data
-    /// Returns nil if Data is not the correct length.
+    /// Returns an Int16 value from Data.
+    /// Returns `nil` if Data is not the correct length.
     @_disfavoredOverload
     public func toInt16(from endianness: NumberEndianness = .platformDefault) -> Int16? {
         toNumber(from: endianness, toType: Int16.self)
@@ -67,8 +67,8 @@ extension Data {
 
 extension Data {
     /// **OTCore:**
-    /// Returns an Int32 value from Data
-    /// Returns nil if Data is not the correct length.
+    /// Returns an Int32 value from Data.
+    /// Returns `nil` if Data is not the correct length.
     @_disfavoredOverload
     public func toInt32(from endianness: NumberEndianness = .platformDefault) -> Int32? {
         toNumber(from: endianness, toType: Int32.self)
@@ -79,8 +79,8 @@ extension Data {
 
 extension Data {
     /// **OTCore:**
-    /// Returns an Int64 value from Data
-    /// Returns nil if Data is not the correct length.
+    /// Returns an Int64 value from Data.
+    /// Returns `nil` if Data is not the correct length.
     @_disfavoredOverload
     public func toInt64(from endianness: NumberEndianness = .platformDefault) -> Int64? {
         toNumber(from: endianness, toType: Int64.self)
@@ -92,7 +92,7 @@ extension Data {
 extension Data {
     /// **OTCore:**
     /// Returns a UInt value from Data.
-    /// Returns nil if Data is not the correct length.
+    /// Returns `nil` if Data is not the correct length.
     @_disfavoredOverload
     public func toUInt(from endianness: NumberEndianness = .platformDefault) -> UInt? {
         toNumber(from: endianness, toType: UInt.self)
@@ -104,7 +104,7 @@ extension Data {
 extension Data {
     /// **OTCore:**
     /// Returns a UInt8 value from Data.
-    /// Returns nil if Data is not the correct length.
+    /// Returns `nil` if Data is not the correct length.
     @_disfavoredOverload
     public func toUInt8() -> UInt8? {
         guard count == 1 else { return nil }
@@ -117,7 +117,7 @@ extension Data {
 extension Data {
     /// **OTCore:**
     /// Returns a UInt16 value from Data.
-    /// Returns nil if Data is not the correct length.
+    /// Returns `nil` if Data is not the correct length.
     @_disfavoredOverload
     public func toUInt16(from endianness: NumberEndianness = .platformDefault) -> UInt16? {
         toNumber(from: endianness, toType: UInt16.self)
@@ -129,7 +129,7 @@ extension Data {
 extension Data {
     /// **OTCore:**
     /// Returns a UInt32 value from Data.
-    /// Returns nil if Data is not the correct length.
+    /// Returns `nil` if Data is not the correct length.
     @_disfavoredOverload
     public func toUInt32(from endianness: NumberEndianness = .platformDefault) -> UInt32? {
         toNumber(from: endianness, toType: UInt32.self)
@@ -141,7 +141,7 @@ extension Data {
 extension Data {
     /// **OTCore:**
     /// Returns a UInt64 value from Data.
-    /// Returns nil if Data is not the correct length.
+    /// Returns `nil` if Data is not the correct length.
     @_disfavoredOverload
     public func toUInt64(from endianness: NumberEndianness = .platformDefault) -> UInt64? {
         toNumber(from: endianness, toType: UInt64.self)
@@ -158,41 +158,40 @@ extension Float32 {
         var number = self
         
         return withUnsafeBytes(of: &number) { rawBuffer in
-            rawBuffer
-                .withMemoryRebound(to: UInt8.self) { buffer in
-                    switch endianness {
-                    case .platformDefault:
-                        return Data(buffer: buffer)
+            rawBuffer.withMemoryRebound(to: UInt8.self) { buffer in
+                switch endianness {
+                case .platformDefault:
+                    return Data(buffer: buffer)
                     
+                case .littleEndian:
+                    switch NumberEndianness.system {
                     case .littleEndian:
-                        switch NumberEndianness.system {
-                        case .littleEndian:
-                            return Data(buffer: buffer)
-                        case .bigEndian:
-                            return Data(Data(buffer: buffer).reversed())
-                        default:
-                            fatalError() // should never happen
-                        }
-                    
+                        return Data(buffer: buffer)
                     case .bigEndian:
-                        switch NumberEndianness.system {
-                        case .littleEndian:
-                            return Data(Data(buffer: buffer).reversed())
-                        case .bigEndian:
-                            return Data(buffer: buffer)
-                        default:
-                            fatalError() // should never happen
-                        }
+                        return Data(Data(buffer: buffer).reversed())
+                    default:
+                        fatalError() // should never happen
+                    }
+                    
+                case .bigEndian:
+                    switch NumberEndianness.system {
+                    case .littleEndian:
+                        return Data(Data(buffer: buffer).reversed())
+                    case .bigEndian:
+                        return Data(buffer: buffer)
+                    default:
+                        fatalError() // should never happen
                     }
                 }
+            }
         }
     }
 }
 
 extension Data {
     /// **OTCore:**
-    /// Returns a Float32 value from Data
-    /// Returns nil if Data is != 4 bytes.
+    /// Returns a Float32 value from Data.
+    /// Returns `nil` if Data is != 4 bytes.
     @_disfavoredOverload
     public func toFloat32(from endianness: NumberEndianness = .platformDefault) -> Float32? {
         guard count == 4 else { return nil }
@@ -262,41 +261,40 @@ extension Double {
         var number = self
         
         return withUnsafeBytes(of: &number) { rawBuffer in
-            rawBuffer
-                .withMemoryRebound(to: UInt8.self) { buffer in
-                    switch endianness {
-                    case .platformDefault:
-                        return Data(buffer: buffer)
+            rawBuffer.withMemoryRebound(to: UInt8.self) { buffer in
+                switch endianness {
+                case .platformDefault:
+                    return Data(buffer: buffer)
                     
+                case .littleEndian:
+                    switch NumberEndianness.system {
                     case .littleEndian:
-                        switch NumberEndianness.system {
-                        case .littleEndian:
-                            return Data(buffer: buffer)
-                        case .bigEndian:
-                            return Data(Data(buffer: buffer).reversed())
-                        default:
-                            fatalError() // should never happen
-                        }
-                    
+                        return Data(buffer: buffer)
                     case .bigEndian:
-                        switch NumberEndianness.system {
-                        case .littleEndian:
-                            return Data(Data(buffer: buffer).reversed())
-                        case .bigEndian:
-                            return Data(buffer: buffer)
-                        default:
-                            fatalError() // should never happen
-                        }
+                        return Data(Data(buffer: buffer).reversed())
+                    default:
+                        fatalError() // should never happen
+                    }
+                    
+                case .bigEndian:
+                    switch NumberEndianness.system {
+                    case .littleEndian:
+                        return Data(Data(buffer: buffer).reversed())
+                    case .bigEndian:
+                        return Data(buffer: buffer)
+                    default:
+                        fatalError() // should never happen
                     }
                 }
+            }
         }
     }
 }
 
 extension Data {
     /// **OTCore:**
-    /// Returns a Double value from Data
-    /// Returns nil if Data is != 8 bytes.
+    /// Returns a Double value from Data.
+    /// Returns `nil` if Data is != 8 bytes.
     @_disfavoredOverload
     public func toDouble(from endianness: NumberEndianness = .platformDefault) -> Double? {
         guard count == 8 else { return nil }
@@ -367,15 +365,14 @@ extension FixedWidthInteger {
         
         switch endianness {
         case .platformDefault: int = self
-        case .littleEndian:    int = littleEndian
-        case .bigEndian:       int = bigEndian
+        case .littleEndian: int = littleEndian
+        case .bigEndian: int = bigEndian
         }
         
         return withUnsafeBytes(of: &int) { rawBuffer in
-            rawBuffer
-                .withMemoryRebound(to: UInt8.self) { buffer in
-                    Data(buffer: buffer)
-                }
+            rawBuffer.withMemoryRebound(to: UInt8.self) { buffer in
+                Data(buffer: buffer)
+            }
         }
     }
 }
@@ -436,7 +433,7 @@ extension Data {
 
 extension String {
     /// **OTCore:**
-    /// Returns a Data representation of a String, defaulting to utf8 encoding.
+    /// Returns a Data representation of a String, defaulting to UTF-8 encoding.
     @_disfavoredOverload
     public func toData(using encoding: String.Encoding = .utf8) -> Data? {
         data(using: encoding)

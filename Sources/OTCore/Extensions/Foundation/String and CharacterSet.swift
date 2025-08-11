@@ -16,8 +16,10 @@ extension StringProtocol {
     ///
     /// For example:
     ///
-    ///     "abc123def456g7".split(intoSequencesOf: .letters, .decimalDigits)
-    ///     // ["abc", "123", "def", "456", "g", "7"]
+    /// ```swift
+    /// "abc123def456g7".split(intoSequencesOf: .letters, .decimalDigits)
+    /// // ["abc", "123", "def", "456", "g", "7"]
+    /// ```
     ///
     /// - complexity: O(*n*) where *n* is length of string
     @_disfavoredOverload
@@ -92,9 +94,10 @@ extension StringProtocol {
     ///
     /// Example:
     ///
-    ///     "A string 123".only(.alphanumerics)`
-    ///     "A string 123".only(.letters, .decimalDigits)`
-    ///
+    /// ```swift
+    /// "A string 123".only(.alphanumerics)`
+    /// "A string 123".only(.letters, .decimalDigits)`
+    /// ```
     @_disfavoredOverload
     public func only(
         _ characterSet: CharacterSet,
@@ -129,9 +132,10 @@ extension StringProtocol {
     ///
     /// Example:
     ///
-    ///     "A string 123".removing(.whitespaces)`
-    ///     "A string 123".removing(.letters, .decimalDigits)`
-    ///
+    /// ```swift
+    /// "A string 123".removing(.whitespaces)`
+    /// "A string 123".removing(.letters, .decimalDigits)`
+    /// ```
     @_disfavoredOverload
     public func removing(
         _ characterSet: CharacterSet,
@@ -158,14 +162,14 @@ extension StringProtocol {
 
 extension StringProtocol {
     /// **OTCore:**
-    /// Returns true if the string is entirely comprised of ASCII characters (0-127).
+    /// Returns `true` if the string is entirely comprised of ASCII characters (0-127).
     @inlinable @_disfavoredOverload
     public var isASCII: Bool {
         allSatisfy(\.isASCII)
     }
     
     /// **OTCore:**
-    /// Returns true if all characters in the string are contained in the character set.
+    /// Returns `true` if all characters in the string are contained in the character set.
     @_disfavoredOverload
     public func isOnly(
         _ characterSet: CharacterSet,
@@ -179,7 +183,7 @@ extension StringProtocol {
     }
     
     /// **OTCore:**
-    /// Returns true if all characters in the string are contained in the character set.
+    /// Returns `true` if all characters in the string are contained in the character set.
     @_disfavoredOverload
     public func isOnly(charactersIn string: String) -> Bool {
         let characterSet = CharacterSet(charactersIn: string)
@@ -187,7 +191,7 @@ extension StringProtocol {
     }
     
     /// **OTCore:**
-    /// Returns true if any character in the string are contained in the character set.
+    /// Returns `true` if any character in the string are contained in the character set.
     @_disfavoredOverload
     public func contains(
         any characterSet: CharacterSet,
@@ -205,7 +209,7 @@ extension StringProtocol {
     }
     
     /// **OTCore:**
-    /// Returns true if any character in the string are contained in the character set.
+    /// Returns `true` if any character in the string are contained in the character set.
     @_disfavoredOverload
     public func contains(anyCharactersIn characters: String) -> Bool {
         let characterSet = CharacterSet(charactersIn: characters)

@@ -16,13 +16,13 @@ extension CGFloat: FloatingPointHighPrecisionStringConvertible { }
 
 extension BinaryInteger {
     /// **OTCore:**
-    /// Same as `CGFloat()`
+    /// Same as `CGFloat(self)`.
     /// (Functional convenience method)
     @inlinable @_disfavoredOverload
     public var cgFloat: CGFloat { CGFloat(self) }
     
     /// **OTCore:**
-    /// Same as `CGFloat(exactly:)`
+    /// Same as `CGFloat(exactly: self)`.
     /// (Functional convenience method)
     @inlinable @_disfavoredOverload
     public var cgFloatExactly: CGFloat? { CGFloat(exactly: self) }
@@ -30,13 +30,13 @@ extension BinaryInteger {
 
 extension BinaryFloatingPoint {
     /// **OTCore:**
-    /// Same as `CGFloat()`
+    /// Same as `CGFloat(self)`.
     /// (Functional convenience method)
     @inlinable @_disfavoredOverload
     public var cgFloat: CGFloat { CGFloat(self) }
     
     /// **OTCore:**
-    /// Same as `CGFloat(exactly:)`
+    /// Same as `CGFloat(exactly: self)`.
     /// (Functional convenience method)
     @inlinable @_disfavoredOverload
     public var cgFloatExactly: CGFloat? { CGFloat(exactly: self) }
@@ -48,7 +48,7 @@ extension BinaryFloatingPoint {
 
 extension CGFloat: FloatingPointPowerComputable {
     /// **OTCore:**
-    /// Same as `pow()`
+    /// Same as `pow()`.
     /// (Functional convenience method)
     @inlinable @_disfavoredOverload
     public func power(_ exponent: CGFloat) -> CGFloat {

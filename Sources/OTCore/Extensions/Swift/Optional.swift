@@ -12,7 +12,7 @@ public protocol OTCoreOptionalTyped {
     associatedtype Wrapped
     
     /// **OTCore:**
-    /// Semantic workaround used to enable extensions on types such as `Type<T>?
+    /// Semantic workaround used to enable extensions on types such as `Type<T>?`.
     @inlinable @_disfavoredOverload
     var optional: Wrapped? { get set }
 }
@@ -41,51 +41,62 @@ extension Optional: OTCoreOptionalTyped {
 ///
 /// First, conditionally cast `Any` as? `OTCoreOptional`:
 ///
-///     let value: Any = Optional("Test")
-///     guard let asOptional = value as? OTCoreOptional else { ... }
+/// ```swift
+/// let value: Any = Optional("Test")
+/// guard let asOptional = value as? OTCoreOptional else { ... }
+/// ```
 ///
 /// An easy way to test if the Optional is `nil`:
 ///
-///     asOptional.isNone // false
+/// ```swift
+/// asOptional.isNone // false
+/// ```
 ///
 /// Switch over wrapped concrete type:
 ///
-///     switch asOptional.wrappedType() {
-///     case is String.Type:
-///         // case matches if wrapped type is String
-///         // regardless whether it's .some() or nil
-///     case is Int.Type:
-///         // ...
-///     }
+/// ```swift
+/// switch asOptional.wrappedType() {
+/// case is String.Type:
+///     // case matches if wrapped type is String
+///     // regardless whether it's some() or nil
+/// case is Int.Type:
+///     // ...
+/// }
+/// ```
 ///
 /// Switch by conditionally casting concrete type, preserving the Optional:
 ///
-///     switch asOptional {
-///     case let string as String?:
-///         // string == Optional("Test")
-///     case let int as Int?:
-///         // ...
-///     }
+/// ```swift
+/// switch asOptional {
+/// case let string as String?:
+///     // string == Optional("Test")
+/// case let int as Int?:
+///     // ...
+/// }
+/// ```
 ///
 /// Unwrap by switching:
 ///
-///     switch asOptional {
-///     case let string as String:
-///         // string == "Test"
-///     case let int as Int:
-///         // ...
-///     default:
-///         // nil
-///     }
+/// ```swift
+/// switch asOptional {
+/// case let string as String:
+///     // string == "Test"
+/// case let int as Int:
+///     // ...
+/// default:
+///     // nil
+/// }
+/// ```
 ///
 /// Unwrap by `if let` binding:
 ///
-///     if let string = asOptional.asAny() as? String {
-///         // string == "Test" (unwrapped)
-///     } else {
-///         // nil
-///     }
-///
+/// ```swift
+/// if let string = asOptional.asAny() as? String {
+///     // string == "Test" (unwrapped)
+/// } else {
+///     // nil
+/// }
+/// ```
 protocol OTCoreOptional {
     /// **OTCore:**
     /// Returns the optional Typed as `Any?`.
@@ -98,7 +109,7 @@ protocol OTCoreOptional {
     func wrappedType() -> Any.Type
     
     /// **OTCore:**
-    /// Returns `true` if optional is `.none` (`nil`).
+    /// Returns `true` if optional is `none` (`nil`).
     @_disfavoredOverload
     var isNone: Bool { get }
 }
@@ -120,11 +131,11 @@ extension Optional: OTCoreOptional {
     }
 }
 
-// MARK: - .ifNil(_:)
+// MARK: - ifNil(_:)
 
 extension Optional {
     /// **OTCore:**
-    /// Same as `self ?? defaultValue`
+    /// Same as `self ?? defaultValue`.
     /// (Functional convenience method)
     @inlinable @_disfavoredOverload
     public func ifNil(_ defaultValue: Wrapped) -> Wrapped {

@@ -60,7 +60,7 @@ extension XMLElement {
     
     /// **OTCore:**
     /// Gets an attribute value.
-    /// If attribute name does not exist or does not have a value, nil will be returned.
+    /// If attribute name does not exist or does not have a value, `nil` will be returned.
     @_disfavoredOverload
     public func objectValue(forAttributeNamed attributeName: String) -> Any? {
         attribute(forName: attributeName)?.objectValue

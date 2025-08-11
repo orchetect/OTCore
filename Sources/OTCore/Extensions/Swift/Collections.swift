@@ -75,21 +75,23 @@ extension MutableCollection {
     ///
     /// Get: if index does not exist (out-of-bounds), `nil` is returned.
     ///
-    /// Set: if index does not exist, set fails silently and the value is not stored. Note that setting `nil` on a non-Optional element is not supported.
+    /// Set: if index does not exist, set fails silently and the value is not stored.
+    /// Note that setting `nil` on a non-Optional element is not supported.
     ///
     /// Example:
     ///
-    ///     let arr = [1, 2, 3]
-    ///     arr[safe: 0] // Optional(1)
-    ///     arr[safe: 3] // nil
+    /// ```swift
+    /// let arr = [1, 2, 3]
+    /// arr[safe: 0] // Optional(1)
+    /// arr[safe: 3] // nil
     ///
-    ///     // for slice, index numbers are preserved like native subscript
-    ///     let arrSlice = [1, 2, 3].suffix(2)
-    ///     arrSlice[safe: 0] // nil
-    ///     arrSlice[safe: 1] // Optional(2)
-    ///     arrSlice[safe: 2] // Optional(3)
-    ///     arrSlice[safe: 3] // nil
-    ///
+    /// // for slice, index numbers are preserved like native subscript
+    /// let arrSlice = [1, 2, 3].suffix(2)
+    /// arrSlice[safe: 0] // nil
+    /// arrSlice[safe: 1] // Optional(2)
+    /// arrSlice[safe: 2] // Optional(3)
+    /// arrSlice[safe: 3] // nil
+    /// ```
     @inlinable @_disfavoredOverload
     public subscript(safe index: Index) -> Element? {
         get {
@@ -157,17 +159,18 @@ extension MutableCollection where Element: OTCoreOptionalTyped {
     ///
     /// Example:
     ///
-    ///     let arr = [1, 2, 3]
-    ///     arr[safe: 0] // Optional(1)
-    ///     arr[safe: 3] // nil
+    /// ```swift
+    /// let arr = [1, 2, 3]
+    /// arr[safe: 0] // Optional(1)
+    /// arr[safe: 3] // nil
     ///
-    ///     // for slice, index numbers are preserved like native subscript
-    ///     let arrSlice = [1, 2, 3].suffix(2)
-    ///     arrSlice[safe: 0] // nil
-    ///     arrSlice[safe: 1] // Optional(2)
-    ///     arrSlice[safe: 2] // Optional(3)
-    ///     arrSlice[safe: 3] // nil
-    ///
+    /// // for slice, index numbers are preserved like native subscript
+    /// let arrSlice = [1, 2, 3].suffix(2)
+    /// arrSlice[safe: 0] // nil
+    /// arrSlice[safe: 1] // Optional(2)
+    /// arrSlice[safe: 2] // Optional(3)
+    /// arrSlice[safe: 3] // nil
+    /// ```
     @inlinable @_disfavoredOverload
     public subscript(safe index: Index) -> Element? {
         get {
@@ -219,17 +222,18 @@ extension Collection {
     ///
     /// Example:
     ///
-    ///     let arr = [1, 2, 3]
-    ///     arr[safe: 0] // Optional(1)
-    ///     arr[safe: 3] // nil
+    /// ```swift
+    /// let arr = [1, 2, 3]
+    /// arr[safe: 0] // Optional(1)
+    /// arr[safe: 3] // nil
     ///
-    ///     // for slice, index numbers are preserved like native subscript
-    ///     let arrSlice = [1, 2, 3].suffix(2)
-    ///     arrSlice[safe: 0] // nil
-    ///     arrSlice[safe: 1] // Optional(2)
-    ///     arrSlice[safe: 2] // Optional(3)
-    ///     arrSlice[safe: 3] // nil
-    ///
+    /// // for slice, index numbers are preserved like native subscript
+    /// let arrSlice = [1, 2, 3].suffix(2)
+    /// arrSlice[safe: 0] // nil
+    /// arrSlice[safe: 1] // Optional(2)
+    /// arrSlice[safe: 2] // Optional(3)
+    /// arrSlice[safe: 3] // nil
+    /// ```
     @inlinable @_disfavoredOverload
     public subscript(safe index: Index) -> Element? {
         indices.contains(index) ? self[index] : nil
@@ -257,17 +261,18 @@ extension Collection where Index == Int {
     ///
     /// Example:
     ///
-    ///     let arr = [1, 2, 3]
-    ///     arr[safe: 0] // Optional(1)
-    ///     arr[safe: 3] // nil
+    /// ```swift
+    /// let arr = [1, 2, 3]
+    /// arr[safe: 0] // Optional(1)
+    /// arr[safe: 3] // nil
     ///
-    ///     // for slice, index numbers are preserved like native subscript
-    ///     let arrSlice = [1, 2, 3].suffix(2)
-    ///     arrSlice[safe: 0] // nil
-    ///     arrSlice[safe: 1] // Optional(2)
-    ///     arrSlice[safe: 2] // Optional(3)
-    ///     arrSlice[safe: 3] // nil
-    ///
+    /// // for slice, index numbers are preserved like native subscript
+    /// let arrSlice = [1, 2, 3].suffix(2)
+    /// arrSlice[safe: 0] // nil
+    /// arrSlice[safe: 1] // Optional(2)
+    /// arrSlice[safe: 2] // Optional(3)
+    /// arrSlice[safe: 3] // nil
+    /// ```
     @inlinable @_disfavoredOverload
     public subscript(safe index: Int) -> Element? {
         indices.contains(index) ? self[index] : nil
@@ -337,22 +342,25 @@ extension Collection {
 
 extension MutableCollection {
     /// **OTCore:**
-    /// Access collection indexes safely, referenced by position offset `0..<count`. (Same as `[position: Int]` but returns `nil` if out-of-bounds.
+    /// Access collection indexes safely, referenced by position offset `0 ..< count`.
+    /// (Same as `[position: Int]` but returns `nil` if out-of-bounds.)
     ///
     /// Get: if index does not exist (out-of-bounds), `nil` is returned.
     ///
-    /// Set: if index does not exist, set fails silently and the value is not stored. Note that setting `nil` on a non-Optional element is not supported.
+    /// Set: if index does not exist, set fails silently and the value is not stored.
+    /// Note that setting `nil` on a non-Optional element is not supported.
     ///
     /// Example:
     ///
-    ///     let arr = [1, 2, 3]
-    ///     arr[safePosition: 0] // Optional(1)
-    ///     arr[safePosition: 3] // nil
+    /// ```swift
+    /// let arr = [1, 2, 3]
+    /// arr[safePosition: 0] // Optional(1)
+    /// arr[safePosition: 3] // nil
     ///
-    ///     let arrSlice = [1, 2, 3].suffix
-    ///     arrSlice[safePosition: 0] // Optional(2)
-    ///     arrSlice[safePosition: 2] // nil
-    ///
+    /// let arrSlice = [1, 2, 3].suffix
+    /// arrSlice[safePosition: 0] // Optional(2)
+    /// arrSlice[safePosition: 2] // nil
+    /// ```
     @inlinable @_disfavoredOverload
     public subscript(safePosition indexOffset: Int) -> Element? {
         get {
@@ -417,7 +425,8 @@ extension MutableCollection {
 
 extension MutableCollection where Element: OTCoreOptionalTyped {
     /// **OTCore:**
-    /// Access collection indexes safely, referenced by position offset `0..<count`. (Same as `[position: Int]` but returns `nil` if out-of-bounds.
+    /// Access collection indexes safely, referenced by position offset `0 ..< count`.
+    /// (Same as `[position: Int]` but returns `nil` if out-of-bounds.)
     ///
     /// Get: if index does not exist (out-of-bounds), `nil` is returned.
     ///
@@ -425,14 +434,15 @@ extension MutableCollection where Element: OTCoreOptionalTyped {
     ///
     /// Example:
     ///
-    ///     let arr = [1, 2, 3]
-    ///     arr[safePosition: 0] // Optional(1)
-    ///     arr[safePosition: 3] // nil
+    /// ```swift
+    /// let arr = [1, 2, 3]
+    /// arr[safePosition: 0] // Optional(1)
+    /// arr[safePosition: 3] // nil
     ///
-    ///     let arrSlice = [1, 2, 3].suffix
-    ///     arrSlice[safePosition: 0] // Optional(2)
-    ///     arrSlice[safePosition: 2] // nil
-    ///
+    /// let arrSlice = [1, 2, 3].suffix
+    /// arrSlice[safePosition: 0] // Optional(2)
+    /// arrSlice[safePosition: 2] // nil
+    /// ```
     @inlinable @_disfavoredOverload
     public subscript(safePosition indexOffset: Int) -> Element? {
         get {
@@ -477,7 +487,8 @@ extension MutableCollection where Element: OTCoreOptionalTyped {
 
 extension Collection where Index == Int {
     /// **OTCore:**
-    /// Access collection indexes safely, referenced by position offset `0..<count`. (Same as `[position: Int]` but returns `nil` if out-of-bounds.
+    /// Access collection indexes safely, referenced by position offset `0 ..< count`.
+    /// (Same as `[position: Int]` but returns `nil` if out-of-bounds.)
     ///
     /// Get: if index does not exist (out-of-bounds), `nil` is returned.
     ///
@@ -485,14 +496,15 @@ extension Collection where Index == Int {
     ///
     /// Example:
     ///
-    ///     let arr = [1, 2, 3]
-    ///     arr[safePosition: 0] // Optional(1)
-    ///     arr[safePosition: 3] // nil
+    /// ```swift
+    /// let arr = [1, 2, 3]
+    /// arr[safePosition: 0] // Optional(1)
+    /// arr[safePosition: 3] // nil
     ///
-    ///     let arrSlice = [1, 2, 3].suffix(2)
-    ///     arrSlice[safePosition: 0] // Optional(2)
-    ///     arrSlice[safePosition: 2] // nil
-    ///
+    /// let arrSlice = [1, 2, 3].suffix(2)
+    /// arrSlice[safePosition: 0] // Optional(2)
+    /// arrSlice[safePosition: 2] // nil
+    /// ```
     @inlinable @_disfavoredOverload
     public subscript(safePosition index: Int) -> Element? {
         guard count > 0,
@@ -507,16 +519,17 @@ extension Collection where Index == Int {
     /// Access collection indexes safely.
     /// If index does not exist (out-of-bounds), `defaultValue` is returned.
     ///
-    ///     let arr = [1, 2, 3]
-    ///     arr[safe: 0, default: 99] // 1
-    ///     arr[safe: 3, default: 99] // 99
+    /// ```swift
+    /// let arr = [1, 2, 3]
+    /// arr[safe: 0, default: 99] // 1
+    /// arr[safe: 3, default: 99] // 99
     ///
-    ///     let arrSlice = [1, 2, 3].suffix(2)
-    ///     arrSlice[safe: 0, default: 99] // 99
-    ///     arrSlice[safe: 1, default: 99] // 2
-    ///     arrSlice[safe: 2, default: 99] // 3
-    ///     arrSlice[safe: 3, default: 99] // 99
-    ///
+    /// let arrSlice = [1, 2, 3].suffix(2)
+    /// arrSlice[safe: 0, default: 99] // 99
+    /// arrSlice[safe: 1, default: 99] // 2
+    /// arrSlice[safe: 2, default: 99] // 3
+    /// arrSlice[safe: 3, default: 99] // 99
+    /// ```
     @inlinable @_disfavoredOverload
     public subscript(
         safe index: Int,
@@ -531,15 +544,16 @@ extension Collection where Index == Int {
     ///
     /// Example:
     ///
-    ///     let arr = [1, 2, 3]
-    ///     arr[safePosition: 0, default: 99] // 1
-    ///     arr[safePosition: 3, default: 99] // 99
+    /// ```swift
+    /// let arr = [1, 2, 3]
+    /// arr[safePosition: 0, default: 99] // 1
+    /// arr[safePosition: 3, default: 99] // 99
     ///
-    ///     let arrSlice = [1, 2, 3].suffix(2)
-    ///     arrSlice[safePosition: 0, default: 99] // 2
-    ///     arrSlice[safePosition: 1, default: 99] // 3
-    ///     arrSlice[safePosition: 2, default: 99] // 99
-    ///
+    /// let arrSlice = [1, 2, 3].suffix(2)
+    /// arrSlice[safePosition: 0, default: 99] // 2
+    /// arrSlice[safePosition: 1, default: 99] // 3
+    /// arrSlice[safePosition: 2, default: 99] // 99
+    /// ```
     @inlinable @_disfavoredOverload
     public subscript(
         safePosition index: Int,
@@ -558,7 +572,8 @@ extension Collection where Index == Int {
 
 extension Collection where Index == Int {
     /// **OTCore:**
-    /// Access collection indexes safely, referenced by position offset `0..<count`. (Same as `[Int]` but if position range is not fully contained within the collection's element position offsets, `nil` is returned.
+    /// Access collection indexes safely, referenced by position offset `0 ..< count`.
+    /// (Same as `[Int]` but if position range is not fully contained within the collection's element position offsets, `nil` is returned.)
     @inlinable @_disfavoredOverload
     public subscript(safePosition range: ClosedRange<Int>) -> SubSequence? {
         guard range.lowerBound >= 0,
@@ -571,7 +586,8 @@ extension Collection where Index == Int {
     }
     
     /// **OTCore:**
-    /// Access collection indexes safely, referenced by position offset `0..<count`. (Same as `[Int]` but if position range is not fully contained within the collection's element position offsets, `nil` is returned.
+    /// Access collection indexes safely, referenced by position offset `0 ..< count`.
+    /// (Same as `[Int]` but if position range is not fully contained within the collection's element position offsets, `nil` is returned.)
     @inlinable @_disfavoredOverload
     public subscript(safePosition range: Range<Int>) -> SubSequence? {
         guard range.lowerBound >= 0,
@@ -584,7 +600,8 @@ extension Collection where Index == Int {
     }
     
     /// **OTCore:**
-    /// Access collection indexes safely, referenced by position offset `0..<count`. (Same as `[Int]` but if position range is not fully contained within the collection's element position offsets, `nil` is returned.
+    /// Access collection indexes safely, referenced by position offset `0 ..< count`.
+    /// (Same as `[Int]` but if position range is not fully contained within the collection's element position offsets, `nil` is returned.)
     @inlinable @_disfavoredOverload
     public subscript(safePosition range: PartialRangeFrom<Int>) -> SubSequence? {
         let fromIndex = index(startIndex, offsetBy: range.lowerBound)
@@ -596,7 +613,8 @@ extension Collection where Index == Int {
     }
     
     /// **OTCore:**
-    /// Access collection indexes safely, referenced by position offset `0..<count`. (Same as `[Int]` but if position range is not fully contained within the collection's element position offsets, `nil` is returned.
+    /// Access collection indexes safely, referenced by position offset `0 ..< count`.
+    /// (Same as `[Int]` but if position range is not fully contained within the collection's element position offsets, `nil` is returned.)
     @inlinable @_disfavoredOverload
     public subscript(safePosition range: PartialRangeThrough<Int>) -> SubSequence? {
         let toIndex = index(startIndex, offsetBy: range.upperBound)
@@ -608,7 +626,8 @@ extension Collection where Index == Int {
     }
     
     /// **OTCore:**
-    /// Access collection indexes safely, referenced by position offset `0..<count`. (Same as `[Int]` but if position range is not fully contained within the collection's element position offsets, `nil` is returned.
+    /// Access collection indexes safely, referenced by position offset `0 ..< count`.
+    /// (Same as `[Int]` but if position range is not fully contained within the collection's element position offsets, `nil` is returned.)
     @inlinable @_disfavoredOverload
     public subscript(safePosition range: PartialRangeUpTo<Int>) -> SubSequence? {
         let toIndex = index(startIndex, offsetBy: range.upperBound)
@@ -624,7 +643,7 @@ extension Collection where Index == Int {
 
 extension RangeReplaceableCollection {
     /// **OTCore:**
-    /// Same as `.remove(at:)` but returns an optional instead of throwing an exception if the index does not exist
+    /// Same as `remove(at:)` but returns an optional instead of throwing an exception if the index does not exist
     @inlinable @discardableResult @_disfavoredOverload
     public mutating func remove(safeAt index: Index) -> Element? {
         if indices.contains(index) {
@@ -637,7 +656,7 @@ extension RangeReplaceableCollection {
 
 extension RangeReplaceableCollection where Index == Int {
     /// **OTCore:**
-    /// Same as `.remove(at:)` but returns an optional instead of throwing an exception if the element at the given offset position does not exist.
+    /// Same as `remove(at:)` but returns an optional instead of throwing an exception if the element at the given offset position does not exist.
     /// References index as an offset from `startIndex` and does not reference indexes directly.
     @inlinable @discardableResult @_disfavoredOverload
     public mutating func remove(safePositionAt indexOffset: Int) -> Element? {
@@ -725,17 +744,18 @@ extension Array {
     ///
     /// Example:
     ///
-    ///     let x = ["0", "1", "2", "3", "4"]
+    /// ```swift
+    /// let x = ["0", "1", "2", "3", "4"]
     ///
-    ///     x[wrapping: 0]  // "0"
-    ///     x[wrapping: 4]  // "4"
-    ///     x[wrapping: 5]  // "0"
-    ///     x[wrapping: 6]  // "1"
-    ///     x[wrapping: -1] // "4"
-    ///     x[wrapping: -4] // "1"
-    ///     x[wrapping: -5] // "0"
-    ///     x[wrapping: -6] // "4"
-    ///
+    /// x[wrapping: 0]  // "0"
+    /// x[wrapping: 4]  // "4"
+    /// x[wrapping: 5]  // "0"
+    /// x[wrapping: 6]  // "1"
+    /// x[wrapping: -1] // "4"
+    /// x[wrapping: -4] // "1"
+    /// x[wrapping: -5] // "0"
+    /// x[wrapping: -6] // "4"
+    /// ```
     @inlinable @_disfavoredOverload
     public subscript(wrapping index: Index) -> Iterator.Element {
         let max = count
@@ -867,7 +887,8 @@ extension Collection where Element: Strideable,
     ///
     /// Starting at the first element of the array, walks through the array lazily searching for gap of `n2 > n1+1` in values and returns the missing value.
     ///
-    /// This method is only typically useful on an array of values that has been `.sorted()` first. Passing the `after` parameter will only return a gap value if it's greater than the `after` value.
+    /// This method is only typically useful on an array of values that has been `sorted()` first.
+    /// Passing the `after` parameter will only return a gap value if it's greater than the `after` value.
     ///
     /// If there are no gaps, `nil` is returned.
     ///
@@ -875,11 +896,13 @@ extension Collection where Element: Strideable,
     ///
     /// Example:
     ///
-    ///     [].firstGapValue                    // nil
-    ///     [1,  3,4,5].firstGapValue           // 2
-    ///     [1,2,  4,5].firstGapValue           // 3
-    ///     [1,2,3,4  ].firstGapValue           // nil
-    ///     [1,3,5,7,9].firstGapValue(after: 2) // 4
+    /// ```swift
+    /// [].firstGapValue                    // nil
+    /// [1,  3,4,5].firstGapValue           // 2
+    /// [1,2,  4,5].firstGapValue           // 3
+    /// [1,2,3,4  ].firstGapValue           // nil
+    /// [1,3,5,7,9].firstGapValue(after: 2) // 4
+    /// ```
     ///
     /// - complexity: O(*n*), where *n* represents index of first gap in the array
     @inlinable @_disfavoredOverload
@@ -963,7 +986,8 @@ extension Sequence {
 
 extension Collection {
     /// **OTCore:**
-    /// Splits a `Collection` or `String` into groups of `every` _n_ number of characters, grouping from left-to-right. If `backwards` is `true`, right-to-left.
+    /// Splits a `Collection` or `String` into groups of `every` _n_ number of characters, grouping from left-to-right.
+    /// If `backwards` is `true`, right-to-left.
     @_disfavoredOverload
     public func split(
         every: Int,
@@ -1358,7 +1382,7 @@ extension Dictionary {
     
     /// **OTCore:**
     /// Returns a new dictionary by transforming keys and values using a closure.
-    /// Analogous to Swift's standard `.map` method.
+    /// Analogous to Swift's standard `map` method.
     @inlinable @_disfavoredOverload
     public func mapDictionary<K: Hashable, V: Any>(
         _ transform: (_ key: Key, _ value: Value) throws -> (K, V)
@@ -1371,7 +1395,7 @@ extension Dictionary {
     
     /// **OTCore:**
     /// Returns a new dictionary by transforming keys and values using a closure.
-    /// Analogous to Swift's standard `.compactMap` method.
+    /// Analogous to Swift's standard `compactMap` method.
     @inlinable @_disfavoredOverload
     public func compactMapDictionary<K: Hashable, V: Any>(
         _ transform: (_ key: Key, _ value: Value) throws -> (K, V)?
@@ -1387,7 +1411,7 @@ extension Dictionary {
 extension Sequence {
     /// **OTCore:**
     /// Returns a new dictionary by mapping elements to key/value pairs.
-    /// Analogous to Swift's standard `.map` method.
+    /// Analogous to Swift's standard `map` method.
     @inlinable @_disfavoredOverload
     public func mapDictionary<K: Hashable, V: Any>(
         _ transform: (_ element: Element) throws -> (K, V)
@@ -1400,7 +1424,7 @@ extension Sequence {
     
     /// **OTCore:**
     /// Returns a new dictionary by mapping elements to key/value pairs.
-    /// Analogous to Swift's standard `.compactMap` method.
+    /// Analogous to Swift's standard `compactMap` method.
     @inlinable @_disfavoredOverload
     public func compactMapDictionary<K: Hashable, V: Any>(
         _ transform: (_ element: Element) throws -> (K, V)?
