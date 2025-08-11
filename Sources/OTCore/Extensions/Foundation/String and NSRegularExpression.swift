@@ -111,13 +111,13 @@ extension StringProtocol {
     /// If any capture group is not matched it will be `nil`.
     @_disfavoredOverload
     public func regexMatches(
-        captureGroupsFromPattern: String,
+        captureGroupsFromPattern pattern: String,
         options: NSRegularExpression.Options = [],
         matchesOptions: NSRegularExpression.MatchingOptions = [.withTransparentBounds]
     ) -> [SubSequence?] {
         do {
             let regex = try NSRegularExpression(
-                pattern: captureGroupsFromPattern,
+                pattern: pattern,
                 options: options
             )
             

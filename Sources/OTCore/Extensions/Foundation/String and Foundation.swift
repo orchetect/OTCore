@@ -53,8 +53,6 @@ extension StringProtocol {
     @_disfavoredOverload
     public func contains<T: StringProtocol>(caseInsensitive find: T) -> Bool {
         range(of: find, options: .caseInsensitive) != nil
-            ? true
-            : false
     }
     
     /// **OTCore:**
