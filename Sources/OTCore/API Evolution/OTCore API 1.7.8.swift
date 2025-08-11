@@ -42,6 +42,12 @@ extension StringProtocol {
     public func isOnly(characters: String) -> Bool {
         isOnly(charactersIn: characters)
     }
+    
+    @available(*, deprecated, renamed: "contains(anyCharactersIn:)")
+    @_disfavoredOverload
+    public func contains(anyCharacters characters: String) -> Bool {
+        contains(anyCharactersIn: characters)
+    }
 }
 
 #endif

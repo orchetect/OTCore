@@ -207,7 +207,7 @@ extension StringProtocol {
     /// **OTCore:**
     /// Returns true if any character in the string are contained in the character set.
     @_disfavoredOverload
-    public func contains(anyCharacters characters: String) -> Bool {
+    public func contains(anyCharactersIn characters: String) -> Bool {
         let characterSet = CharacterSet(charactersIn: characters)
         
         for char in self {
