@@ -11,6 +11,12 @@ import AppKit
 extension NSPasteboard.PasteboardType {
     /// **OTCore:**
     /// Can use in place of `.fileURL` when building for platforms earlier than macOS 10.13.
+    @available(
+        *,
+        deprecated,
+        renamed: "fileURL",
+        message: "Since OTCore now has a minimum target of macOS 10.15, this property is redundant and will be removed in a future release of OTCore."
+    )
     @_disfavoredOverload
     public static var fileURLBackCompat: Self {
         if #available(macOS 10.13, *) {
