@@ -181,8 +181,8 @@ extension StringProtocol {
     /// **OTCore:**
     /// Returns true if all characters in the string are contained in the character set.
     @_disfavoredOverload
-    public func isOnly(characters: String) -> Bool {
-        let characterSet = CharacterSet(charactersIn: characters)
+    public func isOnly(charactersIn string: String) -> Bool {
+        let characterSet = CharacterSet(charactersIn: string)
         return allSatisfy(characterSet.contains(_:))
     }
     

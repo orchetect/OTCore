@@ -4,6 +4,10 @@
 //  © 2024 Steffan Andrews • Licensed under MIT License
 //
 
+#if canImport(Foundation)
+
+import Foundation
+
 #if canImport(AppKit)
 
 import Foundation // imports Core Graphics
@@ -25,6 +29,18 @@ extension CGPoint {
     @inline(__always) @_disfavoredOverload
     public var nsPoint: NSPoint {
         self as NSPoint
+    }
+}
+
+#endif
+
+// MARK: - String and CharacterSet.swift
+
+extension StringProtocol {
+    @available(*, deprecated, renamed: "isOnly(charactersIn:)")
+    @_disfavoredOverload
+    public func isOnly(characters: String) -> Bool {
+        isOnly(charactersIn: characters)
     }
 }
 
