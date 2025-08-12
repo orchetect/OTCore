@@ -5,79 +5,79 @@
 //
 
 import OTCore
-import XCTest
+import Testing
 
-class Abstractions_ZeroIndexedCollection_Tests: XCTestCase {
-    override func setUp() { super.setUp() }
-    override func tearDown() { super.tearDown() }
-    
-    func testZeroIndexedCollection() {
+@Suite struct Abstractions_ZeroIndexedCollection_Tests {
+    @Test
+    func zeroIndexedCollection() {
         let arr = ["A", "B", "C"]
         let filtered = arr.lazy.filter { $0 != "A" }
         
         let coll = ZeroIndexedCollection(filtered)
         
-        XCTAssertEqual(coll.isEmpty, false)
-        XCTAssertEqual(coll.count, 2)
-        XCTAssertEqual(coll[0], "B")
-        XCTAssertEqual(coll[1], "C")
+        #expect(!coll.isEmpty)
+        #expect(coll.count == 2)
+        #expect(coll[0] == "B")
+        #expect(coll[1] == "C")
     }
     
-    func testZeroIndexedMutableCollection() {
+    @Test
+    func zeroIndexedMutableCollection() {
         var coll = ZeroIndexedMutableCollection(["A", "B", "C"][1...])
         
-        XCTAssertEqual(coll.isEmpty, false)
-        XCTAssertEqual(coll.count, 2)
+        #expect(!coll.isEmpty)
+        #expect(coll.count == 2)
         
-        XCTAssertEqual(coll.first, "B")
-        XCTAssertEqual(coll[0], "B")
-        XCTAssertEqual(coll[1], "C")
+        #expect(coll.first == "B")
+        #expect(coll[0] == "B")
+        #expect(coll[1] == "C")
         
         // mutate
         
         coll[0] = "X"
-        XCTAssertEqual(coll[0], "X")
-        XCTAssertEqual(coll[1], "C")
+        #expect(coll[0] == "X")
+        #expect(coll[1] == "C")
         
         coll[1] = "Y"
-        XCTAssertEqual(coll[0], "X")
-        XCTAssertEqual(coll[1], "Y")
+        #expect(coll[0] == "X")
+        #expect(coll[1] == "Y")
         
         coll.swapAt(0, 1)
-        XCTAssertEqual(coll[0], "Y")
-        XCTAssertEqual(coll[1], "X")
+        #expect(coll[0] == "Y")
+        #expect(coll[1] == "X")
         
-        XCTAssertEqual(coll.first, "Y")
-        XCTAssertEqual(coll.firstIndex(of: "X"), 1)
+        #expect(coll.first == "Y")
+        #expect(coll.firstIndex(of: "X") == 1)
     }
     
-    func testZeroIndexedRangeReplaceableCollection() {
+    @Test
+    func zeroIndexedRangeReplaceableCollection() {
         var coll = ZeroIndexedRangeReplaceableCollection(["A", "B", "C", "D", "E"][1...])
         
-        XCTAssertEqual(coll.isEmpty, false)
-        XCTAssertEqual(coll.count, 4)
+        #expect(!coll.isEmpty)
+        #expect(coll.count == 4)
         
-        XCTAssertEqual(coll.first, "B")
-        XCTAssertEqual(coll[0], "B")
-        XCTAssertEqual(coll[1], "C")
-        XCTAssertEqual(coll[2], "D")
-        XCTAssertEqual(coll[3], "E")
+        #expect(coll.first == "B")
+        #expect(coll[0] == "B")
+        #expect(coll[1] == "C")
+        #expect(coll[2] == "D")
+        #expect(coll[3] == "E")
         
         // mutate
         
         coll.replaceSubrange(1 ..< 3, with: ["X", "Y"])
-        XCTAssertEqual(coll.count, 4)
-        XCTAssertEqual(coll[0], "B")
-        XCTAssertEqual(coll[1], "X")
-        XCTAssertEqual(coll[2], "Y")
-        XCTAssertEqual(coll[3], "E")
+        #expect(coll.count == 4)
+        #expect(coll[0] == "B")
+        #expect(coll[1] == "X")
+        #expect(coll[2] == "Y")
+        #expect(coll[3] == "E")
         
         coll.replaceSubrange(1 ..< 3, with: ["J", "K", "L"])
-        XCTAssertEqual(coll.count, 5)
-        XCTAssertEqual(coll[0], "B")
-        XCTAssertEqual(coll[1], "J")
-        XCTAssertEqual(coll[2], "K")
-        XCTAssertEqual(coll[3], "L")
-        XCTAssertEqual(coll[4], "E")
+        #expect(coll.count == 5)
+        #expect(coll[0] == "B")
+        #expect(coll[1] == "J")
+        #expect(coll[2] == "K")
+        #expect(coll[3] == "L")
+        #expect(coll[4] == "E")
     }
 }

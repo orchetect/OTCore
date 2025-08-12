@@ -19,6 +19,7 @@ let package = Package(
     ],
     dependencies: [
         // testing-only dependency
+        .package(url: "https://github.com/apple/swift-numerics", from: "1.0.3"),
         .package(url: "https://github.com/orchetect/XCTestUtils", from: "1.1.2")
     ],
     targets: [
@@ -29,7 +30,11 @@ let package = Package(
         ),
         .testTarget(
             name: "OTCoreTests",
-            dependencies: ["OTCore", "XCTestUtils"]
+            dependencies: [
+                "OTCore", 
+                .product(name: "Numerics", package: "swift-numerics"),
+                "XCTestUtils"
+            ]
         )
     ]
 )

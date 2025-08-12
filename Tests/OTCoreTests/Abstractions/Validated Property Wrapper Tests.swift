@@ -5,13 +5,11 @@
 //
 
 import OTCore
-import XCTest
+import Testing
 
-class Abstractions_Validated_Tests: XCTestCase {
-    override func setUp() { super.setUp() }
-    override func tearDown() { super.tearDown() }
-    
-    func testValidated() {
+@Suite struct Abstractions_Validated_Tests {
+    @Test
+    func validated() {
         struct SomeStruct {
             @Validated({
                 $0.clamped(to: 5 ... 10)
@@ -20,18 +18,18 @@ class Abstractions_Validated_Tests: XCTestCase {
         
         var someStruct = SomeStruct()
         
-        XCTAssertEqual(someStruct.value, 5) // default value validated
+        #expect(someStruct.value == 5) // default value validated
         
         someStruct.value = 2
-        XCTAssertEqual(someStruct.value, 5)
+        #expect(someStruct.value == 5)
         
         someStruct.value = 5
-        XCTAssertEqual(someStruct.value, 5)
+        #expect(someStruct.value == 5)
         
         someStruct.value = 10
-        XCTAssertEqual(someStruct.value, 10)
+        #expect(someStruct.value == 10)
         
         someStruct.value = 11
-        XCTAssertEqual(someStruct.value, 10)
+        #expect(someStruct.value == 10)
     }
 }

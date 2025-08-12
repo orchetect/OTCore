@@ -5,26 +5,13 @@
 //
 
 import OTCore
-import XCTest
+import Testing
 
-class Abstractions_StringTitleCase_Tests: XCTestCase {
-    override func setUp() { super.setUp() }
-    override func tearDown() { super.tearDown() }
-    
-    func testTitleCased() {
-        XCTAssertEqual(
-            "this".titleCased,
-            "This"
-        )
-        
-        XCTAssertEqual(
-            "this thing".titleCased,
-            "This Thing"
-        )
-        
-        XCTAssertEqual(
-            "this is a test".titleCased,
-            "This is a Test"
-        )
+@Suite struct Abstractions_StringTitleCase_Tests {
+    @Test
+    func titleCased() {
+        #expect("this".titleCased == "This")
+        #expect("this thing".titleCased == "This Thing")
+        #expect("this is a test".titleCased == "This is a Test")
     }
 }

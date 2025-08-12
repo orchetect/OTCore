@@ -5,67 +5,65 @@
 //
 
 import OTCore
-import XCTest
+import Testing
 
-class Abstractions_IPAddress_Tests: XCTestCase {
-    override func setUp() { super.setUp() }
-    override func tearDown() { super.tearDown() }
-    
-    func testIPAddress() {
+@Suite struct Abstractions_IPAddress_Tests {
+    @Test
+    func ipAddress() {
         // MARK: IPv4
         
         // valid unspecified
-        XCTAssertEqual(IPAddress("0.0.0.0")?.version, .ipV4)
+        #expect(IPAddress("0.0.0.0")?.version == .ipV4)
         
-        XCTAssertEqual(IPAddress("10.0.0.100")?.version, .ipV4)
-        XCTAssertEqual(IPAddress("255.255.255.255")?.version, .ipV4)
-        XCTAssertEqual(IPAddress("001.001.001.001")?.version, .ipV4)
+        #expect(IPAddress("10.0.0.100")?.version == .ipV4)
+        #expect(IPAddress("255.255.255.255")?.version == .ipV4)
+        #expect(IPAddress("001.001.001.001")?.version == .ipV4)
         
-        XCTAssertNil(IPAddress("..."))
-        XCTAssertNil(IPAddress(" . . . "))
-        XCTAssertNil(IPAddress("300.300.300.300"))
-        XCTAssertNil(IPAddress("300.1.1.1"))
-        XCTAssertNil(IPAddress("1.300.1.1"))
-        XCTAssertNil(IPAddress("1.1.300.1"))
-        XCTAssertNil(IPAddress("1.1.1.300"))
-        XCTAssertNil(IPAddress("1 .102.103.104"))
-        XCTAssertNil(IPAddress("1.2.3.4.5"))
+        #expect(IPAddress("...") == nil)
+        #expect(IPAddress(" . . . ") == nil)
+        #expect(IPAddress("300.300.300.300") == nil)
+        #expect(IPAddress("300.1.1.1") == nil)
+        #expect(IPAddress("1.300.1.1") == nil)
+        #expect(IPAddress("1.1.300.1") == nil)
+        #expect(IPAddress("1.1.1.300") == nil)
+        #expect(IPAddress("1 .102.103.104") == nil)
+        #expect(IPAddress("1.2.3.4.5") == nil)
         
         // no surrounding spaces allowed, even if IP address is valid
-        XCTAssertNil(IPAddress(" 1.2.3.4 "))
+        #expect(IPAddress(" 1.2.3.4 ") == nil)
         
         // MARK: IPv6
         
         // local loopback address
-        XCTAssertEqual(IPAddress("::1")?.version, .ipV6)
+        #expect(IPAddress("::1")?.version == .ipV6)
         
         // valid unspecified
-        XCTAssertEqual(IPAddress("::")?.version, .ipV6)
+        #expect(IPAddress("::")?.version == .ipV6)
         
         // includes interface component
-        XCTAssertEqual(
-            IPAddress("fe80::479:5a0d:bf0f:130%en0")?.version,
-            .ipV6
+        #expect(
+            IPAddress("fe80::479:5a0d:bf0f:130%en0")?.version
+                == .ipV6
         )
         
         // includes interface component
-        XCTAssertEqual(
-            IPAddress("fe80::c6a:a089:1eec:80a7%awdl0")?.version,
-            .ipV6
+        #expect(
+            IPAddress("fe80::c6a:a089:1eec:80a7%awdl0")?.version
+                == .ipV6
         )
-        XCTAssertEqual(IPAddress("2001:470:9b36:1::2")?.version, .ipV6)
-        XCTAssertEqual(IPAddress("2001:cdba:0000:0000:0000:0000:3257:9652")?.version, .ipV6)
-        XCTAssertEqual(IPAddress("2001:cdba:0:0:0:0:3257:9652")?.version, .ipV6)
-        XCTAssertEqual(IPAddress("2001:db8:85a3::8a2e:370:7334")?.version, .ipV6)
+        #expect(IPAddress("2001:470:9b36:1::2")?.version == .ipV6)
+        #expect(IPAddress("2001:cdba:0000:0000:0000:0000:3257:9652")?.version == .ipV6)
+        #expect(IPAddress("2001:cdba:0:0:0:0:3257:9652")?.version == .ipV6)
+        #expect(IPAddress("2001:db8:85a3::8a2e:370:7334")?.version == .ipV6)
         
         // IPv4 address mapped to IPv6
-        XCTAssertEqual(IPAddress("::ffff:192.0.2.128")?.version, .ipV6)
+        #expect(IPAddress("::ffff:192.0.2.128")?.version == .ipV6)
         
-        XCTAssertNil(IPAddress("::_"))
+        #expect(IPAddress("::_") == nil)
         
         // uses '::' twice - not allowed
-        XCTAssertNil(IPAddress("1200::AB00:1234::2552:7777:1313"))
+        #expect(IPAddress("1200::AB00:1234::2552:7777:1313") == nil)
         
-        XCTAssertNil(IPAddress("1200:0000:AB00:1234:O000:2552:7777:1313"))
+        #expect(IPAddress("1200:0000:AB00:1234:O000:2552:7777:1313") == nil)
     }
 }

@@ -4,21 +4,21 @@
 //  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
+import Foundation
 import OTCore
-import XCTest
+import Testing
 
-class Abstractions_DateComponentsFromString_Tests: XCTestCase {
-    override func setUp() { super.setUp() }
-    override func tearDown() { super.tearDown() }
-    
-    func testDateComponents_Init_String() {
+@Suite struct Abstractions_DateComponentsFromString_Tests {
+    @Test
+    func dateComponents_Init_String() {
         let parsed = DateComponents(fuzzy: "Mar 26, 2019")
-        XCTAssertEqual(parsed?.year,    2019)
-        XCTAssertEqual(parsed?.month,   3)
-        XCTAssertEqual(parsed?.day,     26)
+        #expect(parsed?.year ==    2019)
+        #expect(parsed?.month ==   3)
+        #expect(parsed?.day ==     26)
     }
     
-    func testStringParsing() {
+    @Test
+    func stringParsing() {
         var parsed: DateComponents?
         
         // test basic delimiters: space , . / \
@@ -26,225 +26,223 @@ class Abstractions_DateComponentsFromString_Tests: XCTestCase {
         // component)
         
         parsed = "Mar 26, 2019".dateComponents
-        XCTAssertEqual(parsed?.year,    2019)
-        XCTAssertEqual(parsed?.month,   3)
-        XCTAssertEqual(parsed?.day,     26)
+        #expect(parsed?.year ==    2019)
+        #expect(parsed?.month ==   3)
+        #expect(parsed?.day ==     26)
         
         parsed = "March 26, 2019".dateComponents
-        XCTAssertEqual(parsed?.year,    2019)
-        XCTAssertEqual(parsed?.month,   3)
-        XCTAssertEqual(parsed?.day,     26)
+        #expect(parsed?.year ==    2019)
+        #expect(parsed?.month ==   3)
+        #expect(parsed?.day ==     26)
         
         parsed = "Mar-26-2019".dateComponents
-        XCTAssertEqual(parsed?.year,    2019)
-        XCTAssertEqual(parsed?.month,   3)
-        XCTAssertEqual(parsed?.day,     26)
+        #expect(parsed?.year ==    2019)
+        #expect(parsed?.month ==   3)
+        #expect(parsed?.day ==     26)
         
         parsed = "26-Mar-2019".dateComponents
-        XCTAssertEqual(parsed?.year,    2019)
-        XCTAssertEqual(parsed?.month,   3)
-        XCTAssertEqual(parsed?.day,     26)
+        #expect(parsed?.year ==    2019)
+        #expect(parsed?.month ==   3)
+        #expect(parsed?.day ==     26)
         
         parsed = "3/26/2019".dateComponents
-        XCTAssertEqual(parsed?.year,    2019)
-        XCTAssertEqual(parsed?.month,   3)
-        XCTAssertEqual(parsed?.day,     26)
+        #expect(parsed?.year ==    2019)
+        #expect(parsed?.month ==   3)
+        #expect(parsed?.day ==     26)
         
         parsed = "03/26/2019".dateComponents
-        XCTAssertEqual(parsed?.year,    2019)
-        XCTAssertEqual(parsed?.month,   3)
-        XCTAssertEqual(parsed?.day,     26)
+        #expect(parsed?.year ==    2019)
+        #expect(parsed?.month ==   3)
+        #expect(parsed?.day ==     26)
         
         parsed = "26/03/2019".dateComponents
-        XCTAssertEqual(parsed?.year,    2019)
-        XCTAssertEqual(parsed?.month,   3)
-        XCTAssertEqual(parsed?.day,     26)
+        #expect(parsed?.year ==    2019)
+        #expect(parsed?.month ==   3)
+        #expect(parsed?.day ==     26)
         
         parsed = "03\\26\\2019".dateComponents
-        XCTAssertEqual(parsed?.year,    2019)
-        XCTAssertEqual(parsed?.month,   3)
-        XCTAssertEqual(parsed?.day,     26)
+        #expect(parsed?.year ==    2019)
+        #expect(parsed?.month ==   3)
+        #expect(parsed?.day ==     26)
         
         parsed = "26\\03\\2019".dateComponents
-        XCTAssertEqual(parsed?.year,    2019)
-        XCTAssertEqual(parsed?.month,   3)
-        XCTAssertEqual(parsed?.day,     26)
+        #expect(parsed?.year ==    2019)
+        #expect(parsed?.month ==   3)
+        #expect(parsed?.day ==     26)
         
         parsed = "03-26-2019".dateComponents
-        XCTAssertEqual(parsed?.year,    2019)
-        XCTAssertEqual(parsed?.month,   3)
-        XCTAssertEqual(parsed?.day,     26)
+        #expect(parsed?.year ==    2019)
+        #expect(parsed?.month ==   3)
+        #expect(parsed?.day ==     26)
         
         parsed = "26-03-2019".dateComponents
-        XCTAssertEqual(parsed?.year,    2019)
-        XCTAssertEqual(parsed?.month,   3)
-        XCTAssertEqual(parsed?.day,     26)
+        #expect(parsed?.year ==    2019)
+        #expect(parsed?.month ==   3)
+        #expect(parsed?.day ==     26)
         
         // ambiguous cases - two-digit years
         
         parsed = "Mar-26-00".dateComponents
-        XCTAssertEqual(parsed?.year,    2000)
-        XCTAssertEqual(parsed?.month,   3)
-        XCTAssertEqual(parsed?.day,     26)
+        #expect(parsed?.year ==    2000)
+        #expect(parsed?.month ==   3)
+        #expect(parsed?.day ==     26)
         
         parsed = "Mar-26-19".dateComponents
-        XCTAssertEqual(parsed?.year,    2019)
-        XCTAssertEqual(parsed?.month,   3)
-        XCTAssertEqual(parsed?.day,     26)
+        #expect(parsed?.year ==    2019)
+        #expect(parsed?.month ==   3)
+        #expect(parsed?.day ==     26)
         
         parsed = "Mar-26-39".dateComponents
-        XCTAssertEqual(parsed?.year,    2039)
-        XCTAssertEqual(parsed?.month,   3)
-        XCTAssertEqual(parsed?.day,     26)
+        #expect(parsed?.year ==    2039)
+        #expect(parsed?.month ==   3)
+        #expect(parsed?.day ==     26)
         
         parsed = "Mar-26-40".dateComponents // arbitrary rollover year
-        XCTAssertEqual(parsed?.year,    1940)
-        XCTAssertEqual(parsed?.month,   3)
-        XCTAssertEqual(parsed?.day,     26)
+        #expect(parsed?.year ==    1940)
+        #expect(parsed?.month ==   3)
+        #expect(parsed?.day ==     26)
         
         // ambiguous cases - low digit days
         
         parsed = "03-10-2019".dateComponents
-        XCTAssertEqual(parsed?.year,    2019)
-        XCTAssertEqual(parsed?.month,   3)
-        XCTAssertEqual(parsed?.day,     10)
+        #expect(parsed?.year ==    2019)
+        #expect(parsed?.month ==   3)
+        #expect(parsed?.day ==     10)
         
         parsed = "10-03-2019".dateComponents
-        XCTAssertEqual(parsed?.year,    2019)
-        XCTAssertEqual(parsed?.month,   10)
-        XCTAssertEqual(parsed?.day,     3)
+        #expect(parsed?.year ==    2019)
+        #expect(parsed?.month ==   10)
+        #expect(parsed?.day ==     3)
         
         parsed = "03-10-19".dateComponents
-        XCTAssertEqual(parsed?.year,    2019)
-        XCTAssertEqual(parsed?.month,   3)
-        XCTAssertEqual(parsed?.day,     10)
+        #expect(parsed?.year ==    2019)
+        #expect(parsed?.month ==   3)
+        #expect(parsed?.day ==     10)
         
         parsed = "10-03-19".dateComponents
-        XCTAssertEqual(parsed?.year,    2019)
-        XCTAssertEqual(parsed?.month,   10)
-        XCTAssertEqual(parsed?.day,     3)
+        #expect(parsed?.year ==    2019)
+        #expect(parsed?.month ==   10)
+        #expect(parsed?.day ==     3)
         
         // unusual orders
         
         parsed = "2019-03-10".dateComponents    // obvious - year is only four-digit component
-        XCTAssertEqual(parsed?.year,    2019)
-        XCTAssertEqual(parsed?.month,   3)
-        XCTAssertEqual(parsed?.day,     10)
+        #expect(parsed?.year ==    2019)
+        #expect(parsed?.month ==   3)
+        #expect(parsed?.day ==     10)
         
         parsed = "2019/03/10".dateComponents    // obvious - year is only four-digit component
-        XCTAssertEqual(parsed?.year,    2019)
-        XCTAssertEqual(parsed?.month,   3)
-        XCTAssertEqual(parsed?.day,     10)
+        #expect(parsed?.year ==    2019)
+        #expect(parsed?.month ==   3)
+        #expect(parsed?.day ==     10)
         
         parsed = "2019-10-03".dateComponents    // obvious - year is only four-digit component
-        XCTAssertEqual(parsed?.year,    2019)
-        XCTAssertEqual(parsed?.month,   10)
-        XCTAssertEqual(parsed?.day,     3)
+        #expect(parsed?.year ==    2019)
+        #expect(parsed?.month ==   10)
+        #expect(parsed?.day ==     3)
         
         parsed = "99-10-03".dateComponents      // first component is > 31 so it's taken as the year
-        XCTAssertEqual(parsed?.year,    1999)
-        XCTAssertEqual(parsed?.month,   10)
-        XCTAssertEqual(parsed?.day,     3)
+        #expect(parsed?.year ==    1999)
+        #expect(parsed?.month ==   10)
+        #expect(parsed?.day ==     3)
         
         parsed = "05-10-03".dateComponents      // defaults to assuming 3rd component is the year
-        XCTAssertEqual(parsed?.year,    2003)
-        XCTAssertEqual(parsed?.month,   5)
-        XCTAssertEqual(parsed?.day,     10)
+        #expect(parsed?.year ==    2003)
+        #expect(parsed?.month ==   5)
+        #expect(parsed?.day ==     10)
         
         parsed = "2019-Mar-10".dateComponents
-        XCTAssertEqual(parsed?.year,    2019)
-        XCTAssertEqual(parsed?.month,   3)
-        XCTAssertEqual(parsed?.day,     10)
+        #expect(parsed?.year ==    2019)
+        #expect(parsed?.month ==   3)
+        #expect(parsed?.day ==     10)
         
         parsed = "March 10, 2019".dateComponents
-        XCTAssertEqual(parsed?.year,    2019)
-        XCTAssertEqual(parsed?.month,   3)
-        XCTAssertEqual(parsed?.day,     10)
+        #expect(parsed?.year ==    2019)
+        #expect(parsed?.month ==   3)
+        #expect(parsed?.day ==     10)
         
         // missing year
         
         let currentYear = Calendar.current.component(.year, from: Date())
         
         parsed = "Mar-10".dateComponents
-        XCTAssertEqual(parsed?.year,    currentYear)
-        XCTAssertEqual(parsed?.month,   3)
-        XCTAssertEqual(parsed?.day,     10)
+        #expect(parsed?.year ==    currentYear)
+        #expect(parsed?.month ==   3)
+        #expect(parsed?.day ==     10)
         
         parsed = "March 10".dateComponents
-        XCTAssertEqual(parsed?.year,    currentYear)
-        XCTAssertEqual(parsed?.month,   3)
-        XCTAssertEqual(parsed?.day,     10)
+        #expect(parsed?.year ==    currentYear)
+        #expect(parsed?.month ==   3)
+        #expect(parsed?.day ==     10)
         
         parsed = "10 Mar".dateComponents
-        XCTAssertEqual(parsed?.year,    currentYear)
-        XCTAssertEqual(parsed?.month,   3)
-        XCTAssertEqual(parsed?.day,     10)
+        #expect(parsed?.year ==    currentYear)
+        #expect(parsed?.month ==   3)
+        #expect(parsed?.day ==     10)
         
         // string without separators
         
         parsed = "10Mar2019".dateComponents
-        XCTAssertEqual(parsed?.year,    2019)
-        XCTAssertEqual(parsed?.month,   3)
-        XCTAssertEqual(parsed?.day,     10)
+        #expect(parsed?.year ==    2019)
+        #expect(parsed?.month ==   3)
+        #expect(parsed?.day ==     10)
         
         parsed = "2019Mar10".dateComponents
-        XCTAssertEqual(parsed?.year,    2019)
-        XCTAssertEqual(parsed?.month,   3)
-        XCTAssertEqual(parsed?.day,     10)
+        #expect(parsed?.year ==    2019)
+        #expect(parsed?.month ==   3)
+        #expect(parsed?.day ==     10)
         
         parsed = " 2019March10 ".dateComponents
-        XCTAssertEqual(parsed?.year,    2019)
-        XCTAssertEqual(parsed?.month,   3)
-        XCTAssertEqual(parsed?.day,     10)
+        #expect(parsed?.year ==    2019)
+        #expect(parsed?.month ==   3)
+        #expect(parsed?.day ==     10)
         
         // failures
         
         parsed = "Notamonth 10, 2019".dateComponents    // invalid month
-        XCTAssertNil(parsed)
+        #expect(parsed == nil)
         
         parsed = "March 32, 2019".dateComponents        // invalid day
-        XCTAssertNil(parsed)
+        #expect(parsed == nil)
     }
     
     #if compiler(>=6.2) // Swift 6.2 Foundation required
-    func testDateComponentsParseStrategy() throws {
-        // TODO: have to make this a guard statement with XCTest as it doesn't play nice with @available attributes on test functions, but when migrating to Swift Testing this can transition to being a @availble keyword on the test func
-        guard #available(macOS 26.0, iOS 26.0, tvOS 26.0, watchOS 26.0, visionOS 26.0, *) // DateComponents(_, strategy:) requirement
-        else {
-            throw XCTSkip("Not available on this platform.")
-        }
-        
+    @available(macOS 26.0, iOS 26.0, tvOS 26.0, watchOS 26.0, visionOS 26.0, *) // DateComponents(_, strategy:) requirement
+    @Test
+    func dateComponentsParseStrategy() throws {
         let parsed = try DateComponents("Mar 26, 2019", strategy: .fuzzyDate)
-        XCTAssertEqual(parsed.year,    2019)
-        XCTAssertEqual(parsed.month,   3)
-        XCTAssertEqual(parsed.day,     26)
+        #expect(parsed.year ==    2019)
+        #expect(parsed.month ==   3)
+        #expect(parsed.day ==     26)
     }
     #endif
     
     @available(macOS 12.0, iOS 15.0, tvOS 15.0, watchOS 8.0, *)
-    func testDateParseStrategy() throws {
+    @Test
+    func dateParseStrategy() throws {
         let parsed = try Date(
             "Mar 26, 2019",
             strategy: .fuzzyDate(calendar: .current, timeZone: .init(secondsFromGMT: 0)!)
         )
-        XCTAssertEqual(parsed.timeIntervalSince1970, 1553558400.0)
+        #expect(parsed.timeIntervalSince1970 == 1553558400.0)
     }
     
-    func testDateComponents_StringWithMask() {
+    @Test
+    func dateComponents_StringWithMask() {
         // empty/nil components
         
-        XCTAssertEqual(
+        #expect(
             DateComponents()
-                .string(withMask: .YYYYMMDD),
-            "00000000"
+                .string(withMask: .YYYYMMDD)
+            == "00000000"
         )
         
         // typical components
         
-        XCTAssertEqual(
+        #expect(
             DateComponents(year: 2019, month: 3, day: 26)
-                .string(withMask: .YYYYMMDD),
-            "20190326"
+                .string(withMask: .YYYYMMDD)
+            == "20190326"
         )
     }
 }
