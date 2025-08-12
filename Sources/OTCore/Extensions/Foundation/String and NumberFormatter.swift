@@ -1,7 +1,7 @@
 //
 //  String and NumberFormatter.swift
 //  OTCore • https://github.com/orchetect/OTCore
-//  © 2022 Steffan Andrews • Licensed under MIT License
+//  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
 #if canImport(Foundation)
@@ -11,7 +11,7 @@ import Foundation
 extension DefaultStringInterpolation {
     /// Cache to improve performance, implicitly lazy (as a global static declaration).
     ///
-    /// ***** Note: This may not be thread-safe if called from more than one thread simultaneously. *****
+    /// - Warning: This may not be thread-safe if called from more than one thread simultaneously.
     fileprivate static let siNumFormatter = NumberFormatter()
     
     /// **OTCore:**
@@ -21,10 +21,10 @@ extension DefaultStringInterpolation {
     ///
     /// ```swift
     /// "There are \(3, format: .spellOut) apples"
-    /// // == "There are three apples"
+    /// // "There are three apples"
     /// ```
     ///
-    /// - warning: This may not be thread-safe if called from more than one thread simultaneously.
+    /// - Warning: This may not be thread-safe if called from more than one thread simultaneously.
     @_disfavoredOverload
     public mutating func appendInterpolation(
         _ value: Int,

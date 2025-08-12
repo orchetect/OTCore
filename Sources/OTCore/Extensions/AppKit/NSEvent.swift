@@ -1,7 +1,7 @@
 //
 //  NSEvent.swift
 //  OTCore • https://github.com/orchetect/OTCore
-//  © 2022 Steffan Andrews • Licensed under MIT License
+//  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
 #if os(macOS)
@@ -15,8 +15,9 @@ extension NSEvent {
     @MainActor @_disfavoredOverload
     public func location(in view: NSView) -> NSPoint {
         // Apple docs:
-        // "With NSMouseMoved and possibly other events, the event can have a nil window (that is, the window property contains nil).
-        // In this case, locationInWindow returns the event location in screen coordinates."
+        // "With NSMouseMoved and possibly other events, the event can have a nil window (that is,
+        // the window property contains nil). In this case, locationInWindow returns the event
+        // location in screen coordinates."
         
         view.convert(locationInWindow, from: nil)
     }

@@ -1,15 +1,15 @@
 //
 //  Optional Tests.swift
 //  OTCore • https://github.com/orchetect/OTCore
-//  © 2022 Steffan Andrews • Licensed under MIT License
+//  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
-import XCTest
 import OTCore
+import XCTest
 
 // testOptionalType() declares
 
-fileprivate protocol testStructProtocol { }
+private protocol testStructProtocol { }
 
 extension Collection where Element: OTCoreOptionalTyped,
 Element.Wrapped: testStructProtocol {

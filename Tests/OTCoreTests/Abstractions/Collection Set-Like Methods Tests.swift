@@ -1,11 +1,11 @@
 //
 //  Collection Set-Like Methods Tests.swift
 //  OTCore • https://github.com/orchetect/OTCore
-//  © 2022 Steffan Andrews • Licensed under MIT License
+//  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
-import XCTest
 import OTCore
+import XCTest
 
 class Abstractions_CollectionSetLikeMethods_Tests: XCTestCase {
     override func setUp() { super.setUp() }
@@ -63,8 +63,8 @@ class Abstractions_CollectionSetLikeMethods_Tests: XCTestCase {
             arr,
             [.foo(1), .fooB(999), .one]
         )  // can't use this to check associated value
-        arr.forEach {
-            switch $0 {
+        for item in arr {
+            switch item {
             case let .fooB(val): XCTAssertEqual(val, 1)   // check associated value here
             default: break
             }
@@ -75,8 +75,8 @@ class Abstractions_CollectionSetLikeMethods_Tests: XCTestCase {
             arr,
             [.foo(1), .fooB(999), .one]
         )  // can't use this to check associated value
-        arr.forEach {
-            switch $0 {
+        for item in arr {
+            switch item {
             case let .fooB(val): XCTAssertEqual(val, 4)   // check associated value here
             default: break
             }
@@ -87,8 +87,8 @@ class Abstractions_CollectionSetLikeMethods_Tests: XCTestCase {
             arr,
             [.foo(1), .one, .fooB(999)]
         )  // can't use this to check associated value
-        arr.forEach {
-            switch $0 {
+        for item in arr {
+            switch item {
             case let .fooB(val): XCTAssertEqual(val, 5)   // check associated value here
             default: break
             }
@@ -99,8 +99,8 @@ class Abstractions_CollectionSetLikeMethods_Tests: XCTestCase {
             arr,
             [.fooB(999), .foo(1), .one]
         )  // can't use this to check associated value
-        arr.forEach {
-            switch $0 {
+        for item in arr {
+            switch item {
             case let .fooB(val): XCTAssertEqual(val, 0)   // check associated value here
             default: break
             }
@@ -111,8 +111,8 @@ class Abstractions_CollectionSetLikeMethods_Tests: XCTestCase {
             arr,
             [.fooB(999), .foo(1), .one]
         )  // can't use this to check associated value
-        arr.forEach {
-            switch $0 {
+        for item in arr {
+            switch item {
             case let .fooB(val): XCTAssertEqual(val, 3)   // check associated value here
             default: break
             }
@@ -123,8 +123,8 @@ class Abstractions_CollectionSetLikeMethods_Tests: XCTestCase {
             arr,
             [.foo(1), .one, .fooB(999)]
         )  // can't use this to check associated value
-        arr.forEach {
-            switch $0 {
+        for item in arr {
+            switch item {
             case let .fooB(val): XCTAssertEqual(val, 3)   // check associated value here
             default: break
             }

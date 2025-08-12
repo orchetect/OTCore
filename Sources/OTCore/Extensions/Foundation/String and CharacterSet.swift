@@ -1,7 +1,7 @@
 //
 //  String and CharacterSet.swift
 //  OTCore • https://github.com/orchetect/OTCore
-//  © 2022 Steffan Andrews • Licensed under MIT License
+//  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
 #if canImport(Foundation)
@@ -39,7 +39,8 @@ extension StringProtocol {
             
             func closeGrouping(closingIdx: Self.Index) {
                 if let startIdx = currentGroupingStartIndex {
-                    // if grouping didn't match char sets, only add grouping if omitNonmatching == true
+                    // if grouping didn't match char sets, only add grouping if omitNonmatching ==
+                    // true
                     if lastCharSetIndex == nil, omitNonmatching { return }
                     
                     result.append(self[startIdx ... closingIdx])
@@ -114,7 +115,8 @@ extension StringProtocol {
     }
     
     /// **OTCore:**
-    /// Returns a string preserving only characters from the passed string and removing all other characters.
+    /// Returns a string preserving only characters from the passed string and removing all other
+    /// characters.
     @_disfavoredOverload
     public func only(charactersIn string: String) -> String {
         only(CharacterSet(charactersIn: string))

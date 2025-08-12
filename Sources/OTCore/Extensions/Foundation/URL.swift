@@ -1,7 +1,7 @@
 //
 //  URL.swift
 //  OTCore • https://github.com/orchetect/OTCore
-//  © 2022 Steffan Andrews • Licensed under MIT License
+//  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
 #if canImport(Foundation)
@@ -50,7 +50,8 @@ extension URL {
     }
     
     /// **OTCore:**
-    /// If the URL has the given base URL exactly, the path components will be returned removing the base URL's path components.
+    /// If the URL has the given base URL exactly, the path components will be returned removing the
+    /// base URL's path components.
     ///
     /// ie:
     ///
@@ -72,7 +73,8 @@ extension URL {
     }
     
     /// **OTCore:**
-    /// If the URL path components begin with those of the given base URL, the path components will be returned removing the base URL's path components.
+    /// If the URL path components begin with those of the given base URL, the path components will
+    /// be returned removing the base URL's path components.
     ///
     /// ie:
     ///
@@ -125,8 +127,7 @@ extension URL {
     ) -> Self {
         let oldFileName = lastPathComponent
         let newFileName = transform(oldFileName)
-        let newURL: URL = self
-            .deletingLastPathComponent()
+        let newURL: URL = deletingLastPathComponent()
             .appendingPathComponent(newFileName)
         return newURL
     }
@@ -139,15 +140,15 @@ extension URL {
     ) -> Self {
         let oldFileName = deletingPathExtension().lastPathComponent
         let newFileName = transform(oldFileName)
-        let newURL: URL = self
-            .deletingLastPathComponent()
+        let newURL: URL = deletingLastPathComponent()
             .appendingPathComponent(newFileName)
             .appendingPathExtension(pathExtension)
         return newURL
     }
     
     /// **OTCore:**
-    /// Return a new URL by appending a string to the file name (last path component) before the extension.
+    /// Return a new URL by appending a string to the file name (last path component) before the
+    /// extension.
     ///
     /// ie:
     ///
@@ -162,8 +163,7 @@ extension URL {
     ) -> Self {
         let oldFileName = deletingPathExtension().lastPathComponent
         let newFileName = "\(oldFileName)\(string)"
-        let newURL: URL = self
-            .deletingLastPathComponent()
+        let newURL: URL = deletingLastPathComponent()
             .appendingPathComponent(newFileName)
             .appendingPathExtension(pathExtension)
         return newURL
@@ -187,8 +187,8 @@ extension URL {
     /// **OTCore:**
     /// Returns whether the file URL path is a folder.
     ///
-    /// - Will return `nil` if the URL is not a properly formatted file URL, or there was a problem querying
-    ///   the URL's file system attributes.
+    /// - Will return `nil` if the URL is not a properly formatted file URL, or there was a problem
+    ///   querying the URL's file system attributes.
     @_disfavoredOverload
     public var isFolder: Bool? {
         try? resourceValues(forKeys: [URLResourceKey.isDirectoryKey])
@@ -201,9 +201,11 @@ extension URL {
     /// If the file does not exist or the URL is not a file URL, the URL will remain unmodified.
     ///
     /// > Note:
-    /// > This method is only available on macOS as the API required is not available on other platforms.
+    /// > This method is only available on macOS as the API required is not available on other
+    /// > platforms.
     ///
-    /// - Throws: Error if the URL is not a file URL, or there was a problem reading the file system.
+    /// - Throws: Error if the URL is not a file URL, or there was a problem reading the file
+    ///   system.
     @available(iOS, unavailable)
     @available(tvOS, unavailable)
     @available(watchOS, unavailable)
@@ -216,12 +218,15 @@ extension URL {
     /// **OTCore:**
     /// Returns the URL by returning its canonical file system path on disk.
     ///
-    /// If the file does not exist or the URL is not a file URL, the URL will be returned unmodified.
+    /// If the file does not exist or the URL is not a file URL, the URL will be returned
+    /// unmodified.
     ///
     /// > Note:
-    /// > This method is only available on macOS as the API required is not available on other platforms.
+    /// > This method is only available on macOS as the API required is not available on other
+    /// > platforms.
     ///
-    /// - Throws: Error if the URL is not a file URL, or there was a problem reading the file system.
+    /// - Throws: Error if the URL is not a file URL, or there was a problem reading the file
+    ///   system.
     @available(iOS, unavailable)
     @available(tvOS, unavailable)
     @available(watchOS, unavailable)
@@ -241,13 +246,16 @@ extension URL {
     
     /// **OTCore:**
     /// Returns `true` if the URL points to the same file system node as another URL.
-    /// This is more reliable than comparing simple equality of two `URL` instances, as this method will
-    /// account for mismatched case and will resolve the URLs as needed in order to perform the comparison.
+    /// This is more reliable than comparing simple equality of two `URL` instances, as this method
+    /// will account for mismatched case and will resolve the URLs as needed in order to perform
+    /// the comparison.
     ///
     /// > Note:
-    /// > This method is only available on macOS as the API required is not available on other platforms.
+    /// > This method is only available on macOS as the API required is not available on other
+    /// > platforms.
     ///
-    /// - Throws: Error if one or both URLs are not file URLs, or there was a problem reading the file system.
+    /// - Throws: Error if one or both URLs are not file URLs, or there was a problem reading the
+    ///   file system.
     @available(iOS, unavailable)
     @available(tvOS, unavailable)
     @available(watchOS, unavailable)
@@ -260,8 +268,8 @@ extension URL {
         
         guard let lhs = try? resourceValues(forKeys: [.fileResourceIdentifierKey])
             .fileResourceIdentifier,
-              let rhs = try? otherFileURL.resourceValues(forKeys: [.fileResourceIdentifierKey])
-            .fileResourceIdentifier
+            let rhs = try? otherFileURL.resourceValues(forKeys: [.fileResourceIdentifierKey])
+                .fileResourceIdentifier
         else { throw CocoaError(.fileReadUnknown) }
         
         return lhs.isEqual(rhs)
@@ -272,7 +280,8 @@ extension URL {
 
 extension URL {
     /// **OTCore:**
-    /// Attempts to first move a file to the Trash if possible, otherwise attempts to delete the file.
+    /// Attempts to first move a file to the Trash if possible, otherwise attempts to delete the
+    /// file.
     ///
     /// If the file was moved to the trash, the new resulting `URL` is returned.
     ///
@@ -347,15 +356,16 @@ extension URL {
     }
     
     /// **OTCore:**
-    /// Creates an alias of the base URL file or folder `at` the supplied target location. Will override existing path if it exists.
+    /// Creates an alias of the base URL file or folder `at` the supplied target location. Will
+    /// override existing path if it exists.
     @_disfavoredOverload
     public func createFinderAlias(at url: URL) throws {
         let data = try
-        bookmarkData(
-            options: .suitableForBookmarkFile,
-            includingResourceValuesForKeys: nil,
-            relativeTo: nil
-        )
+            bookmarkData(
+                options: .suitableForBookmarkFile,
+                includingResourceValuesForKeys: nil,
+                relativeTo: nil
+            )
         
         try URL.writeBookmarkData(data, to: url)
     }
@@ -441,7 +451,8 @@ extension URL {
     }
     
     /// **OTCore:**
-    /// Creates a symbolic link (symlink) of the base URL file or folder `at` the supplied target location.
+    /// Creates a symbolic link (symlink) of the base URL file or folder `at` the supplied target
+    /// location.
     ///
     /// - Returns `true` if new symlink gets created.
     /// - Returns `false` if destination already exists or if the symlink already exists.
@@ -455,10 +466,11 @@ extension URL {
 // MARK: - Folders
 
 extension FileManager {
-#if os(macOS)
+    #if os(macOS)
     
     /// **OTCore:**
-    /// Backwards compatible method for retrieving the current user's home directory, using the most recent API where possible.
+    /// Backwards compatible method for retrieving the current user's home directory, using the most
+    /// recent API where possible.
     @_disfavoredOverload
     public var homeDirectoryForCurrentUserCompat: URL {
         if #available(OSX 10.12, *) {
@@ -470,7 +482,7 @@ extension FileManager {
         }
     }
     
-#endif
+    #endif
     
     /// **OTCore:**
     /// Backwards compatible method for retrieving a temporary folder from the system.

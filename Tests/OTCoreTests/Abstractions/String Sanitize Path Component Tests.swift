@@ -1,11 +1,11 @@
 //
 //  String Sanitize Path Component Tests.swift
 //  OTCore • https://github.com/orchetect/OTCore
-//  © 2022 Steffan Andrews • Licensed under MIT License
+//  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
-import XCTest
 import OTCore
+import XCTest
 
 @available(macOS 13, iOS 16, tvOS 16, watchOS 9, *)
 class Abstractions_StringSanitizePathComponent_Tests: XCTestCase {
@@ -29,11 +29,26 @@ class Abstractions_StringSanitizePathComponent_Tests: XCTestCase {
         
         // path component string
         XCTAssertEqual("".sanitizingPathComponent(for: fs, replacement: "-"), "")
-        XCTAssertEqual("Test/File.txt".sanitizingPathComponent(for: fs, replacement: "-"), "Test-File.txt")
-        XCTAssertEqual("Test//File.txt".sanitizingPathComponent(for: fs, replacement: "-"), "Test--File.txt")
-        XCTAssertEqual("TestFile\0.txt".sanitizingPathComponent(for: fs, replacement: "-"), "TestFile-.txt")
-        XCTAssertEqual("Test/File\0.txt".sanitizingPathComponent(for: fs, replacement: "-"), "Test-File-.txt")
-        XCTAssertEqual("Test:File.txt".sanitizingPathComponent(for: fs, replacement: "-"), "Test-File.txt")
+        XCTAssertEqual(
+            "Test/File.txt".sanitizingPathComponent(for: fs, replacement: "-"),
+            "Test-File.txt"
+        )
+        XCTAssertEqual(
+            "Test//File.txt".sanitizingPathComponent(for: fs, replacement: "-"),
+            "Test--File.txt"
+        )
+        XCTAssertEqual(
+            "TestFile\0.txt".sanitizingPathComponent(for: fs, replacement: "-"),
+            "TestFile-.txt"
+        )
+        XCTAssertEqual(
+            "Test/File\0.txt".sanitizingPathComponent(for: fs, replacement: "-"),
+            "Test-File-.txt"
+        )
+        XCTAssertEqual(
+            "Test:File.txt".sanitizingPathComponent(for: fs, replacement: "-"),
+            "Test-File.txt"
+        )
         
         // url last path component
         XCTAssertEqual(
@@ -107,7 +122,8 @@ class Abstractions_StringSanitizePathComponent_Tests: XCTestCase {
 }
 
 extension URL {
-    // URL has slightly different sequential path separator behavior depending on platform and version
+    // URL has slightly different sequential path separator behavior depending on platform and
+    // version
     fileprivate static let preservesSequentialSeparators: Bool = {
         #if os(macOS)
         true

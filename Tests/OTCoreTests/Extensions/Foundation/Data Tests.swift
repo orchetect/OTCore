@@ -1,11 +1,11 @@
 //
 //  Data Tests.swift
 //  OTCore • https://github.com/orchetect/OTCore
-//  © 2022 Steffan Andrews • Licensed under MIT License
+//  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
-import XCTest
 @testable import OTCore
+import XCTest
 
 class Extensions_Foundation_Data_Tests: XCTestCase {
     override func setUp() { super.setUp() }
@@ -630,7 +630,8 @@ class Extensions_Foundation_Data_Tests: XCTestCase {
     func testMemoryAlignment() {
         // test for misaligned raw pointer (memory alignment)
         
-        // if the underlying Data -> T:FixedWidthInteger method is not properly aligned, this test will trigger a runtime exception
+        // if the underlying Data -> T:FixedWidthInteger method is not properly aligned, this test
+        // will trigger a runtime exception
         
         // cycle through 8 memory offset positions regardless of the type we're testing
         for offset in 1 ... 8 {

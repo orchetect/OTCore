@@ -1,10 +1,11 @@
 //
 //  ReverseDomainName.swift
 //  OTCore • https://github.com/orchetect/OTCore
-//  © 2024 Steffan Andrews • Licensed under MIT License
+//  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
-/// A type representing a domain name in reverse-notation (ie: `com.apple`, `com.apple.www`, `com.apple.www.zzz`).
+/// A type representing a domain name in reverse-notation (ie: `com.apple`, `com.apple.www`,
+/// `com.apple.www.zzz`).
 public struct ReverseDomainName {
     /// Individual domain name components (domain name split by period (`.`) characters).
     public let components: [String]
@@ -24,8 +25,8 @@ public struct ReverseDomainName {
             .extensionComponentCount(inDomainComponents: components.reversed())
     }
     
-    /// Initialize a new instance from reverse-notation domain name components (domain name split by period (`.`)
-    /// characters).
+    /// Initialize a new instance from reverse-notation domain name components (domain name split by
+    /// period (`.`) characters).
     public init(components: [String]) {
         self.components = components
         
@@ -47,6 +48,7 @@ extension ReverseDomainName: CustomStringConvertible {
         string
     }
 }
+
 extension ReverseDomainName: Sendable { }
 
 extension ReverseDomainName {

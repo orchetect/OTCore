@@ -1,7 +1,7 @@
 //
 //  OTCore API 1.4.6.swift
 //  OTCore • https://github.com/orchetect/OTCore
-//  © 2022 Steffan Andrews • Licensed under MIT License
+//  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
 #if canImport(Foundation)
@@ -16,9 +16,9 @@ public struct UserDefaultsBacked<Value> {
     public var storage: UserDefaults
     public var wrappedValue: Value
     
-    //public init(wrappedValue: Value) { fatalError() }
+    // public init(wrappedValue: Value) { fatalError() }
     
-    //public init(key: String) { fatalError() }
+    // public init(key: String) { fatalError() }
     
     public init(
         wrappedValue defaultValue: Value,
@@ -39,8 +39,6 @@ public struct UserDefaultsBacked<Value> {
         validation closure: @escaping (Value) -> Value,
         storage: UserDefaults = .standard
     ) { fatalError() }
-    
-    /* extension UserDefaultsBacked where Value: ExpressibleByNilLiteral { */
     
     public init<V>(
         key: String,

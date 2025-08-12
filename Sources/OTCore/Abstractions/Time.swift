@@ -1,13 +1,14 @@
 //
 //  Time.swift
 //  OTCore • https://github.com/orchetect/OTCore
-//  © 2024 Steffan Andrews • Licensed under MIT License
+//  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
 import Foundation
 
 /// **OTCore:**
-/// Value type offering basic convenience methods related to manipulating time and formatting time strings.
+/// Value type offering basic convenience methods related to manipulating time and formatting time
+/// strings.
 public struct Time {
     /// Hours component.
     public var hours = 0
@@ -327,7 +328,8 @@ extension Time {
     }
     
     /// **OTCore:**
-    /// Returns the string value of the given time component, formatted for the given time string ``Format``.
+    /// Returns the string value of the given time component, formatted for the given time string
+    /// ``Format``.
     public func stringValue(of component: Component, format: Format) -> String {
         let isPadded = format.isPadded(for: component)
         return stringValue(of: component, padded: isPadded)

@@ -1,7 +1,7 @@
 //
 //  String and Foundation.swift
 //  OTCore • https://github.com/orchetect/OTCore
-//  © 2022 Steffan Andrews • Licensed under MIT License
+//  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
 #if canImport(Foundation)
@@ -40,7 +40,8 @@ extension StringProtocol {
     }
     
     /// **OTCore:**
-    /// Returns the substring in the given range of character positions (offsets from the start index).
+    /// Returns the substring in the given range of character positions (offsets from the start
+    /// index).
     @_disfavoredOverload
     public subscript(position offsetRange: NSRange) -> SubSequence {
         let fromIndex = index(startIndex, offsetBy: offsetRange.location)
@@ -56,7 +57,8 @@ extension StringProtocol {
     }
     
     /// **OTCore:**
-    /// Convenience method: returns `true` if starts with the specified string. Case-insensitive, non-localized.
+    /// Convenience method: returns `true` if starts with the specified string. Case-insensitive,
+    /// non-localized.
     @_disfavoredOverload
     public func hasPrefix<T: StringProtocol>(caseInsensitive prefix: T) -> Bool {
         // Method 1
@@ -83,7 +85,8 @@ extension StringProtocol {
     }
     
     /// **OTCore:**
-    /// Convenience method: returns `true` if ends with the specified string. Case-insensitive, non-localized.
+    /// Convenience method: returns `true` if ends with the specified string. Case-insensitive,
+    /// non-localized.
     @_disfavoredOverload
     public func hasSuffix<T: StringProtocol>(caseInsensitive prefix: T) -> Bool {
         guard let range = range(
@@ -100,7 +103,8 @@ extension StringProtocol {
     }
     
     /// **OTCore:**
-    /// Convenience function to return a new string with whitespaces and newlines trimmed off start and end.
+    /// Convenience function to return a new string with whitespaces and newlines trimmed off start
+    /// and end.
     @inlinable @_disfavoredOverload
     public var trimmed: String {
         trimmingCharacters(in: .whitespacesAndNewlines)

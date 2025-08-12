@@ -1,7 +1,7 @@
 //
 //  Collection Set-Like Methods.swift
 //  OTCore • https://github.com/orchetect/OTCore
-//  © 2022 Steffan Andrews • Licensed under MIT License
+//  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
 // MARK: - Set-like functionality for Non-Set Collections
@@ -127,9 +127,9 @@ extension Collection where Self: RangeReplaceableCollection,
     public func union<S>(_ other: S) -> Self
     where Element == S.Element, S: Sequence {
         var newCollection = self
-        other.forEach {
-            if !newCollection.contains($0) {
-                newCollection.append($0)
+        for item in other {
+            if !newCollection.contains(item) {
+                newCollection.append(item)
             }
         }
         return newCollection
@@ -141,9 +141,9 @@ extension Collection where Self: RangeReplaceableCollection,
     @inlinable @_disfavoredOverload
     public mutating func formUnion<S>(_ other: S)
     where Element == S.Element, S: Sequence {
-        other.forEach {
-            if !contains($0) {
-                append($0)
+        for item in other {
+            if !contains(item) {
+                append(item)
             }
         }
     }
@@ -155,8 +155,8 @@ extension Collection where Self: RangeReplaceableCollection,
     public func union<S>(updating other: S) -> Self
     where Element == S.Element, S: Sequence {
         var newCollection = self
-        other.forEach {
-            newCollection.update(with: $0, position: .default)
+        for item in other {
+            newCollection.update(with: item, position: .default)
         }
         return newCollection
     }
@@ -167,8 +167,8 @@ extension Collection where Self: RangeReplaceableCollection,
     @inlinable @_disfavoredOverload
     public mutating func formUnion<S>(updating other: S)
     where Element == S.Element, S: Sequence {
-        other.forEach {
-            update(with: $0, position: .default)
+        for item in other {
+            update(with: item, position: .default)
         }
     }
 }

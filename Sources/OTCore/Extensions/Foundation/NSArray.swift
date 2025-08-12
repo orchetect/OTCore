@@ -1,7 +1,7 @@
 //
 //  NSArray.swift
 //  OTCore • https://github.com/orchetect/OTCore
-//  © 2022 Steffan Andrews • Licensed under MIT License
+//  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
 #if canImport(Foundation)
@@ -14,7 +14,8 @@ extension NSArray {
     ///
     /// > Note:
     /// > `NSArray/NSMutableArray` indexes are always zero-based and sequential (`0...`).
-    /// > Therefore, a `[safePosition:]` subscript is unnecessary, as this subscript fills both roles.
+    /// > Therefore, a `[safePosition:]` subscript is unnecessary, as this subscript fills both
+    /// > roles.
     ///
     /// Example:
     ///
@@ -35,7 +36,8 @@ extension NSMutableArray {
     ///
     /// > Note:
     /// > `NSArray/NSMutableArray` indexes are always zero-based and sequential (`0...`).
-    /// > Therefore, a `[safePosition:]` subscript is unnecessary, as this subscript fills both roles.
+    /// > Therefore, a `[safePosition:]` subscript is unnecessary, as this subscript fills both
+    /// > roles.
     ///
     /// Get: if index does not exist (out-of-bounds), `nil` is returned.
     ///

@@ -1,7 +1,7 @@
 //
 //  Clamped Property Wrapper.swift
 //  OTCore • https://github.com/orchetect/OTCore
-//  © 2022 Steffan Andrews • Licensed under MIT License
+//  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
 import Foundation
@@ -23,18 +23,18 @@ public struct Clamped<Value>: Sendable where Value: Comparable, Value: Sendable 
         }
     }
     
-    internal static func clamping(
+    static func clamping(
         _ value: Value,
         min: Value?,
         max: Value?
     ) -> Value {
-        if let min = min {
-            if let max = max {
+        if let min {
+            if let max {
                 return value.clamped(to: min ... max)
             } else {
                 return value.clamped(to: min...)
             }
-        } else if let max = max {
+        } else if let max {
             return value.clamped(to: ...max)
         } else {
             return value

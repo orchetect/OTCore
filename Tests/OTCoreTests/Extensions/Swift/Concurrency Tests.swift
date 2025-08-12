@@ -1,11 +1,11 @@
 //
 //  Concurrency Tests.swift
 //  OTCore • https://github.com/orchetect/OTCore
-//  © 2022 Steffan Andrews • Licensed under MIT License
+//  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
-import XCTest
 import OTCore
+import XCTest
 
 @available(macOS 10.15, iOS 13.0.0, watchOS 6.0, tvOS 13.0, *)
 final class Extensions_Swift_Concurrency_Tests: XCTestCase {

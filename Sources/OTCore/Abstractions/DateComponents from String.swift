@@ -1,7 +1,7 @@
 //
 //  DateComponents from String.swift
 //  OTCore • https://github.com/orchetect/OTCore
-//  © 2022 Steffan Andrews • Licensed under MIT License
+//  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
 #if canImport(Foundation)
@@ -12,7 +12,8 @@ import Foundation
 
 extension DateComponents {
     /// **OTCore:**
-    /// Parse a date string heuristically in a variety of formats involving month and day, and optionally year.
+    /// Parse a date string heuristically in a variety of formats involving month and day, and
+    /// optionally year.
     ///
     /// Only produces day, month and year components.
     ///
@@ -141,7 +142,8 @@ extension DateComponents {
         
         var remaining = split.compactMap { Int($0) }
         
-        // if remaining components aren't all numbers (convertible to Int), original input string is not as expected
+        // if remaining components aren't all numbers (convertible to Int), original input string is
+        // not as expected
         guard split.count == remaining.count else { return nil }
         split = []
         
@@ -167,6 +169,7 @@ extension DateComponents {
                 day = remaining[0]
                 remaining.remove(at: 0)
             }
+
         case 2:
             guard month == 0, day == 0 else { return nil }
             
@@ -205,7 +208,8 @@ extension DateComponents {
 
 extension String {
     /// **OTCore:**
-    /// Attempts to parse Year, Month and Day components from an unformatted date string using simple heuristics.
+    /// Attempts to parse Year, Month and Day components from an unformatted date string using
+    /// simple heuristics.
     @_disfavoredOverload
     public var dateComponents: DateComponents? {
         DateComponents(fuzzy: self)
@@ -215,7 +219,8 @@ extension String {
 // MARK: - FuzzyDateComponentsStringParseStrategy
 
 /// **OTCore:**
-/// Parse a date string heuristically in a variety of formats involving month and day, and optionally year.
+/// Parse a date string heuristically in a variety of formats involving month and day, and
+/// optionally year.
 ///
 /// Only produces day, month and year components.
 ///
@@ -259,10 +264,11 @@ public struct FuzzyDateComponentsStringParseStrategy<ParseInput>: ParseStrategy,
 
 @available(macOS 12.0, iOS 15.0, tvOS 15.0, watchOS 8.0, *)
 extension ParseStrategy where ParseOutput == DateComponents,
-                              Self == FuzzyDateComponentsStringParseStrategy<String>
+    Self == FuzzyDateComponentsStringParseStrategy<String>
 {
     /// **OTCore:**
-    /// Parse a date string heuristically in a variety of formats involving month and day, and optionally year.
+    /// Parse a date string heuristically in a variety of formats involving month and day, and
+    /// optionally year.
     public static var fuzzyDate: FuzzyDateComponentsStringParseStrategy<ParseInput> {
         FuzzyDateComponentsStringParseStrategy()
     }
@@ -270,10 +276,11 @@ extension ParseStrategy where ParseOutput == DateComponents,
 
 @available(macOS 12.0, iOS 15.0, tvOS 15.0, watchOS 8.0, *)
 extension ParseStrategy where ParseOutput == DateComponents,
-                              Self == FuzzyDateComponentsStringParseStrategy<Substring>
+    Self == FuzzyDateComponentsStringParseStrategy<Substring>
 {
     /// **OTCore:**
-    /// Parse a date string heuristically in a variety of formats involving month and day, and optionally year.
+    /// Parse a date string heuristically in a variety of formats involving month and day, and
+    /// optionally year.
     public static var fuzzyDate: FuzzyDateComponentsStringParseStrategy<ParseInput> {
         FuzzyDateComponentsStringParseStrategy()
     }
@@ -282,7 +289,8 @@ extension ParseStrategy where ParseOutput == DateComponents,
 // MARK: - fuzzyDateParseStrategy
 
 /// **OTCore:**
-/// Parse a date string heuristically in a variety of formats involving month and day, and optionally year.
+/// Parse a date string heuristically in a variety of formats involving month and day, and
+/// optionally year.
 ///
 /// Only produces day, month and year components.
 ///
@@ -344,10 +352,11 @@ public struct FuzzyDateParseStrategy<ParseInput>: ParseStrategy, Sendable where 
 
 @available(macOS 12.0, iOS 15.0, tvOS 15.0, watchOS 8.0, *)
 extension ParseStrategy where ParseOutput == Date,
-                              Self == FuzzyDateParseStrategy<String>
+    Self == FuzzyDateParseStrategy<String>
 {
     /// **OTCore:**
-    /// Parse a date string heuristically in a variety of formats involving month and day, and optionally year.
+    /// Parse a date string heuristically in a variety of formats involving month and day, and
+    /// optionally year.
     public static func fuzzyDate(
         calendar: Calendar = .current,
         timeZone: TimeZone = .current
@@ -358,10 +367,11 @@ extension ParseStrategy where ParseOutput == Date,
 
 @available(macOS 12.0, iOS 15.0, tvOS 15.0, watchOS 8.0, *)
 extension ParseStrategy where ParseOutput == Date,
-                              Self == FuzzyDateParseStrategy<Substring>
+    Self == FuzzyDateParseStrategy<Substring>
 {
     /// **OTCore:**
-    /// Parse a date string heuristically in a variety of formats involving month and day, and optionally year.
+    /// Parse a date string heuristically in a variety of formats involving month and day, and
+    /// optionally year.
     public static func fuzzyDate(
         calendar: Calendar = .current,
         timeZone: TimeZone = .current

@@ -1,11 +1,11 @@
 //
 //  String and NSRegularExpression Tests.swift
 //  OTCore • https://github.com/orchetect/OTCore
-//  © 2022 Steffan Andrews • Licensed under MIT License
+//  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
-import XCTest
 @testable import OTCore
+import XCTest
 
 class Extensions_Foundation_StringAndNSRegularExpression_Tests: XCTestCase {
     override func setUp() { super.setUp() }
@@ -87,7 +87,7 @@ class Extensions_Foundation_StringAndNSRegularExpression_Tests: XCTestCase {
         
         XCTAssertEqual(
             subStr.regexMatches(
-                pattern: regPattern, 
+                pattern: regPattern,
                 replacementTemplate: "A$1B$2C"
             ),
             "A123B456C"

@@ -1,11 +1,11 @@
 //
 //  Time Tests.swift
 //  OTCore • https://github.com/orchetect/OTCore
-//  © 2024 Steffan Andrews • Licensed under MIT License
+//  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
-import XCTest
 /* @testable */ import OTCore
+import XCTest
 
 final class Abstractions_Time_Tests: XCTestCase {
     override func setUp() { super.setUp() }
@@ -64,7 +64,8 @@ final class Abstractions_Time_Tests: XCTestCase {
     }
     
     func testTimeHMS_Overflow() {
-        // no overflow by default; this could be modified in future to either truncate or roll up values
+        // no overflow by default; this could be modified in future to either truncate or roll up
+        // values
         
         let t = Time(hours: 0, minutes: 0, seconds: 90)
         
@@ -275,7 +276,7 @@ final class Abstractions_Time_Tests: XCTestCase {
     func testTimeStringValueA() {
         let t = Time(hours: 15, minutes: 46, seconds: 20, milliseconds: 49)
         
-        Time.Format.allCases.forEach { fmt in
+        for fmt in Time.Format.allCases {
             let str: String = {
                 switch fmt {
                 case .shortest:     return "15:46:20"
@@ -301,7 +302,7 @@ final class Abstractions_Time_Tests: XCTestCase {
     func testTimeStringValueB() {
         let t = Time(hours: 5, minutes: 6, seconds: 20)
         
-        Time.Format.allCases.forEach { fmt in
+        for fmt in Time.Format.allCases {
             let str: String = {
                 switch fmt {
                 case .shortest:     return "5:06:20"
@@ -327,7 +328,7 @@ final class Abstractions_Time_Tests: XCTestCase {
     func testTimeStringValue_Zero() {
         let t = Time(hours: 0, minutes: 0, seconds: 0)
         
-        Time.Format.allCases.forEach { fmt in
+        for fmt in Time.Format.allCases {
             let str: String = {
                 switch fmt {
                 case .shortest:     return "0:00"
@@ -353,7 +354,7 @@ final class Abstractions_Time_Tests: XCTestCase {
     func testTimeStringValue_Negative() {
         let t = Time(hours: 0, minutes: 0, seconds: 20, sign: .minus)
         
-        Time.Format.allCases.forEach { fmt in
+        for fmt in Time.Format.allCases {
             let str: String = {
                 switch fmt {
                 case .shortest:     return "-0:20"

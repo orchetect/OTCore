@@ -1,7 +1,7 @@
 //
 //  FloatingPoint and Foundation.swift
 //  OTCore • https://github.com/orchetect/OTCore
-//  © 2022 Steffan Andrews • Licensed under MIT License
+//  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
 #if canImport(Foundation)
@@ -24,9 +24,10 @@ extension CharacterSet {
 }
 
 extension FloatingPoint where Self: CVarArg,
-                              Self: FloatingPointHighPrecisionStringConvertible {
+Self: FloatingPointHighPrecisionStringConvertible {
     /// **OTCore:**
-    /// Returns a string representation of a floating-point number, with maximum 100 decimal places of precision.
+    /// Returns a string representation of a floating-point number, with maximum 100 decimal places
+    /// of precision.
     @_disfavoredOverload
     public var stringValueHighPrecision: String {
         var formatted = String(format: "%.100f", self)
@@ -43,7 +44,8 @@ extension FloatingPoint where Self: CVarArg,
 #if !(arch(arm64) || arch(arm) || os(watchOS)) // Float80 is now removed for ARM
 extension Float80 {
     /// **OTCore:**
-    /// Returns a string representation of a floating-point number, with maximum 100 decimal places of precision.
+    /// Returns a string representation of a floating-point number, with maximum 100 decimal places
+    /// of precision.
     @_disfavoredOverload
     public var stringValueHighPrecision: String {
         // String(format:) does not work with Float80
@@ -69,7 +71,6 @@ extension FloatingPoint where Self: CVarArg,
         return String(format: "%.\(decimalPlaces)f", roundedValue)
     }
 }
-
 
 #if !(arch(arm64) || arch(arm) || os(watchOS)) // Float80 is now removed for ARM
 extension Float80 {

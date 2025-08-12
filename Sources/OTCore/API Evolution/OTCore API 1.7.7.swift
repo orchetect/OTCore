@@ -1,7 +1,7 @@
 //
 //  OTCore API 1.7.7.swift
 //  OTCore • https://github.com/orchetect/OTCore
-//  © 2024 Steffan Andrews • Licensed under MIT License
+//  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
 #if canImport(Foundation)
@@ -21,7 +21,7 @@ extension IPAddress {
 
 // MARK: - Data.swift
 
-extension Collection where Element == UInt8 {
+extension Collection<UInt8> {
     /// **OTCore:**
     /// Same as `Data(self)`.
     /// Returns a Data object using the array as bytes.
@@ -52,7 +52,8 @@ extension Data {
 
 extension DateComponents {
     /// **OTCore:**
-    /// Parse a date string heuristically in a variety of formats involving month and day, and optionally year.
+    /// Parse a date string heuristically in a variety of formats involving month and day, and
+    /// optionally year.
     ///
     /// Only produces day, month and year components.
     ///

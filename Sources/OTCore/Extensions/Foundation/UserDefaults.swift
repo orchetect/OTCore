@@ -1,7 +1,7 @@
 //
 //  UserDefaults.swift
 //  OTCore • https://github.com/orchetect/OTCore
-//  © 2022 Steffan Andrews • Licensed under MIT License
+//  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
 #if canImport(Foundation)
@@ -12,7 +12,8 @@ extension UserDefaults {
     // custom optional methods for core data types that don't intrinsically support optionals yet
     
     /// **OTCore:**
-    /// Convenience method to wrap the built-in `integer(forKey:)` method in an optional returning `nil` if the key doesn't exist.
+    /// Convenience method to wrap the built-in `integer(forKey:)` method in an optional returning
+    /// `nil` if the key doesn't exist.
     @_disfavoredOverload
     public func integerOptional(forKey key: String) -> Int? {
         guard object(forKey: key) != nil else { return nil }
@@ -20,7 +21,8 @@ extension UserDefaults {
     }
     
     /// **OTCore:**
-    /// Convenience method to wrap the built-in `double(forKey:)` method in an optional returning `nil` if the key doesn't exist.
+    /// Convenience method to wrap the built-in `double(forKey:)` method in an optional returning
+    /// `nil` if the key doesn't exist.
     @_disfavoredOverload
     public func doubleOptional(forKey key: String) -> Double? {
         guard object(forKey: key) != nil else { return nil }
@@ -28,7 +30,8 @@ extension UserDefaults {
     }
     
     /// **OTCore:**
-    /// Convenience method to wrap the built-in `float(forKey:)` method in an optional returning `nil` if the key doesn't exist.
+    /// Convenience method to wrap the built-in `float(forKey:)` method in an optional returning
+    /// `nil` if the key doesn't exist.
     @_disfavoredOverload
     public func floatOptional(forKey key: String) -> Float? {
         guard object(forKey: key) != nil else { return nil }
@@ -36,7 +39,8 @@ extension UserDefaults {
     }
     
     /// **OTCore:**
-    /// Convenience method to wrap the built-in `bool(forKey:)` method in an optional returning `nil` if the key doesn't exist.
+    /// Convenience method to wrap the built-in `bool(forKey:)` method in an optional returning
+    /// `nil` if the key doesn't exist.
     @_disfavoredOverload
     public func boolOptional(forKey key: String) -> Bool? {
         guard object(forKey: key) != nil else { return nil }
@@ -46,7 +50,8 @@ extension UserDefaults {
     /// **OTCore:**
     /// Returns `true` if the key exists.
     ///
-    /// This method is only useful when you don't care about extracting a value from the key and merely want to check for the key's existence.
+    /// This method is only useful when you don't care about extracting a value from the key and
+    /// merely want to check for the key's existence.
     @_disfavoredOverload
     public func exists(key: String) -> Bool {
         object(forKey: key) != nil
@@ -155,7 +160,7 @@ public struct UserDefaultsStorage<Value, StorageValue>: @unchecked Sendable wher
             if computedOnly {
                 return getTransformationComputedOnly(value)
             }
-            guard let value = value else {
+            guard let value else {
                 return defaultValue()
             }
             let processed = getTransformation(value)
@@ -278,7 +283,8 @@ public struct UserDefaultsStorage<Value, StorageValue>: @unchecked Sendable wher
     
     // MARK: Init - Same Type Codable
     
-    /// Store and retrieve any object conforming to `Codable` by using JSON serialization and storing as `String` in UserDefaults.
+    /// Store and retrieve any object conforming to `Codable` by using JSON serialization and
+    /// storing as `String` in UserDefaults.
     @_disfavoredOverload
     public init(
         wrappedValue defaultValue: Value,
@@ -349,14 +355,14 @@ public struct UserDefaultsStorage<Value, StorageValue>: @unchecked Sendable wher
         
         self.key = key
         self.storage = storage
-        self.getTransformationComputedOnly = getTransformation
-        self.setTransformationComputedOnly = setTransformation
+        getTransformationComputedOnly = getTransformation
+        setTransformationComputedOnly = setTransformation
         
         // not used
         self.getTransformation = { _ in nil }
         self.setTransformation = { _ in nil }
         // safe because we ensure to not use this property when computedOnly == true
-        self.defaultValue = { fatalError() }
+        defaultValue = { fatalError() }
     }
 }
 
@@ -389,7 +395,8 @@ extension UserDefaultsStorage where Value: ExpressibleByNilLiteral {
     
     // MARK: Init - Same Type Codable
     
-    /// Store and retrieve any object conforming to `Codable` by using JSON serialization and storing as `String` in UserDefaults.
+    /// Store and retrieve any object conforming to `Codable` by using JSON serialization and
+    /// storing as `String` in UserDefaults.
     @_disfavoredOverload
     public init(
         key: String,

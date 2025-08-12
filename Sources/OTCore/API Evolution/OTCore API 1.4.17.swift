@@ -1,7 +1,7 @@
 //
 //  OTCore API 1.4.17.swift
 //  OTCore • https://github.com/orchetect/OTCore
-//  © 2023 Steffan Andrews • Licensed under MIT License
+//  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
 // This is Mac-only because even though XMLNode exists in Foundation, it is only available on macOS

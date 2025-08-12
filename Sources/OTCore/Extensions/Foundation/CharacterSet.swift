@@ -1,7 +1,7 @@
 //
 //  CharacterSet.swift
 //  OTCore • https://github.com/orchetect/OTCore
-//  © 2022 Steffan Andrews • Licensed under MIT License
+//  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
 #if canImport(Foundation)
@@ -22,8 +22,8 @@ extension CharacterSet {
     public init(_ characters: [Character]) {
         self.init()
 
-        characters.forEach {
-            $0.unicodeScalars.forEach { insert($0) }
+        for character in characters {
+            character.unicodeScalars.forEach { insert($0) }
         }
     }
 }

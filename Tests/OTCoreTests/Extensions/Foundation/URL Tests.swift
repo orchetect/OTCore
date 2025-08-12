@@ -1,11 +1,11 @@
 //
 //  URL Tests.swift
 //  OTCore • https://github.com/orchetect/OTCore
-//  © 2022 Steffan Andrews • Licensed under MIT License
+//  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
-import XCTest
 @testable import OTCore
+import XCTest
 
 class Extensions_Foundation_URL_Tests: XCTestCase {
     override func setUp() { super.setUp() }
@@ -369,12 +369,18 @@ class Extensions_Foundation_URL_Tests: XCTestCase {
         var reformed = lowercased
         try reformed.canonicalizeFileURL()
         
-        // adjust original URL for comparison. path canonicalization adds `/private` to temporary directory path.
+        // adjust original URL for comparison. path canonicalization adds `/private` to temporary
+        // directory path.
         let prefixString = "file:///var/"
         let originalFileString = file.absoluteString
-        let originalFileStringRange = originalFileString.startIndex ..< originalFileString.index(originalFileString.startIndex, offsetBy: prefixString.count)
+        let originalFileStringRange = originalFileString.startIndex
+            ..< originalFileString.index(originalFileString.startIndex, offsetBy: prefixString.count)
         let prefixedOriginalFileString = originalFileString
-            .replacingOccurrences(of: prefixString, with: "file:///private/var/", range: originalFileStringRange)
+            .replacingOccurrences(
+                of: prefixString,
+                with: "file:///private/var/",
+                range: originalFileStringRange
+            )
         
         XCTAssertEqual(prefixedOriginalFileString, reformed.absoluteString)
     }
@@ -383,7 +389,8 @@ class Extensions_Foundation_URL_Tests: XCTestCase {
     #if os(macOS)
     func testCanonicalizingFileURL() throws {
         // write temp file including a mix of uppercase and lowercase letters
-        let file = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("\(UUID().uuidString)-TeSt123AbC.txt")
+        let file = URL(fileURLWithPath: NSTemporaryDirectory())
+            .appendingPathComponent("\(UUID().uuidString)-TeSt123AbC.txt")
         try "\(Date())".write(to: file, atomically: true, encoding: .utf8)
         XCTAssert(file.fileExists)
         
@@ -391,12 +398,18 @@ class Extensions_Foundation_URL_Tests: XCTestCase {
         XCTAssertNotEqual(file.absoluteString, lowercased.absoluteString)
         let reformed = try lowercased.canonicalizingFileURL()
         
-        // adjust original URL for comparison. path canonicalization adds `/private` to temporary directory path.
+        // adjust original URL for comparison. path canonicalization adds `/private` to temporary
+        // directory path.
         let prefixString = "file:///var/"
         let originalFileString = file.absoluteString
-        let originalFileStringRange = originalFileString.startIndex ..< originalFileString.index(originalFileString.startIndex, offsetBy: prefixString.count)
+        let originalFileStringRange = originalFileString.startIndex
+            ..< originalFileString.index(originalFileString.startIndex, offsetBy: prefixString.count)
         let prefixedOriginalFileString = originalFileString
-            .replacingOccurrences(of: prefixString, with: "file:///private/var/", range: originalFileStringRange)
+            .replacingOccurrences(
+                of: prefixString,
+                with: "file:///private/var/",
+                range: originalFileStringRange
+            )
         
         XCTAssertEqual(prefixedOriginalFileString, reformed.absoluteString)
     }
@@ -405,7 +418,8 @@ class Extensions_Foundation_URL_Tests: XCTestCase {
     #if os(macOS)
     func testIsEqualFileNode() throws {
         // write temp file including a mix of uppercase and lowercase letters
-        let file = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("\(UUID().uuidString)-TeSt123AbC.txt")
+        let file = URL(fileURLWithPath: NSTemporaryDirectory())
+            .appendingPathComponent("\(UUID().uuidString)-TeSt123AbC.txt")
         try "\(Date())".write(to: file, atomically: true, encoding: .utf8)
         XCTAssert(file.fileExists)
         

@@ -1,7 +1,7 @@
 //
 //  DispatchGroup.swift
 //  OTCore • https://github.com/orchetect/OTCore
-//  © 2022 Steffan Andrews • Licensed under MIT License
+//  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
 #if canImport(Foundation)
@@ -52,7 +52,8 @@ extension DispatchGroup {
     }
     
     /// **OTCore:**
-    /// Convenience DispatchGroup-wrapping method to run code synchronously with the block being executed on the specified dispatch queue.
+    /// Convenience DispatchGroup-wrapping method to run code synchronously with the block being
+    /// executed on the specified dispatch queue.
     /// You must call `leave()` once within the body of the closure.
     ///
     /// Example:
@@ -80,7 +81,8 @@ extension DispatchGroup {
     }
     
     /// **OTCore:**
-    /// Convenience DispatchGroup-wrapping method to run async code synchronously with a timeout period.
+    /// Convenience DispatchGroup-wrapping method to run async code synchronously with a timeout
+    /// period.
     /// You must call `leave()` once within the body of the closure.
     ///
     /// Example:
@@ -109,7 +111,8 @@ extension DispatchGroup {
     }
     
     /// **OTCore:**
-    /// Convenience DispatchGroup-wrapping method to run async code synchronously with a timeout period with the block being executed on the specified dispatch queue.
+    /// Convenience DispatchGroup-wrapping method to run async code synchronously with a timeout
+    /// period with the block being executed on the specified dispatch queue.
     /// You must call `leave()` once within the body of the closure.
     ///
     /// Example:
@@ -143,7 +146,8 @@ extension DispatchGroup {
 }
 
 /// **OTCore:**
-/// A result value indicating whether a dispatch operation finished before a specified time. If the operation succeeded, an associated result value is returned.
+/// A result value indicating whether a dispatch operation finished before a specified time. If the
+/// operation succeeded, an associated result value is returned.
 public enum DispatchSyncTimeoutResult<T> {
     case success(T)
     case timedOut
@@ -151,7 +155,8 @@ public enum DispatchSyncTimeoutResult<T> {
     
 extension DispatchGroup {
     /// **OTCore:**
-    /// A thin DispatchGroup wrapper capable of returning a value, that only publicly allows `leave(withValue:)` to be called.
+    /// A thin DispatchGroup wrapper capable of returning a value, that only publicly allows
+    /// `leave(withValue:)` to be called.
     /// Not meant to be instanced directly. Use `DispatchGroup.sync{}` instead.
     public final class ThinReturnValueDispatchGroup<ReturnValue>: @unchecked Sendable {
         fileprivate let group = DispatchGroup()
@@ -169,7 +174,8 @@ extension DispatchGroup {
     }
     
     /// **OTCore:**
-    /// Convenience DispatchGroup-wrapping method to run async code synchronously and return a value.
+    /// Convenience DispatchGroup-wrapping method to run async code synchronously and return a
+    /// value.
     /// You must call `leave(withValue:)` once within the body of the closure.
     ///
     /// Example:
@@ -196,7 +202,8 @@ extension DispatchGroup {
     }
     
     /// **OTCore:**
-    /// Convenience DispatchGroup-wrapping method to run async code synchronously and return a value with the block being executed on the specified dispatch queue.
+    /// Convenience DispatchGroup-wrapping method to run async code synchronously and return a value
+    /// with the block being executed on the specified dispatch queue.
     /// You must call `leave(withValue:)` once within the body of the closure.
     ///
     /// Example:
@@ -226,7 +233,8 @@ extension DispatchGroup {
     }
     
     /// **OTCore:**
-    /// Convenience DispatchGroup-wrapping method to run async code synchronously and return a value with a timeout period.
+    /// Convenience DispatchGroup-wrapping method to run async code synchronously and return a value
+    /// with a timeout period.
     /// You must call `leave(withValue:)` once within the body of the closure.
     ///
     /// Example:
@@ -265,7 +273,8 @@ extension DispatchGroup {
     }
     
     /// **OTCore:**
-    /// Convenience DispatchGroup-wrapping method to run async code synchronously and return a value with a timeout period with the block being executed on the specified dispatch queue.
+    /// Convenience DispatchGroup-wrapping method to run async code synchronously and return a value
+    /// with a timeout period with the block being executed on the specified dispatch queue.
     /// You must call `leave(withValue:)` once within the body of the closure.
     ///
     /// Example:

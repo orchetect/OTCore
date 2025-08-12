@@ -1,7 +1,7 @@
 //
 //  FloatingPoint.swift
 //  OTCore • https://github.com/orchetect/OTCore
-//  © 2022 Steffan Andrews • Licensed under MIT License
+//  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
 // MARK: - Convenience type conversion methods
@@ -205,7 +205,8 @@ extension FloatingPoint where Self: FloatingPointPowerComputable {
     }
     
     /// **OTCore:**
-    /// Replaces this value by rounding it to `decimalPlaces` number of decimal places using rounding `rule`.
+    /// Replaces this value by rounding it to `decimalPlaces` number of decimal places using
+    /// rounding `rule`.
     ///
     /// If `decimalPlaces <= 0,` `trunc(self)` is used.
     @_disfavoredOverload
@@ -223,7 +224,8 @@ extension FloatingPoint {
     /// **OTCore:**
     /// Returns a number that has been wrapped around a range.
     /// If the number already falls within the range, the number is returned as-is.
-    /// If the number underflows or overflows the range, it is wrapped around the range's bounds continuously.
+    /// If the number underflows or overflows the range, it is wrapped around the range's bounds
+    /// continuously.
     ///
     /// Example:
     ///
@@ -241,7 +243,7 @@ extension FloatingPoint {
     ///    8.0.wrapped(around: -1.0...3.0) // 3.0
     ///    9.0.wrapped(around: -1.0...3.0) // -1.0
     /// ```
-    /// 
+    ///
     /// - parameter range: integer range, allowing negative and positive bounds.
     @inlinable @_disfavoredOverload
     public func wrapped(around range: ClosedRange<Self>) -> Self {
@@ -262,7 +264,8 @@ extension FloatingPoint {
     /// **OTCore:**
     /// Returns a number that has been wrapped around a range.
     /// If the number already falls within the range, the number is returned as-is.
-    /// If the number underflows or overflows the range, it is wrapped around the range's bounds continuously.
+    /// If the number underflows or overflows the range, it is wrapped around the range's bounds
+    /// continuously.
     @inlinable @_disfavoredOverload
     public func wrapped(around range: Range<Self>) -> Self {
         guard !isNaN, !isInfinite else { return self }
@@ -347,7 +350,8 @@ extension String {
 }
 
 extension Substring {
-    // float types init(_ text:) are not inlinable when passed a Substring, even though when passed a StringProtocol type the init is inlinable
+    // float types init(_ text:) are not inlinable when passed a Substring, even though when passed
+    // a StringProtocol type the init is inlinable
     
     /// **OTCore:**
     /// Returns a `Double`, or `nil` if unsuccessful.

@@ -1,7 +1,7 @@
 //
 //  Decimal.swift
 //  OTCore • https://github.com/orchetect/OTCore
-//  © 2022 Steffan Andrews • Licensed under MIT License
+//  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
 #if canImport(Foundation)
@@ -185,7 +185,8 @@ extension Decimal {
     }
     
     /// **OTCore:**
-    /// Replaces this value by rounding it to `decimalPlaces` number of decimal places using rounding `rule`.
+    /// Replaces this value by rounding it to `decimalPlaces` number of decimal places using
+    /// rounding `rule`.
     @_disfavoredOverload
     public mutating func round(
         _ rule: NSDecimalNumber.RoundingMode = .plain,
@@ -202,7 +203,8 @@ extension Decimal {
     ///
     /// See https://developer.apple.com/documentation/xcode-release-notes/xcode-16-release-notes#Foundation
     ///
-    /// This method is not currently used, but its functionality was tested and it works as expected.
+    /// This method is not currently used, but its functionality was tested and it works as
+    /// expected.
     // private func _roundedAlternative(
     //     _ rule: NSDecimalNumber.RoundingMode = .plain,
     //     decimalPlaces: Int

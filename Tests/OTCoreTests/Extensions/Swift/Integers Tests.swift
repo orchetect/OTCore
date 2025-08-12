@@ -1,11 +1,11 @@
 //
 //  Integers Tests.swift
 //  OTCore • https://github.com/orchetect/OTCore
-//  © 2022 Steffan Andrews • Licensed under MIT License
+//  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
-import XCTest
 import OTCore
+import XCTest
 
 class Extensions_Swift_Integers_Tests: XCTestCase {
     override func setUp() { super.setUp() }
@@ -446,8 +446,8 @@ class Extensions_Swift_Integers_Tests: XCTestCase {
         XCTAssertEqual(arr.count, 4)
         
         // ensure each value is within range
-        arr.forEach {
-            XCTAssert(range.contains($0))
+        for item in arr {
+            XCTAssert(range.contains(item))
         }
     }
     

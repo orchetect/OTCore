@@ -1,11 +1,11 @@
 //
 //  ZeroIndexedCollection Tests.swift
 //  OTCore • https://github.com/orchetect/OTCore
-//  © 2022 Steffan Andrews • Licensed under MIT License
+//  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
-import XCTest
 import OTCore
+import XCTest
 
 class Abstractions_ZeroIndexedCollection_Tests: XCTestCase {
     override func setUp() { super.setUp() }

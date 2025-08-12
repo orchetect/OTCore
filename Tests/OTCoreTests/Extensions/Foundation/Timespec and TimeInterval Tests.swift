@@ -1,11 +1,11 @@
 //
 //  Timespec and TimeInterval Tests.swift
 //  OTCore • https://github.com/orchetect/OTCore
-//  © 2022 Steffan Andrews • Licensed under MIT License
+//  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
-import XCTest
 @testable import OTCore
+import XCTest
 
 class Extensions_Foundation_TimespecAndTimeInterval_Tests: XCTestCase {
     func testTimespec_inits() {

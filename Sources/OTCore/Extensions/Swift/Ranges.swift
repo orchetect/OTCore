@@ -1,7 +1,7 @@
 //
 //  Ranges.swift
 //  OTCore • https://github.com/orchetect/OTCore
-//  © 2022 Steffan Andrews • Licensed under MIT License
+//  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
 import Foundation
@@ -234,8 +234,8 @@ extension Comparable {
     }
     
     // ie: 5.0.clamped(to: 7.0..<10.0)
-    // not a good idea to implement this -- floating point numbers don't make sense in a ..< type range
-    // because would the max of 7.0..<10.0 be 9.999999999...? It can't be 10.0.
+    // not a good idea to implement this -- floating point numbers don't make sense in a ..< type
+    // range because would the max of 7.0..<10.0 be 9.999999999...? It can't be 10.0.
     // func clamped(to limits: Range<Self>) -> Self { }
 }
 
@@ -275,9 +275,11 @@ extension ClosedRange where Bound: SignedInteger, Bound.Stride: SignedInteger {
     ///
     /// This method is only typically useful on an `excluding` array that has been `sorted()` first.
     ///
-    /// - note: where possible, use the `first(excluding: Range)` variants of this method because they are far more performant than this one.
+    /// - note: where possible, use the `first(excluding: Range)` variants of this method because
+    ///   they are far more performant than this one.
     ///
-    /// - complexity: O(*n1* * *n2*), where *n1* == self.count, *n2* == excluding.count; lazily over `self.count`.
+    /// - complexity: O(*n1* * *n2*), where *n1* == self.count, *n2* == excluding.count;
+    ///   lazily over `self.count`.
     @_disfavoredOverload
     public func first(excluding: ArraySlice<Bound>) -> Bound? {
         guard !excluding.isEmpty else {
@@ -293,9 +295,11 @@ extension ClosedRange where Bound: SignedInteger, Bound.Stride: SignedInteger {
     ///
     /// This method is only typically useful on an `excluding` array that has been `sorted()` first.
     ///
-    /// - note: where possible, use the `first(excluding: Range)` variants of this method because they are far more performant than this one.
+    /// - note: where possible, use the `first(excluding: Range)` variants of this method because
+    ///   they are far more performant than this one.
     ///
-    /// - complexity: O(*n1* * *n2*), where *n1* == self.count, *n2* == excluding.count; lazily over `self.count`.
+    /// - complexity: O(*n1* * *n2*), where *n1* == self.count, *n2* == excluding.count;
+    ///   lazily over `self.count`.
     @_disfavoredOverload
     public func first(excluding: [Bound]) -> Bound? {
         first(excluding: ArraySlice(excluding))
@@ -306,11 +310,15 @@ extension ClosedRange where Bound: SignedInteger, Bound.Stride: SignedInteger {
     /// If there are no available elements, `nil` is returned.
     /// This method assumes the `presortedExcluding` array is already pre-sorted.
     ///
-    /// This method may be more performant than calling `first(excluding: ArraySlice)` for large `presortedExcluding` arrays or potentially large overlays between `self` and `presortedExcluding`.
+    /// This method may be more performant than calling `first(excluding: ArraySlice)` for large
+    /// `presortedExcluding` arrays or potentially large overlays between `self` and
+    /// `presortedExcluding`.
     ///
-    /// - note: Where possible, use the `first(excluding: Range)` variants of this method because they are far more performant.
+    /// - note: Where possible, use the `first(excluding: Range)` variants of this method because
+    ///   they are far more performant.
     ///
-    /// - complexity: O(*n1* * *n2*), where *n1* == self.count, *n2* == excluding.count; lazily over `self.count`.
+    /// - complexity: O(*n1* * *n2*), where *n1* == self.count, *n2* == excluding.count;
+    ///   lazily over `self.count`.
     @_disfavoredOverload
     public func first(presortedExcluding: ArraySlice<Bound>) -> Bound? {
         guard !presortedExcluding.isEmpty else {
@@ -357,23 +365,31 @@ extension ClosedRange where Bound: SignedInteger, Bound.Stride: SignedInteger {
     /// If there are no available elements, `nil` is returned.
     /// This method assumes the `presortedExcluding` array is already pre-sorted.
     ///
-    /// This method may be more performant than calling `first(excluding: ArraySlice)` for large `presortedExcluding` arrays or potentially large overlays between `self` and `presortedExcluding`.
+    /// This method may be more performant than calling `first(excluding: ArraySlice)` for large
+    /// `presortedExcluding` arrays or potentially large overlays between `self` and
+    /// `presortedExcluding`.
     ///
-    /// - note: Where possible, use the `first(excluding: Range)` variants of this method because they are far more performant.
+    /// - note: Where possible, use the `first(excluding: Range)` variants of this method because
+    ///   they are far more performant.
     ///
-    /// - complexity: O(*n1* * *n2*), where *n1* == self.count, *n2* == excluding.count; lazily over `self.count`.
+    /// - complexity: O(*n1* * *n2*), where *n1* == self.count, *n2* == excluding.count;
+    ///   lazily over `self.count`.
     @_disfavoredOverload
     public func first(presortedExcluding: [Bound]) -> Bound? {
         first(presortedExcluding: ArraySlice(presortedExcluding))
     }
     
     /// **OTCore:**
-    /// Returns the first element of the range that does not match any of the `sortingAndExcluding` values.
+    /// Returns the first element of the range that does not match any of the `sortingAndExcluding`
+    /// values.
     /// If there are no available elements, `nil` is returned.
     ///
-    /// This method first sorts the values in `sortingAndExcluding` and includes additional logic that may be more efficient (when working with a large base range and/or exclusion array) than simply passing a pre-sorted array to `first(excluding:)`.
+    /// This method first sorts the values in `sortingAndExcluding` and includes additional logic
+    /// that may be more efficient (when working with a large base range and/or exclusion array)
+    /// than simply passing a pre-sorted array to `first(excluding:)`.
     ///
-    /// - complexity: Varies, somewhere between O(`sortingAndExcluding.count`) and O(`self.count * excluding.count`).
+    /// - complexity: Varies, somewhere between O(`sortingAndExcluding.count`) and
+    ///   O(`self.count * excluding.count`).
     @_disfavoredOverload
     public func first(sortingAndExcluding: ArraySlice<Bound>) -> Bound? {
         // optimization: if not excluding anything, just return first value
@@ -385,12 +401,16 @@ extension ClosedRange where Bound: SignedInteger, Bound.Stride: SignedInteger {
     }
     
     /// **OTCore:**
-    /// Returns the first element of the range that does not match any of the `sortingAndExcluding` values.
+    /// Returns the first element of the range that does not match any of the `sortingAndExcluding`
+    /// values.
     /// If there are no available elements, `nil` is returned.
     ///
-    /// This method first sorts the values in `sortingAndExcluding` and includes additional logic that may be more efficient (when working with a large base range and/or exclusion array) than simply passing a pre-sorted array to `first(excluding:)`.
+    /// This method first sorts the values in `sortingAndExcluding` and includes additional logic
+    /// that may be more efficient (when working with a large base range and/or exclusion array)
+    /// than simply passing a pre-sorted array to `first(excluding:)`.
     ///
-    /// - complexity: Varies, somewhere between O(`sortingAndExcluding.count`) and O(`self.count * excluding.count`).
+    /// - complexity: Varies, somewhere between O(`sortingAndExcluding.count`) and
+    ///   O(`self.count * excluding.count`).
     @_disfavoredOverload
     public func first(sortingAndExcluding: [Bound]) -> Bound? {
         first(sortingAndExcluding: ArraySlice(sortingAndExcluding))
@@ -401,6 +421,7 @@ extension ClosedRange where Bound.Stride: SignedInteger, Bound: Strideable {
     /// **OTCore:**
     /// Returns the first element of the range that does not match any of the `excluding` values.
     /// If there are no available elements, nil is returned.
+    ///
     /// - complexity: O(1) or slightly higher
     @_disfavoredOverload
     public func first(excluding: ClosedRange<Bound>) -> Bound? {
@@ -421,6 +442,7 @@ extension ClosedRange where Bound.Stride: SignedInteger, Bound: Strideable {
     /// **OTCore:**
     /// Returns the first element of the range that does not match any of the `excluding` values.
     /// If there are no available elements, `nil` is returned.
+    ///
     /// - complexity: O(1) or slightly higher
     @_disfavoredOverload
     public func first(excluding: Range<Bound>) -> Bound? {
@@ -441,6 +463,7 @@ extension ClosedRange where Bound.Stride: SignedInteger, Bound: Strideable {
     /// **OTCore:**
     /// Returns the first element of the range that does not match any of the `excluding` values.
     /// If there are no available elements, `nil` is returned.
+    ///
     /// - complexity: O(1) or slightly higher
     @_disfavoredOverload
     public func first(excluding: PartialRangeFrom<Bound>) -> Bound? {
@@ -452,6 +475,7 @@ extension ClosedRange where Bound.Stride: SignedInteger, Bound: Strideable {
     /// **OTCore:**
     /// Returns the first element of the range that does not match any of the `excluding` values.
     /// If there are no available elements, `nil` is returned.
+    ///
     /// - complexity: O(1) or slightly higher
     @_disfavoredOverload
     public func first(excluding: PartialRangeThrough<Bound>) -> Bound? {
@@ -465,6 +489,7 @@ extension ClosedRange where Bound.Stride: SignedInteger, Bound: Strideable {
     /// **OTCore:**
     /// Returns the first element of the range that does not match any of the `excluding` values.
     /// If there are no available elements, `nil` is returned.
+    ///
     /// - complexity: O(1) or slightly higher
     @_disfavoredOverload
     public func first(excluding: PartialRangeUpTo<Bound>) -> Bound? {
@@ -514,11 +539,15 @@ extension Range where Bound: SignedInteger, Bound.Stride: SignedInteger {
     /// If there are no available elements, `nil` is returned.
     /// This method assumes the `presortedExcluding` array is already pre-sorted.
     ///
-    /// This method may be more performant than calling `first(excluding: ArraySlice)` for large `presortedExcluding` arrays or potentially large overlays between `self` and `presortedExcluding`.
+    /// This method may be more performant than calling `first(excluding: ArraySlice)` for large
+    /// `presortedExcluding` arrays or potentially large overlays between `self` and
+    /// `presortedExcluding`.
     ///
-    /// - note: Where possible, use the `first(excluding: Range)` variants of this method because they are far more performant.
+    /// - note: Where possible, use the `first(excluding: Range)` variants of this method because
+    ///   they are far more performant.
     ///
-    /// - complexity: O(*n1* * *n2*), where *n1* == self.count, *n2* == excluding.count; lazily over `self.count`.
+    /// - complexity: O(*n1* * *n2*), where *n1* == self.count, *n2* == excluding.count;
+    ///   lazily over `self.count`.
     @_disfavoredOverload
     public func first(presortedExcluding: ArraySlice<Bound>) -> Bound? {
         if upperBound == lowerBound { return nil }
@@ -533,11 +562,15 @@ extension Range where Bound: SignedInteger, Bound.Stride: SignedInteger {
     /// If there are no available elements, `nil` is returned.
     /// This method assumes the `presortedExcluding` array is already pre-sorted.
     ///
-    /// This method may be more performant than calling `first(excluding: ArraySlice)` for large `presortedExcluding` arrays or potentially large overlays between `self` and `presortedExcluding`.
+    /// This method may be more performant than calling `first(excluding: ArraySlice)` for large
+    /// `presortedExcluding` arrays or potentially large overlays between `self` and
+    /// `presortedExcluding`.
     ///
-    /// - note: Where possible, use the `first(excluding: Range)` variants of this method because they are far more performant.
+    /// - note: Where possible, use the `first(excluding: Range)` variants of this method because
+    ///   they are far more performant.
     ///
-    /// - complexity: O(*n1* * *n2*), where *n1* == self.count, *n2* == excluding.count; lazily over `self.count`.
+    /// - complexity: O(*n1* * *n2*), where *n1* == self.count, *n2* == excluding.count;
+    ///   lazily over `self.count`.
     @_disfavoredOverload
     public func first(presortedExcluding: [Bound]) -> Bound? {
         if upperBound == lowerBound { return nil }
@@ -548,12 +581,16 @@ extension Range where Bound: SignedInteger, Bound.Stride: SignedInteger {
     }
     
     /// **OTCore:**
-    /// Returns the first element of the range that does not match any of the `sortingAndExcluding` values.
+    /// Returns the first element of the range that does not match any of the `sortingAndExcluding`
+    /// values.
     /// If there are no available elements, `nil` is returned.
     ///
-    /// This method first sorts the values in `sortingAndExcluding` and includes additional logic that may be more efficient (when working with a large base range and/or exclusion array) than simply passing a pre-sorted array to `first(excluding:)`.
+    /// This method first sorts the values in `sortingAndExcluding` and includes additional logic
+    /// that may be more efficient (when working with a large base range and/or exclusion array)
+    /// than simply passing a pre-sorted array to `first(excluding:)`.
     ///
-    /// - complexity: Varies, somewhere between O(`sortingAndExcluding.count`) and O(`self.count * excluding.count`).
+    /// - complexity: Varies, somewhere between O(`sortingAndExcluding.count`) and
+    ///   O(`self.count * excluding.count`).
     @_disfavoredOverload
     public func first(sortingAndExcluding: ArraySlice<Bound>) -> Bound? {
         if upperBound == lowerBound { return nil }
@@ -564,12 +601,16 @@ extension Range where Bound: SignedInteger, Bound.Stride: SignedInteger {
     }
     
     /// **OTCore:**
-    /// Returns the first element of the range that does not match any of the `sortingAndExcluding` values.
+    /// Returns the first element of the range that does not match any of the `sortingAndExcluding`
+    /// values.
     /// If there are no available elements, `nil` is returned.
     ///
-    /// This method first sorts the values in `sortingAndExcluding` and includes additional logic that may be more efficient (when working with a large base range and/or exclusion array) than simply passing a pre-sorted array to `first(excluding:)`.
+    /// This method first sorts the values in `sortingAndExcluding` and includes additional logic
+    /// that may be more efficient (when working with a large base range and/or exclusion array)
+    /// than simply passing a pre-sorted array to `first(excluding:)`.
     ///
-    /// - complexity: Varies, somewhere between O(`sortingAndExcluding.count`) and O(`self.count * excluding.count`).
+    /// - complexity: Varies, somewhere between O(`sortingAndExcluding.count`) and
+    ///   O(`self.count * excluding.count`).
     @_disfavoredOverload
     public func first(sortingAndExcluding: [Bound]) -> Bound? {
         first(sortingAndExcluding: ArraySlice(sortingAndExcluding))
@@ -667,7 +708,8 @@ extension Range where Bound: Strideable, Bound.Stride: SignedInteger {
 extension PartialRangeFrom where Bound.Stride: SignedInteger, Bound: Strideable {
     /// **OTCore:**
     /// Returns the first element of the range that does not match any of the `excluding` values.
-    /// This method is only typically useful with an exclusion array of that has been `sorted()` first.
+    /// This method is only typically useful with an exclusion array of that has been `sorted()`
+    /// first.
     ///
     /// - complexity: O(*n*), where *n* is the length of the exclusion array.
     @_disfavoredOverload
@@ -681,7 +723,8 @@ extension PartialRangeFrom where Bound.Stride: SignedInteger, Bound: Strideable 
     
     /// **OTCore:**
     /// Returns the first element of the range that does not match any of the `excluding` values.
-    /// This method is only typically useful with an exclusion array of that has been `sorted()` first.
+    /// This method is only typically useful with an exclusion array of that has been `sorted()`
+    /// first.
     ///
     /// - complexity: O(*n*), where *n* is the length of the exclusion array.
     @_disfavoredOverload
@@ -690,9 +733,12 @@ extension PartialRangeFrom where Bound.Stride: SignedInteger, Bound: Strideable 
     }
     
     /// **OTCore:**
-    /// Returns the first element of the range that does not match any of the `sortingAndExcluding` values.
+    /// Returns the first element of the range that does not match any of the `sortingAndExcluding`
+    /// values.
     ///
-    /// This method first sorts the values in `sortingAndExcluding` and includes additional logic that may be more efficient (when working with an exclusion array) than simply passing a pre-sorted array to `first(excluding:)`.
+    /// This method first sorts the values in `sortingAndExcluding` and includes additional logic
+    /// that may be more efficient (when working with an exclusion array) than simply passing a
+    /// pre-sorted array to `first(excluding:)`.
     ///
     /// - complexity: O(*n*), where *n* is the length of the exclusion array.
     @_disfavoredOverload
@@ -707,9 +753,12 @@ extension PartialRangeFrom where Bound.Stride: SignedInteger, Bound: Strideable 
     }
     
     /// **OTCore:**
-    /// Returns the first element of the range that does not match any of the `sortingAndExcluding` values.
+    /// Returns the first element of the range that does not match any of the `sortingAndExcluding`
+    /// values.
     ///
-    /// This method first sorts the values in `sortingAndExcluding` and includes additional logic that may be more efficient (when working with an exclusion array) than simply passing a pre-sorted array to `first(excluding:)`.
+    /// This method first sorts the values in `sortingAndExcluding` and includes additional logic
+    /// that may be more efficient (when working with an exclusion array) than simply passing a
+    /// pre-sorted array to `first(excluding:)`.
     ///
     /// - complexity: O(*n*), where *n* is the length of the exclusion array.
     @_disfavoredOverload
@@ -718,9 +767,12 @@ extension PartialRangeFrom where Bound.Stride: SignedInteger, Bound: Strideable 
     }
     
     /// **OTCore:**
-    /// Returns the first element of the range that does not match any of the `sortingAndExcluding` values.
+    /// Returns the first element of the range that does not match any of the `sortingAndExcluding`
+    /// values.
     ///
-    /// This method first sorts the values in `sortingAndExcluding` and includes additional logic that may be more efficient (when working with an exclusion array) than simply passing a pre-sorted array to `first(excluding:)`.
+    /// This method first sorts the values in `sortingAndExcluding` and includes additional logic
+    /// that may be more efficient (when working with an exclusion array) than simply passing a
+    /// pre-sorted array to `first(excluding:)`.
     ///
     /// - complexity: O(*n*), where *n* is the length of the exclusion array.
     @_disfavoredOverload
@@ -737,9 +789,12 @@ extension PartialRangeFrom where Bound.Stride: SignedInteger, Bound: Strideable 
     }
     
     /// **OTCore:**
-    /// Returns the first element of the range that does not match any of the `sortingAndExcluding` values.
+    /// Returns the first element of the range that does not match any of the `sortingAndExcluding`
+    /// values.
     ///
-    /// This method first sorts the values in `sortingAndExcluding` and includes additional logic that may be more efficient (when working with an exclusion array) than simply passing a pre-sorted array to `first(excluding:)`.
+    /// This method first sorts the values in `sortingAndExcluding` and includes additional logic
+    /// that may be more efficient (when working with an exclusion array) than simply passing a
+    /// pre-sorted array to `first(excluding:)`.
     ///
     /// - complexity: O(*n*), where *n* is the length of the exclusion array.
     @_disfavoredOverload
@@ -752,7 +807,7 @@ extension PartialRangeFrom where Bound.Stride: SignedInteger, Bound: Strideable 
     /// **OTCore:**
     /// Returns the first element of the range that does not match any of the `excluding` values.
     /// If there are no available elements, `nil` is returned.
-    /// 
+    ///
     /// - complexity: O(1) or slightly higher
     @_disfavoredOverload
     public func first(excluding: ClosedRange<Bound>) -> Bound {
@@ -957,7 +1012,8 @@ extension PartialRangeFrom {
 
 extension BinaryInteger {
     /// **OTCore:**
-    /// Repeats the closure n number of times. The number must be > 0 otherwise the code is never executed.
+    /// Repeats the closure n number of times. The number must be > 0 otherwise the code is never
+    /// executed.
     @_disfavoredOverload
     public func repeatEach(_ operation: @escaping () -> Void) {
         var increment = 0 as Self
@@ -973,7 +1029,9 @@ extension ClosedRange where Element: BinaryInteger {
     /// Repeats the closure once for each element in the range.
     @_disfavoredOverload
     public func repeatEach(_ operation: @escaping () -> Void) {
-        for _ in self { operation() }
+        for _ in self {
+            operation()
+        }
     }
 }
 
@@ -982,6 +1040,8 @@ extension Range where Element: BinaryInteger {
     /// Repeats the closure once for each element in the range.
     @_disfavoredOverload
     public func repeatEach(_ operation: @escaping () -> Void) {
-        for _ in self { operation() }
+        for _ in self {
+            operation()
+        }
     }
 }

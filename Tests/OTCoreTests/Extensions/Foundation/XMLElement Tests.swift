@@ -1,14 +1,14 @@
 //
 //  XMLElement Tests.swift
 //  OTCore • https://github.com/orchetect/OTCore
-//  © 2022 Steffan Andrews • Licensed under MIT License
+//  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
 // This is Mac-only because even though XMLNode exists in Foundation, it is only available on macOS
 #if os(macOS)
 
-import XCTest
 @testable import OTCore
+import XCTest
 
 final class Extensions_Foundation_XMLElement_Tests: XMLTestCase {
     override func setUp() { super.setUp() }
@@ -45,11 +45,11 @@ final class Extensions_Foundation_XMLElement_Tests: XMLTestCase {
     func testCollection_XMLNode_FilterAttribute() throws {
         // prep
         
-        let nodes = [
-            try XMLElement(xmlString: "<obj class='classA' name='name1'/>"),
-            try XMLElement(xmlString: "<obj class='classA' name='name2'/>"),
-            try XMLElement(xmlString: "<obj class='classB' name='name3'/>"),
-            try XMLElement(xmlString: "<obj class='classB' name='name4'/>")
+        let nodes = try [
+            XMLElement(xmlString: "<obj class='classA' name='name1'/>"),
+            XMLElement(xmlString: "<obj class='classA' name='name2'/>"),
+            XMLElement(xmlString: "<obj class='classB' name='name3'/>"),
+            XMLElement(xmlString: "<obj class='classB' name='name4'/>")
         ]
         
         // test
@@ -68,11 +68,11 @@ final class Extensions_Foundation_XMLElement_Tests: XMLTestCase {
     func testCollection_XMLNode_Lazy_FilterAttribute() throws {
         // prep
         
-        let nodes = [
-            try XMLElement(xmlString: "<obj class='classA' name='name1'/>"),
-            try XMLElement(xmlString: "<obj class='classA' name='name2'/>"),
-            try XMLElement(xmlString: "<obj class='classB' name='name3'/>"),
-            try XMLElement(xmlString: "<obj class='classB' name='name4'/>")
+        let nodes = try [
+            XMLElement(xmlString: "<obj class='classA' name='name1'/>"),
+            XMLElement(xmlString: "<obj class='classA' name='name2'/>"),
+            XMLElement(xmlString: "<obj class='classB' name='name3'/>"),
+            XMLElement(xmlString: "<obj class='classB' name='name4'/>")
         ]
             .lazy
         
@@ -318,7 +318,10 @@ final class Extensions_Foundation_XMLElement_Tests: XMLTestCase {
         let element = XMLElement(name: "testname")
         
         element.set(url: URL(string: "file:///Users/user/Desktop/")!, forAttribute: "key1")
-        XCTAssertEqual(element.stringValue(forAttributeNamed: "key1"), "file:///Users/user/Desktop/")
+        XCTAssertEqual(
+            element.stringValue(forAttributeNamed: "key1"),
+            "file:///Users/user/Desktop/"
+        )
         
         element.set(url: URL(string: "https://www.google.com")!, forAttribute: "key1")
         XCTAssertEqual(element.stringValue(forAttributeNamed: "key1"), "https://www.google.com")

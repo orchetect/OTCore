@@ -1,7 +1,7 @@
 //
 //  String.swift
 //  OTCore • https://github.com/orchetect/OTCore
-//  © 2022 Steffan Andrews • Licensed under MIT License
+//  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
 // MARK: - String Convenience Constants
@@ -196,7 +196,8 @@ extension String {
 // MARK: - String Optionals
 
 /// **OTCore:**
-/// Convenience: Returns unwrapped String representation of a Swift Optional, otherwise returns contents of `default` string.
+/// Convenience: Returns unwrapped String representation of a Swift Optional, otherwise returns
+/// contents of `default` string.
 ///
 /// Also accessible through the string interpolation variant:
 ///
@@ -217,7 +218,8 @@ public func optionalString(
 
 extension DefaultStringInterpolation {
     /// **OTCore:**
-    /// Convenience: Returns unwrapped String representation of a Swift Optional, otherwise returns contents of `ifNil` string.
+    /// Convenience: Returns unwrapped String representation of a Swift Optional, otherwise returns
+    /// contents of `ifNil` string.
     @inlinable @_disfavoredOverload
     public mutating func appendInterpolation(
         _ object: Any?,

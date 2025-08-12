@@ -1,7 +1,7 @@
 //
 //  String and NSRegularExpression.swift
 //  OTCore • https://github.com/orchetect/OTCore
-//  © 2022 Steffan Andrews • Licensed under MIT License
+//  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
 #if canImport(Foundation)
@@ -143,9 +143,15 @@ extension StringProtocol {
                         if nsRange.location == NSNotFound {
                             matches.append(nil)
                         } else {
-                            let selfOffset = self.utf16.startIndex.utf16Offset(in: self)
-                            let lb = self.utf16.index(self.startIndex, offsetBy: selfOffset + nsRange.lowerBound)
-                            let ub = self.utf16.index(self.startIndex, offsetBy: selfOffset + nsRange.upperBound)
+                            let selfOffset = utf16.startIndex.utf16Offset(in: self)
+                            let lb = utf16.index(
+                                startIndex,
+                                offsetBy: selfOffset + nsRange.lowerBound
+                            )
+                            let ub = utf16.index(
+                                startIndex,
+                                offsetBy: selfOffset + nsRange.upperBound
+                            )
                             
                             let subString = self[lb ..< ub]
                             matches.append(subString)

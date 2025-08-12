@@ -1,7 +1,7 @@
 //
 //  DataReader.swift
 //  OTCore • https://github.com/orchetect/OTCore
-//  © 2022 Steffan Andrews • Licensed under MIT License
+//  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
 import Foundation
@@ -36,7 +36,8 @@ public struct DataReader {
     }
     
     /// Manually advance by _n_ number of bytes from current read offset.
-    /// Note that this method is unchecked which may result in an offset beyond the end of the data stream.
+    /// Note that this method is unchecked which may result in an offset beyond the end of the data
+    /// stream.
     public mutating func advanceBy(_ count: Int) {
         readOffset += count
     }
@@ -86,7 +87,7 @@ public struct DataReader {
             return (data: Data(), advanceCount: 0)
         }
         
-        if let count = count,
+        if let count,
            count < 0 { return nil }
         
         let readPosStartIndex = base.startIndex.advanced(by: readOffset)

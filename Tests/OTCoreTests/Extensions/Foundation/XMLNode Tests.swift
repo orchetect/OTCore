@@ -1,14 +1,14 @@
 //
 //  XMLNode Tests.swift
 //  OTCore • https://github.com/orchetect/OTCore
-//  © 2022 Steffan Andrews • Licensed under MIT License
+//  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
 // This is Mac-only because even though XMLNode exists in Foundation, it is only available on macOS
 #if os(macOS)
 
-import XCTest
 @testable import OTCore
+import XCTest
 
 final class Extensions_Foundation_XMLNode_Tests: XMLTestCase {
     override func setUp() { super.setUp() }

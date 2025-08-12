@@ -1,7 +1,7 @@
 //
 //  Globals.swift
 //  OTCore • https://github.com/orchetect/OTCore
-//  © 2022 Steffan Andrews • Licensed under MIT License
+//  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
 import Foundation
@@ -21,24 +21,27 @@ public enum Globals {
         /// Returns the name of the current executable.
         public static let name: String = Bundle.main
             .infoDictionaryString(key: kCFBundleNameKey)
-                ?? ""
+            ?? ""
         
         /// **OTCore:**
         /// Returns the current executable's bundle ID.
         /// Returns an empty string in case of failure.
         public static let bundleID: String = Bundle.main
             .bundleIdentifier
-                ?? ""
+            ?? ""
         
         /// **OTCore:**
-        /// Returns the value of the current executable's Info.plist `CFBundleShortVersionString` key.
-        /// Returns an empty string in case of failure or if the key does not exist in the bundle's Info.plist.
+        /// Returns the value of the current executable's Info.plist `CFBundleShortVersionString`
+        /// key.
+        /// Returns an empty string in case of failure or if the key does not exist in the bundle's
+        /// Info.plist.
         public static let versionShort: String = Bundle.main
             .infoDictionaryString(key: "CFBundleShortVersionString")
-                ?? ""
+            ?? ""
         
         /// **OTCore:**
-        /// Returns the major version number from the value of the current executable's Info.plist `CFBundleShortVersionString` key.
+        /// Returns the major version number from the value of the current executable's Info.plist
+        /// `CFBundleShortVersionString` key.
         /// Returns 0 in case of failure or if the key does not exist in the bundle's Info.plist.
         public static let versionMajor: Int = .init(
             versionShort
@@ -48,10 +51,11 @@ public enum Globals {
         
         /// **OTCore:**
         /// Returns the value from the app bundle's `kCFBundleVersionKey` key.
-        /// Returns an empty string in case of failure or if the key does not exist in the bundle's Info.plist.
+        /// Returns an empty string in case of failure or if the key does not exist in the bundle's
+        /// Info.plist.
         public static let versionBuildNumber: String = Bundle.main
             .infoDictionaryString(key: kCFBundleVersionKey)
-                ?? ""
+            ?? ""
     }
 }
 
@@ -121,17 +125,19 @@ extension Globals {
         
         /// **OTCore:**
         /// Returns local Mac's mainboard serial number.
-        /// (Computes lazily, once upon first access and retains value persistently until app quits.)
+        /// (Computes lazily, once upon first access and retains value persistently until app
+        /// quits.)
         public static let serialNumber: String? = Self
             .getSysInfoString(key: kIOPlatformSerialNumberKey)
         
         /// **OTCore:**
         /// Returns local Mac's hardware UUID string.
-        /// (Computes lazily, once upon first access and retains value persistently until app quits.)
+        /// (Computes lazily, once upon first access and retains value persistently until app
+        /// quits.)
         public static let hardwareUUID: String? = Self.getSysInfoString(key: kIOPlatformUUIDKey)
         
         /// Internal use.
-        internal static func getSysInfoString(key: String) -> String? {
+        static func getSysInfoString(key: String) -> String? {
             let platformExpert = IOServiceGetMatchingService(
                 kIOMasterPortDefault,
                 IOServiceMatching("IOPlatformExpertDevice")

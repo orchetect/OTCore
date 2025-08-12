@@ -1,11 +1,11 @@
 //
 //  Ranges Tests.swift
 //  OTCore • https://github.com/orchetect/OTCore
-//  © 2022 Steffan Andrews • Licensed under MIT License
+//  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
-import XCTest
 import OTCore
+import XCTest
 
 class Extensions_Swift_Ranges_Tests: XCTestCase {
     override func setUp() { super.setUp() }
@@ -877,7 +877,6 @@ class Extensions_Swift_Ranges_Tests: XCTestCase {
         XCTAssertEqual(bounds(of: (-1)...).max, nil)
         XCTAssertEqual(bounds(of:    1...).min, 1)
         XCTAssertEqual(bounds(of:    1...).max, nil)
-        
         
         // PartialRangeUpTo
         XCTAssertEqual(bounds(of:   ..<0).min, nil)

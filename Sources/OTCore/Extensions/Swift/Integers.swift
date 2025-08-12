@@ -1,7 +1,7 @@
 //
 //  Integers.swift
 //  OTCore • https://github.com/orchetect/OTCore
-//  © 2022 Steffan Andrews • Licensed under MIT License
+//  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
 // MARK: - Convenience type conversion methods
@@ -361,7 +361,8 @@ extension BinaryInteger {
     /// **OTCore:**
     /// Returns a number that has been wrapped around a range.
     /// If the number already falls within the range, the number is returned as-is.
-    /// If the number underflows or overflows the range, it is wrapped around the range's bounds continuously.
+    /// If the number underflows or overflows the range, it is wrapped around the range's bounds
+    /// continuously.
     ///
     /// Example:
     ///
@@ -398,7 +399,8 @@ extension BinaryInteger {
     /// **OTCore:**
     /// Returns a number that has been wrapped around a range.
     /// If the number already falls within the range, the number is returned as-is.
-    /// If the number underflows or overflows the range, it is wrapped around the range's bounds continuously.
+    /// If the number underflows or overflows the range, it is wrapped around the range's bounds
+    /// continuously.
     @inlinable @_disfavoredOverload
     public func wrapped(around range: Range<Self>) -> Self {
         let min = range.lowerBound

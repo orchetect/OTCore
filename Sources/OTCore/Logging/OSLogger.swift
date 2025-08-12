@@ -1,7 +1,7 @@
 //
 //  OSLogger.swift
 //  OTCore • https://github.com/orchetect/OTCore
-//  © 2022 Steffan Andrews • Licensed under MIT License
+//  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
 // os.log does not rely on Foundation, but we need Foundation for file path string operations
@@ -12,7 +12,8 @@ import os.log
 
 // -------------------------------------------------------------------------
 // Suggestion:
-// In your library/application that adopts OTCore, you can write your own centralized extension to store references to specific logs, if you require more than one.
+// In your library/application that adopts OTCore, you can write your own centralized extension to
+// store references to specific logs, if you require more than one.
 //
 //     @available(macOS 10.12, iOS 10.0, watchOS 3.0, tvOS 10.0, *)
 //     extension OSLog {
@@ -61,7 +62,8 @@ public final class OSLogger: Sendable {
     ///
     /// - note: These messages are not posted to the log in a release build.
     ///
-    /// - remark: OSLog Description: The lowest priority. Only captured in memory. Not stored on disk.
+    /// - remark: OSLog Description: The lowest priority. Only captured in memory. Not stored on
+    ///   disk.
     @inline(__always)
     public func debug(
         _ items: Any?...,
@@ -118,7 +120,8 @@ public final class OSLogger: Sendable {
     /// Log a message with default log type.
     /// Appears in both release and debug builds.
     ///
-    /// - remark: OSLog Description: Purely informational in nature. Only captured in memory and not stored on disk unless otherwise specified. Eventually purged.
+    /// - remark: OSLog Description: Purely informational in nature. Only captured in memory and not
+    ///   stored on disk unless otherwise specified. Eventually purged.
     @inline(__always)
     public func info(
         _ items: Any?...,
@@ -222,7 +225,8 @@ public final class OSLogger: Sendable {
     /// Log an error.
     /// Appears in both release and debug builds.
     ///
-    /// - remark: OSLog Description: Something is amiss and might fail if not corrected. Always stored on disk. Eventually purged.
+    /// - remark: OSLog Description: Something is amiss and might fail if not corrected. Always
+    ///   stored on disk. Eventually purged.
     @inline(__always)
     public func error(
         _ items: Any?...,
@@ -500,7 +504,8 @@ extension OSLogger {
         /// **OTCore:**
         /// Sets the default `OSLog` to use.
         ///
-        /// It is highly recommended to define a custom `OSLog` and not use the `default` (which does not post bundleID/subsystem information to the Console).
+        /// It is highly recommended to define a custom `OSLog` and not use the `default` (which
+        /// does not post bundleID/subsystem information to the Console).
         @inline(__always)
         public var defaultLog: OSLog
         
@@ -510,9 +515,11 @@ extension OSLogger {
         public var defaultTemplate: OSLogger.LogTemplate
         
         /// **OTCore:**
-        /// When enabled, all `debug` and `info` log level messages will be coerced to be `default` log level.
+        /// When enabled, all `debug` and `info` log level messages will be coerced to be `default`
+        /// log level.
         /// This allows them to be printed to the system Console log.
-        /// Otherwise by default, logging calls to OSLog will not print `debug` or `info` level messages to the Console log.
+        /// Otherwise by default, logging calls to OSLog will not print `debug` or `info` level
+        /// messages to the Console log.
         @inline(__always)
         public var coerceInfoAndDebugToDefault: Bool = false
         

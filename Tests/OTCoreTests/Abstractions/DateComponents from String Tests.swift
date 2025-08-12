@@ -1,11 +1,11 @@
 //
 //  DateComponents from String Tests.swift
 //  OTCore • https://github.com/orchetect/OTCore
-//  © 2022 Steffan Andrews • Licensed under MIT License
+//  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
-import XCTest
 import OTCore
+import XCTest
 
 class Abstractions_DateComponentsFromString_Tests: XCTestCase {
     override func setUp() { super.setUp() }
@@ -22,7 +22,8 @@ class Abstractions_DateComponentsFromString_Tests: XCTestCase {
         var parsed: DateComponents?
         
         // test basic delimiters: space , . / \
-        // obvious cases (ones where basic logic can obviously determine which value is which date component)
+        // obvious cases (ones where basic logic can obviously determine which value is which date
+        // component)
         
         parsed = "Mar 26, 2019".dateComponents
         XCTAssertEqual(parsed?.year,    2019)

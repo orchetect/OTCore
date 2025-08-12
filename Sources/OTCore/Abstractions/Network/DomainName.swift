@@ -1,7 +1,7 @@
 //
 //  DomainName.swift
 //  OTCore • https://github.com/orchetect/OTCore
-//  © 2024 Steffan Andrews • Licensed under MIT License
+//  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
 /// A type representing a domain name (ie: `apple.com`, `www.apple.com`, `sub.domain.www.zzz`).
@@ -22,7 +22,8 @@ public struct DomainName {
         extensionComponentCount = Self.extensionComponentCount(inDomainComponents: components)
     }
     
-    /// Initialize a new instance from domain name components (domain name split by period (`.`) characters).
+    /// Initialize a new instance from domain name components (domain name split by period (`.`)
+    /// characters).
     public init(components: [String]) {
         self.components = components
         extensionComponentCount = Self.extensionComponentCount(inDomainComponents: components)
@@ -126,10 +127,11 @@ extension DomainName {
     /// This list is not nearly exhaustive or complete.
     /// See https://publicsuffix.org/list/ for a _very_ exhaustive publicly-maintained list.
     ///
-    /// If a domain name does not contain one of these extensions, it is assumed the domain has a single (top) level
-    /// domain extension (such as "com").
+    /// If a domain name does not contain one of these extensions, it is assumed the domain has a
+    /// single (top) level domain extension (such as "com").
     ///
-    /// Dictionary is keyed by top-level domain, with the value comprising an array of all defined second-level domains.
+    /// Dictionary is keyed by top-level domain, with the value comprising an array of all defined
+    /// second-level domains.
     ///
     /// See https://en.wikipedia.org/wiki/Second-level_domain
     private static let twoLevelDomainExtensions: [String: [String]] = [
@@ -1076,7 +1078,8 @@ extension DomainName {
     
     /// Returns the number of trailing components that make up the domain extension.
     ///
-    /// Note that it is rare to have more than two components be considered part of the domain extension.
+    /// Note that it is rare to have more than two components be considered part of the domain
+    /// extension.
     static func extensionComponentCount(inDomainComponents components: [String]) -> Int {
         guard components.count > 1 else { return 0 }
         guard components.count > 2 else { return 1 }

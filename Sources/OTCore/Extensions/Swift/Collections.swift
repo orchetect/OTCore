@@ -1,7 +1,7 @@
 //
 //  Collections.swift
 //  OTCore • https://github.com/orchetect/OTCore
-//  © 2022 Steffan Andrews • Licensed under MIT License
+//  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
 // MARK: - Typealiases & Protocols
@@ -45,8 +45,8 @@ extension Set {
     /// **OTCore:**
     /// Syntactic sugar: Return a new set by inserting the contents of another set into the set.
     @inlinable @_disfavoredOverload
-    public static func + <S>(lhs: Self, rhs: S) -> Self 
-    where S: Sequence, S.Element == Element
+    public static func + <S>(lhs: Self, rhs: S) -> Self
+        where S: Sequence, S.Element == Element
     {
         var copy = lhs
         copy.formUnion(rhs)
@@ -57,7 +57,7 @@ extension Set {
     /// Syntactic sugar: Insert the contents of another set into the set.
     @inlinable @_disfavoredOverload
     public static func += <S>(lhs: inout Self, rhs: S)
-    where S: Sequence, S.Element == Element
+        where S: Sequence, S.Element == Element
     {
         lhs.formUnion(rhs)
     }
@@ -210,7 +210,8 @@ extension MutableCollection where Element: OTCoreOptionalTyped {
 
 // Collection:
 // (inherits from Sequence)
-// (conformance on Array, ArraySlice, ContiguousArray, Dictionary, Set, Range, ClosedRange, KeyValuePairs, CollectionOfOne, EmptyCollection, etc.)
+// (conformance on Array, ArraySlice, ContiguousArray, Dictionary, Set, Range, ClosedRange,
+// KeyValuePairs, CollectionOfOne, EmptyCollection, etc.)
 // (does not conform on NSArray, NSDictionary, etc.)
 extension Collection {
     /// **OTCore:**
@@ -573,7 +574,8 @@ extension Collection where Index == Int {
 extension Collection where Index == Int {
     /// **OTCore:**
     /// Access collection indexes safely, referenced by position offset `0 ..< count`.
-    /// (Same as `[Int]` but if position range is not fully contained within the collection's element position offsets, `nil` is returned.)
+    /// (Same as `[Int]` but if position range is not fully contained within the collection's
+    /// element position offsets, `nil` is returned.)
     @inlinable @_disfavoredOverload
     public subscript(safePosition range: ClosedRange<Int>) -> SubSequence? {
         guard range.lowerBound >= 0,
@@ -587,7 +589,8 @@ extension Collection where Index == Int {
     
     /// **OTCore:**
     /// Access collection indexes safely, referenced by position offset `0 ..< count`.
-    /// (Same as `[Int]` but if position range is not fully contained within the collection's element position offsets, `nil` is returned.)
+    /// (Same as `[Int]` but if position range is not fully contained within the collection's
+    /// element position offsets, `nil` is returned.)
     @inlinable @_disfavoredOverload
     public subscript(safePosition range: Range<Int>) -> SubSequence? {
         guard range.lowerBound >= 0,
@@ -601,7 +604,8 @@ extension Collection where Index == Int {
     
     /// **OTCore:**
     /// Access collection indexes safely, referenced by position offset `0 ..< count`.
-    /// (Same as `[Int]` but if position range is not fully contained within the collection's element position offsets, `nil` is returned.)
+    /// (Same as `[Int]` but if position range is not fully contained within the collection's
+    /// element position offsets, `nil` is returned.)
     @inlinable @_disfavoredOverload
     public subscript(safePosition range: PartialRangeFrom<Int>) -> SubSequence? {
         let fromIndex = index(startIndex, offsetBy: range.lowerBound)
@@ -614,7 +618,8 @@ extension Collection where Index == Int {
     
     /// **OTCore:**
     /// Access collection indexes safely, referenced by position offset `0 ..< count`.
-    /// (Same as `[Int]` but if position range is not fully contained within the collection's element position offsets, `nil` is returned.)
+    /// (Same as `[Int]` but if position range is not fully contained within the collection's
+    /// element position offsets, `nil` is returned.)
     @inlinable @_disfavoredOverload
     public subscript(safePosition range: PartialRangeThrough<Int>) -> SubSequence? {
         let toIndex = index(startIndex, offsetBy: range.upperBound)
@@ -627,7 +632,8 @@ extension Collection where Index == Int {
     
     /// **OTCore:**
     /// Access collection indexes safely, referenced by position offset `0 ..< count`.
-    /// (Same as `[Int]` but if position range is not fully contained within the collection's element position offsets, `nil` is returned.)
+    /// (Same as `[Int]` but if position range is not fully contained within the collection's
+    /// element position offsets, `nil` is returned.)
     @inlinable @_disfavoredOverload
     public subscript(safePosition range: PartialRangeUpTo<Int>) -> SubSequence? {
         let toIndex = index(startIndex, offsetBy: range.upperBound)
@@ -643,7 +649,8 @@ extension Collection where Index == Int {
 
 extension RangeReplaceableCollection {
     /// **OTCore:**
-    /// Same as `remove(at:)` but returns an optional instead of throwing an exception if the index does not exist
+    /// Same as `remove(at:)` but returns an optional instead of throwing an exception if the index
+    /// does not exist
     @inlinable @discardableResult @_disfavoredOverload
     public mutating func remove(safeAt index: Index) -> Element? {
         if indices.contains(index) {
@@ -656,7 +663,8 @@ extension RangeReplaceableCollection {
 
 extension RangeReplaceableCollection where Index == Int {
     /// **OTCore:**
-    /// Same as `remove(at:)` but returns an optional instead of throwing an exception if the element at the given offset position does not exist.
+    /// Same as `remove(at:)` but returns an optional instead of throwing an exception if the
+    /// element at the given offset position does not exist.
     /// References index as an offset from `startIndex` and does not reference indexes directly.
     @inlinable @discardableResult @_disfavoredOverload
     public mutating func remove(safePositionAt indexOffset: Int) -> Element? {
@@ -694,7 +702,8 @@ extension Collection {
     }
     
     /// **OTCore:**
-    /// Returns the substring in the given range of character positions (offsets from the start index).
+    /// Returns the substring in the given range of character positions (offsets from the start
+    /// index).
     @_disfavoredOverload
     public subscript(position offsetRange: ClosedRange<Int>) -> SubSequence {
         let fromIndex = index(startIndex, offsetBy: offsetRange.lowerBound)
@@ -703,7 +712,8 @@ extension Collection {
     }
     
     /// **OTCore:**
-    /// Returns the substring in the given range of character positions (offsets from the start index).
+    /// Returns the substring in the given range of character positions (offsets from the start
+    /// index).
     @_disfavoredOverload
     public subscript(position offsetRange: Range<Int>) -> SubSequence {
         let fromIndex = index(startIndex, offsetBy: offsetRange.lowerBound)
@@ -712,7 +722,8 @@ extension Collection {
     }
     
     /// **OTCore:**
-    /// Returns the substring in the given range of character positions (offsets from the start index).
+    /// Returns the substring in the given range of character positions (offsets from the start
+    /// index).
     @_disfavoredOverload
     public subscript(position offsetRange: PartialRangeFrom<Int>) -> SubSequence {
         let fromIndex = index(startIndex, offsetBy: offsetRange.lowerBound)
@@ -720,7 +731,8 @@ extension Collection {
     }
     
     /// **OTCore:**
-    /// Returns the substring in the given range of character positions (offsets from the start index).
+    /// Returns the substring in the given range of character positions (offsets from the start
+    /// index).
     @_disfavoredOverload
     public subscript(position offsetRange: PartialRangeThrough<Int>) -> SubSequence {
         let toIndex = index(startIndex, offsetBy: offsetRange.upperBound)
@@ -728,7 +740,8 @@ extension Collection {
     }
     
     /// **OTCore:**
-    /// Returns the substring in the given range of character positions (offsets from the start index).
+    /// Returns the substring in the given range of character positions (offsets from the start
+    /// index).
     @_disfavoredOverload
     public subscript(position offsetRange: PartialRangeUpTo<Int>) -> SubSequence {
         let toIndex = index(startIndex, offsetBy: offsetRange.upperBound)
@@ -789,7 +802,8 @@ extension Collection where Element: Hashable {
 extension Collection where Element: StringProtocol {
     /// **OTCore:**
     /// Returns the shortest string in the collection.
-    /// If more than one element are the same length as the shortest element, the first will be returned.
+    /// If more than one element are the same length as the shortest element, the first will be
+    /// returned.
     /// - complexity: O(*n*)
     @inlinable @_disfavoredOverload
     public func shortest() -> Element? {
@@ -799,7 +813,8 @@ extension Collection where Element: StringProtocol {
     
     /// **OTCore:**
     /// Returns the index of the shortest string in the collection.
-    /// If more than one element are the same length as the shortest element, the first will be returned.
+    /// If more than one element are the same length as the shortest element, the first will be
+    /// returned.
     /// - complexity: O(*n*)
     @inlinable @_disfavoredOverload
     public func shortestIndex() -> Index? {
@@ -831,7 +846,8 @@ extension Collection where Element: StringProtocol {
 extension Collection where Element: StringProtocol {
     /// **OTCore:**
     /// Returns the longest string in the collection.
-    /// If more than one element are the same length as the longest element, the first will be returned.
+    /// If more than one element are the same length as the longest element, the first will be
+    /// returned.
     /// - complexity: O(*n*)
     @inlinable @_disfavoredOverload
     public func longest() -> Element? {
@@ -841,7 +857,8 @@ extension Collection where Element: StringProtocol {
     
     /// **OTCore:**
     /// Returns the index of the longest string in the collection.
-    /// If more than one element are the same length as the longest element, the first will be returned.
+    /// If more than one element are the same length as the longest element, the first will be
+    /// returned.
     /// - complexity: O(*n*)
     @inlinable @_disfavoredOverload
     public func longestIndex() -> Index? {
@@ -866,7 +883,8 @@ extension Collection where Element: StringProtocol {
 
 extension Collection where Element: BinaryInteger {
     /// **OTCore:**
-    /// Returns a string of integer literals, useful for generating Swift array declarations when debugging.
+    /// Returns a string of integer literals, useful for generating Swift array declarations when
+    /// debugging.
     @inlinable @_disfavoredOverload
     public var stringValueArrayLiteral: String {
         map { "\($0)" }
@@ -885,14 +903,17 @@ extension Collection where Element: Strideable,
     /// **OTCore:**
     /// Returns the first gap value not contained in the array.
     ///
-    /// Starting at the first element of the array, walks through the array lazily searching for gap of `n2 > n1+1` in values and returns the missing value.
+    /// Starting at the first element of the array, walks through the array lazily searching for gap
+    /// of `n2 > n1+1` in values and returns the missing value.
     ///
     /// This method is only typically useful on an array of values that has been `sorted()` first.
-    /// Passing the `after` parameter will only return a gap value if it's greater than the `after` value.
+    /// Passing the `after` parameter will only return a gap value if it's greater than the `after`
+    /// value.
     ///
     /// If there are no gaps, `nil` is returned.
     ///
-    /// If the array is empty, `nil` is returned since there is no first element to derive a value from.
+    /// If the array is empty, `nil` is returned since there is no first element to derive a value
+    /// from.
     ///
     /// Example:
     ///
@@ -937,8 +958,8 @@ extension Set {
     {
         var newSet = self
         
-        other.forEach {
-            newSet.update(with: $0)
+        for item in other {
+            newSet.update(with: item)
         }
         
         return newSet
@@ -986,7 +1007,8 @@ extension Sequence {
 
 extension Collection {
     /// **OTCore:**
-    /// Splits a `Collection` or `String` into groups of `every` _n_ number of characters, grouping from left-to-right.
+    /// Splits a `Collection` or `String` into groups of `every` _n_ number of characters, grouping
+    /// from left-to-right.
     /// If `backwards` is `true`, right-to-left.
     @_disfavoredOverload
     public func split(
@@ -1061,9 +1083,9 @@ public enum DuplicateElementFilter {
 }
 
 extension Collection
-where Element: Equatable,
-      Index: Strideable,
-      Index.Stride: SignedInteger
+    where Element: Equatable,
+    Index: Strideable,
+    Index.Stride: SignedInteger
 {
     /// **OTCore:**
     /// Returns the array with duplicates removed.
@@ -1082,9 +1104,9 @@ where Element: Equatable,
 }
 
 extension RangeReplaceableCollection
-where Element: Equatable,
-      Index: Strideable,
-      Index.Stride: SignedInteger
+    where Element: Equatable,
+    Index: Strideable,
+    Index.Stride: SignedInteger
 {
     /// **OTCore:**
     /// Removes duplicate elements.
@@ -1098,8 +1120,8 @@ where Element: Equatable,
     ) {
         let dupeIndices = duplicateElementIndices(removing, sorted: true)
         
-        dupeIndices.reversed().forEach {
-            remove(at: $0)
+        for dupeIndex in dupeIndices.reversed() {
+            remove(at: dupeIndex)
         }
     }
 }
@@ -1117,9 +1139,9 @@ extension Collection where Element: Hashable {
 }
 
 extension Collection
-where Element: Equatable,
-      Index: Strideable,
-      Index.Stride: SignedInteger
+    where Element: Equatable,
+    Index: Strideable,
+    Index.Stride: SignedInteger
 {
     /// **OTCore:**
     /// Returns only duplicate elements (elements that occur more than once in the array).
@@ -1153,7 +1175,7 @@ where Element: Equatable,
         var dupeIndices: [Index] = indices.reduce(into: []) { result, idx in
             let advancedIndex = self.index(idx, offsetBy: 1)
             guard advancedIndex != endIndex else { return }
-            let scanIndices = advancedIndex..<endIndex
+            let scanIndices = advancedIndex ..< endIndex
             
             switch dupeFilter {
             case .firstOccurrences:
@@ -1258,7 +1280,7 @@ extension Collection where Element: Equatable {
     public var allElementsAreEqual: Bool {
         guard !isEmpty else { return true }
         let firstValue = first
-        return dropFirst().allSatisfy({ $0 == firstValue })
+        return dropFirst().allSatisfy { $0 == firstValue }
     }
     
     /// **OTCore:**
@@ -1267,7 +1289,7 @@ extension Collection where Element: Equatable {
     public func elementsEqual<C: Collection>(
         orderInsensitive other: C
     ) -> Bool
-    where Element == C.Element, C.Index: Hashable
+        where Element == C.Element, C.Index: Hashable
     {
         guard count == other.count else { return false }
         guard count > 0 else { return true }
@@ -1333,7 +1355,9 @@ where Element: Equatable {
     public mutating func replace<Sources, NewElements>(
         elementsIn sources: Sources,
         with newElements: NewElements
-    ) where Sources: Collection, Sources.Element == Element, NewElements: Collection, NewElements.Element == Element {
+    ) where Sources: Collection, Sources.Element == Element,
+            NewElements: Collection, NewElements.Element == Element
+    {
         // early return - don't replace if source and replacement is identical.
         // this also avoids a potential infinite loop.
         guard !sources.elementsEqual(newElements) else { return }
@@ -1354,7 +1378,9 @@ where Element: Equatable {
     public func replacing<Sources, NewElements>(
         elementsIn sources: Sources,
         with newElements: NewElements
-    ) -> Self where Sources: Collection, Sources.Element == Element, NewElements: Collection, NewElements.Element == Element {
+    ) -> Self where Sources: Collection, Sources.Element == Element,
+                    NewElements: Collection, NewElements.Element == Element
+    {
         var mutable = self
         mutable.replace(elementsIn: sources, with: newElements)
         return mutable

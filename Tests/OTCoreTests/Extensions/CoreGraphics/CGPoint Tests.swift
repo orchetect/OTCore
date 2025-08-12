@@ -1,18 +1,18 @@
 //
 //  CGPoint Tests.swift
 //  OTCore • https://github.com/orchetect/OTCore
-//  © 2022 Steffan Andrews • Licensed under MIT License
+//  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
-import XCTest
 @testable import OTCore
+import XCTest
 
 class Extensions_CoreGraphics_CGPoint_Tests: XCTestCase {
     override func setUp() { super.setUp() }
     override func tearDown() { super.tearDown() }
     
     #if canImport(AppKit)
-    /// This method used to test an OTCore category property `nsPoint` which was removed in OTCore 1.7.8
+    /// This method used to test the OTCore property `nsPoint` which was removed in OTCore 1.7.8
     func testNSPoint() {
         // just to confirm that the compiler sees both types as the same
         let nsPoint: NSPoint = CGPoint(x: 1.23, y: 2.5) // .nsPoint

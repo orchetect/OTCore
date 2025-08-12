@@ -1,7 +1,7 @@
 //
 //  OTCore API 1.5.4.swift
 //  OTCore • https://github.com/orchetect/OTCore
-//  © 2024 Steffan Andrews • Licensed under MIT License
+//  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
 // MARK: - URL.swift
@@ -13,7 +13,8 @@ extension FileManager {
     #if os(macOS)
     
     /// **OTCore:**
-    /// Backwards compatible method for retrieving the current user's home directory, using the most recent API where possible.
+    /// Backwards compatible method for retrieving the current user's home directory, using the most
+    /// recent API where possible.
     @available(*, deprecated, renamed: "default.homeDirectoryForCurrentUserCompat")
     @_disfavoredOverload
     public static var homeDirectoryForCurrentUserCompat: URL {

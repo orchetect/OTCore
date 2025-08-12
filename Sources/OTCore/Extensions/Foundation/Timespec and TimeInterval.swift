@@ -1,7 +1,7 @@
 //
 //  Timespec and TimeInterval.swift
 //  OTCore • https://github.com/orchetect/OTCore
-//  © 2022 Steffan Andrews • Licensed under MIT License
+//  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
 #if canImport(Foundation)
@@ -15,8 +15,8 @@ extension timespec {
     /// Convenience constructor from `TimeInterval`.
     ///
     /// > Note:
-    /// > As of macOS 13.0, iOS 16.0, watchOS 9.0, tvOS 16.0, Swift adds a new `Duration` type allowing this
-    /// > functionality to be used natively.
+    /// > As of macOS 13.0, iOS 16.0, watchOS 9.0, tvOS 16.0, Swift adds a new `Duration` type
+    /// > allowing this functionality to be used natively.
     /// >
     /// > For example:
     /// >

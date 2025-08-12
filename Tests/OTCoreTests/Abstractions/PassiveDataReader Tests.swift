@@ -1,11 +1,11 @@
 //
 //  PassiveDataReader Tests.swift
 //  OTCore • https://github.com/orchetect/OTCore
-//  © 2022 Steffan Andrews • Licensed under MIT License
+//  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
-import XCTest
 import OTCore
+import XCTest
 
 class Abstractions_PassiveDataReader_Tests: XCTestCase {
     // MARK: - Data storage starting with index 0

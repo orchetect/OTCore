@@ -1,11 +1,11 @@
 //
 //  Timespec Tests.swift
 //  OTCore • https://github.com/orchetect/OTCore
-//  © 2022 Steffan Andrews • Licensed under MIT License
+//  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
-import XCTest
 @testable import OTCore
+import XCTest
 
 class Extensions_Darwin_Timespec_Tests: XCTestCase {
     override func setUp() { super.setUp() }
@@ -29,7 +29,8 @@ class Extensions_Darwin_Timespec_Tests: XCTestCase {
     }
     
     func testTimespecOperators() {
-        // assuming all tv_sec and tv_nsec values are positive integers when forming original timespec()'s
+        // assuming all tv_sec and tv_nsec values are positive integers when forming original
+        // timespec()'s
         
         // + basic
         
@@ -121,7 +122,9 @@ class Extensions_Darwin_Timespec_Tests: XCTestCase {
         
         // edge cases
         
-        // technically this this is equal, but Equatable internally tests discrete values and not existential equality -- which, for the time being, is intended functionality since in practise, timespec should never be formed with overflowing values
+        // technically this this is equal, but Equatable internally tests discrete values and not
+        // existential equality -- which, for the time being, is intended functionality since in
+        // practise, timespec should never be formed with overflowing values
         XCTAssertFalse(
             timespec(tv_sec: 10, tv_nsec: 1_000_000_500) ==
                 timespec(tv_sec: 11, tv_nsec: 500)

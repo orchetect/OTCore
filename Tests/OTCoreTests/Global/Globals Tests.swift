@@ -1,15 +1,16 @@
 //
 //  Globals Tests.swift
 //  OTCore • https://github.com/orchetect/OTCore
-//  © 2022 Steffan Andrews • Licensed under MIT License
+//  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
 import Foundation
-import Testing
 import OTCore
+import Testing
 
 @Suite struct Global_Globals_Tests {
-    @Test func testBundle() {
+    @Test
+    func bundle() {
         // this test could break in future versions of Xcode/XCTest
         // but we'll test what 'known values' we can here
         
@@ -33,7 +34,8 @@ import OTCore
         #expect(Globals.MainBundle.versionBuildNumber != "")
     }
     
-    @Test func testSystem() async {
+    @Test
+    func system() async {
         // values cannot be tested explicitly since they vary by system
         
         #if os(macOS)
@@ -53,19 +55,20 @@ import OTCore
         #endif
     }
     
-    @Test func testBundle_infoDictionaryString() {
+    @Test
+    func bundle_infoDictionaryString() {
         // String key name
         
         #expect(
             Bundle.main.infoDictionaryString(key: kCFBundleIdentifierKey as String) ==
-            "com.apple.dt.xctest.tool"
+                "com.apple.dt.xctest.tool"
         )
         
         // CFString key name
         
         #expect(
             Bundle.main.infoDictionaryString(key: kCFBundleIdentifierKey) ==
-            "com.apple.dt.xctest.tool"
+                "com.apple.dt.xctest.tool"
         )
     }
 }

@@ -1,7 +1,7 @@
 //
 //  XMLNode.swift
 //  OTCore • https://github.com/orchetect/OTCore
-//  © 2022 Steffan Andrews • Licensed under MIT License
+//  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
 // This is Mac-only because even though XMLNode exists in Foundation, it is only available on macOS
@@ -42,7 +42,7 @@ extension Sequence where Element: XMLNode {
     /// Mapping is performed lazily.
     @inlinable @_disfavoredOverload
     public func asElements() -> LazyCompactMapSequence<Self, XMLElement> {
-        self.lazy.compactMap(\.asElement)
+        lazy.compactMap(\.asElement)
     }
 }
 
@@ -56,7 +56,7 @@ extension Sequence where Element: XMLNode {
     public func filter(
         whereNodeNamed nodeName: String
     ) -> LazyFilterSequence<LazySequence<Self>.Elements> {
-        self.lazy.filter(whereNodeNamed: nodeName)
+        lazy.filter(whereNodeNamed: nodeName)
     }
 }
 

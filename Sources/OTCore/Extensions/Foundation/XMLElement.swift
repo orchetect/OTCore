@@ -1,7 +1,7 @@
 //
 //  XMLElement.swift
 //  OTCore • https://github.com/orchetect/OTCore
-//  © 2022 Steffan Andrews • Licensed under MIT License
+//  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
 // This is Mac-only because even though XMLNode exists in Foundation, it is only available on macOS
@@ -16,7 +16,9 @@ extension XMLElement {
     /// Iterates on all ancestors of the element, starting with the element's parent.
     /// Iterator is performed lazily.
     @_disfavoredOverload
-    public func ancestorElements(includingSelf: Bool) -> UnfoldSequence<XMLElement, (XMLElement, Bool)> {
+    public func ancestorElements(
+        includingSelf: Bool
+    ) -> UnfoldSequence<XMLElement, (XMLElement, Bool)> {
         sequence(state: (element: self, consumedSelf: false)) { state in
             if includingSelf, !state.1 {
                 state.0 = self
@@ -72,7 +74,7 @@ extension XMLElement {
     /// Removes attribute if `value` is `nil`.
     @_disfavoredOverload
     public func addAttribute(withName attributeName: String, value: String?) {
-        if let value = value {
+        if let value {
             let attr = XMLNode(kind: .attribute)
             attr.name = attributeName
             attr.stringValue = value
@@ -84,11 +86,12 @@ extension XMLElement {
     
     /// **OTCore:**
     /// Convenience to populate with attributes.
-    /// Attributes are accepted as an array of tuples instead of a dictionary in order to maintain order.
+    /// Attributes are accepted as an array of tuples instead of a dictionary in order to maintain
+    /// order.
     @_disfavoredOverload
     public func addAttributes(_ attributes: [(name: String, value: String)]) {
-        attributes.forEach {
-            addAttribute(withName: $0.name, value: $0.value)
+        for attribute in attributes {
+            addAttribute(withName: attribute.name, value: attribute.value)
         }
     }
 }
@@ -132,7 +135,7 @@ extension XMLElement {
         removeIfDefault: Bool = false,
         useInt: Bool = false
     ) {
-        guard let newValue = newValue else {
+        guard let newValue else {
             addAttribute(withName: attributeName, value: nil)
             return
         }
@@ -162,7 +165,7 @@ extension XMLElement {
         forAttribute attributeName: String,
         useInt: Bool = false
     ) {
-        guard let newValue = newValue else {
+        guard let newValue else {
             addAttribute(withName: attributeName, value: nil)
             return
         }
@@ -264,7 +267,8 @@ extension XMLElement {
 extension XMLElement {
     /// **OTCore:**
     /// Convenience to initialize and populate with attributes.
-    /// Attributes are accepted as an array of tuples instead of a dictionary in order to maintain order.
+    /// Attributes are accepted as an array of tuples instead of a dictionary in order to maintain
+    /// order.
     @_disfavoredOverload
     public convenience init(
         name: String,
@@ -286,7 +290,7 @@ extension Sequence where Element: XMLElement {
     public func filter(
         whereElementNamed nodeName: String
     ) -> LazyFilterSequence<LazySequence<Self>.Elements> {
-        self.lazy.filter(whereElementNamed: nodeName)
+        lazy.filter(whereElementNamed: nodeName)
     }
     
     /// **OTCore:**
@@ -296,7 +300,7 @@ extension Sequence where Element: XMLElement {
     public func filter(
         whereElementNamed nodeNames: [String]
     ) -> LazyFilterSequence<LazySequence<Self>.Elements> {
-        self.lazy.filter(whereElementNamed: nodeNames)
+        lazy.filter(whereElementNamed: nodeNames)
     }
     
     /// **OTCore:**
@@ -307,7 +311,7 @@ extension Sequence where Element: XMLElement {
         whereAttribute attributeName: String,
         hasValue attributeValue: String
     ) -> LazyFilterSequence<LazySequence<Self>.Elements> {
-        self.lazy.filter(whereAttribute: attributeName, hasValue: attributeValue)
+        lazy.filter(whereAttribute: attributeName, hasValue: attributeValue)
     }
     
     /// **OTCore:**
@@ -319,7 +323,7 @@ extension Sequence where Element: XMLElement {
         whereAttribute attributeName: String,
         _ isIncluded: @escaping (_ attributeValue: String) -> Bool
     ) -> LazyFilterSequence<LazySequence<Self>.Elements> {
-        self.lazy.filter(whereAttribute: attributeName, isIncluded)
+        lazy.filter(whereAttribute: attributeName, isIncluded)
     }
     
     /// **OTCore:**
@@ -329,7 +333,7 @@ extension Sequence where Element: XMLElement {
     public func filter(
         withAttribute attributeName: String
     ) -> LazyFilterSequence<LazySequence<Self>.Elements> {
-        self.lazy.filter { $0.attribute(forName: attributeName) != nil }
+        lazy.filter { $0.attribute(forName: attributeName) != nil }
     }
 }
 

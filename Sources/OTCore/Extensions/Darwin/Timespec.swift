@@ -1,7 +1,7 @@
 //
 //  Timespec.swift
 //  OTCore • https://github.com/orchetect/OTCore
-//  © 2022 Steffan Andrews • Licensed under MIT License
+//  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
 #if canImport(Darwin)
@@ -13,16 +13,26 @@ import Darwin
 // Apple docs:
 //
 // CLOCK_MONOTONIC
-// clock that increments monotonically, tracking the time since an arbitrary point, and will continue to increment while the system is asleep.
+// ---------------
+// clock that increments monotonically, tracking the time since an arbitrary point, and will
+// continue to increment while the system is asleep.
 //
 // CLOCK_MONOTONIC_RAW
-// clock that increments monotonically, tracking the time since an arbitrary point like CLOCK_MONOTONIC. However, this clock is unaffected by frequency or time adjustments. It should not be compared to other system time sources.
+// -------------------
+// clock that increments monotonically, tracking the time since an arbitrary point like
+// CLOCK_MONOTONIC. However, this clock is unaffected by frequency or time adjustments. It should
+// not be compared to other system time sources.
 //
 // CLOCK_MONOTONIC_RAW_APPROX
-// like CLOCK_MONOTONIC_RAW, but reads a value cached by the system at context switch. This can be read faster, but at a loss of accuracy as it may return values that are milliseconds old.
+// --------------------------
+// like CLOCK_MONOTONIC_RAW, but reads a value cached by the system at context switch. This can be
+// read faster, but at a loss of accuracy as it may return values that are milliseconds old.
 //
 // CLOCK_UPTIME_RAW
-// clock that increments monotonically, in the same manner as CLOCK_MONOTONIC_RAW, but that does not increment while the system is asleep. The returned value is identical to the result of mach_absolute_time() after the appropriate mach_timebase conversion is applied.
+// ----------------
+// clock that increments monotonically, in the same manner as CLOCK_MONOTONIC_RAW, but that does not
+// increment while the system is asleep. The returned value is identical to the result of
+// mach_absolute_time() after the appropriate mach_timebase conversion is applied.
 
 /// **OTCore:**
 /// Returns high-precision system uptime.

@@ -1,14 +1,14 @@
 //
 //  XMLTestCase.swift
 //  OTCore • https://github.com/orchetect/OTCore
-//  © 2022 Steffan Andrews • Licensed under MIT License
+//  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
 // This is Mac-only because even though XMLNode exists in Foundation, it is only available on macOS
 #if os(macOS)
 
-import XCTest
 @testable import OTCore
+import XCTest
 
 class XMLTestCase: XCTestCase {
     static func child(of node: XMLNode, named: String) throws -> XMLElement {
@@ -26,6 +26,7 @@ class XMLTestCase: XCTestCase {
             options: [.nodePrettyPrint, .nodeCompactEmptyElement]
         )
     }
+
     static let testXMLStringData = testXMLString.toData()!
     static let testXMLString = """
         <?xml version="1.0" encoding="utf-8"?>

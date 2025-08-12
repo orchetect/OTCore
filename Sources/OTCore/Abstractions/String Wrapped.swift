@@ -1,7 +1,7 @@
 //
 //  String Wrapped.swift
 //  OTCore • https://github.com/orchetect/OTCore
-//  © 2022 Steffan Andrews • Licensed under MIT License
+//  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
 extension String {
@@ -27,7 +27,8 @@ extension String {
     }
     
     /// **OTCore:**
-    /// Type describing a pair of enclosing brackets/braces or similar characters that are different for prefix and suffix.
+    /// Type describing a pair of enclosing brackets/braces or similar characters that are different
+    /// for prefix and suffix.
     public enum StringWrappedEnclosingType: Sendable {
         /// `( )` a.k.a. parens
         case parentheses

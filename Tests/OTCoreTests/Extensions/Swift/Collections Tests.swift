@@ -1,11 +1,11 @@
 //
 //  Collections Tests.swift
 //  OTCore • https://github.com/orchetect/OTCore
-//  © 2022 Steffan Andrews • Licensed under MIT License
+//  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
-import XCTest
 import OTCore
+import XCTest
 
 class Extensions_Swift_Collections_Tests: XCTestCase {
     override func setUp() { super.setUp() }
@@ -1180,8 +1180,8 @@ class Extensions_Swift_Collections_Tests: XCTestCase {
             setA,
             [.fooB(999), .one, .two]
         )      // can't use this to check associated value
-        setA.forEach {
-            switch $0 {
+        for item in setA {
+            switch item {
             case let .fooB(val): XCTAssertEqual(val, 1)     // check associated value here
             default: break
             }
@@ -1194,8 +1194,8 @@ class Extensions_Swift_Collections_Tests: XCTestCase {
             setB,
             [.fooB(999), .one, .two]
         )      // can't use this to check associated value
-        setB.forEach {
-            switch $0 {
+        for item in setB {
+            switch item {
             case let .fooB(val): XCTAssertEqual(val, 2)     // check associated value here
             default: break
             }
@@ -1208,8 +1208,8 @@ class Extensions_Swift_Collections_Tests: XCTestCase {
             set,
             [.fooB(999), .one, .two]
         )       // can't use this to check associated value
-        set.forEach {
-            switch $0 {
+        for item in set {
+            switch item {
             case let .fooB(val): XCTAssertEqual(val, 2)     // check associated value here
             default: break
             }
@@ -1487,14 +1487,32 @@ class Extensions_Swift_Collections_Tests: XCTestCase {
         XCTAssertEqual(["", ""].replacing(elementsIn: [], with: []), ["", ""])
         XCTAssertEqual(["a", "b"].replacing(elementsIn: ["a"], with: []), ["b"])
         XCTAssertEqual(["a", "b"].replacing(elementsIn: ["b"], with: []), ["a"])
-        XCTAssertEqual(["A", "b", "a", "A", "B"].replacing(elementsIn: ["b"], with: []), ["A", "a", "A", "B"])
-        XCTAssertEqual(["A", "b", "a", "A", "b"].replacing(elementsIn: ["b"], with: []), ["A", "a", "A"])
+        XCTAssertEqual(
+            ["A", "b", "a", "A", "B"].replacing(elementsIn: ["b"], with: []),
+            ["A", "a", "A", "B"]
+        )
+        XCTAssertEqual(
+            ["A", "b", "a", "A", "b"].replacing(elementsIn: ["b"], with: []),
+            ["A", "a", "A"]
+        )
         
-        XCTAssertEqual(["A", "b", "a", "A", "B"].replacing(elementsIn: ["b", "A"], with: []), ["a", "B"])
+        XCTAssertEqual(
+            ["A", "b", "a", "A", "B"].replacing(elementsIn: ["b", "A"], with: []),
+            ["a", "B"]
+        )
         
-        XCTAssertEqual(["Tester", "Hello"].replacing(elementsIn: [""], with: []), ["Tester", "Hello"])
-        XCTAssertEqual(["Tester", "Hello"].replacing(elementsIn: ["e"], with: []), ["Tester", "Hello"])
-        XCTAssertEqual(["Tester", "Hello", "Tester"].replacing(elementsIn: ["Tester"], with: []), ["Hello"])
+        XCTAssertEqual(
+            ["Tester", "Hello"].replacing(elementsIn: [""], with: []),
+            ["Tester", "Hello"]
+        )
+        XCTAssertEqual(
+            ["Tester", "Hello"].replacing(elementsIn: ["e"], with: []),
+            ["Tester", "Hello"]
+        )
+        XCTAssertEqual(
+            ["Tester", "Hello", "Tester"].replacing(elementsIn: ["Tester"], with: []),
+            ["Hello"]
+        )
         
         XCTAssertEqual("Tester".replacing(elementsIn: ["e"], with: []), "Tstr")
         XCTAssertEqual("Tester".replacing(elementsIn: ["e" as Character], with: []), "Tstr")
@@ -1509,14 +1527,32 @@ class Extensions_Swift_Collections_Tests: XCTestCase {
         XCTAssertEqual(["", ""].replacing(elementsIn: [], with: [""]), ["", ""])
         XCTAssertEqual(["a", "b"].replacing(elementsIn: ["a"], with: ["z"]), ["z", "b"])
         XCTAssertEqual(["a", "b"].replacing(elementsIn: ["b"], with: ["z"]), ["a", "z"])
-        XCTAssertEqual(["A", "b", "a", "A", "B"].replacing(elementsIn: ["b"], with: ["z"]), ["A", "z", "a", "A", "B"])
-        XCTAssertEqual(["A", "b", "a", "A", "b"].replacing(elementsIn: ["b"], with: ["z"]), ["A", "z", "a", "A", "z"])
+        XCTAssertEqual(
+            ["A", "b", "a", "A", "B"].replacing(elementsIn: ["b"], with: ["z"]),
+            ["A", "z", "a", "A", "B"]
+        )
+        XCTAssertEqual(
+            ["A", "b", "a", "A", "b"].replacing(elementsIn: ["b"], with: ["z"]),
+            ["A", "z", "a", "A", "z"]
+        )
         
-        XCTAssertEqual(["A", "b", "a", "A", "B"].replacing(elementsIn: ["b", "A"], with: ["z"]), ["z", "z", "a", "z", "B"])
+        XCTAssertEqual(
+            ["A", "b", "a", "A", "B"].replacing(elementsIn: ["b", "A"], with: ["z"]),
+            ["z", "z", "a", "z", "B"]
+        )
         
-        XCTAssertEqual(["Tester", "Hello"].replacing(elementsIn: [""], with: ["z"]), ["Tester", "Hello"])
-        XCTAssertEqual(["Tester", "Hello"].replacing(elementsIn: ["e"], with: ["z"]), ["Tester", "Hello"])
-        XCTAssertEqual(["Tester", "Hello", "Tester"].replacing(elementsIn: ["Tester"], with: ["New"]), ["New", "Hello", "New"])
+        XCTAssertEqual(
+            ["Tester", "Hello"].replacing(elementsIn: [""], with: ["z"]),
+            ["Tester", "Hello"]
+        )
+        XCTAssertEqual(
+            ["Tester", "Hello"].replacing(elementsIn: ["e"], with: ["z"]),
+            ["Tester", "Hello"]
+        )
+        XCTAssertEqual(
+            ["Tester", "Hello", "Tester"].replacing(elementsIn: ["Tester"], with: ["New"]),
+            ["New", "Hello", "New"]
+        )
         
         XCTAssertEqual("Tester".replacing(elementsIn: ["e"], with: ["z"]), "Tzstzr")
         XCTAssertEqual("Tester".replacing(elementsIn: ["e" as Character], with: ["z"]), "Tzstzr")
@@ -1531,17 +1567,38 @@ class Extensions_Swift_Collections_Tests: XCTestCase {
         XCTAssertEqual(["", ""].replacing(elementsIn: [], with: ["", ""]), ["", ""])
         XCTAssertEqual(["a", "b"].replacing(elementsIn: ["a"], with: ["y", "z"]), ["y", "z", "b"])
         XCTAssertEqual(["a", "b"].replacing(elementsIn: ["b"], with: ["y", "z"]), ["a", "y", "z"])
-        XCTAssertEqual(["A", "b", "a", "A", "B"].replacing(elementsIn: ["b"], with: ["y", "z"]), ["A", "y", "z", "a", "A", "B"])
-        XCTAssertEqual(["A", "b", "a", "A", "b"].replacing(elementsIn: ["b"], with: ["y", "z"]), ["A", "y", "z", "a", "A", "y", "z"])
+        XCTAssertEqual(
+            ["A", "b", "a", "A", "B"].replacing(elementsIn: ["b"], with: ["y", "z"]),
+            ["A", "y", "z", "a", "A", "B"]
+        )
+        XCTAssertEqual(
+            ["A", "b", "a", "A", "b"].replacing(elementsIn: ["b"], with: ["y", "z"]),
+            ["A", "y", "z", "a", "A", "y", "z"]
+        )
         
-        XCTAssertEqual(["A", "b", "a", "A", "B"].replacing(elementsIn: ["b", "A"], with: ["y", "z"]), ["y", "z", "y", "z", "a", "y", "z", "B"])
+        XCTAssertEqual(
+            ["A", "b", "a", "A", "B"].replacing(elementsIn: ["b", "A"], with: ["y", "z"]),
+            ["y", "z", "y", "z", "a", "y", "z", "B"]
+        )
         
-        XCTAssertEqual(["Tester", "Hello"].replacing(elementsIn: [""], with: ["y", "z"]), ["Tester", "Hello"])
-        XCTAssertEqual(["Tester", "Hello"].replacing(elementsIn: ["e"], with: ["y", "z"]), ["Tester", "Hello"])
-        XCTAssertEqual(["Tester", "Hello", "Tester"].replacing(elementsIn: ["Tester"], with: ["New1", "New2"]), ["New1", "New2", "Hello", "New1", "New2"])
+        XCTAssertEqual(
+            ["Tester", "Hello"].replacing(elementsIn: [""], with: ["y", "z"]),
+            ["Tester", "Hello"]
+        )
+        XCTAssertEqual(
+            ["Tester", "Hello"].replacing(elementsIn: ["e"], with: ["y", "z"]),
+            ["Tester", "Hello"]
+        )
+        XCTAssertEqual(
+            ["Tester", "Hello", "Tester"].replacing(elementsIn: ["Tester"], with: ["New1", "New2"]),
+            ["New1", "New2", "Hello", "New1", "New2"]
+        )
         
         XCTAssertEqual("Tester".replacing(elementsIn: ["e"], with: ["y", "z"]), "Tyzstyzr")
-        XCTAssertEqual("Tester".replacing(elementsIn: ["e" as Character], with: ["y", "z"]), "Tyzstyzr")
+        XCTAssertEqual(
+            "Tester".replacing(elementsIn: ["e" as Character], with: ["y", "z"]),
+            "Tyzstyzr"
+        )
     }
     
     // MARK: - String Collection Duplicates
@@ -1563,7 +1620,10 @@ class Extensions_Swift_Collections_Tests: XCTestCase {
         XCTAssertEqual(["a", "a"].localizedRemovingDuplicates(), ["a"])
         XCTAssertEqual(["a", "A"].localizedRemovingDuplicates(), ["a", "A"])
         XCTAssertEqual(["A", "a"].localizedRemovingDuplicates(), ["A", "a"])
-        XCTAssertEqual(["A", "b", "a", "A", "B"].localizedRemovingDuplicates(), ["A", "b", "a", "B"])
+        XCTAssertEqual(
+            ["A", "b", "a", "A", "B"].localizedRemovingDuplicates(),
+            ["A", "b", "a", "B"]
+        )
     }
     
     func testStringCollection_localizedCaseInsensitiveRemovingDuplicates() throws {
@@ -1575,7 +1635,10 @@ class Extensions_Swift_Collections_Tests: XCTestCase {
         XCTAssertEqual(["a", "a"].localizedCaseInsensitiveRemovingDuplicates(), ["a"])
         XCTAssertEqual(["a", "A"].localizedCaseInsensitiveRemovingDuplicates(), ["a"])
         XCTAssertEqual(["A", "a"].localizedCaseInsensitiveRemovingDuplicates(), ["A"])
-        XCTAssertEqual(["A", "b", "a", "A", "B"].localizedCaseInsensitiveRemovingDuplicates(), ["A", "b"])
+        XCTAssertEqual(
+            ["A", "b", "a", "A", "B"].localizedCaseInsensitiveRemovingDuplicates(),
+            ["A", "b"]
+        )
     }
     
     func testStringCollection_localizedStandardRemovingDuplicates() throws {
@@ -1587,7 +1650,10 @@ class Extensions_Swift_Collections_Tests: XCTestCase {
         XCTAssertEqual(["a", "a"].localizedStandardRemovingDuplicates(), ["a"])
         XCTAssertEqual(["a", "A"].localizedStandardRemovingDuplicates(), ["a", "A"])
         XCTAssertEqual(["A", "a"].localizedStandardRemovingDuplicates(), ["A", "a"])
-        XCTAssertEqual(["A", "b", "a", "A", "B"].localizedStandardRemovingDuplicates(), ["A", "b", "a", "B"])
+        XCTAssertEqual(
+            ["A", "b", "a", "A", "B"].localizedStandardRemovingDuplicates(),
+            ["A", "b", "a", "B"]
+        )
     }
     
     // MARK: - .mapKeys

@@ -1,7 +1,7 @@
 //
 //  NSImage.swift
 //  OTCore • https://github.com/orchetect/OTCore
-//  © 2023 Steffan Andrews • Licensed under MIT License
+//  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
 #if os(macOS)
@@ -28,10 +28,9 @@ extension NSImage {
         var properties: [NSBitmapImageRep.PropertyKey: Any] = [:]
         properties[.compressionFactor] = compressionFactor?.clamped(to: 0.0 ... 1.0) as NSNumber?
         
-        guard
-            let imageData = tiffRepresentation,
-            let imageRep = NSBitmapImageRep(data: imageData),
-            let fileData = imageRep.representation(using: type, properties: properties)
+        guard let imageData = tiffRepresentation,
+              let imageRep = NSBitmapImageRep(data: imageData),
+              let fileData = imageRep.representation(using: type, properties: properties)
         else {
             throw CocoaError(.fileWriteUnknown)
         }

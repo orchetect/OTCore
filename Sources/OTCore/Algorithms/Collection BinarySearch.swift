@@ -1,7 +1,7 @@
 //
 //  Collection BinarySearch.swift
 //  OTCore • https://github.com/orchetect/OTCore
-//  © 2022 Steffan Andrews • Licensed under MIT License
+//  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
 // MARK: - Search algorithms
@@ -12,9 +12,11 @@ extension ArraySlice where Element: Comparable {
     ///
     /// - If the value is found, a single-count range is returned with the index (ie: `4 ... 4`).
     ///
-    /// - If the value is not found, a 2-count range is returned with the two neighboring indexes below and above the search value.
+    /// - If the value is not found, a 2-count range is returned with the two neighboring indexes
+    ///   below and above the search value.
     ///
-    /// - If the search value is not within the upper and lower bounds of the array's values, `nil` is returned.
+    /// - If the search value is not within the upper and lower bounds of the array's values, `nil`
+    ///   is returned.
     ///
     /// Example:
     ///
@@ -25,7 +27,8 @@ extension ArraySlice where Element: Comparable {
     /// [].binarySearch(forValue: 10)          // nil
     /// ```
     ///
-    /// - warning: The base array must be `sorted()` prior to invoking this method or it will not function as intended.
+    /// - warning: The base array must be `sorted()` prior to invoking this method or it will not
+    ///   function as intended.
     @_disfavoredOverload
     public func binarySearch(
         forValue searchElement: Element
@@ -64,9 +67,11 @@ extension Array where Element: Comparable {
     ///
     /// - If the value is found, a single-count range is returned with the index (ie: `4 ... 4`).
     ///
-    /// - If the value is not found, a 2-count range is returned with the two neighboring indexes below and above the search value.
+    /// - If the value is not found, a 2-count range is returned with the two neighboring indexes
+    ///   below and above the search value.
     ///
-    /// - If the search value is not within the upper and lower bounds of the array's values, `nil` is returned.
+    /// - If the search value is not within the upper and lower bounds of the array's values, `nil`
+    ///   is returned.
     ///
     /// Example:
     ///
@@ -77,7 +82,8 @@ extension Array where Element: Comparable {
     /// [].binarySearch(forValue: 10)          // nil
     /// ```
     ///
-    /// - warning: The base array must be `sorted()` prior to invoking this method or it will not function as intended.
+    /// - warning: The base array must be `sorted()` prior to invoking this method or it will not
+    ///   function as intended.
     @_disfavoredOverload
     public func binarySearch(
         forValue searchElement: Element

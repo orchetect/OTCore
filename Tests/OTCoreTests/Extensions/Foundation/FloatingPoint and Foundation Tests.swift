@@ -1,11 +1,11 @@
 //
 //  FloatingPoint and Foundation Tests.swift
 //  OTCore • https://github.com/orchetect/OTCore
-//  © 2022 Steffan Andrews • Licensed under MIT License
+//  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
-import XCTest
 @testable import OTCore
+import XCTest
 
 class Extensions_Foundation_FloatingPointAndFoundation_Tests: XCTestCase {
     override func setUp() { super.setUp() }
@@ -94,7 +94,8 @@ class Extensions_Foundation_FloatingPointAndFoundation_Tests: XCTestCase {
         // }
         
         // float80
-        // (we need more thorough unit test here for Float80 because it's internally using a custom implementation)
+        // (we need more thorough unit test here for Float80 because it's internally using a custom
+        // implementation)
         #if !(arch(arm64) || arch(arm) || os(watchOS)) // Float80 is now removed for ARM
         XCTAssertEqual(Float80(1.62456).string(decimalPlaces: -1), "2")
         XCTAssertEqual(Float80(1.62456).string(decimalPlaces:  0), "2")

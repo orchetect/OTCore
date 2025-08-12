@@ -1,11 +1,11 @@
 //
 //  String and CharacterSet Tests.swift
 //  OTCore • https://github.com/orchetect/OTCore
-//  © 2022 Steffan Andrews • Licensed under MIT License
+//  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
-import XCTest
 @testable import OTCore
+import XCTest
 
 class Extensions_Foundation_StringAndCharacterSet_Tests: XCTestCase {
     override func setUp() { super.setUp() }
@@ -44,7 +44,8 @@ class Extensions_Foundation_StringAndCharacterSet_Tests: XCTestCase {
         
         // (if character sets have overlapping characters, they are matched in the order listed)
         
-        // alphanumerics catches all characters (including .letters and .decimalDigits), so .letters and .decimalDigits will never trigger a new grouping)
+        // alphanumerics catches all characters (including .letters and .decimalDigits), so .letters
+        // and .decimalDigits will never trigger a new grouping)
         XCTAssertEqual(
             "abc123def456gh78i9"
                 .split(intoSequencesOf: .alphanumerics, .letters, .decimalDigits),
