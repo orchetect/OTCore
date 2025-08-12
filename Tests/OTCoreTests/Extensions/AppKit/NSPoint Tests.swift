@@ -14,7 +14,7 @@ class Extensions_Foundation_NSPoint_Tests: XCTestCase {
     override func setUp() { super.setUp() }
     override func tearDown() { super.tearDown() }
     
-    /// This method used to test the OTCore property `cgPoint` which was removed in OTCore 1.7.8
+    /// This method used to test the OTCore property `cgPoint` which was removed in OTCore 1.7.9
     func testCGPoint() {
         // just to confirm that the compiler sees both types as the same
         let cgPoint: CGPoint = NSPoint(x: 1.23, y: 2.5) // .cgPoint

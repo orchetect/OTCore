@@ -12,7 +12,7 @@ class Extensions_CoreGraphics_CGPoint_Tests: XCTestCase {
     override func tearDown() { super.tearDown() }
     
     #if canImport(AppKit)
-    /// This method used to test the OTCore property `nsPoint` which was removed in OTCore 1.7.8
+    /// This method used to test the OTCore property `nsPoint` which was removed in OTCore 1.7.9
     func testNSPoint() {
         // just to confirm that the compiler sees both types as the same
         let nsPoint: NSPoint = CGPoint(x: 1.23, y: 2.5) // .nsPoint
