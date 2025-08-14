@@ -8,7 +8,7 @@ The library has full unit test coverage and is actively used in production.
 
 ## Installation: Swift Package Manager (SPM)
 
-### Dependency within an Application
+### Dependency within an Application Project
 
 1. Add the package to your Xcode project using Swift Package Manager using `https://github.com/orchetect/OTCore` as the URL.
 
@@ -24,7 +24,7 @@ In your Package.swift file:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/orchetect/OTCore", from: "1.7.4")
+    .package(url: "https://github.com/orchetect/OTCore", from: "1.7.9")
 ]
 ```
 
