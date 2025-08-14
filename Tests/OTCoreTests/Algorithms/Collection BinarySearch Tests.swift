@@ -24,7 +24,7 @@ import Testing
         // test guaranteed returns (non-nil, x...x where x is one number)
         
         let maxArraySize = 0 ... 500
-        var sp = SegmentedProgress(maxArraySize, segments: 20, roundedToPlaces: 0)
+        // var sp = SegmentedProgress(maxArraySize, segments: 20, roundedToPlaces: 0)
         
         print("Guaranteed return test: ", terminator: "")
         
@@ -37,8 +37,7 @@ import Testing
                 #expect(search!.count == 1) // should find exact match in array
             }
             
-            if let spResult = sp
-                .progress(value: arraySize) { print(spResult + " ", terminator: "") }
+            // if let spResult = sp.progress(value: arraySize) { print(spResult + " ", terminator: "") }
         }
         print("")
         

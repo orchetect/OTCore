@@ -5,27 +5,24 @@
 //
 
 import OTCore
-import XCTest
+import Testing
 
 // testOptionalType() declares
 
 private protocol testStructProtocol { }
 
-extension Collection where Element: OTCoreOptionalTyped,
-Element.Wrapped: testStructProtocol {
+extension Collection where Element: OTCoreOptionalTyped, Element.Wrapped: testStructProtocol {
     fileprivate var foo: Int { 2 }
 }
 
-class Extensions_Swift_Optional_Tests: XCTestCase {
-    override func setUp() { super.setUp() }
-    override func tearDown() { super.tearDown() }
-    
-    func testOptionalType() {
+@Suite struct Extensions_Swift_Optional_Tests {
+    @Test
+    func optionalType() {
         // basic test
         
         let num: Int? = 1
         
-        XCTAssertEqual(num.optional, Optional(1))
+        #expect(num.optional == Optional(1))
         
         // extension test
         
@@ -35,30 +32,32 @@ class Extensions_Swift_Optional_Tests: XCTestCase {
         
         let arr: [testStruct<UInt8>?] = [testStruct(value: UInt8(1)), nil]
         
-        XCTAssertEqual(arr.foo, 2) // ensure the extension works
+        #expect(arr.foo == 2) // ensure the extension works
     }
     
-    func testDefault() {
+    @Test
+    func ifNilDefault() {
         let val1: Int? = 1
         
-        XCTAssertEqual(val1.ifNil(2), 1)
+        #expect(val1.ifNil(2) == 1)
         
         let val2: Int? = nil
         
-        XCTAssertEqual(val2.ifNil(2), 2)
+        #expect(val2.ifNil(2) == 2)
     }
     
-    func testOptionalProperty() {
+    @Test
+    func optionalProperty() {
         var val: Int? = 1
         
-        XCTAssertEqual(val.optional, 1)
+        #expect(val.optional == 1)
         
         val.optional = 2
         
-        XCTAssertEqual(val.optional, 2)
+        #expect(val.optional == 2)
         
         val.optional = nil
         
-        XCTAssertEqual(val.optional, nil)
+        #expect(val.optional == nil)
     }
 }

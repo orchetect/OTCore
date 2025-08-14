@@ -4,22 +4,20 @@
 //  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
-#if os(macOS)
+#if canImport(AppKit)
 
 import AppKit
 @testable import OTCore
-import XCTest
+import Testing
 
-class Extensions_AppKit_URLAndAppKit_Tests: XCTestCase {
-    override func setUp() { super.setUp() }
-    override func tearDown() { super.tearDown() }
-    
-    func testURLIcon() {
+@Suite struct Extensions_AppKit_URLAndAppKit_Tests {
+    @Test
+    func urlIcon() {
         // on most, if not all, systems this should produce a value
         
         let url = URL(fileURLWithPath: "/")
         let fileIcon = url.fileIcon
-        XCTAssertNotNil(fileIcon)
+        #expect(fileIcon != nil)
     }
 }
 

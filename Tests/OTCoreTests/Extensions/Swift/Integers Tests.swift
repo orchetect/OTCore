@@ -5,13 +5,11 @@
 //
 
 import OTCore
-import XCTest
+import Testing
 
-class Extensions_Swift_Integers_Tests: XCTestCase {
-    override func setUp() { super.setUp() }
-    override func tearDown() { super.tearDown() }
-    
-    func testTypeConversions_IntsToIntsAndFloats() {
+@Suite struct Extensions_Swift_Integers_Tests {
+    @Test
+    func typeConversions_IntsToIntsAndFloats() {
         // Int
         
         _ = 1.int
@@ -363,66 +361,72 @@ class Extensions_Swift_Integers_Tests: XCTestCase {
         #endif
     }
     
-    func testTypeConversions_StringToInts() {
-        XCTAssertEqual("1".int, 1)
-        XCTAssertEqual("1".uInt, UInt(1))
-        XCTAssertEqual("1".int8, Int8(1))
-        XCTAssertEqual("1".uInt8, UInt8(1))
-        XCTAssertEqual("1".int16, Int16(1))
-        XCTAssertEqual("1".uInt16, UInt16(1))
-        XCTAssertEqual("1".int32, Int32(1))
-        XCTAssertEqual("1".uInt32, UInt32(1))
-        XCTAssertEqual("1".int64, Int64(1))
-        XCTAssertEqual("1".uInt64, UInt64(1))
+    @Test
+    func typeConversions_StringToInts() {
+        #expect("1".int == 1)
+        #expect("1".uInt == UInt(1))
+        #expect("1".int8 == Int8(1))
+        #expect("1".uInt8 == UInt8(1))
+        #expect("1".int16 == Int16(1))
+        #expect("1".uInt16 == UInt16(1))
+        #expect("1".int32 == Int32(1))
+        #expect("1".uInt32 == UInt32(1))
+        #expect("1".int64 == Int64(1))
+        #expect("1".uInt64 == UInt64(1))
     }
     
-    func testTypeConversions_IntsToString() {
-        XCTAssertEqual(1.string, "1")
-        XCTAssertEqual(UInt(1).string, "1")
-        XCTAssertEqual(Int8(1).string, "1")
-        XCTAssertEqual(UInt8(1).string, "1")
-        XCTAssertEqual(Int16(1).string, "1")
-        XCTAssertEqual(UInt16(1).string, "1")
-        XCTAssertEqual(Int32(1).string, "1")
-        XCTAssertEqual(UInt32(1).string, "1")
-        XCTAssertEqual(Int64(1).string, "1")
-        XCTAssertEqual(UInt64(1).string, "1")
+    @Test
+    func typeConversions_IntsToString() {
+        #expect(1.string == "1")
+        #expect(UInt(1).string == "1")
+        #expect(Int8(1).string == "1")
+        #expect(UInt8(1).string == "1")
+        #expect(Int16(1).string == "1")
+        #expect(UInt16(1).string == "1")
+        #expect(Int32(1).string == "1")
+        #expect(UInt32(1).string == "1")
+        #expect(Int64(1).string == "1")
+        #expect(UInt64(1).string == "1")
     }
     
-    func testRounding() {
-        XCTAssertEqual((-5).roundedAwayFromZero(toMultiplesOf: 4), -8)
-        XCTAssertEqual((-1).roundedAwayFromZero(toMultiplesOf: 4), -4)
-        XCTAssertEqual(1.roundedAwayFromZero(toMultiplesOf: 1), 1)
-        XCTAssertEqual(1.roundedAwayFromZero(toMultiplesOf: 4), 4)
-        XCTAssertEqual(4.roundedAwayFromZero(toMultiplesOf: 4), 4)
-        XCTAssertEqual(5.roundedAwayFromZero(toMultiplesOf: 4), 8)
+    @Test
+    func rounding() {
+        #expect((-5).roundedAwayFromZero(toMultiplesOf: 4) == -8)
+        #expect((-1).roundedAwayFromZero(toMultiplesOf: 4) == -4)
+        #expect(1.roundedAwayFromZero(toMultiplesOf: 1) == 1)
+        #expect(1.roundedAwayFromZero(toMultiplesOf: 4) == 4)
+        #expect(4.roundedAwayFromZero(toMultiplesOf: 4) == 4)
+        #expect(5.roundedAwayFromZero(toMultiplesOf: 4) == 8)
         
-        XCTAssertEqual((-5).roundedUp(toMultiplesOf: 4), -4)
-        XCTAssertEqual((-1).roundedUp(toMultiplesOf: 4),  0)
-        XCTAssertEqual(1.roundedUp(toMultiplesOf: 1), 1)
-        XCTAssertEqual(1.roundedUp(toMultiplesOf: 4), 4)
-        XCTAssertEqual(4.roundedUp(toMultiplesOf: 4), 4)
-        XCTAssertEqual(5.roundedUp(toMultiplesOf: 4), 8)
+        #expect((-5).roundedUp(toMultiplesOf: 4) == -4)
+        #expect((-1).roundedUp(toMultiplesOf: 4) == 0)
+        #expect(1.roundedUp(toMultiplesOf: 1) == 1)
+        #expect(1.roundedUp(toMultiplesOf: 4) == 4)
+        #expect(4.roundedUp(toMultiplesOf: 4) == 4)
+        #expect(5.roundedUp(toMultiplesOf: 4) == 8)
         
-        XCTAssertEqual((-5).roundedDown(toMultiplesOf: 4),  -8)
-        XCTAssertEqual((-1).roundedDown(toMultiplesOf: 4),  -4)
-        XCTAssertEqual(1.roundedDown(toMultiplesOf: 1), 1)
-        XCTAssertEqual(1.roundedDown(toMultiplesOf: 4), 0)
-        XCTAssertEqual(4.roundedDown(toMultiplesOf: 4), 4)
-        XCTAssertEqual(5.roundedDown(toMultiplesOf: 4), 4)
+        #expect((-5).roundedDown(toMultiplesOf: 4) == -8)
+        #expect((-1).roundedDown(toMultiplesOf: 4) == -4)
+        #expect(1.roundedDown(toMultiplesOf: 1) == 1)
+        #expect(1.roundedDown(toMultiplesOf: 4) == 0)
+        #expect(4.roundedDown(toMultiplesOf: 4) == 4)
+        #expect(5.roundedDown(toMultiplesOf: 4) == 4)
     }
     
-    func testBit() {
-        XCTAssertEqual(0b100.uInt8.bit(0), 0)
-        XCTAssertEqual(0b100.uInt8.bit(1), 0)
-        XCTAssertEqual(0b100.uInt8.bit(2), 1)
+    @Test
+    func uInt8_bit() {
+        #expect(0b100.uInt8.bit(0) == 0)
+        #expect(0b100.uInt8.bit(1) == 0)
+        #expect(0b100.uInt8.bit(2) == 1)
     }
     
-    func testInt8twosComplement() {
-        XCTAssertEqual(Int8(-0b01000000).twosComplement, 0b11000000)
+    @Test
+    func int8twosComplement() {
+        #expect(Int8(-0b01000000).twosComplement == 0b11000000)
     }
     
-    func testCollectionRandomNumbers() {
+    @Test
+    func collectionRandomNumbers() {
         // typical types
         
         _ = [Int](randomValuesBetween: 0 ... 255, count: 4)
@@ -443,141 +447,143 @@ class Extensions_Swift_Integers_Tests: XCTestCase {
         let arr = [UInt8](randomValuesBetween: range, count: 4)
         
         // check expected count
-        XCTAssertEqual(arr.count, 4)
+        #expect(arr.count == 4)
         
         // ensure each value is within range
         for item in arr {
-            XCTAssert(range.contains(item))
+            #expect(range.contains(item))
         }
     }
     
-    func testWrappingNumbers() {
+    @Test
+    func wrappingNumbers() {
         // ClosedRange
         
         // single value ranges
         
-        XCTAssertEqual(1.wrapped(around: 0 ... 0), 0)
-        XCTAssertEqual(1.wrapped(around: -1 ... (-1)), -1)
+        #expect(1.wrapped(around: 0 ... 0) == 0)
+        #expect(1.wrapped(around: -1 ... (-1)) == -1)
         
         // basic ranges
         
-        XCTAssertEqual((-11).wrapped(around: 0 ... 4), 4)
-        XCTAssertEqual((-10).wrapped(around: 0 ... 4), 0)
-        XCTAssertEqual((-9).wrapped(around: 0 ... 4), 1)
-        XCTAssertEqual((-8).wrapped(around: 0 ... 4), 2)
-        XCTAssertEqual((-7).wrapped(around: 0 ... 4), 3)
-        XCTAssertEqual((-6).wrapped(around: 0 ... 4), 4)
-        XCTAssertEqual((-5).wrapped(around: 0 ... 4), 0)
-        XCTAssertEqual((-4).wrapped(around: 0 ... 4), 1)
-        XCTAssertEqual((-3).wrapped(around: 0 ... 4), 2)
-        XCTAssertEqual((-2).wrapped(around: 0 ... 4), 3)
-        XCTAssertEqual((-1).wrapped(around: 0 ... 4), 4)
-        XCTAssertEqual(0.wrapped(around: 0 ... 4), 0)
-        XCTAssertEqual(1.wrapped(around: 0 ... 4), 1)
-        XCTAssertEqual(2.wrapped(around: 0 ... 4), 2)
-        XCTAssertEqual(3.wrapped(around: 0 ... 4), 3)
-        XCTAssertEqual(4.wrapped(around: 0 ... 4), 4)
-        XCTAssertEqual(5.wrapped(around: 0 ... 4), 0)
-        XCTAssertEqual(6.wrapped(around: 0 ... 4), 1)
-        XCTAssertEqual(7.wrapped(around: 0 ... 4), 2)
-        XCTAssertEqual(8.wrapped(around: 0 ... 4), 3)
-        XCTAssertEqual(9.wrapped(around: 0 ... 4), 4)
-        XCTAssertEqual(10.wrapped(around: 0 ... 4), 0)
-        XCTAssertEqual(11.wrapped(around: 0 ... 4), 1)
+        #expect((-11).wrapped(around: 0 ... 4) == 4)
+        #expect((-10).wrapped(around: 0 ... 4) == 0)
+        #expect((-9).wrapped(around: 0 ... 4) == 1)
+        #expect((-8).wrapped(around: 0 ... 4) == 2)
+        #expect((-7).wrapped(around: 0 ... 4) == 3)
+        #expect((-6).wrapped(around: 0 ... 4) == 4)
+        #expect((-5).wrapped(around: 0 ... 4) == 0)
+        #expect((-4).wrapped(around: 0 ... 4) == 1)
+        #expect((-3).wrapped(around: 0 ... 4) == 2)
+        #expect((-2).wrapped(around: 0 ... 4) == 3)
+        #expect((-1).wrapped(around: 0 ... 4) == 4)
+        #expect(0.wrapped(around: 0 ... 4) == 0)
+        #expect(1.wrapped(around: 0 ... 4) == 1)
+        #expect(2.wrapped(around: 0 ... 4) == 2)
+        #expect(3.wrapped(around: 0 ... 4) == 3)
+        #expect(4.wrapped(around: 0 ... 4) == 4)
+        #expect(5.wrapped(around: 0 ... 4) == 0)
+        #expect(6.wrapped(around: 0 ... 4) == 1)
+        #expect(7.wrapped(around: 0 ... 4) == 2)
+        #expect(8.wrapped(around: 0 ... 4) == 3)
+        #expect(9.wrapped(around: 0 ... 4) == 4)
+        #expect(10.wrapped(around: 0 ... 4) == 0)
+        #expect(11.wrapped(around: 0 ... 4) == 1)
         
-        XCTAssertEqual((-11).wrapped(around: 1 ... 5), 4)
-        XCTAssertEqual((-10).wrapped(around: 1 ... 5), 5)
-        XCTAssertEqual((-9).wrapped(around: 1 ... 5), 1)
-        XCTAssertEqual((-8).wrapped(around: 1 ... 5), 2)
-        XCTAssertEqual((-7).wrapped(around: 1 ... 5), 3)
-        XCTAssertEqual((-6).wrapped(around: 1 ... 5), 4)
-        XCTAssertEqual((-5).wrapped(around: 1 ... 5), 5)
-        XCTAssertEqual((-4).wrapped(around: 1 ... 5), 1)
-        XCTAssertEqual((-3).wrapped(around: 1 ... 5), 2)
-        XCTAssertEqual((-2).wrapped(around: 1 ... 5), 3)
-        XCTAssertEqual((-1).wrapped(around: 1 ... 5), 4)
-        XCTAssertEqual(0.wrapped(around: 1 ... 5), 5)
-        XCTAssertEqual(1.wrapped(around: 1 ... 5), 1)
-        XCTAssertEqual(2.wrapped(around: 1 ... 5), 2)
-        XCTAssertEqual(3.wrapped(around: 1 ... 5), 3)
-        XCTAssertEqual(4.wrapped(around: 1 ... 5), 4)
-        XCTAssertEqual(5.wrapped(around: 1 ... 5), 5)
-        XCTAssertEqual(6.wrapped(around: 1 ... 5), 1)
-        XCTAssertEqual(7.wrapped(around: 1 ... 5), 2)
-        XCTAssertEqual(8.wrapped(around: 1 ... 5), 3)
-        XCTAssertEqual(9.wrapped(around: 1 ... 5), 4)
-        XCTAssertEqual(10.wrapped(around: 1 ... 5), 5)
-        XCTAssertEqual(11.wrapped(around: 1 ... 5), 1)
+        #expect((-11).wrapped(around: 1 ... 5) == 4)
+        #expect((-10).wrapped(around: 1 ... 5) == 5)
+        #expect((-9).wrapped(around: 1 ... 5) == 1)
+        #expect((-8).wrapped(around: 1 ... 5) == 2)
+        #expect((-7).wrapped(around: 1 ... 5) == 3)
+        #expect((-6).wrapped(around: 1 ... 5) == 4)
+        #expect((-5).wrapped(around: 1 ... 5) == 5)
+        #expect((-4).wrapped(around: 1 ... 5) == 1)
+        #expect((-3).wrapped(around: 1 ... 5) == 2)
+        #expect((-2).wrapped(around: 1 ... 5) == 3)
+        #expect((-1).wrapped(around: 1 ... 5) == 4)
+        #expect(0.wrapped(around: 1 ... 5) == 5)
+        #expect(1.wrapped(around: 1 ... 5) == 1)
+        #expect(2.wrapped(around: 1 ... 5) == 2)
+        #expect(3.wrapped(around: 1 ... 5) == 3)
+        #expect(4.wrapped(around: 1 ... 5) == 4)
+        #expect(5.wrapped(around: 1 ... 5) == 5)
+        #expect(6.wrapped(around: 1 ... 5) == 1)
+        #expect(7.wrapped(around: 1 ... 5) == 2)
+        #expect(8.wrapped(around: 1 ... 5) == 3)
+        #expect(9.wrapped(around: 1 ... 5) == 4)
+        #expect(10.wrapped(around: 1 ... 5) == 5)
+        #expect(11.wrapped(around: 1 ... 5) == 1)
         
-        XCTAssertEqual((-11).wrapped(around: -1 ... 3), -1)
-        XCTAssertEqual((-10).wrapped(around: -1 ... 3),  0)
-        XCTAssertEqual((-9).wrapped(around: -1 ... 3),  1)
-        XCTAssertEqual((-8).wrapped(around: -1 ... 3),  2)
-        XCTAssertEqual((-7).wrapped(around: -1 ... 3),  3)
-        XCTAssertEqual((-6).wrapped(around: -1 ... 3), -1)
-        XCTAssertEqual((-5).wrapped(around: -1 ... 3),  0)
-        XCTAssertEqual((-4).wrapped(around: -1 ... 3),  1)
-        XCTAssertEqual((-3).wrapped(around: -1 ... 3),  2)
-        XCTAssertEqual((-2).wrapped(around: -1 ... 3),  3)
-        XCTAssertEqual((-1).wrapped(around: -1 ... 3), -1)
-        XCTAssertEqual(0.wrapped(around: -1 ... 3),  0)
-        XCTAssertEqual(1.wrapped(around: -1 ... 3),  1)
-        XCTAssertEqual(2.wrapped(around: -1 ... 3),  2)
-        XCTAssertEqual(3.wrapped(around: -1 ... 3),  3)
-        XCTAssertEqual(4.wrapped(around: -1 ... 3), -1)
-        XCTAssertEqual(5.wrapped(around: -1 ... 3),  0)
-        XCTAssertEqual(6.wrapped(around: -1 ... 3),  1)
-        XCTAssertEqual(7.wrapped(around: -1 ... 3),  2)
-        XCTAssertEqual(8.wrapped(around: -1 ... 3),  3)
-        XCTAssertEqual(9.wrapped(around: -1 ... 3), -1)
-        XCTAssertEqual(10.wrapped(around: -1 ... 3),  0)
-        XCTAssertEqual(11.wrapped(around: -1 ... 3),  1)
+        #expect((-11).wrapped(around: -1 ... 3) == -1)
+        #expect((-10).wrapped(around: -1 ... 3) == 0)
+        #expect((-9).wrapped(around: -1 ... 3) == 1)
+        #expect((-8).wrapped(around: -1 ... 3) == 2)
+        #expect((-7).wrapped(around: -1 ... 3) == 3)
+        #expect((-6).wrapped(around: -1 ... 3) == -1)
+        #expect((-5).wrapped(around: -1 ... 3) == 0)
+        #expect((-4).wrapped(around: -1 ... 3) == 1)
+        #expect((-3).wrapped(around: -1 ... 3) == 2)
+        #expect((-2).wrapped(around: -1 ... 3) == 3)
+        #expect((-1).wrapped(around: -1 ... 3) == -1)
+        #expect(0.wrapped(around: -1 ... 3) == 0)
+        #expect(1.wrapped(around: -1 ... 3) == 1)
+        #expect(2.wrapped(around: -1 ... 3) == 2)
+        #expect(3.wrapped(around: -1 ... 3) == 3)
+        #expect(4.wrapped(around: -1 ... 3) == -1)
+        #expect(5.wrapped(around: -1 ... 3) == 0)
+        #expect(6.wrapped(around: -1 ... 3) == 1)
+        #expect(7.wrapped(around: -1 ... 3) == 2)
+        #expect(8.wrapped(around: -1 ... 3) == 3)
+        #expect(9.wrapped(around: -1 ... 3) == -1)
+        #expect(10.wrapped(around: -1 ... 3) == 0)
+        #expect(11.wrapped(around: -1 ... 3) == 1)
         
         // Range
         
         // single value ranges
         
-        XCTAssertEqual(1.wrapped(around: 0 ..< 0),  0)
-        XCTAssertEqual(1.wrapped(around: -1 ..< (-1)), -1)
+        #expect(1.wrapped(around: 0 ..< 0) == 0)
+        #expect(1.wrapped(around: -1 ..< (-1)) == -1)
         
         // basic ranges
         
-        XCTAssertEqual((-11).wrapped(around: 0 ..< 4), 1)
-        XCTAssertEqual((-10).wrapped(around: 0 ..< 4), 2)
-        XCTAssertEqual((-9).wrapped(around: 0 ..< 4), 3)
-        XCTAssertEqual((-8).wrapped(around: 0 ..< 4), 0)
-        XCTAssertEqual((-7).wrapped(around: 0 ..< 4), 1)
-        XCTAssertEqual((-6).wrapped(around: 0 ..< 4), 2)
-        XCTAssertEqual((-5).wrapped(around: 0 ..< 4), 3)
-        XCTAssertEqual((-4).wrapped(around: 0 ..< 4), 0)
-        XCTAssertEqual((-3).wrapped(around: 0 ..< 4), 1)
-        XCTAssertEqual((-2).wrapped(around: 0 ..< 4), 2)
-        XCTAssertEqual((-1).wrapped(around: 0 ..< 4), 3)
-        XCTAssertEqual(0.wrapped(around: 0 ..< 4), 0)
-        XCTAssertEqual(1.wrapped(around: 0 ..< 4), 1)
-        XCTAssertEqual(2.wrapped(around: 0 ..< 4), 2)
-        XCTAssertEqual(3.wrapped(around: 0 ..< 4), 3)
-        XCTAssertEqual(4.wrapped(around: 0 ..< 4), 0)
-        XCTAssertEqual(5.wrapped(around: 0 ..< 4), 1)
-        XCTAssertEqual(6.wrapped(around: 0 ..< 4), 2)
-        XCTAssertEqual(7.wrapped(around: 0 ..< 4), 3)
-        XCTAssertEqual(8.wrapped(around: 0 ..< 4), 0)
-        XCTAssertEqual(9.wrapped(around: 0 ..< 4), 1)
-        XCTAssertEqual(10.wrapped(around: 0 ..< 4), 2)
-        XCTAssertEqual(11.wrapped(around: 0 ..< 4), 3)
+        #expect((-11).wrapped(around: 0 ..< 4) == 1)
+        #expect((-10).wrapped(around: 0 ..< 4) == 2)
+        #expect((-9).wrapped(around: 0 ..< 4) == 3)
+        #expect((-8).wrapped(around: 0 ..< 4) == 0)
+        #expect((-7).wrapped(around: 0 ..< 4) == 1)
+        #expect((-6).wrapped(around: 0 ..< 4) == 2)
+        #expect((-5).wrapped(around: 0 ..< 4) == 3)
+        #expect((-4).wrapped(around: 0 ..< 4) == 0)
+        #expect((-3).wrapped(around: 0 ..< 4) == 1)
+        #expect((-2).wrapped(around: 0 ..< 4) == 2)
+        #expect((-1).wrapped(around: 0 ..< 4) == 3)
+        #expect(0.wrapped(around: 0 ..< 4) == 0)
+        #expect(1.wrapped(around: 0 ..< 4) == 1)
+        #expect(2.wrapped(around: 0 ..< 4) == 2)
+        #expect(3.wrapped(around: 0 ..< 4) == 3)
+        #expect(4.wrapped(around: 0 ..< 4) == 0)
+        #expect(5.wrapped(around: 0 ..< 4) == 1)
+        #expect(6.wrapped(around: 0 ..< 4) == 2)
+        #expect(7.wrapped(around: 0 ..< 4) == 3)
+        #expect(8.wrapped(around: 0 ..< 4) == 0)
+        #expect(9.wrapped(around: 0 ..< 4) == 1)
+        #expect(10.wrapped(around: 0 ..< 4) == 2)
+        #expect(11.wrapped(around: 0 ..< 4) == 3)
     }
     
-    func testNumberOfDigits() {
-        XCTAssertEqual(0.numberOfDigits, 1)
-        XCTAssertEqual(1.numberOfDigits, 1)
-        XCTAssertEqual(10.numberOfDigits, 2)
-        XCTAssertEqual(15.numberOfDigits, 2)
-        XCTAssertEqual(205.numberOfDigits, 3)
+    @Test
+    func numberOfDigits() {
+        #expect(0.numberOfDigits == 1)
+        #expect(1.numberOfDigits == 1)
+        #expect(10.numberOfDigits == 2)
+        #expect(15.numberOfDigits == 2)
+        #expect(205.numberOfDigits == 3)
         
-        XCTAssertEqual((-0).numberOfDigits, 1)
-        XCTAssertEqual((-1).numberOfDigits, 1)
-        XCTAssertEqual((-10).numberOfDigits, 2)
-        XCTAssertEqual((-15).numberOfDigits, 2)
-        XCTAssertEqual((-205).numberOfDigits, 3)
+        #expect((-0).numberOfDigits == 1)
+        #expect((-1).numberOfDigits == 1)
+        #expect((-10).numberOfDigits == 2)
+        #expect((-15).numberOfDigits == 2)
+        #expect((-205).numberOfDigits == 3)
     }
 }

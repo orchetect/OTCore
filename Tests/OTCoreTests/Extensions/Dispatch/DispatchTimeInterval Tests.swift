@@ -4,38 +4,41 @@
 //  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
-@testable import OTCore
-import XCTest
+#if canImport(Dispatch)
 
-class Extensions_Dispatch_DispatchTimeInterval_Tests: XCTestCase {
-    override func setUp() { super.setUp() }
-    override func tearDown() { super.tearDown() }
-    
-    func testMicroseconds() {
-        XCTAssertEqual(
-            DispatchTimeInterval.seconds(2).microseconds,
-            2_000_000
+import Dispatch
+@testable import OTCore
+import Testing
+
+@Suite struct Extensions_Dispatch_DispatchTimeInterval_Tests {
+    @Test
+    func dispatchTimeInterval_Microseconds() {
+        #expect(
+            DispatchTimeInterval.seconds(2).microseconds
+                == 2_000_000
         )
         
-        XCTAssertEqual(
-            DispatchTimeInterval.milliseconds(2000).microseconds,
-            2_000_000
+        #expect(
+            DispatchTimeInterval.milliseconds(2000).microseconds
+                == 2_000_000
         )
         
-        XCTAssertEqual(
-            DispatchTimeInterval.microseconds(2_000_000).microseconds,
-            2_000_000
+        #expect(
+            DispatchTimeInterval.microseconds(2_000_000).microseconds
+                == 2_000_000
         )
         
-        XCTAssertEqual(
-            DispatchTimeInterval.nanoseconds(2_000_000_000).microseconds,
-            2_000_000
+        #expect(
+            DispatchTimeInterval.nanoseconds(2_000_000_000).microseconds
+                == 2_000_000
         )
         
         // assertion error:
-        // XCTAssertEqual(
-        //    DispatchTimeInterval.never.microseconds,
-        //    0
+        // #expect(
+        //     DispatchTimeInterval.never.microseconds
+        //     == 0
         // )
     }
 }
+
+#endif

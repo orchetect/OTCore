@@ -4,13 +4,19 @@
 //  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
-@testable import OTCore
-import XCTest
+#if canImport(Foundation)
 
-final class Extensions_Foundation_Collections_Tests: XCTestCase {
-    func testComparisonResultInverted() {
-        XCTAssertEqual(ComparisonResult.orderedAscending.inverted, .orderedDescending)
-        XCTAssertEqual(ComparisonResult.orderedSame.inverted, .orderedSame)
-        XCTAssertEqual(ComparisonResult.orderedDescending.inverted, .orderedAscending)
+import Foundation
+@testable import OTCore
+import Testing
+
+@Suite struct Extensions_Foundation_Collections_Tests {
+    @Test
+    func comparisonResultInverted() {
+        #expect(ComparisonResult.orderedAscending.inverted == .orderedDescending)
+        #expect(ComparisonResult.orderedSame.inverted == .orderedSame)
+        #expect(ComparisonResult.orderedDescending.inverted == .orderedAscending)
     }
 }
+
+#endif

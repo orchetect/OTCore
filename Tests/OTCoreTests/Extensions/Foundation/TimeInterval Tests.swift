@@ -4,16 +4,19 @@
 //  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
-@testable import OTCore
-import XCTest
+#if canImport(Foundation)
 
-class Extensions_Foundation_TimeInterval_Tests: XCTestCase {
-    override func setUp() { super.setUp() }
-    override func tearDown() { super.tearDown() }
-    
-    func testTimeInterval_init_Timespec() {
+import Foundation
+@testable import OTCore
+import Testing
+
+@Suite struct Extensions_Foundation_TimeInterval_Tests {
+    @Test
+    func timeInterval_init_Timespec() {
         let ti = TimeInterval(timespec(tv_sec: 1, tv_nsec: 234_567_891))
         
-        XCTAssertEqual(ti, TimeInterval(1.234_567_891))
+        #expect(ti == TimeInterval(1.234_567_891))
     }
 }
+
+#endif

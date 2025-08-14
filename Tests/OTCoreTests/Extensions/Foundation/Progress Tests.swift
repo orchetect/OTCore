@@ -4,43 +4,48 @@
 //  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
-@testable import OTCore
-import XCTest
+#if canImport(Foundation)
 
-class Extensions_Foundation_Progress_Tests: XCTestCase {
-    override func setUp() { super.setUp() }
-    override func tearDown() { super.tearDown() }
-    
-    func testProgressParent_Nil() {
+import Foundation
+@testable import OTCore
+import Testing
+
+@Suite struct Extensions_Foundation_Progress_Tests {
+    @Test
+    func progressParent_Nil() {
         let empty = Progress()
         
-        XCTAssertNil(empty.parent)
+        #expect(empty.parent == nil)
     }
     
-    func testProgressParent() {
+    @Test
+    func progressParent() {
         let master = Progress()
         let child1 = Progress(totalUnitCount: 10, parent: master, pendingUnitCount: 10)
         let child2 = Progress(totalUnitCount: 10, parent: master, pendingUnitCount: 10)
         
-        XCTAssertEqual(child1.parent, master)
-        XCTAssertEqual(child2.parent, master)
+        #expect(child1.parent == master)
+        #expect(child2.parent == master)
     }
     
-    func testProgressChildren_Empty() {
+    @Test
+    func progressChildren_Empty() {
         let empty = Progress()
         
-        XCTAssertEqual(empty.children, [])
+        #expect(empty.children == [])
     }
     
-    func testProgressChildren() {
+    @Test
+    func progressChildren() {
         let master = Progress()
         let child1 = Progress(totalUnitCount: 10, parent: master, pendingUnitCount: 10)
         let child2 = Progress(totalUnitCount: 10, parent: master, pendingUnitCount: 10)
         
-        XCTAssertEqual(master.children, [child1, child2])
+        #expect(master.children == [child1, child2])
     }
     
-    func testParent_Memory() {
+    @Test
+    func parent_Memory() {
         class Foo {
             weak var master: Progress?
             weak var child1: Progress?
@@ -69,14 +74,15 @@ class Extensions_Foundation_Progress_Tests: XCTestCase {
         
         // ensure parent deallocates and has no strong references remaining in memory
         
-        XCTAssertNil(foo.master)
-        XCTAssertNil(foo.child1)
-        XCTAssertNil(foo.child1?.parent)
-        XCTAssertNil(foo.child2)
-        XCTAssertNil(foo.child2?.parent)
+        #expect(foo.master == nil)
+        #expect(foo.child1 == nil)
+        #expect(foo.child1?.parent == nil)
+        #expect(foo.child2 == nil)
+        #expect(foo.child2?.parent == nil)
     }
     
-    func testChildren_Memory() {
+    @Test
+    func children_Memory() {
         class Foo {
             var master: Progress!
             weak var child1: Progress?
@@ -108,15 +114,17 @@ class Extensions_Foundation_Progress_Tests: XCTestCase {
             
             // ensure parent deallocates and has no strong references remaining in memory
             
-            XCTAssertNil(foo.child1)
-            XCTAssertNil(foo.child1?.parent)
-            XCTAssertNil(foo.child2)
-            XCTAssertNil(foo.child2?.parent)
+            #expect(foo.child1 == nil)
+            #expect(foo.child1?.parent == nil)
+            #expect(foo.child2 == nil)
+            #expect(foo.child2?.parent == nil)
             
             masterRef = foo.master
             foo = nil
         }
         
-        XCTAssertNil(masterRef)
+        #expect(masterRef == nil)
     }
 }
+
+#endif

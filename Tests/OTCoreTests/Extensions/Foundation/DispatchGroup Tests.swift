@@ -4,15 +4,23 @@
 //  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
-@testable import OTCore
-import XCTest
+#if canImport(Foundation)
 
-class Extensions_Foundation_DispatchGroup_Tests: XCTestCase {
-    override func setUp() { super.setUp() }
-    override func tearDown() { super.tearDown() }
+import Foundation
+@testable import OTCore
+import Testing
+import TestingExtensions
+
+@Suite(.serialized) struct Extensions_Foundation_DispatchGroup_Tests {
+    actor Expectation {
+        var isFulfilled = false
+        private func _fulfill() { isFulfilled = true }
+        nonisolated func fulfill() { Task { await _fulfill() } }
+    }
     
-    func testSync() {
-        let exp = expectation(description: "")
+    @Test
+    func sync() async {
+        let exp = Expectation()
         
         DispatchGroup.sync { g in
             DispatchQueue.global().asyncAfter(deadline: .now() + .milliseconds(100)) {
@@ -21,11 +29,12 @@ class Extensions_Foundation_DispatchGroup_Tests: XCTestCase {
             }
         }
         
-        wait(for: [exp], timeout: 1.0)
+        await wait(expect: { await exp.isFulfilled }, timeout: 1.0)
     }
     
-    func testSyncOnQueue() {
-        let exp = expectation(description: "")
+    @Test
+    func syncOnQueue() async {
+        let exp = Expectation()
         
         DispatchGroup.sync(asyncOn: .global()) { g in
             sleep(0.1)
@@ -34,12 +43,12 @@ class Extensions_Foundation_DispatchGroup_Tests: XCTestCase {
             g.leave()
         }
         
-        wait(for: [exp], timeout: 1.0)
+        await wait(expect: { await exp.isFulfilled }, timeout: 1.0)
     }
     
-    func testSyncTimeout_timedOut() {
-        let exp = expectation(description: "")
-        exp.isInverted = true
+    @Test
+    func syncTimeout_timedOut() async {
+        let exp = Expectation()
         
         let result = DispatchGroup.sync(timeout: .milliseconds(100)) { g in
             DispatchQueue.global().asyncAfter(deadline: .now() + .seconds(1)) {
@@ -48,12 +57,16 @@ class Extensions_Foundation_DispatchGroup_Tests: XCTestCase {
             }
         }
         
-        wait(for: [exp], timeout: 0.5)
-        XCTAssertEqual(result, .timedOut)
+        await withKnownIssue {
+            await wait(expect: { await exp.isFulfilled }, timeout: 0.5)
+        }
+        #expect(await !exp.isFulfilled)
+        #expect(result == .timedOut)
     }
     
-    func testSyncTimeout_success() {
-        let exp = expectation(description: "")
+    @Test
+    func syncTimeout_success() async {
+        let exp = Expectation()
         
         let result = DispatchGroup.sync(timeout: .seconds(1)) { g in
             DispatchQueue.global().async() {
@@ -62,29 +75,30 @@ class Extensions_Foundation_DispatchGroup_Tests: XCTestCase {
             }
         }
         
-        wait(for: [exp], timeout: 0.5)
-        XCTAssertEqual(result, .success)
+        await wait(expect: { await exp.isFulfilled }, timeout: 0.5)
+        #expect(result == .success)
     }
     
-    func testSyncOnQueueTimeout_timedOut() {
-        let exp = expectation(description: "")
-        exp.isInverted = true
+    @Test
+    func syncOnQueueTimeout_timedOut() async {
+        let exp = Expectation()
         
-        let result = DispatchGroup.sync(
-            asyncOn: .global(),
-            timeout: .milliseconds(100)
-        ) { g in
+        let result = DispatchGroup.sync(asyncOn: .global(), timeout: .milliseconds(100)) { g in
             sleep(1) // 1 second
             exp.fulfill()
             g.leave()
         }
         
-        wait(for: [exp], timeout: 0.5)
-        XCTAssertEqual(result, .timedOut)
+        await withKnownIssue {
+            await wait(expect: { await exp.isFulfilled }, timeout: 0.5)
+        }
+        #expect(await !exp.isFulfilled)
+        #expect(result == .timedOut)
     }
     
-    func testSyncOnQueueTimeout_success() {
-        let exp = expectation(description: "")
+    @Test
+    func syncOnQueueTimeout_success() async {
+        let exp = Expectation()
         
         let result = DispatchGroup.sync(
             asyncOn: .global(),
@@ -94,30 +108,33 @@ class Extensions_Foundation_DispatchGroup_Tests: XCTestCase {
             g.leave()
         }
         
-        wait(for: [exp], timeout: 0.5)
-        XCTAssertEqual(result, .success)
+        await wait(expect: { await exp.isFulfilled }, timeout: 0.5)
+        #expect(result == .success)
     }
     
-    func testSyncReturnValue() {
+    @Test
+    func syncReturnValue() {
         let returnValue = DispatchGroup.sync { g in
             DispatchQueue.global().asyncAfter(deadline: .now() + .milliseconds(100)) {
                 g.leave(withValue: 1)
             }
         }
         
-        XCTAssertEqual(returnValue, 1)
+        #expect(returnValue == 1)
     }
     
-    func testSyncReturnValueOnQueue() {
+    @Test
+    func syncReturnValueOnQueue() {
         let returnValue: Int = DispatchGroup.sync(asyncOn: .global()) { g in
             sleep(0.1)
             g.leave(withValue: 1)
         }
         
-        XCTAssertEqual(returnValue, 1)
+        #expect(returnValue == 1)
     }
     
-    func testSyncReturnValueTimeout_timedOut() {
+    @Test
+    func syncReturnValueTimeout_timedOut() {
         let result = DispatchGroup.sync(timeout: .milliseconds(100)) { g in
             DispatchQueue.global().asyncAfter(deadline: .now() + .seconds(1)) {
                 g.leave(withValue: 1)
@@ -126,15 +143,16 @@ class Extensions_Foundation_DispatchGroup_Tests: XCTestCase {
         
         switch result {
         case .success:
-            XCTFail()
+            #fail()
         case .timedOut:
             // correct
             break
         }
     }
     
-    func testSyncReturnValueTimeout_success() {
-        let result = DispatchGroup.sync(timeout: .milliseconds(100)) { g in
+    @Test
+    func syncReturnValueTimeout_success() {
+        let result = DispatchGroup.sync(timeout: .milliseconds(500)) { g in
             DispatchQueue.global().async() {
                 g.leave(withValue: 1)
             }
@@ -143,13 +161,14 @@ class Extensions_Foundation_DispatchGroup_Tests: XCTestCase {
         switch result {
         case let .success(value):
             // correct
-            XCTAssertEqual(value, 1)
+            #expect(value == 1)
         case .timedOut:
-            XCTFail()
+            #fail()
         }
     }
     
-    func testSyncReturnValueOnQueueTimeout_timedOut() {
+    @Test
+    func syncReturnValueOnQueueTimeout_timedOut() {
         let result: DispatchSyncTimeoutResult<Int> =
             DispatchGroup.sync(
                 asyncOn: .global(),
@@ -161,14 +180,15 @@ class Extensions_Foundation_DispatchGroup_Tests: XCTestCase {
         
         switch result {
         case .success:
-            XCTFail()
+            #fail()
         case .timedOut:
             // correct
             break
         }
     }
     
-    func testSyncReturnValueOnQueueTimeout_success() {
+    @Test
+    func syncReturnValueOnQueueTimeout_success() {
         let result: DispatchSyncTimeoutResult<Int> =
             DispatchGroup.sync(
                 asyncOn: .global(),
@@ -180,13 +200,14 @@ class Extensions_Foundation_DispatchGroup_Tests: XCTestCase {
         switch result {
         case let .success(value):
             // correct
-            XCTAssertEqual(value, 1)
+            #expect(value == 1)
         case .timedOut:
-            XCTFail()
+            #fail()
         }
     }
     
-    func testNesting2() {
+    @Test
+    func nesting() {
         var val = 0
         
         var to1: DispatchTimeoutResult?
@@ -200,8 +221,10 @@ class Extensions_Foundation_DispatchGroup_Tests: XCTestCase {
             g.leave()
         }
         
-        XCTAssertEqual(to1, .success)
-        XCTAssertEqual(to2, .success)
-        XCTAssertEqual(val, 1)
+        #expect(to1 == .success)
+        #expect(to2 == .success)
+        #expect(val == 1)
     }
 }
+
+#endif

@@ -4,144 +4,152 @@
 //  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
-@testable import OTCore
-import XCTest
+#if canImport(Foundation)
 
-class Extensions_Foundation_StringAndNSRegularExpression_Tests: XCTestCase {
-    override func setUp() { super.setUp() }
-    override func tearDown() { super.tearDown() }
-    
-    func testRegExPattern() {
+import Foundation
+@testable import OTCore
+import Testing
+
+@Suite struct Extensions_Foundation_StringAndNSRegularExpression_Tests {
+    @Test
+    func regExPattern() {
         let regPattern = "[0-9]+"
         
         let str = "The 45 turkeys ate 9 sandwiches."
         
-        XCTAssertEqual(
-            str.regexMatches(pattern: regPattern),
-            ["45", "9"]
+        #expect(
+            str.regexMatches(pattern: regPattern)
+                == ["45", "9"]
         )
     }
     
-    func testRegExPattern_ExtendedCharacters() {
+    @Test
+    func regExPattern_ExtendedCharacters() {
         let regPattern = "[0-9]+"
         
         let str = "Thé 45 smiling 😀 túrkêÿs åte →●₩√【】♞‱ 9 Şandwiches."
         
-        XCTAssertEqual(
-            str.regexMatches(pattern: regPattern),
-            ["45", "9"]
+        #expect(
+            str.regexMatches(pattern: regPattern)
+                == ["45", "9"]
         )
     }
     
     /// Ensure that using a Substring as the input string works as expected.
-    func testRegExPattern_InSubString() {
+    @Test
+    func regExPattern_InSubString() {
         let regPattern = "^([0-9]+)X([0-9]+)$"
         
         let str: String = " 123X456 "
-        let subStr: Substring = str[
-            str.index(str.startIndex, offsetBy: 1) ..< str.index(str.startIndex, offsetBy: 8)
-        ]
+        let range = str.index(str.startIndex, offsetBy: 1) ..< str.index(str.startIndex, offsetBy: 8)
+        let subStr: Substring = str[range]
         
-        XCTAssertEqual(
-            subStr.regexMatches(pattern: regPattern),
-            ["123X456"]
+        #expect(
+            subStr.regexMatches(pattern: regPattern)
+                == ["123X456"]
         )
     }
     
-    func testRegExPatternReplacement() {
+    @Test
+    func regExPatternReplacement() {
         let regPattern = "[0-9]+"
         
         let str = "The 45 turkeys ate 9 sandwiches."
         
-        XCTAssertEqual(
+        #expect(
             str.regexMatches(
                 pattern: regPattern,
                 replacementTemplate: "$0-some"
-            ),
-            "The 45-some turkeys ate 9-some sandwiches."
+            )
+                == "The 45-some turkeys ate 9-some sandwiches."
         )
     }
     
-    func testRegExPatternReplacement_ExtendedCharacters() {
+    @Test
+    func regExPatternReplacement_ExtendedCharacters() {
         let regPattern = "[0-9]+"
         
         let str = "Thé 45 smiling 😀 túrkêÿs åte →●₩√【】♞‱ 9 Şandwiches."
         
-        XCTAssertEqual(
+        #expect(
             str.regexMatches(
                 pattern: regPattern,
                 replacementTemplate: "$0-some"
-            ),
-            "Thé 45-some smiling 😀 túrkêÿs åte →●₩√【】♞‱ 9-some Şandwiches."
+            )
+                == "Thé 45-some smiling 😀 túrkêÿs åte →●₩√【】♞‱ 9-some Şandwiches."
         )
     }
     
     /// Ensure that using a Substring as the input string works as expected.
-    func testRegExPatternReplacement_InSubString() {
+    @Test
+    func regExPatternReplacement_InSubString() {
         let regPattern = "^([0-9]+)X([0-9]+)$"
         
         let str: String = " 123X456 "
-        let subStr: Substring = str[
-            str.index(str.startIndex, offsetBy: 1) ..< str.index(str.startIndex, offsetBy: 8)
-        ]
+        let range = str.index(str.startIndex, offsetBy: 1) ..< str.index(str.startIndex, offsetBy: 8)
+        let subStr: Substring = str[range]
         
-        XCTAssertEqual(
+        #expect(
             subStr.regexMatches(
                 pattern: regPattern,
                 replacementTemplate: "A$1B$2C"
-            ),
-            "A123B456C"
+            )
+                == "A123B456C"
         )
     }
     
-    func testRegExCaptureGroups() {
+    @Test
+    func regExCaptureGroups() {
         let capturePattern = #"""
             ([a-zA-z\s]*)\s([0-9]+)\s([a-zA-z\s]*)\s([0-9]+)\s([a-zA-z\s.]*)
             """#
         
         let str = "The 45 turkeys ate 9 sandwiches."
         
-        XCTAssertEqual(
-            str.regexMatches(captureGroupsFromPattern: capturePattern),
-            [
-                Optional(Substring(str)),
-                Optional("The"),
-                Optional("45"),
-                Optional("turkeys ate"),
-                Optional("9"),
-                Optional("sandwiches.")
-            ]
+        #expect(
+            str.regexMatches(captureGroupsFromPattern: capturePattern)
+                == [
+                    Optional(Substring(str)),
+                    Optional("The"),
+                    Optional("45"),
+                    Optional("turkeys ate"),
+                    Optional("9"),
+                    Optional("sandwiches."),
+                ]
         )
     }
     
-    func testRegExCaptureGroups_ExtendedCharacters() {
+    @Test
+    func regExCaptureGroups_ExtendedCharacters() {
         let capturePattern = #"^([^\.]*)\.([^\.]*)\.([\d]+)$"#
         
         let str = "Hellõ țhiș is ǎ têst.Śtřįng 😀→●₩√【】♞‱.1234"
         
-        XCTAssertEqual(
-            str.regexMatches(captureGroupsFromPattern: capturePattern),
-            [
-                Optional(Substring(str)),
-                Optional("Hellõ țhiș is ǎ têst"),
-                Optional("Śtřįng 😀→●₩√【】♞‱"),
-                Optional("1234")
-            ]
+        #expect(
+            str.regexMatches(captureGroupsFromPattern: capturePattern)
+                == [
+                    Optional(Substring(str)),
+                    Optional("Hellõ țhiș is ǎ têst"),
+                    Optional("Śtřįng 😀→●₩√【】♞‱"),
+                    Optional("1234"),
+                ]
         )
     }
-    
+
     /// Ensure that using a Substring as the input string works as expected.
-    func testRegExCaptureGroups_InSubString() {
+    @Test
+    func regExCaptureGroups_InSubString() {
         let regPattern = "^([0-9]+)X([0-9]+)$"
         
         let str: String = " 123X456 "
-        let subStr: Substring = str[
-            str.index(str.startIndex, offsetBy: 1) ..< str.index(str.startIndex, offsetBy: 8)
-        ]
+        let range = str.index(str.startIndex, offsetBy: 1) ..< str.index(str.startIndex, offsetBy: 8)
+        let subStr: Substring = str[range]
         
-        XCTAssertEqual(
-            subStr.regexMatches(captureGroupsFromPattern: regPattern),
-            ["123X456", "123", "456"]
+        #expect(
+            subStr.regexMatches(captureGroupsFromPattern: regPattern)
+                == ["123X456", "123", "456"]
         )
     }
 }
+
+#endif

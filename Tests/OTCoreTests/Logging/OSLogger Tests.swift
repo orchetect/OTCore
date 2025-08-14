@@ -6,14 +6,13 @@
 
 import OSLog
 import OTCore
-import XCTest
+import Testing
+import TestingExtensions
 
-@available(macOS 10.12, iOS 10.0, watchOS 3.0, tvOS 10.0, *)
-class Logging_Log_Tests: XCTestCase {
-    override func setUp() { super.setUp() }
-    override func tearDown() { super.tearDown() }
-    
-    func testLoggerObjects() {
+// @available(macOS 10.12, iOS 10.0, watchOS 3.0, tvOS 10.0, *)
+@Suite struct Logging_Log_Tests {
+    @Test
+    func loggerObjects() {
         // this test does not assert anything, it's just to test access levels
         
         _ = [.message] as OSLogger.LogTemplate
@@ -42,33 +41,34 @@ class Logging_Log_Tests: XCTestCase {
         let logger = OSLogger {
             $0.coerceInfoAndDebugToDefault = true
         }
-        XCTAssertEqual(logger.config.coerceInfoAndDebugToDefault, true)
+        #expect(logger.config.coerceInfoAndDebugToDefault == true)
         
         let logger2 = OSLogger(enabled: false)
             .configure {
                 $0.coerceInfoAndDebugToDefault = true
             }
-        XCTAssertEqual(logger2.config.coerceInfoAndDebugToDefault, true)
+        #expect(logger2.config.coerceInfoAndDebugToDefault == true)
         
         _ = logger.enabled
     }
     
     /// This test is only useful with Thread Sanitizer on.
-    func testThreading() {
-        let completionTimeout = expectation(description: "Test Completion Timeout")
-        
-        let group1 = DispatchGroup()
-        let group2 = DispatchGroup()
-        
+    @Test
+    func threading() async throws {
         let iterations = 2000
+        
+        actor Counter {
+            var count = 0
+            func inc() { count += 1 }
+        }
+        let counter = Counter()
         
         // log operations
         
         let logger = OSLogger { $0.coerceInfoAndDebugToDefault = false }
         
         for index in 0 ..< iterations {
-            group1.enter()
-            DispatchQueue.global().async {
+            DispatchQueue.global().async { [counter] in
                 logger.debug("Log thread 1 test # \(index)")
                 
                 // it's useful to note that os_log output to
@@ -79,9 +79,8 @@ class Logging_Log_Tests: XCTestCase {
                 //       type: .debug,
                 //       "Log thread 1 test # \(index)")
                 
-                group1.leave()
+                Task { await counter.inc() }
             }
-            group2.enter()
             DispatchQueue.global().async {
                 logger.debug("Log thread 2 test # \(index)")
                 
@@ -93,20 +92,15 @@ class Logging_Log_Tests: XCTestCase {
                 //       type: .debug,
                 //       "Log thread 2 test # \(index)")
                 
-                group2.leave()
+                Task { await counter.inc() }
             }
         }
         
-        DispatchQueue.global().async {
-            group1.wait()
-            group2.wait()
-            completionTimeout.fulfill()
-        }
-        
-        wait(for: [completionTimeout], timeout: 10)
+        await wait(expect: { await counter.count == iterations * 2 }, timeout: 5.0)
     }
     
-    func testLogger() {
+    @Test
+    func logger() {
         // this test does not assert anything, it's just for diagnostic
         
         print("---------- default config, coerceInfoAndDebugToDefault:true ----------")
@@ -150,7 +144,8 @@ class Logging_Log_Tests: XCTestCase {
         )
     }
     
-    func testLogger_DefaultLog_NoEmojis() {
+    @Test
+    func logger_DefaultLog_NoEmojis() {
         // this test does not assert anything, it's just for diagnostic
         
         print("---------- default log, no emojis ----------")
@@ -164,7 +159,8 @@ class Logging_Log_Tests: XCTestCase {
         logger.fault("Test logger.fault()", 123)
     }
     
-    func testLogger_DefaultLog_OnlyErrorEmojis() {
+    @Test
+    func logger_DefaultLog_OnlyErrorEmojis() {
         // this test does not assert anything, it's just for diagnostic
         
         print("---------- default log, only error emojis ----------")
@@ -184,7 +180,8 @@ class Logging_Log_Tests: XCTestCase {
         logger.fault("Test logger.fault()", 123)
     }
     
-    func testLogger_DefaultLog_AllEmojis() {
+    @Test
+    func logger_DefaultLog_AllEmojis() {
         // this test does not assert anything, it's just for diagnostic
         
         print("---------- default log, all emojis ----------")
@@ -198,7 +195,8 @@ class Logging_Log_Tests: XCTestCase {
         logger.fault("Test logger.fault()", 123)
     }
     
-    func testLogger_CustomLog_AllEmojis() {
+    @Test
+    func logger_CustomLog_AllEmojis() {
         // this test does not assert anything, it's just for diagnostic
         
         print("---------- custom log, all emojis ----------")
@@ -215,7 +213,8 @@ class Logging_Log_Tests: XCTestCase {
         logger.fault("Test logger.fault()", 123)
     }
     
-    func testLogger_LogMethod() {
+    @Test
+    func logger_LogMethod() {
         // this test does not assert anything, it's just for diagnostic
         
         // default log

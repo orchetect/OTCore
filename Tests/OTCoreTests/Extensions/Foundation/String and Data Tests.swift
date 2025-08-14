@@ -4,14 +4,15 @@
 //  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
-@testable import OTCore
-import XCTest
+#if canImport(Foundation)
 
-class Extensions_Foundation_StringAndData_Tests: XCTestCase {
-    override func setUp() { super.setUp() }
-    override func tearDown() { super.tearDown() }
-    
-    func testBase64() {
+import Foundation
+@testable import OTCore
+import Testing
+
+@Suite struct Extensions_Foundation_StringAndData_Tests {
+    @Test
+    func base64() throws {
         // encode and decode
         
         let sourceString =
@@ -20,16 +21,16 @@ class Extensions_Foundation_StringAndData_Tests: XCTestCase {
         let encodedString =
             "ICEiIyQlJicoKSorLC0uLzAxMjM0NTY3ODk6Ozw9Pj9AQUJDREVGR0hJSktMTU5PUFFSU1RVVldYWVpbXF1eX2BhYmNkZWZnaGlqa2xtbm9wcXJzdHV2d3h5ent8fX4="
         
-        XCTAssertEqual(sourceString.base64EncodedString, encodedString)
+        #expect(sourceString.base64EncodedString == encodedString)
         
-        let decodedString = encodedString.base64DecodedString
+        let decodedString = try #require(encodedString.base64DecodedString)
         
-        XCTAssertNotNil(decodedString)
-        
-        XCTAssertEqual(decodedString!, sourceString)
+        #expect(decodedString == sourceString)
         
         // malformed encoded data
         
-        XCTAssertNil("ld$%#*".base64DecodedString)
+        #expect("ld$%#*".base64DecodedString == nil)
     }
 }
+
+#endif

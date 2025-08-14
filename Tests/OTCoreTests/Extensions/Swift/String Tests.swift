@@ -5,13 +5,11 @@
 //
 
 import OTCore
-import XCTest
+import Testing
 
-class Extensions_Swift_String_Tests: XCTestCase {
-    override func setUp() { super.setUp() }
-    override func tearDown() { super.tearDown() }
-    
-    func testStringConstants() {
+@Suite struct Extensions_Swift_String_Tests {
+    @Test
+    func stringConstants() {
         _ = String.quote
         _ = String.tab
         _ = String.space
@@ -19,7 +17,8 @@ class Extensions_Swift_String_Tests: XCTestCase {
         _ = String.null
     }
     
-    func testCharacterConstants() {
+    @Test
+    func characterConstants() {
         _ = Character.quote
         _ = Character.tab
         _ = Character.space
@@ -27,293 +26,306 @@ class Extensions_Swift_String_Tests: XCTestCase {
         _ = Character.null
     }
     
-    func testStringFunctionalAppendConstants() {
+    @Test
+    func stringFunctionalAppendConstants() {
         // .newLined
         
-        XCTAssertEqual("test".newLined, "test\n")
+        #expect("test".newLined == "test\n")
         
         // .tabbed
         
-        XCTAssertEqual("test".tabbed, "test\t")
+        #expect("test".tabbed == "test\t")
         
         // .newLine()
         
         var strNL = "test"
         strNL.newLine()
-        XCTAssertEqual(strNL, "test\n")
+        #expect(strNL == "test\n")
         
         // .tab()
         
         var strTab = "test"
         strTab.tab()
-        XCTAssertEqual(strTab, "test\t")
+        #expect(strTab == "test\t")
     }
     
-    func testRepeating() {
+    @Test
+    func repeating() {
         // String
         
-        XCTAssertEqual("AB".repeating(0), "")
-        XCTAssertEqual("AB".repeating(1), "AB")
-        XCTAssertEqual("AB".repeating(5), "ABABABABAB")
+        #expect("AB".repeating(0) == "")
+        #expect("AB".repeating(1) == "AB")
+        #expect("AB".repeating(5) == "ABABABABAB")
         
         // Substring
         
         let substring = "ABCD".suffix(2)
-        XCTAssertEqual(substring.repeating(0), "")
-        XCTAssertEqual(substring.repeating(1), "CD")
-        XCTAssertEqual(substring.repeating(5), "CDCDCDCDCD")
+        #expect(substring.repeating(0) == "")
+        #expect(substring.repeating(1) == "CD")
+        #expect(substring.repeating(5) == "CDCDCDCDCD")
         
         // Character
         
-        XCTAssertEqual(Character("A").repeating(0), "")
-        XCTAssertEqual(Character("A").repeating(1), "A")
-        XCTAssertEqual(Character("A").repeating(5), "AAAAA")
+        #expect(Character("A").repeating(0) == "")
+        #expect(Character("A").repeating(1) == "A")
+        #expect(Character("A").repeating(5) == "AAAAA")
     }
     
-    func testTrim() {
+    @Test
+    func trim() {
         // .trim()
         
         var str = "    string    "
         str.trim()
         
-        XCTAssertEqual(str, "string")
+        #expect(str == "string")
     }
     
-    func testRemovingPrefix() {
+    @Test
+    func removingPrefix() {
         // .removingPrefix
         
-        let strrr = "///Users/user"
+        let str = "///Users/user"
         
-        XCTAssertEqual(strrr.removingPrefix(""), "///Users/user")
-        XCTAssertEqual(strrr, "///Users/user")
+        #expect(str.removingPrefix("") == "///Users/user")
+        #expect(str == "///Users/user")
         
-        XCTAssertEqual(strrr.removingPrefix("nonexisting"), "///Users/user")
-        XCTAssertEqual(strrr, "///Users/user")
+        #expect(str.removingPrefix("nonexisting") == "///Users/user")
+        #expect(str == "///Users/user")
         
-        XCTAssertEqual(strrr.removingPrefix("/"), "//Users/user")
-        XCTAssertEqual(strrr, "///Users/user")
+        #expect(str.removingPrefix("/") == "//Users/user")
+        #expect(str == "///Users/user")
         
-        XCTAssertEqual(strrr.removingPrefix("/"), "//Users/user")
-        XCTAssertEqual(strrr, "///Users/user")
+        #expect(str.removingPrefix("/") == "//Users/user")
+        #expect(str == "///Users/user")
         
-        XCTAssertEqual(strrr.removingPrefix("zz"), "///Users/user")
-        XCTAssertEqual(strrr, "///Users/user")
+        #expect(str.removingPrefix("zz") == "///Users/user")
+        #expect(str == "///Users/user")
     }
     
-    func testRemovePrefix() {
+    @Test
+    func removePrefix() {
         // .removePrefix
         
-        var strrr = "///Users/user"
+        var str = "///Users/user"
         
-        strrr.removePrefix("")
-        XCTAssertEqual(strrr, "///Users/user")
+        str.removePrefix("")
+        #expect(str == "///Users/user")
         
-        strrr.removePrefix("nonexisting")
-        XCTAssertEqual(strrr, "///Users/user")
+        str.removePrefix("nonexisting")
+        #expect(str == "///Users/user")
         
-        strrr.removePrefix("/")
-        XCTAssertEqual(strrr, "//Users/user")
+        str.removePrefix("/")
+        #expect(str == "//Users/user")
         
-        strrr.removePrefix("/")
-        XCTAssertEqual(strrr, "/Users/user")
+        str.removePrefix("/")
+        #expect(str == "/Users/user")
         
-        strrr.removePrefix("/")
-        XCTAssertEqual(strrr, "Users/user")
+        str.removePrefix("/")
+        #expect(str == "Users/user")
         
-        strrr.removePrefix("/")
-        XCTAssertEqual(strrr, "Users/user")
+        str.removePrefix("/")
+        #expect(str == "Users/user")
     }
     
-    func testRemoveSuffix() {
-        var strrr = "file:///Users/user///"
+    @Test
+    func removeSuffix() {
+        var str = "file:///Users/user///"
         
         // .removingSuffix
         
-        XCTAssertEqual(strrr.removingSuffix("/"), "file:///Users/user//")
-        XCTAssertEqual(strrr, "file:///Users/user///")
+        #expect(str.removingSuffix("/") == "file:///Users/user//")
+        #expect(str == "file:///Users/user///")
         
-        XCTAssertEqual(strrr.removingSuffix("/"), "file:///Users/user//")
-        XCTAssertEqual(strrr, "file:///Users/user///")
+        #expect(str.removingSuffix("/") == "file:///Users/user//")
+        #expect(str == "file:///Users/user///")
         
-        XCTAssertEqual(strrr.removingSuffix("zz"), "file:///Users/user///")
-        XCTAssertEqual(strrr, "file:///Users/user///")
+        #expect(str.removingSuffix("zz") == "file:///Users/user///")
+        #expect(str == "file:///Users/user///")
         
         // .removeSuffix
         
-        strrr.removeSuffix("/")
-        XCTAssertEqual(strrr, "file:///Users/user//")
+        str.removeSuffix("/")
+        #expect(str == "file:///Users/user//")
         
-        strrr.removeSuffix("/")
-        XCTAssertEqual(strrr, "file:///Users/user/")
+        str.removeSuffix("/")
+        #expect(str == "file:///Users/user/")
         
-        strrr.removeSuffix("/")
-        XCTAssertEqual(strrr, "file:///Users/user")
+        str.removeSuffix("/")
+        #expect(str == "file:///Users/user")
         
-        strrr.removeSuffix("/")
-        XCTAssertEqual(strrr, "file:///Users/user")
+        str.removeSuffix("/")
+        #expect(str == "file:///Users/user")
     }
     
-    func testOptionalString() {
-        XCTAssertEqual(
-            optionalString(
+    @Test
+    func optionalString() {
+        #expect(
+            OTCore.optionalString(
                 describing: Int(exactly: 123),
                 ifNil: "0"
-            ),
-            "123"
+            )
+                == "123"
         )
         
-        XCTAssertEqual(
-            optionalString(
+        #expect(
+            OTCore.optionalString(
                 describing: Int(exactly: 123.4),
                 ifNil: "0"
-            ),
-            "0"
+            )
+                == "0"
         )
     }
     
-    func testStringInterpolationIfNil() {
-        XCTAssertEqual(
-            "\(Int(exactly: 123), ifNil: "0")",
-            "123"
-        )
+    @Test
+    func stringInterpolationIfNil() {
+        #expect("\(Int(exactly: 123), ifNil: "0")" == "123")
         
-        XCTAssertEqual(
-            "\(Int(exactly: 123.4), ifNil: "0")",
-            "0"
-        )
+        #expect("\(Int(exactly: 123.4), ifNil: "0")" == "0")
     }
     
-    func testStringInterpolationRadix() {
-        XCTAssertEqual("\("7F", radix: 16)", "127")
-        XCTAssertEqual("\("7F", radix: 2)", "nil")
+    @Test
+    func stringInterpolationRadix() {
+        #expect("\("7F", radix: 16)" == "127")
+        #expect("\("7F", radix: 2)" == "nil")
     }
     
-    func testSubstringToString() {
+    @Test
+    func substringToString() {
         let str = "123"
         
         // form Substring
         
         let subStr = str.prefix(3)
-        XCTAssertEqual(String(describing: type(of: subStr)), "Substring")
+        #expect(String(describing: type(of: subStr)) == "Substring")
         
         // .string
         
         let toStr = subStr.string
         
-        XCTAssertEqual(toStr, String("123"))
-        XCTAssertEqual(String(describing: type(of: toStr)), "String")
+        #expect(toStr == String("123"))
+        #expect(String(describing: type(of: toStr)) == "String")
     }
     
-    func testCharacterToString() {
+    @Test
+    func characterToString() {
         let char = Character("1")
         
         // .string
         
         let toStr = char.string
         
-        XCTAssertEqual(toStr, String("1"))
-        XCTAssertEqual(String(describing: type(of: toStr)), "String")
+        #expect(toStr == String("1"))
+        #expect(String(describing: type(of: toStr)) == "String")
     }
     
     // MARK: Collections tests
     // the following tests are using methods from Collections.swift
     // but specifically testing their implementation on String/StringProtocol here
     
-    func testStartIndexOffsetBy() {
+    @Test
+    func startIndexOffsetBy() {
         // .startIndex(offsetBy:)
         
         let str = "1234567890"
         
-        XCTAssertEqual(
-            str.startIndex(offsetBy: 0),
-            str.startIndex
+        #expect(
+            str.startIndex(offsetBy: 0)
+                == str.startIndex
         )
         
-        XCTAssertEqual(
-            str.startIndex(offsetBy: 1),
-            str.index(str.startIndex, offsetBy: 1)
+        #expect(
+            str.startIndex(offsetBy: 1)
+                == str.index(str.startIndex, offsetBy: 1)
         )
     }
     
-    func testEndIndexOffsetBy() {
+    @Test
+    func endIndexOffsetBy() {
         // .endIndex(offsetBy:)
         
         let str = "1234567890"
         
-        XCTAssertEqual(
-            str.endIndex(offsetBy: 0),
-            str.endIndex
+        #expect(
+            str.endIndex(offsetBy: 0)
+                == str.endIndex
         )
         
-        XCTAssertEqual(
-            str.endIndex(offsetBy: -1),
-            str.index(str.endIndex, offsetBy: -1)
+        #expect(
+            str.endIndex(offsetBy: -1)
+                == str.index(str.endIndex, offsetBy: -1)
         )
     }
     
-    func testSubscriptPosition_OffsetIndex() {
+    @Test
+    func subscriptPosition_OffsetIndex() {
         // String
         
-        XCTAssertEqual("abc123"[position: 2], "c")
+        #expect("abc123"[position: 2] == "c")
         
         // Substring
         
         let substring = "abc123".suffix(4)
-        XCTAssertEqual(substring[position: 2], "2")
+        #expect(substring[position: 2] == "2")
     }
     
-    func testSubscriptPosition_ClosedRange() {
+    @Test
+    func subscriptPosition_ClosedRange() {
         // String
         
-        XCTAssertEqual("abc123"[position: 1 ... 3], "bc1")
+        #expect("abc123"[position: 1 ... 3] == "bc1")
         
         // Substring
         
         let substring = "abc123".suffix(4)
-        XCTAssertEqual(substring[position: 1 ... 3], "123")
+        #expect(substring[position: 1 ... 3] == "123")
     }
     
-    func testSubscriptPosition_Range() {
+    @Test
+    func subscriptPosition_Range() {
         // String
         
-        XCTAssertEqual("abc123"[position: 1 ..< 3], "bc")
+        #expect("abc123"[position: 1 ..< 3] == "bc")
         
         // Substring
         
         let substring = "abc123".suffix(4)
-        XCTAssertEqual(substring[position: 1 ..< 3], "12")
+        #expect(substring[position: 1 ..< 3] == "12")
     }
     
-    func testSubscriptPosition_PartialRangeFrom() {
+    @Test
+    func subscriptPosition_PartialRangeFrom() {
         // String
         
-        XCTAssertEqual("abc123"[position: 2...], "c123")
+        #expect("abc123"[position: 2...] == "c123")
         
         // Substring
         
         let substring = "abc123".suffix(4)
-        XCTAssertEqual(substring[position: 2...], "23")
+        #expect(substring[position: 2...] == "23")
     }
     
-    func testSubscriptPosition_PartialRangeThrough() {
+    @Test
+    func subscriptPosition_PartialRangeThrough() {
         // String
         
-        XCTAssertEqual("abc123"[position: ...3], "abc1")
+        #expect("abc123"[position: ...3] == "abc1")
         
         // Substring
         
         let substring = "abc123".suffix(4)
-        XCTAssertEqual(substring[position: ...3], "c123")
+        #expect(substring[position: ...3] == "c123")
     }
     
-    func testSubscriptPosition_PartialRangeUpTo() {
+    @Test
+    func subscriptPosition_PartialRangeUpTo() {
         // String
         
-        XCTAssertEqual("abc123"[position: ..<3], "abc")
+        #expect("abc123"[position: ..<3] == "abc")
         
         // Substring
         
         let substring = "abc123".suffix(4)
-        XCTAssertEqual(substring[position: ..<3], "c12")
+        #expect(substring[position: ..<3] == "c12")
     }
 }

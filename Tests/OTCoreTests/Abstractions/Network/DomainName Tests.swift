@@ -7,7 +7,7 @@
 import OTCore
 import Testing
 
-@Suite struct DomainNameTests {
+@Suite struct Abstractions_DomainNameTests {
     @Test
     func initString_OneTLDComponent_NoPrefix() throws {
         #expect(DomainName("apple.com").components == ["apple", "com"])

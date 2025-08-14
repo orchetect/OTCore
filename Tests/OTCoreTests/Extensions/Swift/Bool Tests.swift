@@ -5,54 +5,54 @@
 //
 
 import OTCore
-import XCTest
+import Testing
 
-class Extensions_Swift_Bool_Tests: XCTestCase {
-    override func setUp() { super.setUp() }
-    override func tearDown() { super.tearDown() }
-    
-    func testToInt() {
+@Suite struct Extensions_Swift_Bool_Tests {
+    @Test
+    func toInt() {
         // Bool
-        
-        XCTAssertEqual(true.intValue, 1)
-        XCTAssertEqual(true.int8Value, 1)
-        XCTAssertEqual(true.int16Value, 1)
-        XCTAssertEqual(true.int32Value, 1)
-        XCTAssertEqual(true.int64Value, 1)
-        XCTAssertEqual(true.uIntValue, 1)
-        XCTAssertEqual(true.uInt8Value, 1)
-        XCTAssertEqual(true.uInt16Value, 1)
-        XCTAssertEqual(true.uInt32Value, 1)
-        XCTAssertEqual(true.uInt64Value, 1)
-        
-        XCTAssertEqual(false.intValue, 0)
-        XCTAssertEqual(false.int8Value, 0)
-        XCTAssertEqual(false.int16Value, 0)
-        XCTAssertEqual(false.int32Value, 0)
-        XCTAssertEqual(false.int64Value, 0)
-        XCTAssertEqual(false.uIntValue, 0)
-        XCTAssertEqual(false.uInt8Value, 0)
-        XCTAssertEqual(false.uInt16Value, 0)
-        XCTAssertEqual(false.uInt32Value, 0)
-        XCTAssertEqual(false.uInt64Value, 0)
+
+        #expect(true.intValue == 1)
+        #expect(true.int8Value == 1)
+        #expect(true.int16Value == 1)
+        #expect(true.int32Value == 1)
+        #expect(true.int64Value == 1)
+        #expect(true.uIntValue == 1)
+        #expect(true.uInt8Value == 1)
+        #expect(true.uInt16Value == 1)
+        #expect(true.uInt32Value == 1)
+        #expect(true.uInt64Value == 1)
+
+        #expect(false.intValue == 0)
+        #expect(false.int8Value == 0)
+        #expect(false.int16Value == 0)
+        #expect(false.int32Value == 0)
+        #expect(false.int64Value == 0)
+        #expect(false.uIntValue == 0)
+        #expect(false.uInt8Value == 0)
+        #expect(false.uInt16Value == 0)
+        #expect(false.uInt32Value == 0)
+        #expect(false.uInt64Value == 0)
     }
-    
-    func testToggled() {
-        XCTAssertEqual(true.toggled(), false)
-        XCTAssertEqual(false.toggled(), true)
+
+    @Test
+    func toggled() {
+        #expect(true.toggled() == false)
+        #expect(false.toggled() == true)
     }
-    
-    func testExpressibleByIntegerLiteral() {
-        XCTAssertEqual(Bool(-1), false)
-        XCTAssertEqual(Bool(integerLiteral: 0), false)    // same as b: Bool = 0
-        XCTAssertEqual(Bool(0), false)
-        XCTAssertEqual(Bool(integerLiteral: 1), true)     // same as b: Bool = 1
-        XCTAssertEqual(Bool(1), true)
-        XCTAssertEqual(Bool(integerLiteral: 123), true)     // same as b: Bool = 123
-        XCTAssertEqual(Bool(123), true)
-        
+
+    @Test
+    func expressibleByIntegerLiteral() {
+        #expect(Bool(-1) == false)
+        #expect(Bool(integerLiteral: 0) == false)  // same as b: Bool = 0
+        #expect(Bool(0) == false)
+        #expect(Bool(integerLiteral: 1) == true)   // same as b: Bool = 1
+        #expect(Bool(1) == true)
+        #expect(Bool(integerLiteral: 123) == true) // same as b: Bool = 123
+        #expect(Bool(123) == true)
+
         // ExpressibleByIntegerLiteral - these should all be possible
-        
+
         var b = false
         b = -1
         b = 0
@@ -64,11 +64,11 @@ class Extensions_Swift_Bool_Tests: XCTestCase {
         b = UInt8(1).boolValue
         _ = b // silences 'variable was written to, but never read' warning
     }
-    
-    func testBinaryIntegerBoolValue() {
-        XCTAssertEqual((-1).boolValue, false)
-        XCTAssertEqual(0.boolValue, false)
-        XCTAssertEqual(1.boolValue, true)
-        XCTAssertEqual(123.boolValue, true)
+
+    func binaryIntegerBoolValue() {
+        #expect((-1).boolValue == false)
+        #expect(0.boolValue == false)
+        #expect(1.boolValue == true)
+        #expect(123.boolValue == true)
     }
 }

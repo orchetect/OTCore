@@ -4,15 +4,18 @@
 //  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
-@testable import OTCore
-import XCTest
+#if canImport(Foundation)
 
-class Extensions_Foundation_StringAndNumberFormatter_Tests: XCTestCase {
-    override func setUp() { super.setUp() }
-    override func tearDown() { super.tearDown() }
-    
-    func testStringInterpolationFormatter() {
-        XCTAssertEqual("\(3, format: .ordinal)", "3rd")
-        XCTAssertEqual("\(3, format: .spellOut)", "three")
+import Foundation
+@testable import OTCore
+import Testing
+
+@Suite struct Extensions_Foundation_StringAndNumberFormatter_Tests {
+    @Test
+    func stringInterpolationFormatter() {
+        #expect("\(3, format: .ordinal)" == "3rd")
+        #expect("\(3, format: .spellOut)" == "three")
     }
 }
+
+#endif

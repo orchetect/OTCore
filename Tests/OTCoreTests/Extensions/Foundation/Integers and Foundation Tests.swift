@@ -4,34 +4,37 @@
 //  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
-@testable import OTCore
-import XCTest
+#if canImport(Foundation)
 
-class Extensions_Foundation_IntegersAndFoundation_Tests: XCTestCase {
-    override func setUp() { super.setUp() }
-    override func tearDown() { super.tearDown() }
-    
-    func testStringPaddedTo() {
+import Foundation
+@testable import OTCore
+import Testing
+
+@Suite struct Extensions_Foundation_IntegersAndFoundation_Tests {
+    @Test
+    func stringPaddedTo() {
         // basic validation checks
         
-        XCTAssertEqual(1.string(paddedTo:  1), "1")
-        XCTAssertEqual(1.string(paddedTo:  2), "01")
+        #expect(1.string(paddedTo: 1) == "1")
+        #expect(1.string(paddedTo: 2) == "01")
         
-        XCTAssertEqual(123.string(paddedTo:  1), "123")
+        #expect(123.string(paddedTo: 1) == "123")
         
-        XCTAssertEqual(1.string(paddedTo: -1), "1")
+        #expect(1.string(paddedTo: -1) == "1")
         
-        // BinaryInteger cases
+        // BinaryInteger cases - just basic checks, since it's the same logic for all BinaryIntegers
         
-        XCTAssertEqual(1.string(paddedTo: 1), "1")
-        XCTAssertEqual(UInt(1).string(paddedTo: 1), "1")
-        XCTAssertEqual(Int8(1).string(paddedTo: 1), "1")
-        XCTAssertEqual(UInt8(1).string(paddedTo: 1), "1")
-        XCTAssertEqual(Int16(1).string(paddedTo: 1), "1")
-        XCTAssertEqual(UInt16(1).string(paddedTo: 1), "1")
-        XCTAssertEqual(Int32(1).string(paddedTo: 1), "1")
-        XCTAssertEqual(UInt32(1).string(paddedTo: 1), "1")
-        XCTAssertEqual(Int64(1).string(paddedTo: 1), "1")
-        XCTAssertEqual(UInt64(1).string(paddedTo: 1), "1")
+        #expect(1.string(paddedTo: 1) == "1")
+        #expect(UInt(1).string(paddedTo: 1) == "1")
+        #expect(Int8(1).string(paddedTo: 1) == "1")
+        #expect(UInt8(1).string(paddedTo: 1) == "1")
+        #expect(Int16(1).string(paddedTo: 1) == "1")
+        #expect(UInt16(1).string(paddedTo: 1) == "1")
+        #expect(Int32(1).string(paddedTo: 1) == "1")
+        #expect(UInt32(1).string(paddedTo: 1) == "1")
+        #expect(Int64(1).string(paddedTo: 1) == "1")
+        #expect(UInt64(1).string(paddedTo: 1) == "1")
     }
 }
+
+#endif

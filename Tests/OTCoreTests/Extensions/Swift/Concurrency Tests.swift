@@ -5,21 +5,32 @@
 //
 
 import OTCore
-import XCTest
+import Testing
 
-@available(macOS 10.15, iOS 13.0.0, watchOS 6.0, tvOS 13.0, *)
-final class Extensions_Swift_Concurrency_Tests: XCTestCase {
-    override func setUp() { super.setUp() }
-    override func tearDown() { super.tearDown() }
-    
-    func testWithOrderedTaskGroup() async {
+@Suite struct Extensions_Swift_Concurrency_Tests {
+    @available(macOS 10.15, iOS 13.0.0, watchOS 6.0, tvOS 13.0, *)
+    @Test
+    func withOrderedTaskGroupClosure() async {
         let input = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"]
         
         let output: [String] = await withOrderedTaskGroup(sequence: input) { element in
-            usleep(UInt32.random(in: 1 ... 10) * 1000)
+            try? await Task.sleep(nanoseconds: UInt64.random(in: 1 ... 10) * 1000)
             return element
         }
         
-        XCTAssertEqual(input, output)
+        #expect(input == output)
+    }
+    
+    @available(macOS 10.15, iOS 13.0.0, watchOS 6.0, tvOS 13.0, *)
+    @Test
+    func withOrderedThrowingTaskGroupClosure() async throws {
+        let input = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"]
+        
+        let output: [String] = try await withOrderedThrowingTaskGroup(sequence: input) { element in
+            try await Task.sleep(nanoseconds: UInt64.random(in: 1 ... 10) * 1000)
+            return element
+        }
+        
+        #expect(input == output)
     }
 }

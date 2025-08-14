@@ -4,6 +4,8 @@
 //  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
+#if canImport(Foundation)
+
 import Foundation
 @testable import OTCore
 import Testing
@@ -976,3 +978,5 @@ struct Extensions_Foundation_UserDefaults_Tests {
         #expect(dummyPrefs.pref == "ABC")
     }
 }
+
+#endif

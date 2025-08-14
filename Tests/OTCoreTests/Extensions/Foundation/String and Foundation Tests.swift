@@ -4,149 +4,159 @@
 //  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
-@testable import OTCore
-import XCTest
+#if canImport(Foundation)
 
-class Extensions_Foundation_StringAndFoundation_Tests: XCTestCase {
-    override func setUp() { super.setUp() }
-    override func tearDown() { super.tearDown() }
-    
-    func testFirstIndexOfSubstring() {
+import Foundation
+@testable import OTCore
+import Testing
+
+@Suite struct Extensions_Foundation_StringAndFoundation_Tests {
+    @Test
+    func firstIndexOfSubstring() {
         // .firstIndex(of:)
         
         let str = "This is an example string of an example."
         
-        XCTAssertEqual(
-            str.firstIndex(of: ""),
-            nil
+        #expect(
+            str.firstIndex(of: "")
+                == nil
         )
         
-        XCTAssertEqual(
-            str.firstIndex(of: "i"),
-            str.index(str.startIndex, offsetBy: 2)
+        #expect(
+            str.firstIndex(of: "i")
+                == str.index(str.startIndex, offsetBy: 2)
         )
         
-        XCTAssertEqual(
-            str.firstIndex(of: "This"),
-            str.startIndex
+        #expect(
+            str.firstIndex(of: "This")
+                == str.startIndex
         )
         
-        XCTAssertEqual(
-            str.firstIndex(of: "example"),
-            str.index(str.startIndex, offsetBy: 11)
+        #expect(
+            str.firstIndex(of: "example")
+                == str.index(str.startIndex, offsetBy: 11)
         )
         
         // ensure Swift Standard Library method works
         // and does not produce ambiguous overloads
-        XCTAssertEqual(
-            str.firstIndex(of: Character("i")),
-            str.index(str.startIndex, offsetBy: 2)
+        #expect(
+            str.firstIndex(of: Character("i"))
+                == str.index(str.startIndex, offsetBy: 2)
         )
     }
     
-    func testRangeBackwards() {
+    @Test
+    func rangeBackwards() {
         // .range(backwards:)
         
         let str = "This is an example string of an example."
         
         let rangeBackwards = str.range(backwards: "example")!
         
-        XCTAssertEqual(str.distance(
-            from: str.startIndex,
-            to: rangeBackwards.lowerBound
-        ), 32)
+        #expect(
+            str.distance(from: str.startIndex, to: rangeBackwards.lowerBound)
+                == 32
+        )
         
-        XCTAssertEqual(str.distance(
-            from: str.startIndex,
-            to: rangeBackwards.upperBound
-        ), 39)
+        #expect(
+            str.distance(from: str.startIndex, to: rangeBackwards.upperBound)
+                == 39
+        )
         
-        XCTAssertNil(str.range(backwards: "EXAMPLE"))   // nil, case sensitive
+        #expect(str.range(backwards: "EXAMPLE") == nil) // case sensitive
         
-        XCTAssertNil(str.range(backwards: "zzz"))       // nil, not in the string
+        #expect(str.range(backwards: "zzz") == nil) // not in the string
     }
     
-    func testRangeBackwardsCaseInsensitive() {
+    @Test
+    func rangeBackwardsCaseInsensitive() {
         // .range(backwardsCaseInsensitive:)
         
         let str = "This is an example string of an example."
         
         let rangeBackwards = str.range(backwardsCaseInsensitive: "eXaMpLe")!
         
-        XCTAssertEqual(str.distance(
-            from: str.startIndex,
-            to: rangeBackwards.lowerBound
-        ), 32)
+        #expect(
+            str.distance(from: str.startIndex, to: rangeBackwards.lowerBound)
+                == 32
+        )
         
-        XCTAssertEqual(str.distance(
-            from: str.startIndex,
-            to: rangeBackwards.upperBound
-        ), 39)
+        #expect(
+            str.distance(from: str.startIndex, to: rangeBackwards.upperBound)
+                == 39
+        )
         
-        XCTAssertNotNil(str.range(backwardsCaseInsensitive: "EXAMPLE")) // case insensitive
+        #expect(str.range(backwardsCaseInsensitive: "EXAMPLE") != nil) // case insensitive
         
-        XCTAssertNil(str.range(backwardsCaseInsensitive: "zzz"))        // nil, not in the string
+        #expect(str.range(backwardsCaseInsensitive: "zzz") == nil) // not in the string
     }
     
-    func testSubscriptPosition_NSRange() {
+    @Test
+    func subscriptPosition_NSRange() {
         let nsRange = NSMakeRange(1, 2) // (start: 1, length: 2) == 1...3
         
         // String
         
-        XCTAssertEqual("abc123"[position: nsRange], "bc1")
+        #expect("abc123"[position: nsRange] == "bc1")
         
         // Substring
         
         let string = "abc123"
         let substring = string.suffix(4)
-        XCTAssertEqual(substring[position: nsRange], "123")
+        #expect(substring[position: nsRange] == "123")
     }
     
-    func testContainsCaseInsensitive() {
+    @Test
+    func containsCaseInsensitive() {
         // .contains(caseInsensitive:)
         
         let str = "This is an example string."
         
-        XCTAssertTrue(str.contains(caseInsensitive: "example"))
-        XCTAssertTrue(str.contains(caseInsensitive: "EXAMPLE"))
-        XCTAssertFalse(str.contains(caseInsensitive: "zzz"))
-        XCTAssertFalse(str.contains(caseInsensitive: ""))
+        #expect(str.contains(caseInsensitive: "example"))
+        #expect(str.contains(caseInsensitive: "EXAMPLE"))
+        #expect(!str.contains(caseInsensitive: "zzz"))
+        #expect(!str.contains(caseInsensitive: ""))
     }
     
-    func testHasPrefixCaseInsensitive() {
+    @Test
+    func hasPrefixCaseInsensitive() {
         // .hasPrefix(caseInsensitive:)
         
         let str = "This is an example string."
         
-        XCTAssertTrue(str.hasPrefix(caseInsensitive: "This"))
-        XCTAssertTrue(str.hasPrefix(caseInsensitive: "this"))
-        XCTAssertTrue(str.hasPrefix(caseInsensitive: "THIS"))
-        XCTAssertFalse(str.hasPrefix(caseInsensitive: "HIS"))
-        XCTAssertFalse(str.hasPrefix(caseInsensitive: "zzz"))
-        XCTAssertFalse(str.hasPrefix(caseInsensitive: ""))
+        #expect(str.hasPrefix(caseInsensitive: "This"))
+        #expect(str.hasPrefix(caseInsensitive: "this"))
+        #expect(str.hasPrefix(caseInsensitive: "THIS"))
+        #expect(!str.hasPrefix(caseInsensitive: "HIS"))
+        #expect(!str.hasPrefix(caseInsensitive: "zzz"))
+        #expect(!str.hasPrefix(caseInsensitive: ""))
     }
     
-    func testHasSuffixCaseInsensitive() {
+    @Test
+    func hasSuffixCaseInsensitive() {
         // .hasSuffix(caseInsensitive:)
         
         let str = "This is an example string."
         
-        XCTAssertTrue(str.hasSuffix(caseInsensitive: "String."))
-        XCTAssertTrue(str.hasSuffix(caseInsensitive: "string."))
-        XCTAssertTrue(str.hasSuffix(caseInsensitive: "STRING."))
-        XCTAssertFalse(str.hasSuffix(caseInsensitive: "STRING"))
-        XCTAssertFalse(str.hasSuffix(caseInsensitive: "zzz"))
-        XCTAssertFalse(str.hasSuffix(caseInsensitive: ""))
+        #expect(str.hasSuffix(caseInsensitive: "String."))
+        #expect(str.hasSuffix(caseInsensitive: "string."))
+        #expect(str.hasSuffix(caseInsensitive: "STRING."))
+        #expect(!str.hasSuffix(caseInsensitive: "STRING"))
+        #expect(!str.hasSuffix(caseInsensitive: "zzz"))
+        #expect(!str.hasSuffix(caseInsensitive: ""))
     }
     
-    func testTrimmed() {
+    @Test
+    func trimmed() {
         // String
         
-        XCTAssertEqual("    string    ".trimmed, "string")
+        #expect("    string    ".trimmed == "string")
         
         // Substring
         
         let substring = "    string    ".suffix(13)
-        XCTAssertEqual(substring.trimmed, "string")
+        #expect(substring.trimmed == "string")
     }
 }
+
+#endif

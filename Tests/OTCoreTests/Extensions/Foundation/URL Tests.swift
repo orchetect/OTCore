@@ -4,81 +4,84 @@
 //  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
-@testable import OTCore
-import XCTest
+#if canImport(Foundation)
 
-class Extensions_Foundation_URL_Tests: XCTestCase {
-    override func setUp() { super.setUp() }
-    override func tearDown() { super.tearDown() }
-    
-    func testHasPrefixURL() {
-        XCTAssertTrue(
+import Foundation
+@testable import OTCore
+import Testing
+import TestingExtensions
+
+@Suite struct Extensions_Foundation_URL_Tests {
+    @Test
+    func hasPrefixURL() {
+        #expect(
             URL(fileURLWithPath: "/temp1/temp2/file.txt")
                 .hasPrefix(url: URL(fileURLWithPath: "/"))
         )
         
-        XCTAssertTrue(
+        #expect(
             URL(fileURLWithPath: "/temp1/temp2/file.txt")
                 .hasPrefix(url: URL(fileURLWithPath: "/temp1/"))
         )
         
-        XCTAssertTrue(
+        #expect(
             URL(fileURLWithPath: "/temp1/temp2/file.txt")
                 .hasPrefix(url: URL(fileURLWithPath: "/temp1/temp2/"))
         )
         
-        XCTAssertTrue(
+        #expect(
             URL(fileURLWithPath: "/temp1/temp2/file.txt")
                 .hasPrefix(url: URL(fileURLWithPath: "/temp1/temp2/file.txt"))
         )
         
         // different path
         
-        XCTAssertFalse(
-            URL(fileURLWithPath: "/temp1/temp2/file.txt")
+        #expect(
+            !URL(fileURLWithPath: "/temp1/temp2/file.txt")
                 .hasPrefix(url: URL(fileURLWithPath: "/wrong/"))
         )
         
         // different schemes (ie: file:// vs. https://)
         
-        XCTAssertFalse(
-            URL(fileURLWithPath: "/temp1/temp2/file.txt")
+        #expect(
+            !URL(fileURLWithPath: "/temp1/temp2/file.txt")
                 .hasPrefix(url: URL(string: "https://temp1/temp2/file.txt")!)
         )
         
-        XCTAssertFalse(
-            URL(string: "https://temp1/temp2/file.txt")!
+        #expect(
+            !URL(string: "https://temp1/temp2/file.txt")!
                 .hasPrefix(url: URL(fileURLWithPath: "/temp1/temp2/file.txt"))
         )
         
-        XCTAssertFalse(
-            URL(fileURLWithPath: "/temp1/temp2/file.txt")
+        #expect(
+            !URL(fileURLWithPath: "/temp1/temp2/file.txt")
                 .hasPrefix(url: URL(string: "https://somehost/temp1/temp2/file.txt")!)
         )
         
-        XCTAssertFalse(
-            URL(string: "https://somehost/temp1/temp2/file.txt")!
+        #expect(
+            !URL(string: "https://somehost/temp1/temp2/file.txt")!
                 .hasPrefix(url: URL(fileURLWithPath: "/temp1/temp2/file.txt"))
         )
     }
     
-    func testHasPathComponentsPrefix() {
-        XCTAssertTrue(
+    @Test
+    func hasPathComponentsPrefix() {
+        #expect(
             URL(fileURLWithPath: "/temp1/temp2/file.txt")
                 .hasPathComponents(prefix: URL(fileURLWithPath: "/").pathComponents)
         )
         
-        XCTAssertTrue(
+        #expect(
             URL(fileURLWithPath: "/temp1/temp2/file.txt")
                 .hasPathComponents(prefix: URL(fileURLWithPath: "/temp1/").pathComponents)
         )
         
-        XCTAssertTrue(
+        #expect(
             URL(fileURLWithPath: "/temp1/temp2/file.txt")
                 .hasPathComponents(prefix: URL(fileURLWithPath: "/temp1/temp2/").pathComponents)
         )
         
-        XCTAssertTrue(
+        #expect(
             URL(fileURLWithPath: "/temp1/temp2/file.txt")
                 .hasPathComponents(
                     prefix: URL(fileURLWithPath: "/temp1/temp2/file.txt")
@@ -87,14 +90,14 @@ class Extensions_Foundation_URL_Tests: XCTestCase {
         )
         
         // different path
-        XCTAssertFalse(
-            URL(fileURLWithPath: "/temp1/temp2/file.txt")
+        #expect(
+            !URL(fileURLWithPath: "/temp1/temp2/file.txt")
                 .hasPathComponents(prefix: URL(fileURLWithPath: "/wrong/").pathComponents)
         )
         
         // different path
-        XCTAssertFalse(
-            URL(fileURLWithPath: "/temp1/temp2/file.txt")
+        #expect(
+            !URL(fileURLWithPath: "/temp1/temp2/file.txt")
                 .hasPathComponents(
                     prefix: URL(fileURLWithPath: "/temp1/temp2/otherfile.txt")
                         .pathComponents
@@ -102,8 +105,8 @@ class Extensions_Foundation_URL_Tests: XCTestCase {
         )
         
         // temp1 is hostname in https here, not part of path
-        XCTAssertFalse(
-            URL(string: "file:///temp1/temp2/file.txt")!
+        #expect(
+            !URL(string: "file:///temp1/temp2/file.txt")!
                 .hasPathComponents(
                     prefix: URL(string: "https://temp1/temp2/file.txt")!
                         .pathComponents
@@ -111,8 +114,8 @@ class Extensions_Foundation_URL_Tests: XCTestCase {
         )
         
         // temp1 is hostname in https here, not part of path
-        XCTAssertFalse(
-            URL(string: "https://temp1/temp2/file.txt")!
+        #expect(
+            !URL(string: "https://temp1/temp2/file.txt")!
                 .hasPathComponents(
                     prefix: URL(string: "file:///temp1/temp2/file.txt")!
                         .pathComponents
@@ -120,7 +123,7 @@ class Extensions_Foundation_URL_Tests: XCTestCase {
         )
         
         // different hosts, same paths
-        XCTAssertTrue(
+        #expect(
             URL(string: "https://somehost1.com/temp1/temp2/file.txt")!
                 .hasPathComponents(
                     prefix: URL(string: "https://somehost2.com/temp1/temp2/file.txt")!
@@ -129,7 +132,7 @@ class Extensions_Foundation_URL_Tests: XCTestCase {
         )
         
         // different hosts with authentication and port numbers, same paths
-        XCTAssertTrue(
+        #expect(
             URL(string: "https://user:pass@somehost1.com:8080/temp1/temp2/file.txt")!
                 .hasPathComponents(
                     prefix: URL(string: "https://somehost2.com/temp1/temp2/file.txt")!
@@ -138,7 +141,7 @@ class Extensions_Foundation_URL_Tests: XCTestCase {
         )
         
         // different schemes (ie: file:// vs. https://)
-        XCTAssertTrue(
+        #expect(
             URL(string: "https://somehost.com/temp1/temp2/file.txt")!
                 .hasPathComponents(
                     prefix: URL(string: "file:///temp1/temp2/file.txt")!
@@ -147,225 +150,214 @@ class Extensions_Foundation_URL_Tests: XCTestCase {
         )
     }
     
-    func testOathComponentsRemovingBase() {
-        XCTAssertEqual(
+    @Test
+    func pathComponentsRemovingBase() {
+        #expect(
             URL(string: "file:///temp1/temp2/file.txt")!
-                .pathComponents(removingBase: URL(string: "file:///temp1/temp2/file.txt")!),
-            []
+                .pathComponents(removingBase: URL(string: "file:///temp1/temp2/file.txt")!)
+                == []
         )
         
-        XCTAssertEqual(
+        #expect(
             URL(string: "file:///temp1/temp2/file.txt")!
-                .pathComponents(removingBase: URL(string: "file:///temp1/temp2/")!),
-            ["file.txt"]
+                .pathComponents(removingBase: URL(string: "file:///temp1/temp2/")!)
+                == ["file.txt"]
         )
         
-        XCTAssertEqual(
+        #expect(
             URL(string: "file:///temp1/temp2/file.txt")!
-                .pathComponents(removingBase: URL(string: "file:///temp1/")!),
-            ["temp2", "file.txt"]
+                .pathComponents(removingBase: URL(string: "file:///temp1/")!)
+                == ["temp2", "file.txt"]
         )
         
-        XCTAssertEqual(
+        #expect(
             URL(string: "file:///temp1/temp2/file.txt")!
-                .pathComponents(removingBase: URL(string: "file:///")!),
-            ["temp1", "temp2", "file.txt"]
+                .pathComponents(removingBase: URL(string: "file:///")!)
+                == ["temp1", "temp2", "file.txt"]
         )
         
         // url does not begin with base url
-        XCTAssertEqual(
+        #expect(
             URL(string: "file:///temp1/temp2/file.txt")!
-                .pathComponents(removingBase: URL(string: "file:///temp2/")!),
-            nil
+                .pathComponents(removingBase: URL(string: "file:///temp2/")!)
+                == nil
         )
         
         // different schemes (ie: file:// vs. https://)
-        XCTAssertEqual(
+        #expect(
             URL(string: "file:///temp1/temp2/file.txt")!
-                .pathComponents(
-                    removingBase: URL(string: "https://somehost.com/temp1/temp2/file.txt")!
-                ),
-            nil
+                .pathComponents(removingBase: URL(string: "https://somehost.com/temp1/temp2/file.txt")!)
+                == nil
         )
         
         // different schemes (ie: file:// vs. https://)
-        XCTAssertEqual(
+        #expect(
             URL(string: "file:///temp1/temp2/file.txt")!
-                .pathComponents(removingBase: URL(string: "https://somehost.com/temp1/temp2/")!),
-            nil
+                .pathComponents(removingBase: URL(string: "https://somehost.com/temp1/temp2/")!)
+                == nil
         )
     }
     
-    func testPathComponentsRemovingPrefix() {
-        XCTAssertEqual(
+    @Test
+    func pathComponentsRemovingPrefix() {
+        #expect(
             URL(string: "file:///temp1/temp2/file.txt")!
-                .pathComponents(
-                    removingPrefix: URL(string: "file:///temp1/temp2/file.txt")!
-                        .pathComponents
-                ),
-            []
+                .pathComponents(removingPrefix: URL(string: "file:///temp1/temp2/file.txt")!.pathComponents)
+                == []
         )
         
-        XCTAssertEqual(
+        #expect(
             URL(string: "file:///temp1/temp2/file.txt")!
-                .pathComponents(
-                    removingPrefix: URL(string: "file:///temp1/temp2/")!
-                        .pathComponents
-                ),
-            ["file.txt"]
+                .pathComponents(removingPrefix: URL(string: "file:///temp1/temp2/")!.pathComponents)
+                == ["file.txt"]
         )
         
-        XCTAssertEqual(
+        #expect(
             URL(string: "file:///temp1/temp2/file.txt")!
-                .pathComponents(removingPrefix: URL(string: "file:///temp1/")!.pathComponents),
-            ["temp2", "file.txt"]
+                .pathComponents(removingPrefix: URL(string: "file:///temp1/")!.pathComponents)
+                == ["temp2", "file.txt"]
         )
         
-        XCTAssertEqual(
+        #expect(
             URL(string: "file:///temp1/temp2/file.txt")!
-                .pathComponents(removingPrefix: URL(string: "file:///")!.pathComponents),
-            ["temp1", "temp2", "file.txt"]
+                .pathComponents(removingPrefix: URL(string: "file:///")!.pathComponents)
+                == ["temp1", "temp2", "file.txt"]
         )
         
         // url does not begin with base url
-        XCTAssertEqual(
+        #expect(
             URL(string: "file:///temp1/temp2/file.txt")!
-                .pathComponents(removingPrefix: URL(string: "file:///temp2/")!.pathComponents),
-            nil
+                .pathComponents(removingPrefix: URL(string: "file:///temp2/")!.pathComponents)
+                == nil
         )
         
         // different schemes (ie: file:// vs. https://)
-        XCTAssertEqual(
+        #expect(
             URL(string: "file:///temp1/temp2/file.txt")!
-                .pathComponents(
-                    removingPrefix: URL(string: "https://somehost.com/temp1/temp2/")!
-                        .pathComponents
-                ),
-            ["file.txt"]
+                .pathComponents(removingPrefix: URL(string: "https://somehost.com/temp1/temp2/")!.pathComponents)
+                == ["file.txt"]
         )
         
         // different hosts, same paths
-        XCTAssertEqual(
+        #expect(
             URL(string: "https://somehost1.com/temp1/temp2/file.txt")!
-                .pathComponents(
-                    removingPrefix: URL(string: "https://somehost2.com/temp1/temp2/")!
-                        .pathComponents
-                ),
-            ["file.txt"]
+                .pathComponents(removingPrefix: URL(string: "https://somehost2.com/temp1/temp2/")!.pathComponents)
+                == ["file.txt"]
         )
         
         // different hosts with authentication and port numbers, same paths
-        XCTAssertEqual(
+        #expect(
             URL(string: "https://user:pass@somehost1.com:8080/temp1/temp2/file.txt")!
-                .pathComponents(
-                    removingPrefix: URL(string: "https://somehost2.com/temp1/temp2/")!
-                        .pathComponents
-                ),
-            ["file.txt"]
+                .pathComponents(removingPrefix: URL(string: "https://somehost2.com/temp1/temp2/")!.pathComponents)
+                == ["file.txt"]
         )
         
         // different schemes (ie: file:// vs. https://)
-        XCTAssertEqual(
+        #expect(
             URL(string: "file:///temp1/temp2/file.txt")!
-                .pathComponents(
-                    removingPrefix: URL(string: "https://somehost.com/temp1/temp2/file.txt")!
-                        .pathComponents
-                ),
-            []
+                .pathComponents(removingPrefix: URL(string: "https://somehost.com/temp1/temp2/file.txt")!.pathComponents)
+                == []
         )
     }
     
-    func testRelativeToBaseURL() {
+    @Test
+    func relativeToBaseURL() {
         // ensure absolute URL remains unchanged
-        XCTAssertEqual(
+        #expect(
             URL(string: "file:///temp1/temp2/some%20file.txt")!
                 .relative(to: URL(string: "file:///temp1/")!)
-                .absoluteString,
-            "file:///temp1/temp2/some%20file.txt"
+                .absoluteString
+                == "file:///temp1/temp2/some%20file.txt"
         )
         
         // test baseURL
-        XCTAssertEqual(
+        #expect(
             URL(string: "file:///temp1/temp2/some%20file.txt")!
                 .relative(to: URL(string: "file:///temp1/")!)
-                .baseURL?.absoluteString,
-            "file:///temp1/"
+                .baseURL?.absoluteString
+                == "file:///temp1/"
         )
         
         // test relative path
-        XCTAssertEqual(
+        #expect(
             URL(string: "file:///temp1/temp2/some%20file.txt")!
                 .relative(to: URL(string: "file:///temp1/")!)
-                .relativeString,
-            "temp2/some%20file.txt"
+                .relativeString
+                == "temp2/some%20file.txt"
         )
     }
     
-    func testMutatingLastPathComponent() {
-        XCTAssertEqual(
+    @Test
+    func mutatingLastPathComponent() {
+        #expect(
             URL(string: "file:///temp1/temp2/some%20file.txt")!
                 .mutatingLastPathComponent { "a" + $0 + ".pdf" }
-                .absoluteString,
-            "file:///temp1/temp2/asome%20file.txt.pdf"
+                .absoluteString
+                == "file:///temp1/temp2/asome%20file.txt.pdf"
         )
         
-        XCTAssertEqual(
+        #expect(
             URL(string: "file:///temp1/temp2/some%20file.txt")!
                 .mutatingLastPathComponent { _ in "new file name" }
-                .absoluteString,
-            "file:///temp1/temp2/new%20file%20name"
+                .absoluteString
+                == "file:///temp1/temp2/new%20file%20name"
         )
     }
     
-    func testMutatingLastPathComponentExcludingExtension() {
-        XCTAssertEqual(
+    @Test
+    func mutatingLastPathComponentExcludingExtension() {
+        #expect(
             URL(string: "file:///temp1/temp2/some%20file.txt")!
                 .mutatingLastPathComponentExcludingExtension { "a" + $0 + "b" }
-                .absoluteString,
-            "file:///temp1/temp2/asome%20fileb.txt"
+                .absoluteString
+                == "file:///temp1/temp2/asome%20fileb.txt"
         )
         
-        XCTAssertEqual(
+        #expect(
             URL(string: "file:///temp1/temp2/some%20file.txt")!
                 .mutatingLastPathComponentExcludingExtension { _ in "new file name" }
-                .absoluteString,
-            "file:///temp1/temp2/new%20file%20name.txt"
+                .absoluteString
+                == "file:///temp1/temp2/new%20file%20name.txt"
         )
     }
     
-    func testAppendingToLastPathComponentBeforeExtension() {
-        XCTAssertEqual(
+    @Test
+    func appendingToLastPathComponentBeforeExtension() {
+        #expect(
             URL(string: "file:///temp1/temp2/some%20file.txt")!
                 .appendingToLastPathComponentBeforeExtension("-2")
-                .absoluteString,
-            "file:///temp1/temp2/some%20file-2.txt"
+                .absoluteString
+                == "file:///temp1/temp2/some%20file-2.txt"
         )
     }
     
-    func testFileExists() {
+    @Test
+    func fileExists() {
         // guaranteed to exist
         let folder = URL(fileURLWithPath: NSHomeDirectory())
         
-        XCTAssertTrue(folder.fileExists)
+        #expect(folder.fileExists)
     }
     
-    func testIsFolder() {
+    @Test
+    func isFolder() {
         // guaranteed to exist
         let folder = URL(fileURLWithPath: NSHomeDirectory())
         
-        XCTAssertTrue(folder.isFolder!)
+        #expect(folder.isFolder!)
     }
     
     #if os(macOS)
-    func testCanonicalizeFileURL() throws {
+    @Test
+    func canonicalizeFileURL() throws {
         // write temp file including a mix of uppercase and lowercase letters
         let file = FileManager.default.temporaryDirectory
             .appendingPathComponent("\(UUID().uuidString)-TeSt123AbC.txt")
         try "\(Date())".write(to: file, atomically: true, encoding: .utf8)
-        XCTAssert(file.fileExists)
+        #expect(file.fileExists)
         
-        let lowercased = try XCTUnwrap(URL(string: file.absoluteString.lowercased()))
-        XCTAssertNotEqual(file.absoluteString, lowercased.absoluteString)
+        let lowercased = try #require(URL(string: file.absoluteString.lowercased()))
+        #expect(file.absoluteString != lowercased.absoluteString)
         var reformed = lowercased
         try reformed.canonicalizeFileURL()
         
@@ -382,20 +374,21 @@ class Extensions_Foundation_URL_Tests: XCTestCase {
                 range: originalFileStringRange
             )
         
-        XCTAssertEqual(prefixedOriginalFileString, reformed.absoluteString)
+        #expect(prefixedOriginalFileString == reformed.absoluteString)
     }
     #endif
     
     #if os(macOS)
-    func testCanonicalizingFileURL() throws {
+    @Test
+    func canonicalizingFileURL() throws {
         // write temp file including a mix of uppercase and lowercase letters
         let file = URL(fileURLWithPath: NSTemporaryDirectory())
             .appendingPathComponent("\(UUID().uuidString)-TeSt123AbC.txt")
         try "\(Date())".write(to: file, atomically: true, encoding: .utf8)
-        XCTAssert(file.fileExists)
+        #expect(file.fileExists)
         
-        let lowercased = try XCTUnwrap(URL(string: file.absoluteString.lowercased()))
-        XCTAssertNotEqual(file.absoluteString, lowercased.absoluteString)
+        let lowercased = try #require(URL(string: file.absoluteString.lowercased()))
+        #expect(file.absoluteString != lowercased.absoluteString)
         let reformed = try lowercased.canonicalizingFileURL()
         
         // adjust original URL for comparison. path canonicalization adds `/private` to temporary
@@ -411,26 +404,28 @@ class Extensions_Foundation_URL_Tests: XCTestCase {
                 range: originalFileStringRange
             )
         
-        XCTAssertEqual(prefixedOriginalFileString, reformed.absoluteString)
+        #expect(prefixedOriginalFileString == reformed.absoluteString)
     }
     #endif
     
     #if os(macOS)
-    func testIsEqualFileNode() throws {
+    @Test
+    func isEqualFileNode() throws {
         // write temp file including a mix of uppercase and lowercase letters
         let file = URL(fileURLWithPath: NSTemporaryDirectory())
             .appendingPathComponent("\(UUID().uuidString)-TeSt123AbC.txt")
         try "\(Date())".write(to: file, atomically: true, encoding: .utf8)
-        XCTAssert(file.fileExists)
+        #expect(file.fileExists)
         
-        let lowercased = try XCTUnwrap(URL(string: file.absoluteString.lowercased()))
-        XCTAssertNotEqual(file.absoluteString, lowercased.absoluteString)
+        let lowercased = try #require(URL(string: file.absoluteString.lowercased()))
+        #expect(file.absoluteString != lowercased.absoluteString)
         
-        XCTAssert(try file.isEqualFileNode(as: lowercased))
+        #expect(try file.isEqualFileNode(as: lowercased))
     }
     #endif
     
-    func testTrashOrDelete() {
+    @Test
+    func trashOrDelete() throws {
         // boilerplate
         
         let temporaryDirectoryURL = FileManager.default.temporaryDirectoryCompat
@@ -443,47 +438,34 @@ class Extensions_Foundation_URL_Tests: XCTestCase {
             .appendingPathComponent(randomFolderName)
         
         // ensure path does not exist
-        guard !url.fileExists else {
-            XCTFail("\(url) exists unexpectedly. Can't continue test.")
-            return
-        }
+        try #require(!url.fileExists)
         
-        print("Source URL:     ", url)
+        print("Source URL:", url)
         
         // create source folder
         
         print("Creating source directory...")
         
-        guard (try? FileManager.default.createDirectory(
+        try FileManager.default.createDirectory(
             at: url,
             withIntermediateDirectories: false,
             attributes: nil
-        )) != nil else {
-            XCTFail("Failed to create source folder \"\(url)\". Can't continue test.")
-            return
-        }
+        )
         
         // operation
         
-        var result: URL?
-        
-        do {
-            result = try url.trashOrDelete()
-        } catch {
-            XCTFail("URL.trashOrDelete() threw an exception: \(error)")
-        }
+        let result = try url.trashOrDelete()
         
         // result test
         
         #if os(macOS) || targetEnvironment(macCatalyst)
-        XCTAssertNotNil(result)
+        #expect(result != nil)
         #elseif os(iOS)
-        XCTAssertNil(result)
+        #expect(result == nil)
         #elseif os(tvOS)
-        XCTAssertNil(result)
+        #expect(result == nil)
         #elseif os(watchOS)
-        // watchOS can't run XCTest unit tests, but we'll put the expected result here any way:
-        XCTAssertNil(result)
+        #expect(result == nil)
         #endif
         
         // clean up
@@ -492,7 +474,8 @@ class Extensions_Foundation_URL_Tests: XCTestCase {
         // test moves any temp files/folders it creates to the trash or deletes them
     }
     
-    func testIsFinderAlias() {
+    @Test
+    func isFinderAlias() throws {
         // boilerplate
         
         let temporaryDirectoryURL = FileManager.default.temporaryDirectoryCompat
@@ -505,76 +488,60 @@ class Extensions_Foundation_URL_Tests: XCTestCase {
             .appendingPathComponent(randomFolderName)
         
         // ensure path does not exist
-        guard !url1.fileExists else {
-            XCTFail("\(url1) exists unexpectedly. Can't continue test.")
-            return
-        }
+        try #require(!url1.fileExists)
         
-        print("Source URL:     ", url1)
+        print("Source URL:", url1)
         
         let url2 = temporaryDirectoryURL
             .appendingPathComponent(randomFolderName + " alias")
         
         // ensure path does not exist
-        guard !url2.fileExists else {
-            XCTFail("\(url2) exists unexpectedly. Can't continue test.")
-            return
-        }
+        try #require(!url2.fileExists)
         
         print("Destination URL:", url2)
         
         // ensure paths aren't equal
-        guard url1 != url2 else {
-            XCTFail("Random URLs generated are equal. Can't continue test.")
-            return
-        }
+        try #require(url1 != url2)
         
         // neither exist, so this will fail
         
-        XCTAssertFalse(url1.isFinderAlias)
-        XCTAssertFalse(url2.isFinderAlias)
+        #expect(!url1.isFinderAlias)
+        #expect(!url2.isFinderAlias)
         
         // create source folder
         
         print("Creating source directory...")
         
-        guard (try? FileManager.default.createDirectory(
+        try FileManager.default.createDirectory(
             at: url1,
             withIntermediateDirectories: false,
             attributes: nil
-        )) != nil else {
-            XCTFail("Failed to create source folder \"\(url1)\". Can't continue test.")
-            return
-        }
+        )
         
         // create temporary alias
         
         print("Forming alias...")
         
-        guard (try? url1.createFinderAlias(at: url2)) != nil else {
-            XCTFail(
-                "Failed to create temporary alias \"\(url2)\" on disk from source \"\(url1)\". Can't continue with test."
-            )
-            return
-        }
+        try url1.createFinderAlias(at: url2)
         
         // test
         
-        XCTAssertFalse(url1.isFinderAlias)
-        XCTAssertTrue(url2.isFinderAlias)
+        #expect(!url1.isFinderAlias)
+        #expect(url2.isFinderAlias)
         
         // clean up
         
         // .trashItem not available on all platforms
         
         print("Cleaning up source directory...")
-        XCTAssertNoThrow(try url1.trashOrDelete())
+        #expect(throws: Never.self) { try url1.trashOrDelete() }
         
         print("Cleaning up destination alias...")
-        XCTAssertNoThrow(try url2.trashOrDelete())
+        #expect(throws: Never.self) { try url2.trashOrDelete() }
     }
     
-    func testSymlink() {
+    @Test
+    func symlink() throws {
         // boilerplate
         
         let temporaryDirectoryURL = FileManager.default.temporaryDirectoryCompat
@@ -587,10 +554,7 @@ class Extensions_Foundation_URL_Tests: XCTestCase {
             .appendingPathComponent(randomFolderName)
         
         // ensure path does not exist
-        guard !url1.fileExists else {
-            XCTFail("\(url1) exists unexpectedly. Can't continue test.")
-            return
-        }
+        try #require(!url1.fileExists)
         
         print("Source URL:     ", url1)
         
@@ -598,88 +562,52 @@ class Extensions_Foundation_URL_Tests: XCTestCase {
             .appendingPathComponent(randomFolderName + "-alias")
         
         // ensure path does not exist
-        guard !url2.fileExists else {
-            XCTFail("\(url2) exists unexpectedly. Can't continue test.")
-            return
-        }
+        try #require(!url2.fileExists)
         
         // ensure paths aren't equal
-        guard url1 != url2 else {
-            XCTFail("Random URLs generated are equal. Can't continue test.")
-            return
-        }
+        try #require(url1 != url2)
         
         print("Destination URL:", url2)
         
         // neither exist, so this will fail
         
-        XCTAssertNil(url1.isSymLink)
-        XCTAssertNil(url2.isSymLink)
+        #expect(url1.isSymLink == nil)
+        #expect(url2.isSymLink == nil)
         
         // create source folder
         
         print("Creating source directory...")
         
-        guard (try? FileManager.default.createDirectory(
+        try FileManager.default.createDirectory(
             at: url1,
             withIntermediateDirectories: false,
             attributes: nil
-        )) != nil else {
-            XCTFail("Failed to create source folder \"\(url1)\". Can't continue test.")
-            return
-        }
+        )
         
         // create temporary symlink
         
         print("Forming symlink...")
         
-        if (try? url1.createSymLink(at: url2)) == nil {
-            XCTFail(
-                "Failed to create symlink, or symlink already exists. Can't continue with test."
-            )
-            return
-        }
+        try url1.createSymLink(at: url2)
         
         // test
         
-        if let checkSymlink = url1.isSymLink {
-            XCTAssertFalse(checkSymlink)
-        } else {
-            XCTFail("isSymLink should not be nil here")
-            return
-        }
-        
-        if let checkSymlink = url2.isSymLink {
-            XCTAssertTrue(checkSymlink)
-        } else {
-            XCTFail("isSymLink should not be nil here")
-            return
-        }
-        
-        if let checkSymlink = url1.isSymLinkOf(file: url2) {
-            XCTAssertFalse(checkSymlink)
-        } else {
-            XCTFail("isSymLink should not be nil here")
-            return
-        }
-        
-        if let checkSymlink = url2.isSymLinkOf(file: url1) {
-            XCTAssertTrue(checkSymlink)
-        } else {
-            XCTFail("isSymLink should not be nil here")
-            return
-        }
+        try #expect(!#require(url1.isSymLink as Bool?))
+        try #expect(#require(url2.isSymLink as Bool?))
+        try #expect(!#require(url1.isSymLinkOf(file: url2) as Bool?))
+        try #expect(#require(url2.isSymLinkOf(file: url1) as Bool?))
         
         // clean up
         
         print("Cleaning up source directory...")
-        XCTAssertNoThrow(try url1.trashOrDelete())
+        #expect(throws: Never.self) { try url1.trashOrDelete() }
         
         print("Cleaning up destination symlink...")
-        XCTAssertNoThrow(try url2.trashOrDelete())
+        #expect(throws: Never.self) { try url2.trashOrDelete() }
     }
     
-    func testFolders() {
+    @Test
+    func folders() {
         #if os(macOS)
         
         // FileManager
@@ -690,3 +618,5 @@ class Extensions_Foundation_URL_Tests: XCTestCase {
         #endif
     }
 }
+
+#endif

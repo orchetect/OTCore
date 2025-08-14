@@ -4,17 +4,15 @@
 //  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
-#if os(macOS)
+#if canImport(AppKit)
 
 import AppKit
 @testable import OTCore
-import XCTest
+import Testing
 
-class Extensions_AppKit_NSScreen_Tests: XCTestCase {
-    override func setUp() { super.setUp() }
-    override func tearDown() { super.tearDown() }
-    
-    func testEmpty() {
+@Suite struct Extensions_AppKit_NSScreen_Tests {
+    @Test
+    func emptyTest() {
         // nothing to test here
     }
 }

@@ -5,12 +5,9 @@
 //
 
 import OTCore
-import XCTest
+import Testing
 
-class Extensions_Swift_Result_Tests: XCTestCase {
-    override func setUp() { super.setUp() }
-    override func tearDown() { super.tearDown() }
-    
+@Suite struct Extensions_Swift_Result_Tests {
     /// Enum for test
     fileprivate enum PasswordError: Error, Equatable {
         case short
@@ -25,18 +22,21 @@ class Extensions_Swift_Result_Tests: XCTestCase {
             : .failure(.short)
     }
     
-    func testResultSuccessValue() {
-        XCTAssertEqual(doStuff(true).successValue, "we succeeded")
-        XCTAssertNotEqual(doStuff(true).successValue, "blah blah")
+    @Test
+    func resultSuccessValue() {
+        #expect(doStuff(true).successValue == "we succeeded")
+        #expect(doStuff(true).successValue != "blah blah")
     }
     
-    func testResultFailureValue() {
-        XCTAssertEqual(doStuff(false).failureValue, .short)
-        XCTAssertNotEqual(doStuff(false).failureValue, .simple)
+    @Test
+    func resultFailureValue() {
+        #expect(doStuff(false).failureValue == .short)
+        #expect(doStuff(false).failureValue != .simple)
     }
     
-    func testResultIsSuccess() {
-        XCTAssertEqual(doStuff(true).isSuccess, true)
-        XCTAssertEqual(doStuff(false).isSuccess, false)
+    @Test
+    func resultIsSuccess() {
+        #expect(doStuff(true).isSuccess)
+        #expect(!doStuff(false).isSuccess)
     }
 }

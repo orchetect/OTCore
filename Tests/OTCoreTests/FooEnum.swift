@@ -8,8 +8,8 @@
 
 /// Test enum for use in unit tests
 enum FooEnum {
-    case foo(Int)                           // each Int has a different hash
-    case fooB(Int)                          // identical hash regardless of Int
+    case foo(Int) // each Int has a different hash
+    case fooB(Int) // identical hash regardless of Int
     case one
     case two
     case three

@@ -4,18 +4,15 @@
 //  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
-#if os(macOS)
+#if canImport(AppKit)
 
 import AppKit
 @testable import OTCore
-import XCTest
+import Testing
 
-class Extensions_AppKit_NSEvent_Tests: XCTestCase {
-    override func setUp() { super.setUp() }
-    override func tearDown() { super.tearDown() }
-    
-    @MainActor
-    func testLocationInView() {
+@Suite struct Extensions_AppKit_NSEvent_Tests {
+    @MainActor @Test
+    func locationInView() throws {
         let view = NSView(frame: NSRect())
         let subview = NSView(frame: NSRect())
         view.addSubview(subview)
@@ -28,7 +25,7 @@ class Extensions_AppKit_NSEvent_Tests: XCTestCase {
         subview.setFrameSize(.init(width: 400, height: 400))
         
         // create a mock `mouseDown(with event: NSEvent)` event
-        guard let mockEvent = NSEvent.mouseEvent(
+        let mockEvent = try #require(NSEvent.mouseEvent(
             with: .leftMouseDown,
             location: .init(x: 300, y: 300), // location in window's coord system
             modifierFlags: [],
@@ -38,45 +35,41 @@ class Extensions_AppKit_NSEvent_Tests: XCTestCase {
             eventNumber: 0,
             clickCount: 1,
             pressure: 1.0
-        ) else {
-            XCTFail("Could not create NSEvent."); return
-        }
+        ))
         
         // check native property for expected value
-        XCTAssertEqual(
-            mockEvent.locationInWindow,
-            .init(x: 300, y: 300)
+        #expect(
+            mockEvent.locationInWindow
+                == .init(x: 300, y: 300)
         )
         
         // check native method
-        XCTAssertEqual(
-            subview.convert(mockEvent.locationInWindow, from: nil),
-            .init(x: 200, y: 200)
+        #expect(
+            subview.convert(mockEvent.locationInWindow, from: nil)
+                == .init(x: 200, y: 200)
         )
         
         // test OTCore method
-        XCTAssertEqual(
-            mockEvent.location(in: subview),
-            .init(x: 200, y: 200)
+        #expect(
+            mockEvent.location(in: subview)
+                == .init(x: 200, y: 200)
         )
         
         // dispose of window, keeping view in memory
         window?.contentView = nil
         window = nil
-        XCTAssertNil(view.window)
-        XCTAssertNotNil(view)
-        XCTAssertNotNil(subview)
+        #expect(view.window == nil)
         
         // check native method
-        XCTAssertEqual(
-            subview.convert(mockEvent.locationInWindow, from: nil),
-            .init(x: 200, y: 200)
+        #expect(
+            subview.convert(mockEvent.locationInWindow, from: nil)
+                == .init(x: 200, y: 200)
         )
         
         // test OTCore method
-        XCTAssertEqual(
-            mockEvent.location(in: subview),
-            .init(x: 200, y: 200)
+        #expect(
+            mockEvent.location(in: subview)
+                == .init(x: 200, y: 200)
         )
     }
 }

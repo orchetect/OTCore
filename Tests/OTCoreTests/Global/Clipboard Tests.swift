@@ -5,15 +5,13 @@
 //
 
 import OTCore
-import XCTest
+import Testing
 
-class Global_Clipboard_Tests: XCTestCase {
-    override func setUp() { super.setUp() }
-    override func tearDown() { super.tearDown() }
-    
+@Suite struct Global_Clipboard_Tests {
     // no meaningful tests applicable
     
-    func testEmpty() {
-        XCTAssert(true)
+    @Test
+    func emptyTest() {
+        #expect(true)
     }
 }

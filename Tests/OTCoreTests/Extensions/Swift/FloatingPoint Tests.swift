@@ -4,14 +4,13 @@
 //  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
+import CoreGraphics
 import OTCore
-import XCTest
+import Testing
 
-class Extensions_Swift_FloatingPoint_Tests: XCTestCase {
-    override func setUp() { super.setUp() }
-    override func tearDown() { super.tearDown() }
-    
-    func testTypeConversions_FloatsToInts() {
+@Suite struct Extensions_Swift_FloatingPoint_Tests {
+    @Test
+    func typeConversions_FloatsToInts() {
         // Double
         
         let double = 123.456
@@ -163,300 +162,307 @@ class Extensions_Swift_FloatingPoint_Tests: XCTestCase {
         #endif
     }
     
-    func testBoolValue() {
+    @Test
+    func boolValue() {
         // double
-        XCTAssertEqual(Double(-1.0).boolValue, false)
-        XCTAssertEqual(Double(0.0).boolValue, false)
-        XCTAssertEqual(Double(1.0).boolValue, true)
-        XCTAssertEqual(Double(123.0).boolValue, true)
-        XCTAssertEqual(Double.nan.boolValue, false)
-        XCTAssertEqual(Double.signalingNaN.boolValue, false)
-        XCTAssertEqual(Double.infinity.boolValue, true)
+        #expect(Double(-1.0).boolValue == false)
+        #expect(Double(0.0).boolValue == false)
+        #expect(Double(1.0).boolValue == true)
+        #expect(Double(123.0).boolValue == true)
+        #expect(Double.nan.boolValue == false)
+        #expect(Double.signalingNaN.boolValue == false)
+        #expect(Double.infinity.boolValue == true)
         
         // float
-        XCTAssertEqual(Float(-1.0).boolValue, false)
-        XCTAssertEqual(Float(0.0).boolValue, false)
-        XCTAssertEqual(Float(1.0).boolValue, true)
-        XCTAssertEqual(Float(123.0).boolValue, true)
-        XCTAssertEqual(Float.nan.boolValue, false)
-        XCTAssertEqual(Float.signalingNaN.boolValue, false)
-        XCTAssertEqual(Float.infinity.boolValue, true)
+        #expect(Float(-1.0).boolValue == false)
+        #expect(Float(0.0).boolValue == false)
+        #expect(Float(1.0).boolValue == true)
+        #expect(Float(123.0).boolValue == true)
+        #expect(Float.nan.boolValue == false)
+        #expect(Float.signalingNaN.boolValue == false)
+        #expect(Float.infinity.boolValue == true)
         
         // float80
         #if !(arch(arm64) || arch(arm) || os(watchOS)) // Float80 is now removed for ARM
-        XCTAssertEqual(Float80(-1.0).boolValue, false)
-        XCTAssertEqual(Float80(0.0).boolValue, false)
-        XCTAssertEqual(Float80(1.0).boolValue, true)
-        XCTAssertEqual(Float80(123.0).boolValue, true)
-        XCTAssertEqual(Float80.nan.boolValue, false)
-        XCTAssertEqual(Float80.signalingNaN.boolValue, false)
-        XCTAssertEqual(Float80.infinity.boolValue, true)
+        #expect(Float80(-1.0).boolValue == false)
+        #expect(Float80(0.0).boolValue == false)
+        #expect(Float80(1.0).boolValue == true)
+        #expect(Float80(123.0).boolValue == true)
+        #expect(Float80.nan.boolValue == false)
+        #expect(Float80.signalingNaN.boolValue == false)
+        #expect(Float80.infinity.boolValue == true)
         #endif
         
         // cgfloat
-        XCTAssertEqual(CGFloat(-1.0).boolValue, false)
-        XCTAssertEqual(CGFloat(0.0).boolValue, false)
-        XCTAssertEqual(CGFloat(1.0).boolValue, true)
-        XCTAssertEqual(CGFloat(123.0).boolValue, true)
-        XCTAssertEqual(CGFloat.nan.boolValue, false)
-        XCTAssertEqual(CGFloat.signalingNaN.boolValue, false)
-        XCTAssertEqual(CGFloat.infinity.boolValue, true)
+        #expect(CGFloat(-1.0).boolValue == false)
+        #expect(CGFloat(0.0).boolValue == false)
+        #expect(CGFloat(1.0).boolValue == true)
+        #expect(CGFloat(123.0).boolValue == true)
+        #expect(CGFloat.nan.boolValue == false)
+        #expect(CGFloat.signalingNaN.boolValue == false)
+        #expect(CGFloat.infinity.boolValue == true)
     }
     
-    func testRounded() {
+    @Test
+    func rounded() {
         // Double .rounded(decimalPlaces:)
         
-        XCTAssertEqual(Double(1.62456).rounded(decimalPlaces: -1), 2.0)
-        XCTAssertEqual(Double(1.62456).rounded(decimalPlaces:  0), 2.0)
-        XCTAssertEqual(Double(1.62456).rounded(decimalPlaces:  1), 1.6)
-        XCTAssertEqual(Double(1.62456).rounded(decimalPlaces:  2), 1.62)
-        XCTAssertEqual(Double(1.62456).rounded(decimalPlaces:  3), 1.625)
-        XCTAssertEqual(Double(1.62456).rounded(decimalPlaces:  4), 1.6246)
-        XCTAssertEqual(Double(1.62456).rounded(decimalPlaces:  5), 1.62456)
-        XCTAssertEqual(Double(1.62456).rounded(decimalPlaces:  6), 1.62456)
+        #expect(Double(1.62456).rounded(decimalPlaces: -1) == 2.0)
+        #expect(Double(1.62456).rounded(decimalPlaces: 0) == 2.0)
+        #expect(Double(1.62456).rounded(decimalPlaces: 1) == 1.6)
+        #expect(Double(1.62456).rounded(decimalPlaces: 2) == 1.62)
+        #expect(Double(1.62456).rounded(decimalPlaces: 3) == 1.625)
+        #expect(Double(1.62456).rounded(decimalPlaces: 4) == 1.6246)
+        #expect(Double(1.62456).rounded(decimalPlaces: 5) == 1.62456)
+        #expect(Double(1.62456).rounded(decimalPlaces: 6) == 1.62456)
         
-        XCTAssertEqual(Double(1.62456).rounded(.up, decimalPlaces: -1), 2.0)
-        XCTAssertEqual(Double(1.62456).rounded(.up, decimalPlaces:  0), 2.0)
-        XCTAssertEqual(Double(1.62456).rounded(.up, decimalPlaces:  1), 1.7)
-        XCTAssertEqual(Double(1.62456).rounded(.up, decimalPlaces:  2), 1.63)
-        XCTAssertEqual(Double(1.62456).rounded(.up, decimalPlaces:  3), 1.625)
-        XCTAssertEqual(Double(1.62456).rounded(.up, decimalPlaces:  4), 1.6246)
-        XCTAssertEqual(Double(1.62456).rounded(.up, decimalPlaces:  5), 1.62456)
-        XCTAssertEqual(Double(1.62456).rounded(.up, decimalPlaces:  6), 1.62456)
+        #expect(Double(1.62456).rounded(.up, decimalPlaces: -1) == 2.0)
+        #expect(Double(1.62456).rounded(.up, decimalPlaces: 0) == 2.0)
+        #expect(Double(1.62456).rounded(.up, decimalPlaces: 1) == 1.7)
+        #expect(Double(1.62456).rounded(.up, decimalPlaces: 2) == 1.63)
+        #expect(Double(1.62456).rounded(.up, decimalPlaces: 3) == 1.625)
+        #expect(Double(1.62456).rounded(.up, decimalPlaces: 4) == 1.6246)
+        #expect(Double(1.62456).rounded(.up, decimalPlaces: 5) == 1.62456)
+        #expect(Double(1.62456).rounded(.up, decimalPlaces: 6) == 1.62456)
         
         // negative values
         
-        XCTAssertEqual(Double(-1.62456).rounded(decimalPlaces: 2), -1.62)
-        XCTAssertEqual(Double(-1.62456).rounded(.up, decimalPlaces: 1), -1.6)
-        XCTAssertEqual(Double(-1.62456).rounded(.up, decimalPlaces: 2), -1.62)
-        XCTAssertEqual(Double(-1.62456).rounded(.down, decimalPlaces: 1), -1.7)
-        XCTAssertEqual(Double(-1.62456).rounded(.down, decimalPlaces: 2), -1.63)
+        #expect(Double(-1.62456).rounded(decimalPlaces: 2) == -1.62)
+        #expect(Double(-1.62456).rounded(.up, decimalPlaces: 1) == -1.6)
+        #expect(Double(-1.62456).rounded(.up, decimalPlaces: 2) == -1.62)
+        #expect(Double(-1.62456).rounded(.down, decimalPlaces: 1) == -1.7)
+        #expect(Double(-1.62456).rounded(.down, decimalPlaces: 2) == -1.63)
         
         // edge cases
         
-        XCTAssert(Double.nan.rounded(decimalPlaces: 2).isNaN)
-        XCTAssert(Double.signalingNaN.rounded(decimalPlaces: 2).isNaN)
-        XCTAssertEqual(Double.infinity.rounded(decimalPlaces: 2), .infinity)
+        #expect(Double.nan.rounded(decimalPlaces: 2).isNaN)
+        #expect(Double.signalingNaN.rounded(decimalPlaces: 2).isNaN)
+        #expect(Double.infinity.rounded(decimalPlaces: 2) == .infinity)
         
-        XCTAssert(Float.nan.rounded(decimalPlaces: 2).isNaN)
-        XCTAssert(Float.signalingNaN.rounded(decimalPlaces: 2).isNaN)
-        XCTAssertEqual(Float.infinity.rounded(decimalPlaces: 2), .infinity)
+        #expect(Float.nan.rounded(decimalPlaces: 2).isNaN)
+        #expect(Float.signalingNaN.rounded(decimalPlaces: 2).isNaN)
+        #expect(Float.infinity.rounded(decimalPlaces: 2) == .infinity)
         
-        XCTAssert(CGFloat.nan.rounded(decimalPlaces: 2).isNaN)
-        XCTAssert(CGFloat.signalingNaN.rounded(decimalPlaces: 2).isNaN)
-        XCTAssertEqual(CGFloat.infinity.rounded(decimalPlaces: 2), .infinity)
+        #expect(CGFloat.nan.rounded(decimalPlaces: 2).isNaN)
+        #expect(CGFloat.signalingNaN.rounded(decimalPlaces: 2).isNaN)
+        #expect(CGFloat.infinity.rounded(decimalPlaces: 2) == .infinity)
     }
     
-    func testRound() {
+    @Test
+    func round() {
         // Double .round(decimalPlaces:)
         
         var dbl = 0.1264
         dbl.round(decimalPlaces: 2)
-        XCTAssertEqual(dbl, 0.13)
+        #expect(dbl == 0.13)
         
         dbl = 0.1264
         dbl.round(.up, decimalPlaces: 1)
-        XCTAssertEqual(dbl, 0.2)
+        #expect(dbl == 0.2)
     }
     
-    func testWrappingNumbers() {
+    @Test
+    func wrappingNumbers() {
         // ClosedRange
         
         // single value ranges
         
-        XCTAssertEqual(1.0.wrapped(around: 0 ... 0),  0)
-        XCTAssertEqual(1.0.wrapped(around: -1 ... (-1)), -1)
+        #expect(1.0.wrapped(around: 0 ... 0) == 0)
+        #expect(1.0.wrapped(around: -1 ... (-1)) == -1)
         
         // basic ranges
         
-        XCTAssertEqual((-11.0).wrapped(around: 0 ... 4),  4)
-        XCTAssertEqual((-10.0).wrapped(around: 0 ... 4),  0)
-        XCTAssertEqual((-9.0).wrapped(around: 0 ... 4),  1)
-        XCTAssertEqual((-8.0).wrapped(around: 0 ... 4),  2)
-        XCTAssertEqual((-7.0).wrapped(around: 0 ... 4),  3)
-        XCTAssertEqual((-6.0).wrapped(around: 0 ... 4),  4)
-        XCTAssertEqual((-5.0).wrapped(around: 0 ... 4),  0)
-        XCTAssertEqual((-4.0).wrapped(around: 0 ... 4),  1)
-        XCTAssertEqual((-3.0).wrapped(around: 0 ... 4),  2)
-        XCTAssertEqual((-2.0).wrapped(around: 0 ... 4),  3)
-        XCTAssertEqual((-1.0).wrapped(around: 0 ... 4),  4)
-        XCTAssertEqual(0.0.wrapped(around: 0 ... 4),  0)
-        XCTAssertEqual(1.0.wrapped(around: 0 ... 4),  1)
-        XCTAssertEqual(2.0.wrapped(around: 0 ... 4),  2)
-        XCTAssertEqual(3.0.wrapped(around: 0 ... 4),  3)
-        XCTAssertEqual(4.0.wrapped(around: 0 ... 4),  4)
-        XCTAssertEqual(5.0.wrapped(around: 0 ... 4),  0)
-        XCTAssertEqual(6.0.wrapped(around: 0 ... 4),  1)
-        XCTAssertEqual(7.0.wrapped(around: 0 ... 4),  2)
-        XCTAssertEqual(8.0.wrapped(around: 0 ... 4),  3)
-        XCTAssertEqual(9.0.wrapped(around: 0 ... 4),  4)
-        XCTAssertEqual(10.0.wrapped(around: 0 ... 4),  0)
-        XCTAssertEqual(11.0.wrapped(around: 0 ... 4),  1)
+        #expect((-11.0).wrapped(around: 0 ... 4) == 4)
+        #expect((-10.0).wrapped(around: 0 ... 4) == 0)
+        #expect((-9.0).wrapped(around: 0 ... 4) == 1)
+        #expect((-8.0).wrapped(around: 0 ... 4) == 2)
+        #expect((-7.0).wrapped(around: 0 ... 4) == 3)
+        #expect((-6.0).wrapped(around: 0 ... 4) == 4)
+        #expect((-5.0).wrapped(around: 0 ... 4) == 0)
+        #expect((-4.0).wrapped(around: 0 ... 4) == 1)
+        #expect((-3.0).wrapped(around: 0 ... 4) == 2)
+        #expect((-2.0).wrapped(around: 0 ... 4) == 3)
+        #expect((-1.0).wrapped(around: 0 ... 4) == 4)
+        #expect(0.0.wrapped(around: 0 ... 4) == 0)
+        #expect(1.0.wrapped(around: 0 ... 4) == 1)
+        #expect(2.0.wrapped(around: 0 ... 4) == 2)
+        #expect(3.0.wrapped(around: 0 ... 4) == 3)
+        #expect(4.0.wrapped(around: 0 ... 4) == 4)
+        #expect(5.0.wrapped(around: 0 ... 4) == 0)
+        #expect(6.0.wrapped(around: 0 ... 4) == 1)
+        #expect(7.0.wrapped(around: 0 ... 4) == 2)
+        #expect(8.0.wrapped(around: 0 ... 4) == 3)
+        #expect(9.0.wrapped(around: 0 ... 4) == 4)
+        #expect(10.0.wrapped(around: 0 ... 4) == 0)
+        #expect(11.0.wrapped(around: 0 ... 4) == 1)
         
-        XCTAssertEqual((-11.0).wrapped(around: 1 ... 5),  4)
-        XCTAssertEqual((-10.0).wrapped(around: 1 ... 5),  5)
-        XCTAssertEqual((-9.0).wrapped(around: 1 ... 5),  1)
-        XCTAssertEqual((-8.0).wrapped(around: 1 ... 5),  2)
-        XCTAssertEqual((-7.0).wrapped(around: 1 ... 5),  3)
-        XCTAssertEqual((-6.0).wrapped(around: 1 ... 5),  4)
-        XCTAssertEqual((-5.0).wrapped(around: 1 ... 5),  5)
-        XCTAssertEqual((-4.0).wrapped(around: 1 ... 5),  1)
-        XCTAssertEqual((-3.0).wrapped(around: 1 ... 5),  2)
-        XCTAssertEqual((-2.0).wrapped(around: 1 ... 5),  3)
-        XCTAssertEqual((-1.0).wrapped(around: 1 ... 5),  4)
-        XCTAssertEqual(0.0.wrapped(around: 1 ... 5),  5)
-        XCTAssertEqual(1.0.wrapped(around: 1 ... 5),  1)
-        XCTAssertEqual(2.0.wrapped(around: 1 ... 5),  2)
-        XCTAssertEqual(3.0.wrapped(around: 1 ... 5),  3)
-        XCTAssertEqual(4.0.wrapped(around: 1 ... 5),  4)
-        XCTAssertEqual(5.0.wrapped(around: 1 ... 5),  5)
-        XCTAssertEqual(6.0.wrapped(around: 1 ... 5),  1)
-        XCTAssertEqual(7.0.wrapped(around: 1 ... 5),  2)
-        XCTAssertEqual(8.0.wrapped(around: 1 ... 5),  3)
-        XCTAssertEqual(9.0.wrapped(around: 1 ... 5),  4)
-        XCTAssertEqual(10.0.wrapped(around: 1 ... 5),  5)
-        XCTAssertEqual(11.0.wrapped(around: 1 ... 5),  1)
+        #expect((-11.0).wrapped(around: 1 ... 5) == 4)
+        #expect((-10.0).wrapped(around: 1 ... 5) == 5)
+        #expect((-9.0).wrapped(around: 1 ... 5) == 1)
+        #expect((-8.0).wrapped(around: 1 ... 5) == 2)
+        #expect((-7.0).wrapped(around: 1 ... 5) == 3)
+        #expect((-6.0).wrapped(around: 1 ... 5) == 4)
+        #expect((-5.0).wrapped(around: 1 ... 5) == 5)
+        #expect((-4.0).wrapped(around: 1 ... 5) == 1)
+        #expect((-3.0).wrapped(around: 1 ... 5) == 2)
+        #expect((-2.0).wrapped(around: 1 ... 5) == 3)
+        #expect((-1.0).wrapped(around: 1 ... 5) == 4)
+        #expect(0.0.wrapped(around: 1 ... 5) == 5)
+        #expect(1.0.wrapped(around: 1 ... 5) == 1)
+        #expect(2.0.wrapped(around: 1 ... 5) == 2)
+        #expect(3.0.wrapped(around: 1 ... 5) == 3)
+        #expect(4.0.wrapped(around: 1 ... 5) == 4)
+        #expect(5.0.wrapped(around: 1 ... 5) == 5)
+        #expect(6.0.wrapped(around: 1 ... 5) == 1)
+        #expect(7.0.wrapped(around: 1 ... 5) == 2)
+        #expect(8.0.wrapped(around: 1 ... 5) == 3)
+        #expect(9.0.wrapped(around: 1 ... 5) == 4)
+        #expect(10.0.wrapped(around: 1 ... 5) == 5)
+        #expect(11.0.wrapped(around: 1 ... 5) == 1)
         
-        XCTAssertEqual((-11.0).wrapped(around: -1 ... 3), -1)
-        XCTAssertEqual((-10.0).wrapped(around: -1 ... 3),  0)
-        XCTAssertEqual((-9.0).wrapped(around: -1 ... 3),  1)
-        XCTAssertEqual((-8.0).wrapped(around: -1 ... 3),  2)
-        XCTAssertEqual((-7.0).wrapped(around: -1 ... 3),  3)
-        XCTAssertEqual((-6.0).wrapped(around: -1 ... 3), -1)
-        XCTAssertEqual((-5.0).wrapped(around: -1 ... 3),  0)
-        XCTAssertEqual((-4.0).wrapped(around: -1 ... 3),  1)
-        XCTAssertEqual((-3.0).wrapped(around: -1 ... 3),  2)
-        XCTAssertEqual((-2.0).wrapped(around: -1 ... 3),  3)
-        XCTAssertEqual((-1.0).wrapped(around: -1 ... 3), -1)
-        XCTAssertEqual(0.0.wrapped(around: -1 ... 3),  0)
-        XCTAssertEqual(1.0.wrapped(around: -1 ... 3),  1)
-        XCTAssertEqual(2.0.wrapped(around: -1 ... 3),  2)
-        XCTAssertEqual(3.0.wrapped(around: -1 ... 3),  3)
-        XCTAssertEqual(4.0.wrapped(around: -1 ... 3), -1)
-        XCTAssertEqual(5.0.wrapped(around: -1 ... 3),  0)
-        XCTAssertEqual(6.0.wrapped(around: -1 ... 3),  1)
-        XCTAssertEqual(7.0.wrapped(around: -1 ... 3),  2)
-        XCTAssertEqual(8.0.wrapped(around: -1 ... 3),  3)
-        XCTAssertEqual(9.0.wrapped(around: -1 ... 3), -1)
-        XCTAssertEqual(10.0.wrapped(around: -1 ... 3),  0)
-        XCTAssertEqual(11.0.wrapped(around: -1 ... 3),  1)
+        #expect((-11.0).wrapped(around: -1 ... 3) == -1)
+        #expect((-10.0).wrapped(around: -1 ... 3) == 0)
+        #expect((-9.0).wrapped(around: -1 ... 3) == 1)
+        #expect((-8.0).wrapped(around: -1 ... 3) == 2)
+        #expect((-7.0).wrapped(around: -1 ... 3) == 3)
+        #expect((-6.0).wrapped(around: -1 ... 3) == -1)
+        #expect((-5.0).wrapped(around: -1 ... 3) == 0)
+        #expect((-4.0).wrapped(around: -1 ... 3) == 1)
+        #expect((-3.0).wrapped(around: -1 ... 3) == 2)
+        #expect((-2.0).wrapped(around: -1 ... 3) == 3)
+        #expect((-1.0).wrapped(around: -1 ... 3) == -1)
+        #expect(0.0.wrapped(around: -1 ... 3) == 0)
+        #expect(1.0.wrapped(around: -1 ... 3) == 1)
+        #expect(2.0.wrapped(around: -1 ... 3) == 2)
+        #expect(3.0.wrapped(around: -1 ... 3) == 3)
+        #expect(4.0.wrapped(around: -1 ... 3) == -1)
+        #expect(5.0.wrapped(around: -1 ... 3) == 0)
+        #expect(6.0.wrapped(around: -1 ... 3) == 1)
+        #expect(7.0.wrapped(around: -1 ... 3) == 2)
+        #expect(8.0.wrapped(around: -1 ... 3) == 3)
+        #expect(9.0.wrapped(around: -1 ... 3) == -1)
+        #expect(10.0.wrapped(around: -1 ... 3) == 0)
+        #expect(11.0.wrapped(around: -1 ... 3) == 1)
         
         // Range
         
         // single value ranges
         
-        XCTAssertEqual(1.0.wrapped(around: 0 ..< 0),  0)
-        XCTAssertEqual(1.0.wrapped(around: -1 ..< (-1)), -1)
+        #expect(1.0.wrapped(around: 0 ..< 0) == 0)
+        #expect(1.0.wrapped(around: -1 ..< (-1)) == -1)
         
         // basic ranges
         
-        XCTAssertEqual((-11.0).wrapped(around: 0 ..< 4),  1)
-        XCTAssertEqual((-10.0).wrapped(around: 0 ..< 4),  2)
-        XCTAssertEqual((-9.0).wrapped(around: 0 ..< 4),  3)
-        XCTAssertEqual((-8.0).wrapped(around: 0 ..< 4),  0)
-        XCTAssertEqual((-7.0).wrapped(around: 0 ..< 4),  1)
-        XCTAssertEqual((-6.0).wrapped(around: 0 ..< 4),  2)
-        XCTAssertEqual((-5.0).wrapped(around: 0 ..< 4),  3)
-        XCTAssertEqual((-4.0).wrapped(around: 0 ..< 4),  0)
-        XCTAssertEqual((-3.0).wrapped(around: 0 ..< 4),  1)
-        XCTAssertEqual((-2.0).wrapped(around: 0 ..< 4),  2)
-        XCTAssertEqual((-1.0).wrapped(around: 0 ..< 4),  3)
-        XCTAssertEqual(0.0.wrapped(around: 0 ..< 4),  0)
-        XCTAssertEqual(1.0.wrapped(around: 0 ..< 4),  1)
-        XCTAssertEqual(2.0.wrapped(around: 0 ..< 4),  2)
-        XCTAssertEqual(3.0.wrapped(around: 0 ..< 4),  3)
-        XCTAssertEqual(4.0.wrapped(around: 0 ..< 4),  0)
-        XCTAssertEqual(5.0.wrapped(around: 0 ..< 4),  1)
-        XCTAssertEqual(6.0.wrapped(around: 0 ..< 4),  2)
-        XCTAssertEqual(7.0.wrapped(around: 0 ..< 4),  3)
-        XCTAssertEqual(8.0.wrapped(around: 0 ..< 4),  0)
-        XCTAssertEqual(9.0.wrapped(around: 0 ..< 4),  1)
-        XCTAssertEqual(10.0.wrapped(around: 0 ..< 4),  2)
-        XCTAssertEqual(11.0.wrapped(around: 0 ..< 4),  3)
+        #expect((-11.0).wrapped(around: 0 ..< 4) == 1)
+        #expect((-10.0).wrapped(around: 0 ..< 4) == 2)
+        #expect((-9.0).wrapped(around: 0 ..< 4) == 3)
+        #expect((-8.0).wrapped(around: 0 ..< 4) == 0)
+        #expect((-7.0).wrapped(around: 0 ..< 4) == 1)
+        #expect((-6.0).wrapped(around: 0 ..< 4) == 2)
+        #expect((-5.0).wrapped(around: 0 ..< 4) == 3)
+        #expect((-4.0).wrapped(around: 0 ..< 4) == 0)
+        #expect((-3.0).wrapped(around: 0 ..< 4) == 1)
+        #expect((-2.0).wrapped(around: 0 ..< 4) == 2)
+        #expect((-1.0).wrapped(around: 0 ..< 4) == 3)
+        #expect(0.0.wrapped(around: 0 ..< 4) == 0)
+        #expect(1.0.wrapped(around: 0 ..< 4) == 1)
+        #expect(2.0.wrapped(around: 0 ..< 4) == 2)
+        #expect(3.0.wrapped(around: 0 ..< 4) == 3)
+        #expect(4.0.wrapped(around: 0 ..< 4) == 0)
+        #expect(5.0.wrapped(around: 0 ..< 4) == 1)
+        #expect(6.0.wrapped(around: 0 ..< 4) == 2)
+        #expect(7.0.wrapped(around: 0 ..< 4) == 3)
+        #expect(8.0.wrapped(around: 0 ..< 4) == 0)
+        #expect(9.0.wrapped(around: 0 ..< 4) == 1)
+        #expect(10.0.wrapped(around: 0 ..< 4) == 2)
+        #expect(11.0.wrapped(around: 0 ..< 4) == 3)
         
         // edge cases
         
-        XCTAssert(Double.nan.wrapped(around: 0 ... 1).isNaN)
-        XCTAssert(Double.signalingNaN.wrapped(around: 0 ... 1).isNaN)
-        XCTAssertEqual(Double.infinity.wrapped(around: 0 ... 1), .infinity)
+        #expect(Double.nan.wrapped(around: 0 ... 1).isNaN)
+        #expect(Double.signalingNaN.wrapped(around: 0 ... 1).isNaN)
+        #expect(Double.infinity.wrapped(around: 0 ... 1) == .infinity)
     }
     
-    func testDegreesToRadians() {
+    @Test
+    func degreesToRadians() {
         // Double
-        XCTAssertEqual(360.0.degreesToRadians, 6.28318530717958647693)
-        XCTAssertEqual(6.28318530717958647693.radiansToDegrees, 360.0)
+        #expect(360.0.degreesToRadians == 6.28318530717958647693)
+        #expect(6.28318530717958647693.radiansToDegrees == 360.0)
         
         // Float
-        XCTAssertEqual(Float(360.0).degreesToRadians, 6.283185)
-        XCTAssertEqual(Float(6.283185).radiansToDegrees, 360.0)
+        #expect(Float(360.0).degreesToRadians == 6.283185)
+        #expect(Float(6.283185).radiansToDegrees == 360.0)
         
         #if !(arch(arm64) || arch(arm) || os(watchOS)) // Float80 is now removed for ARM
         // Float80
-        XCTAssertEqual(Float80(360.0).degreesToRadians, 6.28318530717958647693)
-        XCTAssertEqual(Float80(6.28318530717958647693).radiansToDegrees, 360.0)
+        #expect(Float80(360.0).degreesToRadians == 6.28318530717958647693)
+        #expect(Float80(6.28318530717958647693).radiansToDegrees == 360.0)
         #endif
         
         // CGFloat
-        XCTAssertEqual(CGFloat(360.0).degreesToRadians, 6.28318530717958647693)
-        XCTAssertEqual(CGFloat(6.28318530717958647693).radiansToDegrees, 360.0)
+        #expect(CGFloat(360.0).degreesToRadians == 6.28318530717958647693)
+        #expect(CGFloat(6.28318530717958647693).radiansToDegrees == 360.0)
         
         // edge cases
-        XCTAssert(Double.nan.degreesToRadians.isNaN)
-        XCTAssert(Double.signalingNaN.degreesToRadians.isNaN)
-        XCTAssertEqual(Double.infinity.degreesToRadians, .infinity)
+        #expect(Double.nan.degreesToRadians.isNaN)
+        #expect(Double.signalingNaN.degreesToRadians.isNaN)
+        #expect(Double.infinity.degreesToRadians == .infinity)
     }
     
-    func testTypeConversions_FloatsToString() {
-        XCTAssertEqual(Double(1.0).string, "1.0")
-        XCTAssertEqual(Double.nan.string, "nan")
-        XCTAssertEqual(Double.signalingNaN.string, "nan")
-        XCTAssertEqual(Double.infinity.string, "inf")
+    @Test
+    func typeConversions_FloatsToString() {
+        #expect(Double(1.0).string == "1.0")
+        #expect(Double.nan.string == "nan")
+        #expect(Double.signalingNaN.string == "nan")
+        #expect(Double.infinity.string == "inf")
         
-        XCTAssertEqual(Float(1.0).string, "1.0")
-        XCTAssertEqual(Float.nan.string, "nan")
-        XCTAssertEqual(Float.signalingNaN.string, "nan")
-        XCTAssertEqual(Float.infinity.string, "inf")
+        #expect(Float(1.0).string == "1.0")
+        #expect(Float.nan.string == "nan")
+        #expect(Float.signalingNaN.string == "nan")
+        #expect(Float.infinity.string == "inf")
         
         #if !(arch(arm64) || arch(arm) || os(watchOS)) // Float80 is now removed for ARM
-        XCTAssertEqual(Float80(1.0).string, "1.0")
-        XCTAssertEqual(Float80.nan.string, "nan")
-        XCTAssertEqual(Float80.signalingNaN.string, "nan")
-        XCTAssertEqual(Float80.infinity.string, "inf")
+        #expect(Float80(1.0).string == "1.0")
+        #expect(Float80.nan.string == "nan")
+        #expect(Float80.signalingNaN.string == "nan")
+        #expect(Float80.infinity.string == "inf")
         #endif
         
-        XCTAssertEqual(CGFloat(1.0).string, "1.0")
-        XCTAssertEqual(CGFloat.nan.string, "nan")
-        XCTAssertEqual(CGFloat.signalingNaN.string, "nan")
-        XCTAssertEqual(CGFloat.infinity.string, "inf")
+        #expect(CGFloat(1.0).string == "1.0")
+        #expect(CGFloat.nan.string == "nan")
+        #expect(CGFloat.signalingNaN.string == "nan")
+        #expect(CGFloat.infinity.string == "inf")
     }
     
-    func testTypeConversions_StringToFloats() {
+    @Test
+    func typeConversions_StringToFloats() {
         // String
         
         let str = "1.0"
         
-        XCTAssertEqual(str.double,      1.0)
+        #expect(str.double == 1.0)
         
-        XCTAssertEqual(str.float,       1.0)
+        #expect(str.float == 1.0)
         
         #if !(arch(arm64) || arch(arm) || os(watchOS)) // Float80 is now removed for ARM
-        XCTAssertEqual(str.float80,     1.0)
+        #expect(str.float80 == 1.0)
         #endif
         
-        XCTAssertEqual(str.cgFloat,     1.0)
+        #expect(str.cgFloat == 1.0)
         
         // Substring
         
         let subStr = str.prefix(3)
         
-        XCTAssertEqual(subStr.double,   1.0)
+        #expect(subStr.double == 1.0)
         
-        XCTAssertEqual(subStr.float,    1.0)
+        #expect(subStr.float == 1.0)
         
         #if !(arch(arm64) || arch(arm) || os(watchOS)) // Float80 is now removed for ARM
-        XCTAssertEqual(subStr.float80,  1.0)
+        #expect(subStr.float80 == 1.0)
         #endif
         
-        XCTAssertEqual(subStr.cgFloat,  1.0)
+        #expect(subStr.cgFloat == 1.0)
     }
 }

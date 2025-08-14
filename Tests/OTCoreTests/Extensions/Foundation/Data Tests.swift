@@ -4,372 +4,379 @@
 //  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
-@testable import OTCore
-import XCTest
+#if canImport(Foundation)
 
-class Extensions_Foundation_Data_Tests: XCTestCase {
-    override func setUp() { super.setUp() }
-    override func tearDown() { super.tearDown() }
-    
+import Foundation
+@testable import OTCore
+import Testing
+import TestingExtensions
+
+@Suite struct Extensions_Foundation_Data_Tests {
     // MARK: - Ints
     
-    func testInt() {
+    @Test
+    func int() {
         // Int is 32-bit on 32-bit systems, 64-bit on 64-bit systems
         
         #if !(arch(arm) || arch(i386))
         
         // .toData
         
-        XCTAssertEqual(0b1.int.toData(.littleEndian), Data([0b1, 0, 0, 0, 0, 0, 0, 0]))
-        XCTAssertEqual(0b1.int.toData(.bigEndian), Data([0, 0, 0, 0, 0, 0, 0, 0b1]))
+        #expect(0b1.int.toData(.littleEndian) == Data([0b1, 0, 0, 0, 0, 0, 0, 0]))
+        #expect(0b1.int.toData(.bigEndian) == Data([0, 0, 0, 0, 0, 0, 0, 0b1]))
         
         // .toInt64
         
-        XCTAssertEqual(Data([]).toInt(), nil) // underflow
-        XCTAssertEqual(Data([1]).toInt(), nil) // underflow
-        XCTAssertEqual(Data([1, 2]).toInt(), nil) // underflow
-        XCTAssertEqual(Data([1, 2, 3]).toInt(), nil) // underflow
-        XCTAssertEqual(Data([1, 2, 3, 4]).toInt(), nil) // underflow
-        XCTAssertEqual(Data([1, 2, 3, 4, 5]).toInt(), nil) // underflow
-        XCTAssertEqual(Data([1, 2, 3, 4, 5, 6]).toInt(), nil) // underflow
-        XCTAssertEqual(Data([1, 2, 3, 4, 5, 6, 7]).toInt(), nil) // underflow
-        XCTAssertEqual(Data([1, 2, 3, 4, 5, 6, 7, 8, 9]).toInt(), nil) // overflow
+        #expect(Data([]).toInt() == nil) // underflow
+        #expect(Data([1]).toInt() == nil) // underflow
+        #expect(Data([1, 2]).toInt() == nil) // underflow
+        #expect(Data([1, 2, 3]).toInt() == nil) // underflow
+        #expect(Data([1, 2, 3, 4]).toInt() == nil) // underflow
+        #expect(Data([1, 2, 3, 4, 5]).toInt() == nil) // underflow
+        #expect(Data([1, 2, 3, 4, 5, 6]).toInt() == nil) // underflow
+        #expect(Data([1, 2, 3, 4, 5, 6, 7]).toInt() == nil) // underflow
+        #expect(Data([1, 2, 3, 4, 5, 6, 7, 8, 9]).toInt() == nil) // overflow
         
-        XCTAssertEqual(
-            Data([1, 2, 3, 4, 5, 6, 7, 8]).toInt(from: .littleEndian),
-            0b00001000_00000111_00000110_00000101_00000100_00000011_00000010_00000001
+        #expect(
+            Data([1, 2, 3, 4, 5, 6, 7, 8]).toInt(from: .littleEndian)
+                == 0b00001000_00000111_00000110_00000101_00000100_00000011_00000010_00000001
         )
-        XCTAssertEqual(
-            Data([1, 2, 3, 4, 5, 6, 7, 8]).toInt(from: .bigEndian),
-            0b00000001_00000010_00000011_00000100_00000101_00000110_00000111_00001000
+        #expect(
+            Data([1, 2, 3, 4, 5, 6, 7, 8]).toInt(from: .bigEndian)
+                == 0b00000001_00000010_00000011_00000100_00000101_00000110_00000111_00001000
         )
         
         // both ways
-        XCTAssertEqual(
-            Data([1, 2, 3, 4, 5, 6, 7, 8]).toInt()?.toData(),
-            Data([1, 2, 3, 4, 5, 6, 7, 8])
+        #expect(
+            Data([1, 2, 3, 4, 5, 6, 7, 8]).toInt()?.toData()
+                == Data([1, 2, 3, 4, 5, 6, 7, 8])
         )
         
-        XCTAssertEqual(
-            Data([1, 2, 3, 4, 5, 6, 7, 8]).toInt(from: .littleEndian)?.toData(.littleEndian),
-            Data([1, 2, 3, 4, 5, 6, 7, 8])
+        #expect(
+            Data([1, 2, 3, 4, 5, 6, 7, 8]).toInt(from: .littleEndian)?.toData(.littleEndian)
+                == Data([1, 2, 3, 4, 5, 6, 7, 8])
         )
-        XCTAssertEqual(
-            Data([1, 2, 3, 4, 5, 6, 7, 8]).toInt(from: .bigEndian)?.toData(.bigEndian),
-            Data([1, 2, 3, 4, 5, 6, 7, 8])
-        )
-        
-        XCTAssertEqual(
-            Data([1, 2, 3, 4, 5, 6, 7, 8]).toInt(from: .littleEndian)?.toData(.bigEndian),
-            Data([8, 7, 6, 5, 4, 3, 2, 1])
-        )
-        XCTAssertEqual(
-            Data([1, 2, 3, 4, 5, 6, 7, 8]).toInt(from: .bigEndian)?.toData(.littleEndian),
-            Data([8, 7, 6, 5, 4, 3, 2, 1])
+        #expect(
+            Data([1, 2, 3, 4, 5, 6, 7, 8]).toInt(from: .bigEndian)?.toData(.bigEndian)
+                == Data([1, 2, 3, 4, 5, 6, 7, 8])
         )
         
-        #elseif(arch(arm) || arch(i386))
+        #expect(
+            Data([1, 2, 3, 4, 5, 6, 7, 8]).toInt(from: .littleEndian)?.toData(.bigEndian)
+                == Data([8, 7, 6, 5, 4, 3, 2, 1])
+        )
+        #expect(
+            Data([1, 2, 3, 4, 5, 6, 7, 8]).toInt(from: .bigEndian)?.toData(.littleEndian)
+                == Data([8, 7, 6, 5, 4, 3, 2, 1])
+        )
+        
+        #elseif(arch(arm) || !arch(i386))
         
         // .toData
         
-        XCTAssertEqual(0b1.int.toData(.littleEndian), Data([0b1, 0, 0, 0]))
-        XCTAssertEqual(0b1.int.toData(.bigEndian), Data([0, 0, 0, 0b1]))
+        #expect(0b1.int.toData(.littleEndian) == Data([0b1, 0, 0, 0]))
+        #expect(0b1.int.toData(.bigEndian) == Data([0, 0, 0, 0b1]))
         
         // .toInt64
         
-        XCTAssertEqual(Data([]).toInt(), nil) // underflow
-        XCTAssertEqual(Data([1]).toInt(), nil) // underflow
-        XCTAssertEqual(Data([1, 2]).toInt(), nil) // underflow
-        XCTAssertEqual(Data([1, 2, 3]).toInt(), nil) // underflow
-        XCTAssertEqual(Data([1, 2, 3, 4, 5]).toInt(), nil) // overflow
+        #expect(Data([]).toInt() == nil) // underflow
+        #expect(Data([1]).toInt() == nil) // underflow
+        #expect(Data([1, 2]).toInt() == nil) // underflow
+        #expect(Data([1, 2, 3]).toInt() == nil) // underflow
+        #expect(Data([1, 2, 3, 4, 5]).toInt() == nil) // overflow
         
-        XCTAssertEqual(
-            Data([1, 2, 3, 4]).toInt(from: .littleEndian),
-            0b00000100_00000011_00000010_00000001
+        #expect(
+            Data([1, 2, 3, 4]).toInt(from: .littleEndian)
+                == 0b00000100_00000011_00000010_00000001
         )
-        XCTAssertEqual(
-            Data([1, 2, 3, 4]).toInt(from: .bigEndian),
-            0b00000001_00000010_00000011_00000100
+        #expect(
+            Data([1, 2, 3, 4]).toInt(from: .bigEndian)
+                == 0b00000001_00000010_00000011_00000100
         )
         
         // both ways
-        XCTAssertEqual(Data([1, 2, 3, 4]).toInt()?.toData(), Data([1, 2, 3, 4]))
+        #expect(Data([1, 2, 3, 4]).toInt()?.toData() == Data([1, 2, 3, 4]))
         
-        XCTAssertEqual(
-            Data([1, 2, 3, 4]).toInt(from: .littleEndian)?.toData(.littleEndian),
-            Data([1, 2, 3, 4])
+        #expect(
+            Data([1, 2, 3, 4]).toInt(from: .littleEndian)?.toData(.littleEndian)
+                == Data([1, 2, 3, 4])
         )
-        XCTAssertEqual(
-            Data([1, 2, 3, 4]).toInt(from: .bigEndian)?.toData(.bigEndian),
-            Data([1, 2, 3, 4])
+        #expect(
+            Data([1, 2, 3, 4]).toInt(from: .bigEndian)?.toData(.bigEndian)
+                == Data([1, 2, 3, 4])
         )
         
-        XCTAssertEqual(
-            Data([1, 2, 3, 4]).toInt(from: .littleEndian)?.toData(.bigEndian),
-            Data([4, 3, 2, 1])
+        #expect(
+            Data([1, 2, 3, 4]).toInt(from: .littleEndian)?.toData(.bigEndian)
+                == Data([4, 3, 2, 1])
         )
-        XCTAssertEqual(
-            Data([1, 2, 3, 4]).toInt(from: .bigEndian)?.toData(.littleEndian),
-            Data([4, 3, 2, 1])
+        #expect(
+            Data([1, 2, 3, 4]).toInt(from: .bigEndian)?.toData(.littleEndian)
+                == Data([4, 3, 2, 1])
         )
         
         #else
         
-        XCTFail("Platform not supported yet.")
+        #fail("Platform not supported yet.")
         
         #endif
     }
     
-    func testInt8() {
+    @Test
+    func int8() {
         // .toData
         
-        XCTAssertEqual(0b1.int8.toData(), Data([0b1]))
-        XCTAssertEqual((-128).int8.toData(), Data([0b10000000]))
+        #expect(0b1.int8.toData() == Data([0b1]))
+        #expect((-128).int8.toData() == Data([0b10000000]))
         
         // .toInt8
         
-        XCTAssertEqual(Data([]).toInt8(), nil) // underflow
-        XCTAssertEqual(Data([1]).toInt8(), 0b00000001)
-        XCTAssertEqual(Data([1, 2]).toInt8(), nil) // overflow
+        #expect(Data([]).toInt8() == nil) // underflow
+        #expect(Data([1]).toInt8() == 0b00000001)
+        #expect(Data([1, 2]).toInt8() == nil) // overflow
         
         // both ways
         
-        XCTAssertEqual(1.int8.toData().toInt8(),   1)
-        XCTAssertEqual(127.int8.toData().toInt8(),   127)
-        XCTAssertEqual((-128).int8.toData().toInt8(),   -128)
+        #expect(1.int8.toData().toInt8() == 1)
+        #expect(127.int8.toData().toInt8() == 127)
+        #expect((-128).int8.toData().toInt8() == -128)
     }
     
-    func testInt16() {
+    @Test
+    func int16() {
         // .toData
         
-        XCTAssertEqual(0b1.int16.toData(.littleEndian), Data([0b1, 0]))
-        XCTAssertEqual(0b1.int16.toData(.bigEndian), Data([0, 0b1]))
+        #expect(0b1.int16.toData(.littleEndian) == Data([0b1, 0]))
+        #expect(0b1.int16.toData(.bigEndian) == Data([0, 0b1]))
         
         // .toInt16
         
-        XCTAssertEqual(Data([]).toInt16(), nil) // underflow
-        XCTAssertEqual(Data([1]).toInt16(), nil) // underflow
-        XCTAssertEqual(Data([1, 2, 3]).toInt16(), nil) // overflow
+        #expect(Data([]).toInt16() == nil) // underflow
+        #expect(Data([1]).toInt16() == nil) // underflow
+        #expect(Data([1, 2, 3]).toInt16() == nil) // overflow
         
-        XCTAssertEqual(
-            Data([1, 2]).toInt16(from: .littleEndian),
-            0b00000010_00000001
+        #expect(
+            Data([1, 2]).toInt16(from: .littleEndian)
+                == 0b00000010_00000001
         )
-        XCTAssertEqual(
-            Data([1, 2]).toInt16(from: .bigEndian),
-            0b00000001_00000010
+        #expect(
+            Data([1, 2]).toInt16(from: .bigEndian)
+                == 0b00000001_00000010
         )
         
         // both ways
-        XCTAssertEqual(Data([1, 2]).toInt16()?.toData(), Data([1, 2]))
+        #expect(Data([1, 2]).toInt16()?.toData() == Data([1, 2]))
         
-        XCTAssertEqual(
-            Data([1, 2]).toInt16(from: .littleEndian)?.toData(.littleEndian),
-            Data([1, 2])
+        #expect(
+            Data([1, 2]).toInt16(from: .littleEndian)?.toData(.littleEndian)
+                == Data([1, 2])
         )
-        XCTAssertEqual(Data([1, 2]).toInt16(from: .bigEndian)?.toData(.bigEndian), Data([1, 2]))
+        #expect(Data([1, 2]).toInt16(from: .bigEndian)?.toData(.bigEndian) == Data([1, 2]))
         
-        XCTAssertEqual(Data([1, 2]).toInt16(from: .littleEndian)?.toData(.bigEndian), Data([2, 1]))
-        XCTAssertEqual(Data([1, 2]).toInt16(from: .bigEndian)?.toData(.littleEndian), Data([2, 1]))
+        #expect(Data([1, 2]).toInt16(from: .littleEndian)?.toData(.bigEndian) == Data([2, 1]))
+        #expect(Data([1, 2]).toInt16(from: .bigEndian)?.toData(.littleEndian) == Data([2, 1]))
     }
     
-    func testInt32() {
+    @Test
+    func int32() {
         // .toData
         
-        XCTAssertEqual(0b1.int32.toData(.littleEndian), Data([0b1, 0, 0, 0]))
-        XCTAssertEqual(0b1.int32.toData(.bigEndian), Data([0, 0, 0, 0b1]))
+        #expect(0b1.int32.toData(.littleEndian) == Data([0b1, 0, 0, 0]))
+        #expect(0b1.int32.toData(.bigEndian) == Data([0, 0, 0, 0b1]))
         
         // .toInt32
         
-        XCTAssertEqual(Data([]).toInt32(), nil) // underflow
-        XCTAssertEqual(Data([1]).toInt32(), nil) // underflow
-        XCTAssertEqual(Data([1, 2]).toInt32(), nil) // underflow
-        XCTAssertEqual(Data([1, 2, 3]).toInt32(), nil) // underflow
-        XCTAssertEqual(Data([1, 2, 3, 4, 5]).toInt32(), nil) // overflow
+        #expect(Data([]).toInt32() == nil) // underflow
+        #expect(Data([1]).toInt32() == nil) // underflow
+        #expect(Data([1, 2]).toInt32() == nil) // underflow
+        #expect(Data([1, 2, 3]).toInt32() == nil) // underflow
+        #expect(Data([1, 2, 3, 4, 5]).toInt32() == nil) // overflow
         
-        XCTAssertEqual(
-            Data([1, 2, 3, 4]).toInt32(from: .littleEndian),
-            0b00000100_00000011_00000010_00000001
+        #expect(
+            Data([1, 2, 3, 4]).toInt32(from: .littleEndian)
+                == 0b00000100_00000011_00000010_00000001
         )
-        XCTAssertEqual(
-            Data([1, 2, 3, 4]).toInt32(from: .bigEndian),
-            0b00000001_00000010_00000011_00000100
+        #expect(
+            Data([1, 2, 3, 4]).toInt32(from: .bigEndian)
+                == 0b00000001_00000010_00000011_00000100
         )
         
         // both ways
-        XCTAssertEqual(Data([1, 2, 3, 4]).toInt32()?.toData(), Data([1, 2, 3, 4]))
+        #expect(Data([1, 2, 3, 4]).toInt32()?.toData() == Data([1, 2, 3, 4]))
         
-        XCTAssertEqual(
-            Data([1, 2, 3, 4]).toInt32(from: .littleEndian)?.toData(.littleEndian),
-            Data([1, 2, 3, 4])
+        #expect(
+            Data([1, 2, 3, 4]).toInt32(from: .littleEndian)?.toData(.littleEndian)
+                == Data([1, 2, 3, 4])
         )
-        XCTAssertEqual(
-            Data([1, 2, 3, 4]).toInt32(from: .bigEndian)?.toData(.bigEndian),
-            Data([1, 2, 3, 4])
+        #expect(
+            Data([1, 2, 3, 4]).toInt32(from: .bigEndian)?.toData(.bigEndian)
+                == Data([1, 2, 3, 4])
         )
         
-        XCTAssertEqual(
-            Data([1, 2, 3, 4]).toInt32(from: .littleEndian)?.toData(.bigEndian),
-            Data([4, 3, 2, 1])
+        #expect(
+            Data([1, 2, 3, 4]).toInt32(from: .littleEndian)?.toData(.bigEndian)
+                == Data([4, 3, 2, 1])
         )
-        XCTAssertEqual(
-            Data([1, 2, 3, 4]).toInt32(from: .bigEndian)?.toData(.littleEndian),
-            Data([4, 3, 2, 1])
+        #expect(
+            Data([1, 2, 3, 4]).toInt32(from: .bigEndian)?.toData(.littleEndian)
+                == Data([4, 3, 2, 1])
         )
     }
     
-    func testInt64() {
+    @Test
+    func int64() {
         // .toData
         
-        XCTAssertEqual(0b1.int64.toData(.littleEndian), Data([0b1, 0, 0, 0, 0, 0, 0, 0]))
-        XCTAssertEqual(0b1.int64.toData(.bigEndian), Data([0, 0, 0, 0, 0, 0, 0, 0b1]))
+        #expect(0b1.int64.toData(.littleEndian) == Data([0b1, 0, 0, 0, 0, 0, 0, 0]))
+        #expect(0b1.int64.toData(.bigEndian) == Data([0, 0, 0, 0, 0, 0, 0, 0b1]))
         
         // .toInt64
         
-        XCTAssertEqual(Data([]).toInt64(), nil) // underflow
-        XCTAssertEqual(Data([1]).toInt64(), nil) // underflow
-        XCTAssertEqual(Data([1, 2]).toInt64(), nil) // underflow
-        XCTAssertEqual(Data([1, 2, 3]).toInt64(), nil) // underflow
-        XCTAssertEqual(Data([1, 2, 3, 4]).toInt64(), nil) // underflow
-        XCTAssertEqual(Data([1, 2, 3, 4, 5]).toInt64(), nil) // underflow
-        XCTAssertEqual(Data([1, 2, 3, 4, 5, 6]).toInt64(), nil) // underflow
-        XCTAssertEqual(Data([1, 2, 3, 4, 5, 6, 7]).toInt64(), nil) // underflow
-        XCTAssertEqual(Data([1, 2, 3, 4, 5, 6, 7, 8, 9]).toInt64(), nil) // overflow
+        #expect(Data([]).toInt64() == nil) // underflow
+        #expect(Data([1]).toInt64() == nil) // underflow
+        #expect(Data([1, 2]).toInt64() == nil) // underflow
+        #expect(Data([1, 2, 3]).toInt64() == nil) // underflow
+        #expect(Data([1, 2, 3, 4]).toInt64() == nil) // underflow
+        #expect(Data([1, 2, 3, 4, 5]).toInt64() == nil) // underflow
+        #expect(Data([1, 2, 3, 4, 5, 6]).toInt64() == nil) // underflow
+        #expect(Data([1, 2, 3, 4, 5, 6, 7]).toInt64() == nil) // underflow
+        #expect(Data([1, 2, 3, 4, 5, 6, 7, 8, 9]).toInt64() == nil) // overflow
         
-        XCTAssertEqual(
-            Data([1, 2, 3, 4, 5, 6, 7, 8]).toInt64(from: .littleEndian),
-            0b00001000_00000111_00000110_00000101_00000100_00000011_00000010_00000001
+        #expect(
+            Data([1, 2, 3, 4, 5, 6, 7, 8]).toInt64(from: .littleEndian)
+                == 0b00001000_00000111_00000110_00000101_00000100_00000011_00000010_00000001
         )
-        XCTAssertEqual(
-            Data([1, 2, 3, 4, 5, 6, 7, 8]).toInt64(from: .bigEndian),
-            0b00000001_00000010_00000011_00000100_00000101_00000110_00000111_00001000
+        #expect(
+            Data([1, 2, 3, 4, 5, 6, 7, 8]).toInt64(from: .bigEndian)
+                == 0b00000001_00000010_00000011_00000100_00000101_00000110_00000111_00001000
         )
         
         // both ways
-        XCTAssertEqual(
-            Data([1, 2, 3, 4, 5, 6, 7, 8]).toInt64()?.toData(),
-            Data([1, 2, 3, 4, 5, 6, 7, 8])
+        #expect(
+            Data([1, 2, 3, 4, 5, 6, 7, 8]).toInt64()?.toData()
+                == Data([1, 2, 3, 4, 5, 6, 7, 8])
         )
         
-        XCTAssertEqual(
-            Data([1, 2, 3, 4, 5, 6, 7, 8]).toInt64(from: .littleEndian)?.toData(.littleEndian),
-            Data([1, 2, 3, 4, 5, 6, 7, 8])
+        #expect(
+            Data([1, 2, 3, 4, 5, 6, 7, 8]).toInt64(from: .littleEndian)?.toData(.littleEndian)
+                == Data([1, 2, 3, 4, 5, 6, 7, 8])
         )
-        XCTAssertEqual(
-            Data([1, 2, 3, 4, 5, 6, 7, 8]).toInt64(from: .bigEndian)?.toData(.bigEndian),
-            Data([1, 2, 3, 4, 5, 6, 7, 8])
+        #expect(
+            Data([1, 2, 3, 4, 5, 6, 7, 8]).toInt64(from: .bigEndian)?.toData(.bigEndian)
+                == Data([1, 2, 3, 4, 5, 6, 7, 8])
         )
         
-        XCTAssertEqual(
-            Data([1, 2, 3, 4, 5, 6, 7, 8]).toInt64(from: .littleEndian)?.toData(.bigEndian),
-            Data([8, 7, 6, 5, 4, 3, 2, 1])
+        #expect(
+            Data([1, 2, 3, 4, 5, 6, 7, 8]).toInt64(from: .littleEndian)?.toData(.bigEndian)
+                == Data([8, 7, 6, 5, 4, 3, 2, 1])
         )
-        XCTAssertEqual(
-            Data([1, 2, 3, 4, 5, 6, 7, 8]).toInt64(from: .bigEndian)?.toData(.littleEndian),
-            Data([8, 7, 6, 5, 4, 3, 2, 1])
+        #expect(
+            Data([1, 2, 3, 4, 5, 6, 7, 8]).toInt64(from: .bigEndian)?.toData(.littleEndian)
+                == Data([8, 7, 6, 5, 4, 3, 2, 1])
         )
     }
     
     // MARK: - UInts
     
-    func testUInt() {
+    @Test
+    func uInt() {
         // UInt is 32-bit on 32-bit systems, 64-bit on 64-bit systems
         
         #if !(arch(arm) || arch(i386))
         
         // .toData
         
-        XCTAssertEqual(0b1.uInt.toData(.littleEndian), Data([0b1, 0, 0, 0, 0, 0, 0, 0]))
-        XCTAssertEqual(0b1.uInt.toData(.bigEndian), Data([0, 0, 0, 0, 0, 0, 0, 0b1]))
+        #expect(0b1.uInt.toData(.littleEndian) == Data([0b1, 0, 0, 0, 0, 0, 0, 0]))
+        #expect(0b1.uInt.toData(.bigEndian) == Data([0, 0, 0, 0, 0, 0, 0, 0b1]))
         
         // .toUInt
         
-        XCTAssertEqual(Data([]).toUInt(), nil) // underflow
-        XCTAssertEqual(Data([1]).toUInt(), nil) // underflow
-        XCTAssertEqual(Data([1, 2]).toUInt(), nil) // underflow
-        XCTAssertEqual(Data([1, 2, 3]).toUInt(), nil) // underflow
-        XCTAssertEqual(Data([1, 2, 3, 4]).toUInt(), nil) // underflow
-        XCTAssertEqual(Data([1, 2, 3, 4, 5]).toUInt(), nil) // underflow
-        XCTAssertEqual(Data([1, 2, 3, 4, 5, 6]).toUInt(), nil) // underflow
-        XCTAssertEqual(Data([1, 2, 3, 4, 5, 6, 7]).toUInt(), nil) // underflow
-        XCTAssertEqual(Data([1, 2, 3, 4, 5, 6, 7, 8, 9]).toUInt(), nil) // overflow
+        #expect(Data([]).toUInt() == nil) // underflow
+        #expect(Data([1]).toUInt() == nil) // underflow
+        #expect(Data([1, 2]).toUInt() == nil) // underflow
+        #expect(Data([1, 2, 3]).toUInt() == nil) // underflow
+        #expect(Data([1, 2, 3, 4]).toUInt() == nil) // underflow
+        #expect(Data([1, 2, 3, 4, 5]).toUInt() == nil) // underflow
+        #expect(Data([1, 2, 3, 4, 5, 6]).toUInt() == nil) // underflow
+        #expect(Data([1, 2, 3, 4, 5, 6, 7]).toUInt() == nil) // underflow
+        #expect(Data([1, 2, 3, 4, 5, 6, 7, 8, 9]).toUInt() == nil) // overflow
         
-        XCTAssertEqual(
-            Data([1, 2, 3, 4, 5, 6, 7, 8]).toUInt(from: .littleEndian),
-            0b00001000_00000111_00000110_00000101_00000100_00000011_00000010_00000001
+        #expect(
+            Data([1, 2, 3, 4, 5, 6, 7, 8]).toUInt(from: .littleEndian)
+                == 0b00001000_00000111_00000110_00000101_00000100_00000011_00000010_00000001
         )
-        XCTAssertEqual(
-            Data([1, 2, 3, 4, 5, 6, 7, 8]).toUInt(from: .bigEndian),
-            0b00000001_00000010_00000011_00000100_00000101_00000110_00000111_00001000
+        #expect(
+            Data([1, 2, 3, 4, 5, 6, 7, 8]).toUInt(from: .bigEndian)
+                == 0b00000001_00000010_00000011_00000100_00000101_00000110_00000111_00001000
         )
         
         // both ways
-        XCTAssertEqual(
-            Data([1, 2, 3, 4, 5, 6, 7, 8]).toUInt()?.toData(),
-            Data([1, 2, 3, 4, 5, 6, 7, 8])
+        #expect(
+            Data([1, 2, 3, 4, 5, 6, 7, 8]).toUInt()?.toData()
+                == Data([1, 2, 3, 4, 5, 6, 7, 8])
         )
         
-        XCTAssertEqual(
-            Data([1, 2, 3, 4, 5, 6, 7, 8]).toUInt(from: .littleEndian)?.toData(.littleEndian),
-            Data([1, 2, 3, 4, 5, 6, 7, 8])
+        #expect(
+            Data([1, 2, 3, 4, 5, 6, 7, 8]).toUInt(from: .littleEndian)?.toData(.littleEndian)
+                == Data([1, 2, 3, 4, 5, 6, 7, 8])
         )
-        XCTAssertEqual(
-            Data([1, 2, 3, 4, 5, 6, 7, 8]).toUInt(from: .bigEndian)?.toData(.bigEndian),
-            Data([1, 2, 3, 4, 5, 6, 7, 8])
+        #expect(
+            Data([1, 2, 3, 4, 5, 6, 7, 8]).toUInt(from: .bigEndian)?.toData(.bigEndian)
+                == Data([1, 2, 3, 4, 5, 6, 7, 8])
         )
         
-        XCTAssertEqual(
-            Data([1, 2, 3, 4, 5, 6, 7, 8]).toUInt(from: .littleEndian)?.toData(.bigEndian),
-            Data([8, 7, 6, 5, 4, 3, 2, 1])
+        #expect(
+            Data([1, 2, 3, 4, 5, 6, 7, 8]).toUInt(from: .littleEndian)?.toData(.bigEndian)
+                == Data([8, 7, 6, 5, 4, 3, 2, 1])
         )
-        XCTAssertEqual(
-            Data([1, 2, 3, 4, 5, 6, 7, 8]).toUInt(from: .bigEndian)?.toData(.littleEndian),
-            Data([8, 7, 6, 5, 4, 3, 2, 1])
+        #expect(
+            Data([1, 2, 3, 4, 5, 6, 7, 8]).toUInt(from: .bigEndian)?.toData(.littleEndian)
+                == Data([8, 7, 6, 5, 4, 3, 2, 1])
         )
         
         #elseif(arch(arm) || arch(i386))
         
         // .toData
         
-        XCTAssertEqual(0b1.uInt.toData(.littleEndian), Data([0b1, 0, 0, 0]))
-        XCTAssertEqual(0b1.uInt.toData(.bigEndian), Data([0, 0, 0, 0b1]))
+        #expect(0b1.uInt.toData(.littleEndian) == Data([0b1, 0, 0, 0]))
+        #expect(0b1.uInt.toData(.bigEndian) == Data([0, 0, 0, 0b1]))
         
         // .toUInt
         
-        XCTAssertEqual(Data([]).toUInt(), nil) // underflow
-        XCTAssertEqual(Data([1]).toUInt(), nil) // underflow
-        XCTAssertEqual(Data([1, 2]).toUInt(), nil) // underflow
-        XCTAssertEqual(Data([1, 2, 3]).toUInt(), nil) // underflow
-        XCTAssertEqual(Data([1, 2, 3, 4, 5]).toUInt(), nil) // overflow
+        #expect(Data([]).toUInt() == nil) // underflow
+        #expect(Data([1]).toUInt() == nil) // underflow
+        #expect(Data([1, 2]).toUInt() == nil) // underflow
+        #expect(Data([1, 2, 3]).toUInt() == nil) // underflow
+        #expect(Data([1, 2, 3, 4, 5]).toUInt() == nil) // overflow
         
-        XCTAssertEqual(
-            Data([1, 2, 3, 4]).toUInt(from: .littleEndian),
-            0b00000100_00000011_00000010_00000001
+        #expect(
+            Data([1, 2, 3, 4]).toUInt(from: .littleEndian)
+                == 0b00000100_00000011_00000010_00000001
         )
-        XCTAssertEqual(
-            Data([1, 2, 3, 4]).toUInt(from: .bigEndian),
-            0b00000001_00000010_00000011_00000100
+        #expect(
+            Data([1, 2, 3, 4]).toUInt(from: .bigEndian)
+                == 0b00000001_00000010_00000011_00000100
         )
         
         // both ways
-        XCTAssertEqual(Data([1, 2, 3, 4]).toUInt()?.toData(), Data([1, 2, 3, 4]))
+        #expect(Data([1, 2, 3, 4]).toUInt()?.toData() == Data([1, 2, 3, 4]))
         
-        XCTAssertEqual(
-            Data([1, 2, 3, 4]).toUInt(from: .littleEndian)?.toData(.littleEndian),
-            Data([1, 2, 3, 4])
+        #expect(
+            Data([1, 2, 3, 4]).toUInt(from: .littleEndian)?.toData(.littleEndian)
+                == Data([1, 2, 3, 4])
         )
-        XCTAssertEqual(
-            Data([1, 2, 3, 4]).toUInt(from: .bigEndian)?.toData(.bigEndian),
-            Data([1, 2, 3, 4])
+        #expect(
+            Data([1, 2, 3, 4]).toUInt(from: .bigEndian)?.toData(.bigEndian)
+                == Data([1, 2, 3, 4])
         )
         
-        XCTAssertEqual(
-            Data([1, 2, 3, 4]).toUInt(from: .littleEndian)?.toData(.bigEndian),
-            Data([4, 3, 2, 1])
+        #expect(
+            Data([1, 2, 3, 4]).toUInt(from: .littleEndian)?.toData(.bigEndian)
+                == Data([4, 3, 2, 1])
         )
-        XCTAssertEqual(
-            Data([1, 2, 3, 4]).toUInt(from: .bigEndian)?.toData(.littleEndian),
-            Data([4, 3, 2, 1])
+        #expect(
+            Data([1, 2, 3, 4]).toUInt(from: .bigEndian)?.toData(.littleEndian)
+                == Data([4, 3, 2, 1])
         )
         
         #else
@@ -379,258 +386,250 @@ class Extensions_Foundation_Data_Tests: XCTestCase {
         #endif
     }
     
-    func testUInt8() {
+    @Test
+    func uInt8() {
         // .toData
         
-        XCTAssertEqual(0b1.uInt8.toData(), Data([0b1]))
-        XCTAssertEqual(0b11111111.uInt8.toData(), Data([0b11111111]))
+        #expect(0b1.uInt8.toData() == Data([0b1]))
+        #expect(0b11111111.uInt8.toData() == Data([0b11111111]))
         
         // .toUInt8
         
-        XCTAssertEqual(Data([]).toUInt8(), nil) // underflow
-        XCTAssertEqual(Data([1]).toUInt8(), 0b00000001)
-        XCTAssertEqual(Data([1, 2]).toUInt8(), nil) // overflow
+        #expect(Data([]).toUInt8() == nil) // underflow
+        #expect(Data([1]).toUInt8() == 0b00000001)
+        #expect(Data([1, 2]).toUInt8() == nil) // overflow
         
         // both ways
         
-        XCTAssertEqual(1.uInt8.toData().toUInt8(), 1)
-        XCTAssertEqual(255.uInt8.toData().toUInt8(), 255)
+        #expect(1.uInt8.toData().toUInt8() == 1)
+        #expect(255.uInt8.toData().toUInt8() == 255)
     }
     
-    func testUInt16() {
+    @Test
+    func uInt16() {
         // .toData
         
-        XCTAssertEqual(0b1.uInt16.toData(.littleEndian), Data([0b1, 0]))
-        XCTAssertEqual(0b1.uInt16.toData(.bigEndian), Data([0, 0b1]))
+        #expect(0b1.uInt16.toData(.littleEndian) == Data([0b1, 0]))
+        #expect(0b1.uInt16.toData(.bigEndian) == Data([0, 0b1]))
         
         // .toUInt16
         
-        XCTAssertEqual(Data([]).toUInt16(), nil) // underflow
-        XCTAssertEqual(Data([1]).toUInt16(), nil) // underflow
-        XCTAssertEqual(Data([1, 2, 3]).toUInt16(), nil) // overflow
+        #expect(Data([]).toUInt16() == nil) // underflow
+        #expect(Data([1]).toUInt16() == nil) // underflow
+        #expect(Data([1, 2, 3]).toUInt16() == nil) // overflow
         
-        XCTAssertEqual(
-            Data([1, 2]).toUInt16(from: .littleEndian),
-            0b00000010_00000001
+        #expect(
+            Data([1, 2]).toUInt16(from: .littleEndian)
+                == 0b00000010_00000001
         )
-        XCTAssertEqual(
-            Data([1, 2]).toUInt16(from: .bigEndian),
-            0b00000001_00000010
+        #expect(
+            Data([1, 2]).toUInt16(from: .bigEndian)
+                == 0b00000001_00000010
         )
         
         // both ways
-        XCTAssertEqual(Data([1, 2]).toUInt16()?.toData(), Data([1, 2]))
+        #expect(Data([1, 2]).toUInt16()?.toData() == Data([1, 2]))
         
-        XCTAssertEqual(
-            Data([1, 2]).toUInt16(from: .littleEndian)?.toData(.littleEndian),
-            Data([1, 2])
-        )
-        XCTAssertEqual(Data([1, 2]).toUInt16(from: .bigEndian)?.toData(.bigEndian), Data([1, 2]))
+        #expect(Data([1, 2]).toUInt16(from: .littleEndian)?.toData(.littleEndian) == Data([1, 2]))
+        #expect(Data([1, 2]).toUInt16(from: .bigEndian)?.toData(.bigEndian) == Data([1, 2]))
         
-        XCTAssertEqual(Data([1, 2]).toUInt16(from: .littleEndian)?.toData(.bigEndian), Data([2, 1]))
-        XCTAssertEqual(Data([1, 2]).toUInt16(from: .bigEndian)?.toData(.littleEndian), Data([2, 1]))
+        #expect(Data([1, 2]).toUInt16(from: .littleEndian)?.toData(.bigEndian) == Data([2, 1]))
+        #expect(Data([1, 2]).toUInt16(from: .bigEndian)?.toData(.littleEndian) == Data([2, 1]))
     }
     
-    func testUInt32() {
+    @Test
+    func uInt32() {
         // .toData
         
-        XCTAssertEqual(0b1.uInt32.toData(.littleEndian), Data([0b1, 0, 0, 0]))
-        XCTAssertEqual(0b1.uInt32.toData(.bigEndian), Data([0, 0, 0, 0b1]))
+        #expect(0b1.uInt32.toData(.littleEndian) == Data([0b1, 0, 0, 0]))
+        #expect(0b1.uInt32.toData(.bigEndian) == Data([0, 0, 0, 0b1]))
         
         // .toUInt32
         
-        XCTAssertEqual(Data([]).toUInt32(), nil) // underflow
-        XCTAssertEqual(Data([1]).toUInt32(), nil) // underflow
-        XCTAssertEqual(Data([1, 2]).toUInt32(), nil) // underflow
-        XCTAssertEqual(Data([1, 2, 3]).toUInt32(), nil) // underflow
-        XCTAssertEqual(Data([1, 2, 3, 4, 5]).toUInt32(), nil) // overflow
+        #expect(Data([]).toUInt32() == nil) // underflow
+        #expect(Data([1]).toUInt32() == nil) // underflow
+        #expect(Data([1, 2]).toUInt32() == nil) // underflow
+        #expect(Data([1, 2, 3]).toUInt32() == nil) // underflow
+        #expect(Data([1, 2, 3, 4, 5]).toUInt32() == nil) // overflow
         
-        XCTAssertEqual(
-            Data([1, 2, 3, 4]).toUInt32(from: .littleEndian),
-            0b00000100_00000011_00000010_00000001
+        #expect(
+            Data([1, 2, 3, 4]).toUInt32(from: .littleEndian)
+                == 0b00000100_00000011_00000010_00000001
         )
-        XCTAssertEqual(
-            Data([1, 2, 3, 4]).toUInt32(from: .bigEndian),
-            0b00000001_00000010_00000011_00000100
+        #expect(
+            Data([1, 2, 3, 4]).toUInt32(from: .bigEndian)
+                == 0b00000001_00000010_00000011_00000100
         )
         
         // both ways
-        XCTAssertEqual(Data([1, 2, 3, 4]).toUInt32()?.toData(), Data([1, 2, 3, 4]))
+        #expect(Data([1, 2, 3, 4]).toUInt32()?.toData() == Data([1, 2, 3, 4]))
         
-        XCTAssertEqual(
-            Data([1, 2, 3, 4]).toUInt32(from: .littleEndian)?.toData(.littleEndian),
-            Data([1, 2, 3, 4])
-        )
-        XCTAssertEqual(
-            Data([1, 2, 3, 4]).toUInt32(from: .bigEndian)?.toData(.bigEndian),
-            Data([1, 2, 3, 4])
-        )
+        #expect(Data([1, 2, 3, 4]).toUInt32(from: .littleEndian)?.toData(.littleEndian) == Data([1, 2, 3, 4]))
+        #expect(Data([1, 2, 3, 4]).toUInt32(from: .bigEndian)?.toData(.bigEndian) == Data([1, 2, 3, 4]))
         
-        XCTAssertEqual(
-            Data([1, 2, 3, 4]).toUInt32(from: .littleEndian)?.toData(.bigEndian),
-            Data([4, 3, 2, 1])
-        )
-        XCTAssertEqual(
-            Data([1, 2, 3, 4]).toUInt32(from: .bigEndian)?.toData(.littleEndian),
-            Data([4, 3, 2, 1])
-        )
+        #expect(Data([1, 2, 3, 4]).toUInt32(from: .littleEndian)?.toData(.bigEndian) == Data([4, 3, 2, 1]))
+        #expect(Data([1, 2, 3, 4]).toUInt32(from: .bigEndian)?.toData(.littleEndian) == Data([4, 3, 2, 1]))
     }
     
-    func testUInt64() {
+    @Test
+    func uInt64() {
         // .toData
         
-        XCTAssertEqual(0b1.uInt64.toData(.littleEndian), Data([0b1, 0, 0, 0, 0, 0, 0, 0]))
-        XCTAssertEqual(0b1.uInt64.toData(.bigEndian), Data([0, 0, 0, 0, 0, 0, 0, 0b1]))
+        #expect(0b1.uInt64.toData(.littleEndian) == Data([0b1, 0, 0, 0, 0, 0, 0, 0]))
+        #expect(0b1.uInt64.toData(.bigEndian) == Data([0, 0, 0, 0, 0, 0, 0, 0b1]))
         
         // .toUInt64
         
-        XCTAssertEqual(Data([]).toUInt64(), nil) // underflow
-        XCTAssertEqual(Data([1]).toUInt64(), nil) // underflow
-        XCTAssertEqual(Data([1, 2]).toUInt64(), nil) // underflow
-        XCTAssertEqual(Data([1, 2, 3]).toUInt64(), nil) // underflow
-        XCTAssertEqual(Data([1, 2, 3, 4]).toUInt64(), nil) // underflow
-        XCTAssertEqual(Data([1, 2, 3, 4, 5]).toUInt64(), nil) // underflow
-        XCTAssertEqual(Data([1, 2, 3, 4, 5, 6]).toUInt64(), nil) // underflow
-        XCTAssertEqual(Data([1, 2, 3, 4, 5, 6, 7]).toUInt64(), nil) // underflow
-        XCTAssertEqual(Data([1, 2, 3, 4, 5, 6, 7, 8, 9]).toUInt64(), nil) // overflow
+        #expect(Data([]).toUInt64() == nil) // underflow
+        #expect(Data([1]).toUInt64() == nil) // underflow
+        #expect(Data([1, 2]).toUInt64() == nil) // underflow
+        #expect(Data([1, 2, 3]).toUInt64() == nil) // underflow
+        #expect(Data([1, 2, 3, 4]).toUInt64() == nil) // underflow
+        #expect(Data([1, 2, 3, 4, 5]).toUInt64() == nil) // underflow
+        #expect(Data([1, 2, 3, 4, 5, 6]).toUInt64() == nil) // underflow
+        #expect(Data([1, 2, 3, 4, 5, 6, 7]).toUInt64() == nil) // underflow
+        #expect(Data([1, 2, 3, 4, 5, 6, 7, 8, 9]).toUInt64() == nil) // overflow
         
-        XCTAssertEqual(
-            Data([1, 2, 3, 4, 5, 6, 7, 8]).toUInt64(from: .littleEndian),
-            0b00001000_00000111_00000110_00000101_00000100_00000011_00000010_00000001
+        #expect(
+            Data([1, 2, 3, 4, 5, 6, 7, 8]).toUInt64(from: .littleEndian)
+                == 0b00001000_00000111_00000110_00000101_00000100_00000011_00000010_00000001
         )
-        XCTAssertEqual(
-            Data([1, 2, 3, 4, 5, 6, 7, 8]).toUInt64(from: .bigEndian),
-            0b00000001_00000010_00000011_00000100_00000101_00000110_00000111_00001000
+        #expect(
+            Data([1, 2, 3, 4, 5, 6, 7, 8]).toUInt64(from: .bigEndian)
+                == 0b00000001_00000010_00000011_00000100_00000101_00000110_00000111_00001000
         )
         
         // both ways
-        XCTAssertEqual(
-            Data([1, 2, 3, 4, 5, 6, 7, 8]).toUInt64()?.toData(),
-            Data([1, 2, 3, 4, 5, 6, 7, 8])
+        #expect(
+            Data([1, 2, 3, 4, 5, 6, 7, 8]).toUInt64()?.toData()
+                == Data([1, 2, 3, 4, 5, 6, 7, 8])
         )
         
-        XCTAssertEqual(
-            Data([1, 2, 3, 4, 5, 6, 7, 8]).toUInt64(from: .littleEndian)?.toData(.littleEndian),
-            Data([1, 2, 3, 4, 5, 6, 7, 8])
+        #expect(
+            Data([1, 2, 3, 4, 5, 6, 7, 8]).toUInt64(from: .littleEndian)?.toData(.littleEndian)
+                == Data([1, 2, 3, 4, 5, 6, 7, 8])
         )
-        XCTAssertEqual(
-            Data([1, 2, 3, 4, 5, 6, 7, 8]).toUInt64(from: .bigEndian)?.toData(.bigEndian),
-            Data([1, 2, 3, 4, 5, 6, 7, 8])
+        #expect(
+            Data([1, 2, 3, 4, 5, 6, 7, 8]).toUInt64(from: .bigEndian)?.toData(.bigEndian)
+                == Data([1, 2, 3, 4, 5, 6, 7, 8])
         )
         
-        XCTAssertEqual(
-            Data([1, 2, 3, 4, 5, 6, 7, 8]).toUInt64(from: .littleEndian)?.toData(.bigEndian),
-            Data([8, 7, 6, 5, 4, 3, 2, 1])
+        #expect(
+            Data([1, 2, 3, 4, 5, 6, 7, 8]).toUInt64(from: .littleEndian)?.toData(.bigEndian)
+                == Data([8, 7, 6, 5, 4, 3, 2, 1])
         )
-        XCTAssertEqual(
-            Data([1, 2, 3, 4, 5, 6, 7, 8]).toUInt64(from: .bigEndian)?.toData(.littleEndian),
-            Data([8, 7, 6, 5, 4, 3, 2, 1])
+        #expect(
+            Data([1, 2, 3, 4, 5, 6, 7, 8]).toUInt64(from: .bigEndian)?.toData(.littleEndian)
+                == Data([8, 7, 6, 5, 4, 3, 2, 1])
         )
     }
     
     // MARK: - Floats
     
-    func testFloat32() {
+    @Test
+    func float32() {
         // .toData
         
-        XCTAssertEqual(0b1.float32.toData(.littleEndian), Data([0x00, 0x00, 0x80, 0x3F]))
-        XCTAssertEqual(0b1.float32.toData(.bigEndian), Data([0x3F, 0x80, 0x00, 0x00]))
+        #expect(0b1.float32.toData(.littleEndian) == Data([0x00, 0x00, 0x80, 0x3F]))
+        #expect(0b1.float32.toData(.bigEndian) == Data([0x3F, 0x80, 0x00, 0x00]))
         
         // .toFloat32
         
-        XCTAssertEqual(Data([]).toFloat32(), nil) // underflow
-        XCTAssertEqual(Data([1]).toFloat32(), nil) // underflow
-        XCTAssertEqual(Data([1, 2]).toFloat32(), nil) // underflow
-        XCTAssertEqual(Data([1, 2, 3]).toFloat32(), nil) // underflow
-        XCTAssertEqual(Data([1, 2, 3, 4, 5]).toFloat32(), nil) // overflow
+        #expect(Data([]).toFloat32() == nil) // underflow
+        #expect(Data([1]).toFloat32() == nil) // underflow
+        #expect(Data([1, 2]).toFloat32() == nil) // underflow
+        #expect(Data([1, 2, 3]).toFloat32() == nil) // underflow
+        #expect(Data([1, 2, 3, 4, 5]).toFloat32() == nil) // overflow
         
-        XCTAssertEqual(Data([1, 2, 3, 4]).toFloat32(from: .littleEndian), 1.5399896e-36)
-        XCTAssertEqual(Data([1, 2, 3, 4]).toFloat32(from: .bigEndian), 2.3879393e-38)
+        #expect(Data([1, 2, 3, 4]).toFloat32(from: .littleEndian) == 1.5399896e-36)
+        #expect(Data([1, 2, 3, 4]).toFloat32(from: .bigEndian) == 2.3879393e-38)
         
         // both ways
-        XCTAssertEqual(Data([1, 2, 3, 4]).toFloat32()?.toData(), Data([1, 2, 3, 4]))
+        #expect(Data([1, 2, 3, 4]).toFloat32()?.toData() == Data([1, 2, 3, 4]))
         
-        XCTAssertEqual(
-            Data([1, 2, 3, 4]).toFloat32(from: .littleEndian)?.toData(.littleEndian),
-            Data([1, 2, 3, 4])
+        #expect(
+            Data([1, 2, 3, 4]).toFloat32(from: .littleEndian)?.toData(.littleEndian)
+                == Data([1, 2, 3, 4])
         )
-        XCTAssertEqual(
-            Data([1, 2, 3, 4]).toFloat32(from: .bigEndian)?.toData(.bigEndian),
-            Data([1, 2, 3, 4])
+        #expect(
+            Data([1, 2, 3, 4]).toFloat32(from: .bigEndian)?.toData(.bigEndian)
+                == Data([1, 2, 3, 4])
         )
         
-        XCTAssertEqual(
-            Data([1, 2, 3, 4]).toFloat32(from: .littleEndian)?.toData(.bigEndian),
-            Data([4, 3, 2, 1])
+        #expect(
+            Data([1, 2, 3, 4]).toFloat32(from: .littleEndian)?.toData(.bigEndian)
+                == Data([4, 3, 2, 1])
         )
-        XCTAssertEqual(
-            Data([1, 2, 3, 4]).toFloat32(from: .bigEndian)?.toData(.littleEndian),
-            Data([4, 3, 2, 1])
+        #expect(
+            Data([1, 2, 3, 4]).toFloat32(from: .bigEndian)?.toData(.littleEndian)
+                == Data([4, 3, 2, 1])
         )
     }
     
-    func testDouble() {
+    @Test
+    func double() {
         // .toData
         
-        XCTAssertEqual(
-            0b1.double.toData(.littleEndian),
-            Data([0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xF0, 0x3F])
+        #expect(
+            0b1.double.toData(.littleEndian)
+                == Data([0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xF0, 0x3F])
         )
-        XCTAssertEqual(
-            0b1.double.toData(.bigEndian),
-            Data([0x3F, 0xF0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00])
+        #expect(
+            0b1.double.toData(.bigEndian)
+                == Data([0x3F, 0xF0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00])
         )
         
         // .toDouble
         
-        XCTAssertEqual(Data([]).toDouble(), nil) // underflow
-        XCTAssertEqual(Data([1]).toDouble(), nil) // underflow
-        XCTAssertEqual(Data([1, 2]).toDouble(), nil) // underflow
-        XCTAssertEqual(Data([1, 2, 3]).toDouble(), nil) // underflow
-        XCTAssertEqual(Data([1, 2, 3, 4]).toDouble(), nil) // underflow
-        XCTAssertEqual(Data([1, 2, 3, 4, 5]).toDouble(), nil) // underflow
-        XCTAssertEqual(Data([1, 2, 3, 4, 5, 6]).toDouble(), nil) // underflow
-        XCTAssertEqual(Data([1, 2, 3, 4, 5, 6, 7]).toDouble(), nil) // underflow
-        XCTAssertEqual(Data([1, 2, 3, 4, 5, 6, 7, 8, 9]).toDouble(), nil) // overflow
+        #expect(Data([]).toDouble() == nil) // underflow
+        #expect(Data([1]).toDouble() == nil) // underflow
+        #expect(Data([1, 2]).toDouble() == nil) // underflow
+        #expect(Data([1, 2, 3]).toDouble() == nil) // underflow
+        #expect(Data([1, 2, 3, 4]).toDouble() == nil) // underflow
+        #expect(Data([1, 2, 3, 4, 5]).toDouble() == nil) // underflow
+        #expect(Data([1, 2, 3, 4, 5, 6]).toDouble() == nil) // underflow
+        #expect(Data([1, 2, 3, 4, 5, 6, 7]).toDouble() == nil) // underflow
+        #expect(Data([1, 2, 3, 4, 5, 6, 7, 8, 9]).toDouble() == nil) // overflow
         
-        XCTAssertEqual(
-            Data([1, 2, 3, 4, 5, 6, 7, 8]).toDouble(from: .littleEndian),
-            5.447603722011605e-270
+        #expect(
+            Data([1, 2, 3, 4, 5, 6, 7, 8]).toDouble(from: .littleEndian)
+                == 5.447603722011605e-270
         )
-        XCTAssertEqual(
-            Data([1, 2, 3, 4, 5, 6, 7, 8]).toDouble(from: .bigEndian),
-            8.20788039913184e-304
+        #expect(
+            Data([1, 2, 3, 4, 5, 6, 7, 8]).toDouble(from: .bigEndian)
+                == 8.20788039913184e-304
         )
         
         // both ways
-        XCTAssertEqual(
-            Data([1, 2, 3, 4, 5, 6, 7, 8]).toDouble()?.toData(),
-            Data([1, 2, 3, 4, 5, 6, 7, 8])
+        #expect(
+            Data([1, 2, 3, 4, 5, 6, 7, 8]).toDouble()?.toData()
+                == Data([1, 2, 3, 4, 5, 6, 7, 8])
         )
         
-        XCTAssertEqual(
-            Data([1, 2, 3, 4, 5, 6, 7, 8]).toDouble(from: .littleEndian)?.toData(.littleEndian),
-            Data([1, 2, 3, 4, 5, 6, 7, 8])
+        #expect(
+            Data([1, 2, 3, 4, 5, 6, 7, 8]).toDouble(from: .littleEndian)?.toData(.littleEndian)
+                == Data([1, 2, 3, 4, 5, 6, 7, 8])
         )
-        XCTAssertEqual(
-            Data([1, 2, 3, 4, 5, 6, 7, 8]).toDouble(from: .bigEndian)?.toData(.bigEndian),
-            Data([1, 2, 3, 4, 5, 6, 7, 8])
+        #expect(
+            Data([1, 2, 3, 4, 5, 6, 7, 8]).toDouble(from: .bigEndian)?.toData(.bigEndian)
+                == Data([1, 2, 3, 4, 5, 6, 7, 8])
         )
         
-        XCTAssertEqual(
-            Data([1, 2, 3, 4, 5, 6, 7, 8]).toDouble(from: .littleEndian)?.toData(.bigEndian),
-            Data([8, 7, 6, 5, 4, 3, 2, 1])
+        #expect(
+            Data([1, 2, 3, 4, 5, 6, 7, 8]).toDouble(from: .littleEndian)?.toData(.bigEndian)
+                == Data([8, 7, 6, 5, 4, 3, 2, 1])
         )
-        XCTAssertEqual(
-            Data([1, 2, 3, 4, 5, 6, 7, 8]).toDouble(from: .bigEndian)?.toData(.littleEndian),
-            Data([8, 7, 6, 5, 4, 3, 2, 1])
+        #expect(
+            Data([1, 2, 3, 4, 5, 6, 7, 8]).toDouble(from: .bigEndian)?.toData(.littleEndian)
+                == Data([8, 7, 6, 5, 4, 3, 2, 1])
         )
     }
     
-    func testMemoryAlignment() {
+    @Test
+    func memoryAlignment() {
         // test for misaligned raw pointer (memory alignment)
         
-        // if the underlying Data -> T:FixedWidthInteger method is not properly aligned, this test
+        // if the underlying `Data -> T: FixedWidthInteger` method is not properly aligned, this test
         // will trigger a runtime exception
         
         // cycle through 8 memory offset positions regardless of the type we're testing
@@ -675,55 +674,41 @@ class Extensions_Foundation_Data_Tests: XCTestCase {
     
     // MARK: - String
     
-    func testString() {
+    @Test
+    func string() throws {
         // String -> Data
         
         let sourceString = "This is a test string"
         
         let expectedBytes: [UInt8] = [
-            0x54,
-            0x68,
-            0x69,
-            0x73,
-            0x20,
-            0x69,
-            0x73,
-            0x20,
-            0x61,
-            0x20,
-            0x74,
-            0x65,
-            0x73,
-            0x74,
-            0x20,
-            0x73,
-            0x74,
-            0x72,
-            0x69,
-            0x6E,
-            0x67
+            0x54, 0x68, 0x69, 0x73, 0x20, 0x69, 0x73, 0x20,
+            0x61, 0x20, 0x74, 0x65, 0x73, 0x74, 0x20, 0x73,
+            0x74, 0x72, 0x69, 0x6E, 0x67
         ]
         
-        XCTAssertEqual(sourceString.toData(using: .utf8)!, Data(expectedBytes))
+        #expect(try #require(sourceString.toData(using: .utf8)) == Data(expectedBytes))
         
         // Data -> String
         
         let convertedString = Data(expectedBytes).toString(using: .utf8)
         
-        XCTAssertEqual(convertedString, sourceString)
+        #expect(convertedString == sourceString)
     }
     
     // MARK: - toUInt8Bytes
     
-    func testDataUInt8Bytes() {
+    @Test
+    func dataUInt8Bytes() {
         let sourceBytes: [UInt8] = [1, 2, 3]
         
         // Collection -> Data
         
-        XCTAssertEqual(sourceBytes.toData(), Data([1, 2, 3]))
+        #expect(sourceBytes.toData() == Data([1, 2, 3]))
         
         // Data -> Collection
         
-        XCTAssertEqual(Data(sourceBytes).toUInt8Bytes(), [1, 2, 3])
+        #expect(Data(sourceBytes).toUInt8Bytes() == [1, 2, 3])
     }
 }
+
+#endif

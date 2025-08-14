@@ -7,14 +7,13 @@
 // This is Mac-only because even though XMLNode exists in Foundation, it is only available on macOS
 #if os(macOS)
 
+import Foundation
 @testable import OTCore
-import XCTest
+import Testing
 
-final class Extensions_Foundation_XMLNode_Tests: XMLTestCase {
-    override func setUp() { super.setUp() }
-    override func tearDown() { super.tearDown() }
-    
-    func testXMLLoad() throws {
+@Suite struct Extensions_Foundation_XMLNode_Tests: XMLTestSuite {
+    @Test
+    func xmlLoad() throws {
         let loadxml = try Self.testXMLDocument()
         
         let root = loadxml.rootElement()
@@ -23,10 +22,11 @@ final class Extensions_Foundation_XMLNode_Tests: XMLTestCase {
             .filter(whereAttribute: "name", hasValue: "Setup")
             .first
         
-        XCTAssertEqual(setup?.childCount, 14)
+        #expect(setup?.childCount == 14)
     }
     
-    func testCollection_FilterElementName() {
+    @Test
+    func collection_FilterElementName() {
         // prep
         
         let nodes = [
@@ -44,10 +44,10 @@ final class Extensions_Foundation_XMLNode_Tests: XMLTestCase {
         // test
         
         let filtered1 = nodes.filter(whereNodeNamed: "list1B")
-        XCTAssertEqual(filtered1[position: 0], nodes[1])
+        #expect(filtered1[position: 0] == nodes[1])
         
         let filtered2 = nodes.filter(whereNodeNamed: "DoesNotExist")
-        XCTAssert(filtered2.isEmpty)
+        #expect(filtered2.isEmpty)
     }
 }
 

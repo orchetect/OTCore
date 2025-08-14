@@ -4,21 +4,20 @@
 //  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
+import CoreGraphics
 import OTCore
-import XCTest
+import Testing
 
-class Extensions_Swift_Operators_Tests: XCTestCase {
-    override func setUp() { super.setUp() }
-    override func tearDown() { super.tearDown() }
-    
-    func testModulo() {
+@Suite struct Extensions_Swift_Operators_Tests {
+    @Test
+    func modulo() {
         // Double, Float, Float80
         
-        XCTAssertEqual(43.0  % 10.0, 3.0)
-        XCTAssertEqual(Float(43.0) % 10.0, 3.0)
+        #expect(43.0 % 10.0 == 3.0)
+        #expect(Float(43.0) % 10.0 == 3.0)
         
         #if !(arch(arm64) || arch(arm) || os(watchOS)) // Float80 is now removed for ARM
-        XCTAssertEqual(Float80(43.0) % 10.0, 3.0)
+        #expect(Float80(43.0) % 10.0 == 3.0)
         #endif
         
         // CGFloat

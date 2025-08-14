@@ -1,5 +1,5 @@
 //
-//  XMLTestCase.swift
+//  XMLTestSuite.swift
 //  OTCore • https://github.com/orchetect/OTCore
 //  © 2025 Steffan Andrews • Licensed under MIT License
 //
@@ -7,16 +7,19 @@
 // This is Mac-only because even though XMLNode exists in Foundation, it is only available on macOS
 #if os(macOS)
 
+import Foundation
 @testable import OTCore
-import XCTest
+import Testing
 
-class XMLTestCase: XCTestCase {
+protocol XMLTestSuite { }
+
+extension XMLTestSuite {
     static func child(of node: XMLNode, named: String) throws -> XMLElement {
         let child = node.children?
             .lazy
             .compactMap(\.asElement)
             .first(where: { $0.name == named })
-        let unwrapped = try XCTUnwrap(child)
+        let unwrapped = try #require(child)
         return unwrapped
     }
     
@@ -27,8 +30,9 @@ class XMLTestCase: XCTestCase {
         )
     }
 
-    static let testXMLStringData = testXMLString.toData()!
-    static let testXMLString = """
+    static var testXMLStringData: Data { testXMLString.toData()! }
+    static var testXMLString: String {
+        """
         <?xml version="1.0" encoding="utf-8"?>
         <tracklist2>
            <list name="track" type="obj">
@@ -217,6 +221,7 @@ class XMLTestCase: XCTestCase {
            </obj>
         </tracklist2>
         """
+    }
 }
 
 #endif

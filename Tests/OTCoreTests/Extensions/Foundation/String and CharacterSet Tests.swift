@@ -4,40 +4,41 @@
 //  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
-@testable import OTCore
-import XCTest
+#if canImport(Foundation)
 
-class Extensions_Foundation_StringAndCharacterSet_Tests: XCTestCase {
-    override func setUp() { super.setUp() }
-    override func tearDown() { super.tearDown() }
-    
-    func testSplitIntoSequencesOf() {
+import Foundation
+@testable import OTCore
+import Testing
+
+@Suite struct Extensions_Foundation_StringAndCharacterSet_Tests {
+    @Test
+    func splitIntoSequencesOf() {
         // ____ typical cases ____
         
         // complex string
         
-        XCTAssertEqual(
+        #expect(
             "abc123def456gh78i9"
-                .split(intoSequencesOf: .letters, .decimalDigits),
-            ["abc", "123", "def", "456", "gh", "78", "i", "9"]
+                .split(intoSequencesOf: .letters, .decimalDigits)
+                == ["abc", "123", "def", "456", "gh", "78", "i", "9"]
         )
         
-        XCTAssertEqual(
+        #expect(
             "ab_c123def_456gh78__i9"
-                .split(intoSequencesOf: .letters, .decimalDigits),
-            ["ab", "c", "123", "def", "456", "gh", "78", "i", "9"]
+                .split(intoSequencesOf: .letters, .decimalDigits)
+                == ["ab", "c", "123", "def", "456", "gh", "78", "i", "9"]
         )
         
-        XCTAssertEqual(
+        #expect(
             "ab_c123def_456gh78__i9"
-                .split(intoSequencesOf: .letters, .decimalDigits, omitNonmatching: false),
-            ["ab", "_", "c", "123", "def", "_", "456", "gh", "78", "__", "i", "9"]
+                .split(intoSequencesOf: .letters, .decimalDigits, omitNonmatching: false)
+                == ["ab", "_", "c", "123", "def", "_", "456", "gh", "78", "__", "i", "9"]
         )
         
-        XCTAssertEqual(
+        #expect(
             "a_c123def_456gh78__i9"
-                .split(intoSequencesOf: .letters, .decimalDigits, omitNonmatching: false),
-            ["a", "_", "c", "123", "def", "_", "456", "gh", "78", "__", "i", "9"]
+                .split(intoSequencesOf: .letters, .decimalDigits, omitNonmatching: false)
+                == ["a", "_", "c", "123", "def", "_", "456", "gh", "78", "__", "i", "9"]
         )
         
         // character set precedence
@@ -46,211 +47,213 @@ class Extensions_Foundation_StringAndCharacterSet_Tests: XCTestCase {
         
         // alphanumerics catches all characters (including .letters and .decimalDigits), so .letters
         // and .decimalDigits will never trigger a new grouping)
-        XCTAssertEqual(
+        #expect(
             "abc123def456gh78i9"
-                .split(intoSequencesOf: .alphanumerics, .letters, .decimalDigits),
-            ["abc123def456gh78i9"]
+                .split(intoSequencesOf: .alphanumerics, .letters, .decimalDigits)
+                == ["abc123def456gh78i9"]
         )
         
         // ____ edge cases ____
         
         // empty
         
-        XCTAssertEqual(
-            ""
-                .split(intoSequencesOf: .letters, .decimalDigits),
-            []
+        #expect(
+            "".split(intoSequencesOf: .letters, .decimalDigits)
+                == []
         )
         
         // single character
         
-        XCTAssertEqual(
-            "a"
-                .split(intoSequencesOf: .letters, .decimalDigits),
-            ["a"]
+        #expect(
+            "a".split(intoSequencesOf: .letters, .decimalDigits)
+                == ["a"]
         )
         
-        XCTAssertEqual(
-            "1"
-                .split(intoSequencesOf: .letters, .decimalDigits),
-            ["1"]
+        #expect(
+            "1".split(intoSequencesOf: .letters, .decimalDigits)
+                == ["1"]
         )
         
-        XCTAssertEqual(
-            "_"
-                .split(intoSequencesOf: .letters, .decimalDigits),
-            []
+        #expect(
+            "_".split(intoSequencesOf: .letters, .decimalDigits)
+                == []
         )
         
-        XCTAssertEqual(
-            "_"
-                .split(intoSequencesOf: .letters, .decimalDigits, omitNonmatching: false),
-            ["_"]
+        #expect(
+            "_".split(intoSequencesOf: .letters, .decimalDigits, omitNonmatching: false)
+                == ["_"]
         )
         
         // two characters
         
-        XCTAssertEqual(
-            "ab"
-                .split(intoSequencesOf: .letters, .decimalDigits),
-            ["ab"]
+        #expect(
+            "ab".split(intoSequencesOf: .letters, .decimalDigits)
+                == ["ab"]
         )
         
-        XCTAssertEqual(
-            "12"
-                .split(intoSequencesOf: .letters, .decimalDigits),
-            ["12"]
+        #expect(
+            "12".split(intoSequencesOf: .letters, .decimalDigits)
+                == ["12"]
         )
         
-        XCTAssertEqual(
-            "__"
-                .split(intoSequencesOf: .letters, .decimalDigits),
-            []
+        #expect(
+            "__".split(intoSequencesOf: .letters, .decimalDigits)
+                == []
         )
         
-        XCTAssertEqual(
-            "__"
-                .split(intoSequencesOf: .letters, .decimalDigits, omitNonmatching: false),
-            ["__"]
+        #expect(
+            "__".split(intoSequencesOf: .letters, .decimalDigits, omitNonmatching: false)
+                == ["__"]
         )
     }
     
-    func testOnlyCharacterSet() {
+    @Test
+    func onlyCharacterSet() {
         // .only - single character set
         
-        XCTAssertEqual(
+        #expect(
             "abcdefg 12345678 abcdefg 12345678"
-                .only(CharacterSet(charactersIn: "def456")),
-            "def456def456"
+                .only(CharacterSet(charactersIn: "def456"))
+                == "def456def456"
         )
         
-        XCTAssertEqual(
+        #expect(
             "abcdefg 12345678 abcdefg 12345678"
-                .only(charactersIn: "def456"),
-            "def456def456"
+                .only(charactersIn: "def456")
+                == "def456def456"
         )
         
-        XCTAssertEqual(
+        #expect(
             "💚test_123,456. 789"
-                .only(.alphanumerics),
-            "test123456789"
+                .only(.alphanumerics)
+                == "test123456789"
         )
         
-        XCTAssertEqual(
+        #expect(
             "💚test_123,456. 789"
-                .onlyAlphanumerics,
-            "💚test_123,456. 789"
+                .onlyAlphanumerics
+                == "💚test_123,456. 789"
                 .only(.alphanumerics)
         )
         
-        XCTAssertEqual(
+        #expect(
             "💚test_123,456. 789"
-                .only(CharacterSet(charactersIn: "abcdefghijklmnopqrstuvwxyz1234567890")),
-            "test123456789"
+                .only(CharacterSet(charactersIn: "abcdefghijklmnopqrstuvwxyz1234567890"))
+                == "test123456789"
         )
         
-        XCTAssertEqual(
+        #expect(
             "💚test_123,456. 789"
-                .only(charactersIn: "abcdefghijklmnopqrstuvwxyz1234567890"),
-            "test123456789"
+                .only(charactersIn: "abcdefghijklmnopqrstuvwxyz1234567890")
+                == "test123456789"
         )
     }
     
-    func testOnlyCharacterSets() {
+    @Test
+    func onlyCharacterSets() {
         // .only - more than one character set
         
-        XCTAssertEqual(
+        #expect(
             "💚test_123,456. 789"
-                .only(.letters, .decimalDigits),
-            "test123456789"
+                .only(.letters, .decimalDigits)
+                == "test123456789"
         )
     }
     
-    func testRemovingCharacterSet() {
+    @Test
+    func removingCharacterSet() {
         // .removing - single character set
         
-        XCTAssertEqual(
+        #expect(
             "abcdefg 12345678 abcdefg 12345678"
-                .removing(.alphanumerics),
-            "   "
+                .removing(.alphanumerics)
+                == "   "
         )
-        XCTAssertEqual(
+        #expect(
             "abcdefg 12345678 abcdefg 12345678"
-                .removing(.letters),
-            " 12345678  12345678"
-        )
-        
-        XCTAssertEqual(
-            "abcdefg 12345678 abcdefg 12345678"
-                .removing(CharacterSet(charactersIn: "bdf")),
-            "aceg 12345678 aceg 12345678"
+                .removing(.letters)
+                == " 12345678  12345678"
         )
         
-        XCTAssertEqual(
+        #expect(
             "abcdefg 12345678 abcdefg 12345678"
-                .removing(characters: "bdf"),
-            "aceg 12345678 aceg 12345678"
+                .removing(CharacterSet(charactersIn: "bdf"))
+                == "aceg 12345678 aceg 12345678"
+        )
+        
+        #expect(
+            "abcdefg 12345678 abcdefg 12345678"
+                .removing(characters: "bdf")
+                == "aceg 12345678 aceg 12345678"
         )
     }
     
-    func testRemovingCharacterSets() {
+    @Test
+    func removingCharacterSets() {
         // .removing - more than one character set
         
-        XCTAssertEqual(
+        #expect(
             "abcdefg 12345678 abcdefg 12345678"
-                .removing(.letters, .decimalDigits),
-            "   "
+                .removing(.letters, .decimalDigits)
+                == "   "
         )
         
-        XCTAssertEqual(
+        #expect(
             "abcdefg 12345678 abcdefg 12345678"
-                .removing(.letters, .whitespaces),
-            "1234567812345678"
+                .removing(.letters, .whitespaces)
+                == "1234567812345678"
         )
     }
     
-    func testIsASCII() {
+    @Test
+    func isASCII() {
         let asciiString = (0 ... 127)
             .map { UnicodeScalar($0)! }
             .map { "\($0)" }
             .joined()
         
-        XCTAssertTrue(asciiString.isASCII)
+        #expect(asciiString.isASCII)
     }
     
-    func testContainsOnlyCharacterSet() {
+    @Test
+    func containsOnlyCharacterSet() {
         // .isOnly - single character set
         
-        XCTAssertTrue("abcABC123àÀ".isOnly(.alphanumerics))
-        XCTAssertFalse("abcABC123!@#".isOnly(.alphanumerics))
+        #expect("abcABC123àÀ".isOnly(.alphanumerics))
+        #expect(!"abcABC123!@#".isOnly(.alphanumerics))
         
-        XCTAssertTrue("bcA2".isOnly(charactersIn: "abcABC123"))
-        XCTAssertFalse("abcABC123!@#".isOnly(charactersIn: "abcABC123"))
-        XCTAssertFalse("abcABC123!@#".isOnly(charactersIn: ""))
+        #expect("bcA2".isOnly(charactersIn: "abcABC123"))
+        #expect(!"abcABC123!@#".isOnly(charactersIn: "abcABC123"))
+        #expect(!"abcABC123!@#".isOnly(charactersIn: ""))
     }
     
-    func testContainsOnlyCharacterSets() {
+    @Test
+    func containsOnlyCharacterSets() {
         // .isOnly - more than one character set
         
-        XCTAssertTrue("abcABC123àÀ".isOnly(.letters, .decimalDigits))
-        XCTAssertFalse("abcABC123!@#".isOnly(.letters, .decimalDigits))
+        #expect("abcABC123àÀ".isOnly(.letters, .decimalDigits))
+        #expect(!"abcABC123!@#".isOnly(.letters, .decimalDigits))
     }
     
-    func testContainsAnyCharacterSet() {
+    @Test
+    func containsAnyCharacterSet() {
         // .contains(any:) - single character set
         
-        XCTAssertTrue("abcABC123àÀ!@#$".contains(any: .alphanumerics))
-        XCTAssertFalse("!@#$ [],.".contains(any: .alphanumerics))
+        #expect("abcABC123àÀ!@#$".contains(any: .alphanumerics))
+        #expect(!"!@#$ [],.".contains(any: .alphanumerics))
         
-        XCTAssertTrue("abcABC123àÀ!@#$".contains(anyCharactersIn: "abc!"))
-        XCTAssertFalse("!@#$ [],.".contains(anyCharactersIn: "abc"))
-        XCTAssertFalse("!@#$ [],.".contains(anyCharactersIn: ""))
+        #expect("abcABC123àÀ!@#$".contains(anyCharactersIn: "abc!"))
+        #expect(!"!@#$ [],.".contains(anyCharactersIn: "abc"))
+        #expect(!"!@#$ [],.".contains(anyCharactersIn: ""))
     }
     
-    func testContainsAnyCharacterSets() {
+    @Test
+    func containsAnyCharacterSets() {
         // .contains(any:) - more than one character set
         
-        XCTAssertTrue("abcABC123àÀ!@#$".contains(any: .letters, .decimalDigits))
-        XCTAssertFalse("!@#$ [],.".contains(any: .letters, .decimalDigits))
+        #expect("abcABC123àÀ!@#$".contains(any: .letters, .decimalDigits))
+        #expect(!"!@#$ [],.".contains(any: .letters, .decimalDigits))
     }
 }
+
+#endif

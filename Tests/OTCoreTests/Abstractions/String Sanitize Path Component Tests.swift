@@ -8,8 +8,7 @@ import Foundation
 import OTCore
 import Testing
 
-@Suite
-struct Abstractions_StringSanitizePathComponent_Tests {
+@Suite struct Abstractions_StringSanitizePathComponent_Tests {
     // @available(macOS 13, iOS 16, tvOS 16, watchOS 9, *)
     @Test(arguments: [nil, .hfsPlus, .apfs] as [FileSystemFormat?])
     func sanitizingFilename(fileSystem: FileSystemFormat?) {
