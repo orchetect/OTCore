@@ -4,7 +4,7 @@
 //  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
-#if os(macOS)
+#if os(macOS) && !targetEnvironment(macCatalyst)
 
 import AppKit
 

@@ -4,7 +4,7 @@
 //  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
-#if canImport(AppKit)
+#if os(macOS) && !targetEnvironment(macCatalyst)
 
 import AppKit
 @testable import OTCore
