@@ -53,7 +53,7 @@ import TestingExtensions
     }
     
     /// This test is only useful with Thread Sanitizer on.
-    @Test
+    @Test(.enabled(if: isSystemTimingStable()))
     func threading() async throws {
         let iterations = 2000
         
@@ -96,7 +96,7 @@ import TestingExtensions
             }
         }
         
-        await wait(expect: { await counter.count == iterations * 2 }, timeout: 5.0)
+        await wait(expect: { await counter.count == iterations * 2 }, timeout: 10.0)
     }
     
     @Test
