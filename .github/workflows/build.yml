@@ -80,7 +80,7 @@ jobs:
     - name: Build
       run: xcodebuild build -skipMacroValidation -workspace ".swiftpm/xcode/package.xcworkspace" -scheme "$SCHEME" -destination "generic/platform=iOS Simulator,name=Any iOS Device" | xcbeautify && exit ${PIPESTATUS[0]}
     - name: Prepare Destination Device Name
-      shell: bash
+      shell: zsh
       run: |
         xcodebuild -showdestinations -workspace ".swiftpm/xcode/package.xcworkspace" -scheme "$SCHEME" > destinations.txt
         SIMPLATFORM="iOS"
@@ -106,7 +106,7 @@ jobs:
     - name: Build
       run: xcodebuild build -skipMacroValidation -workspace ".swiftpm/xcode/package.xcworkspace" -scheme "$SCHEME" -destination "generic/platform=tvOS Simulator,name=Any tvOS Simulator Device" | xcbeautify && exit ${PIPESTATUS[0]}
     - name: Prepare Destination Device Name
-      shell: bash
+      shell: zsh
       run: |
         xcodebuild -showdestinations -workspace ".swiftpm/xcode/package.xcworkspace" -scheme "$SCHEME" > destinations.txt
         SIMPLATFORM="tvOS"
@@ -132,7 +132,7 @@ jobs:
     - name: Build
       run: xcodebuild build -skipMacroValidation -workspace ".swiftpm/xcode/package.xcworkspace" -scheme "$SCHEME" -destination "generic/platform=watchOS Simulator,name=Any watchOS Simulator Device" | xcbeautify && exit ${PIPESTATUS[0]}
     - name: Prepare Destination Device Name
-      shell: bash
+      shell: zsh
       run: |
         xcodebuild -showdestinations -workspace ".swiftpm/xcode/package.xcworkspace" -scheme "$SCHEME" > destinations.txt
         SIMPLATFORM="watchOS"
