@@ -80,11 +80,11 @@ jobs:
     - name: Build
       run: xcodebuild build -skipMacroValidation -workspace ".swiftpm/xcode/package.xcworkspace" -scheme "$SCHEME" -destination "generic/platform=iOS Simulator,name=Any iOS Device" | xcbeautify && exit ${PIPESTATUS[0]}
     - name: Prepare Destination Device Name
-      shell: zsh
+      shell: bash
       run: |
         xcodebuild -showdestinations -workspace ".swiftpm/xcode/package.xcworkspace" -scheme "$SCHEME" > destinations.txt
         SIMPLATFORM="iOS"
-        SIMDEVICE="iPhone \d{2} "
+        SIMDEVICE="iPhone\s\d{2}\s"
         REGEX="m/\{\splatform:(.*\sSimulator),.*OS:(\d{1,2}\.\d),.*name:([a-zA-Z0-9\(\)\s]*)\s\}/g"
         SIMPATFORMLIST=$(cat destinations.txt | perl -nle 'if ('$REGEX') { $p = $1; $os = $2; $n = $3; if ($p =~ /'$SIMPLATFORM'/ and $n =~ /'$SIMDEVICE'/) { print "- ${n} (${p}) (${os})"; } }')
         echo "Available $SIMPLATFORM simulators:"
@@ -106,11 +106,11 @@ jobs:
     - name: Build
       run: xcodebuild build -skipMacroValidation -workspace ".swiftpm/xcode/package.xcworkspace" -scheme "$SCHEME" -destination "generic/platform=tvOS Simulator,name=Any tvOS Simulator Device" | xcbeautify && exit ${PIPESTATUS[0]}
     - name: Prepare Destination Device Name
-      shell: zsh
+      shell: bash
       run: |
         xcodebuild -showdestinations -workspace ".swiftpm/xcode/package.xcworkspace" -scheme "$SCHEME" > destinations.txt
         SIMPLATFORM="tvOS"
-        SIMDEVICE="Apple TV"
+        SIMDEVICE="Apple\sTV"
         REGEX="m/\{\splatform:(.*\sSimulator),.*OS:(\d{1,2}\.\d),.*name:([a-zA-Z0-9\(\)\s]*)\s\}/g"
         SIMPATFORMLIST=$(cat destinations.txt | perl -nle 'if ('$REGEX') { $p = $1; $os = $2; $n = $3; if ($p =~ /'$SIMPLATFORM'/ and $n =~ /'$SIMDEVICE'/) { print "- ${n} (${p}) (${os})"; } }')
         echo "Available $SIMPLATFORM simulators:"
@@ -132,11 +132,11 @@ jobs:
     - name: Build
       run: xcodebuild build -skipMacroValidation -workspace ".swiftpm/xcode/package.xcworkspace" -scheme "$SCHEME" -destination "generic/platform=watchOS Simulator,name=Any watchOS Simulator Device" | xcbeautify && exit ${PIPESTATUS[0]}
     - name: Prepare Destination Device Name
-      shell: zsh
+      shell: bash
       run: |
         xcodebuild -showdestinations -workspace ".swiftpm/xcode/package.xcworkspace" -scheme "$SCHEME" > destinations.txt
         SIMPLATFORM="watchOS"
-        SIMDEVICE="Apple Watch Series"
+        SIMDEVICE="Apple\sWatch\sSeries"
         REGEX="m/\{\splatform:(.*\sSimulator),.*OS:(\d{1,2}\.\d),.*name:([a-zA-Z0-9\(\)\s]*)\s\}/g"
         SIMPATFORMLIST=$(cat destinations.txt | perl -nle 'if ('$REGEX') { $p = $1; $os = $2; $n = $3; if ($p =~ /'$SIMPLATFORM'/ and $n =~ /'$SIMDEVICE'/) { print "- ${n} (${p}) (${os})"; } }')
         echo "Available $SIMPLATFORM simulators:"
