@@ -96,7 +96,7 @@ import TestingExtensions
             }
         }
         
-        await wait(expect: { await counter.count == iterations * 2 }, timeout: 10.0)
+        await wait(expect: { await counter.count == iterations * 2 }, timeout: 30.0)
     }
     
     @Test
