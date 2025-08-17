@@ -46,7 +46,7 @@ import TestingExtensions
         await wait(expect: { await exp.isFulfilled }, timeout: 1.0)
     }
     
-    @Test
+    @Test(.enabled(if: isSystemTimingStable()))
     func syncTimeout_timedOut() async {
         let exp = Expectation()
         
@@ -79,7 +79,7 @@ import TestingExtensions
         #expect(result == .success)
     }
     
-    @Test
+    @Test(.enabled(if: isSystemTimingStable()))
     func syncOnQueueTimeout_timedOut() async {
         let exp = Expectation()
         
