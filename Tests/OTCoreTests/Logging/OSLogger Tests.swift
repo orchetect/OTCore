@@ -57,9 +57,10 @@ import TestingExtensions
     func threading() async throws {
         let iterations = 2000
         
-        actor Counter {
+        @TestActor final class Counter {
             var count = 0
             func inc() { count += 1 }
+            nonisolated init() { }
         }
         let counter = Counter()
         
@@ -67,8 +68,11 @@ import TestingExtensions
         
         let logger = OSLogger { $0.coerceInfoAndDebugToDefault = false }
         
+        let thread1 = DispatchQueue(label: "thread1", target: .global())
+        let thread2 = DispatchQueue(label: "thread2", target: .global())
+        
         for index in 0 ..< iterations {
-            DispatchQueue.global().async { [counter] in
+            thread1.async { [counter] in
                 logger.debug("Log thread 1 test # \(index)")
                 
                 // it's useful to note that os_log output to
@@ -79,9 +83,9 @@ import TestingExtensions
                 //       type: .debug,
                 //       "Log thread 1 test # \(index)")
                 
-                Task { await counter.inc() }
+                Task { @TestActor in counter.inc() }
             }
-            DispatchQueue.global().async {
+            thread2.async {
                 logger.debug("Log thread 2 test # \(index)")
                 
                 // it's useful to note that os_log output to
@@ -92,7 +96,7 @@ import TestingExtensions
                 //       type: .debug,
                 //       "Log thread 2 test # \(index)")
                 
-                Task { await counter.inc() }
+                Task { @TestActor in counter.inc() }
             }
         }
         
