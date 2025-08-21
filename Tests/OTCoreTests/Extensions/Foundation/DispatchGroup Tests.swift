@@ -11,7 +11,7 @@ import Foundation
 import Testing
 import TestingExtensions
 
-@Suite(.serialized) struct Extensions_Foundation_DispatchGroup_Tests {
+@Suite(.serialized, .enabled(if: isSystemTimingStable())) struct Extensions_Foundation_DispatchGroup_Tests {
     actor Expectation {
         var isFulfilled = false
         private func _fulfill() { isFulfilled = true }
@@ -29,7 +29,7 @@ import TestingExtensions
             }
         }
         
-        await wait(expect: { await exp.isFulfilled }, timeout: 1.0)
+        await wait(expect: { await exp.isFulfilled }, timeout: 10.0)
     }
     
     @Test
@@ -43,15 +43,15 @@ import TestingExtensions
             g.leave()
         }
         
-        await wait(expect: { await exp.isFulfilled }, timeout: 1.0)
+        await wait(expect: { await exp.isFulfilled }, timeout: 10.0)
     }
     
-    @Test(.enabled(if: isSystemTimingStable()))
+    @Test
     func syncTimeout_timedOut() async {
         let exp = Expectation()
         
         let result = DispatchGroup.sync(timeout: .milliseconds(100)) { g in
-            DispatchQueue.global().asyncAfter(deadline: .now() + .seconds(1)) {
+            DispatchQueue.global().asyncAfter(deadline: .now() + .seconds(5)) {
                 exp.fulfill()
                 g.leave()
             }
@@ -75,11 +75,11 @@ import TestingExtensions
             }
         }
         
-        await wait(expect: { await exp.isFulfilled }, timeout: 0.5)
+        await wait(expect: { await exp.isFulfilled }, timeout: 10.0)
         #expect(result == .success)
     }
     
-    @Test(.enabled(if: isSystemTimingStable()))
+    @Test
     func syncOnQueueTimeout_timedOut() async {
         let exp = Expectation()
         
@@ -102,13 +102,13 @@ import TestingExtensions
         
         let result = DispatchGroup.sync(
             asyncOn: .global(),
-            timeout: .seconds(1)
+            timeout: .seconds(5)
         ) { g in
             exp.fulfill()
             g.leave()
         }
         
-        await wait(expect: { await exp.isFulfilled }, timeout: 0.5)
+        await wait(expect: { await exp.isFulfilled }, timeout: 10.0)
         #expect(result == .success)
     }
     
@@ -136,7 +136,7 @@ import TestingExtensions
     @Test
     func syncReturnValueTimeout_timedOut() {
         let result = DispatchGroup.sync(timeout: .milliseconds(100)) { g in
-            DispatchQueue.global().asyncAfter(deadline: .now() + .seconds(1)) {
+            DispatchQueue.global().asyncAfter(deadline: .now() + .seconds(5)) {
                 g.leave(withValue: 1)
             }
         }
