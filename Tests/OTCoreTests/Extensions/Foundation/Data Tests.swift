@@ -18,7 +18,7 @@ import TestingExtensions
     func int() {
         // Int is 32-bit on 32-bit systems, 64-bit on 64-bit systems
         
-        #if !(arch(arm) || arch(i386))
+        #if !(arch(arm) || arch(arm64_32) || arch(i386))
         
         // .toData
         
@@ -70,7 +70,7 @@ import TestingExtensions
                 == Data([8, 7, 6, 5, 4, 3, 2, 1])
         )
         
-        #elseif(arch(arm) || !arch(i386))
+        #elseif(arch(arm) || arch(arm64_32) || !arch(i386))
         
         // .toData
         
@@ -223,6 +223,7 @@ import TestingExtensions
         )
     }
     
+    #if !(arch(arm) || arch(arm64_32) || arch(i386))
     @Test
     func int64() {
         // .toData
@@ -275,14 +276,14 @@ import TestingExtensions
                 == Data([8, 7, 6, 5, 4, 3, 2, 1])
         )
     }
+    #endif
     
     // MARK: - UInts
     
     @Test
     func uInt() {
         // UInt is 32-bit on 32-bit systems, 64-bit on 64-bit systems
-        
-        #if !(arch(arm) || arch(i386))
+        #if !(arch(arm) || arch(arm64_32) || arch(i386))
         
         // .toData
         
@@ -334,7 +335,7 @@ import TestingExtensions
                 == Data([8, 7, 6, 5, 4, 3, 2, 1])
         )
         
-        #elseif(arch(arm) || arch(i386))
+        #elseif(arch(arm) || arch(arm64_32) || arch(i386))
         
         // .toData
         
@@ -471,6 +472,7 @@ import TestingExtensions
         #expect(Data([1, 2, 3, 4]).toUInt32(from: .bigEndian)?.toData(.littleEndian) == Data([4, 3, 2, 1]))
     }
     
+    #if !(arch(arm) || arch(arm64_32) || arch(i386))
     @Test
     func uInt64() {
         // .toData
@@ -523,6 +525,7 @@ import TestingExtensions
                 == Data([8, 7, 6, 5, 4, 3, 2, 1])
         )
     }
+    #endif
     
     // MARK: - Floats
     

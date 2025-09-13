@@ -554,7 +554,7 @@ import Testing
         #expect((1 ... 10000).first(excluding: ..<2) == 2)
         
         // these integers result in overflow on armv7/i386 (32-bit arch)
-        #if !(arch(arm) || arch(i386))
+        #if !(arch(arm) || arch(arm64_32) || arch(i386))
         // very large ranges
         #expect((1 ... 10_000_000_000).first(excluding: [1]) == 2)
         #endif
@@ -706,7 +706,7 @@ import Testing
         #expect((1 ..< 10000).first(excluding: ..<2) == 2)
         
         // these integers result in overflow on armv7/i386 (32-bit arch)
-        #if !(arch(arm) || arch(i386))
+        #if !(arch(arm) || arch(arm64_32) || arch(i386))
         // very large ranges
         #expect((1 ..< 10_000_000_000).first(excluding: [1]) == 2)
         #endif
