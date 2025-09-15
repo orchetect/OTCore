@@ -97,14 +97,10 @@ extension URL {
     // URL has slightly different sequential path separator behavior depending on platform and
     // version
     fileprivate static let preservesSequentialSeparators: Bool = {
-        #if os(macOS)
-        true
-        #elseif os(iOS) || os(tvOS) || os(watchOS) || os(visionOS)
-        if #available(iOS 26, tvOS 26, watchOS 26, visionOS 26, *) {
+        if #available(macOS 26, iOS 26, tvOS 26, watchOS 26, visionOS 26, *) {
             false
         } else {
             true
         }
-        #endif
     }()
 }
