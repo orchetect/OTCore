@@ -181,8 +181,8 @@ import Testing
         arr[safe: -1] = nil       // silently fails
         arr[safe: 6] = nil        // silently fails
         
-        // only occurs in debug builds. only testable with Xcode 26+.
-        #if DEBUG && compiler(>=6.2)
+        // only asserts in debug builds. only testable with Xcode 26+ on macOS.
+        #if os(macOS) && DEBUG && compiler(>=6.2)
         await #expect(processExitsWith: .failure) {
             var arr = [1, 2, 3, 4, 5, 6]
             arr[safe: 0] = nil    // throws precondition failure
@@ -748,8 +748,8 @@ import Testing
         arr[safePosition: -1] = nil       // silently fails, out of bounds
         arr[safePosition: 6] = nil        // silently fails, out of bounds
         
-        // only occurs in debug builds. only testable with Xcode 26+.
-        #if DEBUG && compiler(>=6.2)
+        // only asserts in debug builds. only testable with Xcode 26+ on macOS.
+        #if os(macOS) && DEBUG && compiler(>=6.2)
         await #expect(processExitsWith: .failure) {
             var arr = [1, 2, 3, 4, 5, 6]
             arr[safePosition: 0] = nil    // throws precondition failure

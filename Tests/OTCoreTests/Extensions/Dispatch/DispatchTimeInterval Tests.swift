@@ -33,8 +33,8 @@ import Testing
                 == 2_000_000
         )
         
-        // only asserts in debug builds. only testable with Xcode 26+.
-        #if DEBUG && compiler(>=6.2)
+        // only asserts in debug builds. only testable with Xcode 26+ on macOS.
+        #if os(macOS) && DEBUG && compiler(>=6.2)
         await #expect(processExitsWith: .failure) {
             _ = DispatchTimeInterval.never.microseconds
         }
