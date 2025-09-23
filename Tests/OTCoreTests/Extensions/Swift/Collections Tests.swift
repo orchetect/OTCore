@@ -174,18 +174,20 @@ import Testing
     }
     
     @Test
-    func subscript_Safe_Set_EdgeCases() throws {
-        // setting an existing element to nil currently
-        // throws a preconditionFailure that we can't catch
-        // in unit tests without it halting all tests execution,
-        // so that can't explicitly be tested here
-        
+    func subscript_Safe_Set_EdgeCases() async throws {
         // [Int]
         var arr = [1, 2, 3, 4, 5, 6]
         
         arr[safe: -1] = nil       // silently fails
-        // arr[safe: 0] = nil        // throws precondition failure
         arr[safe: 6] = nil        // silently fails
+        
+        // only occurs in debug builds. only testable with Xcode 26+.
+        #if DEBUG && compiler(>=6.2)
+        await #expect(processExitsWith: .failure) {
+            var arr = [1, 2, 3, 4, 5, 6]
+            arr[safe: 0] = nil    // throws precondition failure
+        }
+        #endif
         
         #expect(arr == [1, 2, 3, 4, 5, 6])
         
@@ -739,18 +741,20 @@ import Testing
     }
     
     @Test
-    func subscript_SafePosition_Set_EdgeCases() throws {
-        // setting an existing element to nil currently
-        // throws a preconditionFailure that we can't catch
-        // in unit tests without it halting all tests execution,
-        // so that can't explicitly be tested here
-        
+    func subscript_SafePosition_Set_EdgeCases() async throws {
         // [Int]
         var arr = [1, 2, 3, 4, 5, 6]
         
         arr[safePosition: -1] = nil       // silently fails, out of bounds
-        // arr[safePosition: 0] = nil        // throws precondition failure
         arr[safePosition: 6] = nil        // silently fails, out of bounds
+        
+        // only occurs in debug builds. only testable with Xcode 26+.
+        #if DEBUG && compiler(>=6.2)
+        await #expect(processExitsWith: .failure) {
+            var arr = [1, 2, 3, 4, 5, 6]
+            arr[safePosition: 0] = nil    // throws precondition failure
+        }
+        #endif
         
         #expect(arr == [1, 2, 3, 4, 5, 6])
         

@@ -12,7 +12,7 @@ import Testing
 
 @Suite struct Extensions_Dispatch_DispatchTimeInterval_Tests {
     @Test
-    func dispatchTimeInterval_Microseconds() {
+    func dispatchTimeInterval_Microseconds() async {
         #expect(
             DispatchTimeInterval.seconds(2).microseconds
                 == 2_000_000
@@ -33,11 +33,12 @@ import Testing
                 == 2_000_000
         )
         
-        // assertion error:
-        // #expect(
-        //     DispatchTimeInterval.never.microseconds
-        //     == 0
-        // )
+        // only asserts in debug builds. only testable with Xcode 26+.
+        #if DEBUG && compiler(>=6.2)
+        await #expect(processExitsWith: .failure) {
+            _ = DispatchTimeInterval.never.microseconds
+        }
+        #endif
     }
 }
 
