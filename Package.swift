@@ -33,7 +33,47 @@ let package = Package(
                 "OTCore", 
                 .product(name: "Numerics", package: "swift-numerics"),
                 .product(name: "TestingExtensions", package: "swift-testing-extensions")
-            ]
+            ],
+            swiftSettings: isRunningOnGitHubActions()
+                ? [.define("GITHUB_ACTIONS", .when(configuration: .debug))]
+                : []
         )
     ]
 )
+
+// MARK: - CI Pipeline
+
+#if canImport(Foundation)
+import Foundation
+#elseif canImport(CoreFoundation)
+import CoreFoundation
+#endif
+
+func getEnvironmentVar(_ name: String) -> String? {
+    guard let rawValue = getenv(name) else { return nil }
+    return String(utf8String: rawValue)
+}
+
+extension StringProtocol {
+    var isTrueEnvValue: Bool {
+        let value = trimmingCharacters(in: .whitespacesAndNewlines)
+        
+        return value == "true"
+            || value == "TRUE"
+            || value == "1"
+            || value == "yes"
+            || value == "YES"
+    }
+}
+
+func isRunningOnGitHubActions() -> Bool {
+#if canImport(Foundation) || canImport(CoreFoundation)
+    guard let value = getEnvironmentVar("GITHUB_ACTIONS")?
+        .trimmingCharacters(in: .whitespacesAndNewlines)
+    else { return false }
+    
+    return value.isTrueEnvValue
+#else
+    return false
+#endif
+}
