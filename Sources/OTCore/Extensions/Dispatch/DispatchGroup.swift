@@ -4,9 +4,9 @@
 //  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
-#if canImport(Foundation)
+#if canImport(Dispatch)
 
-import Foundation
+import Dispatch
 
 extension DispatchGroup {
     /// **OTCore:**
