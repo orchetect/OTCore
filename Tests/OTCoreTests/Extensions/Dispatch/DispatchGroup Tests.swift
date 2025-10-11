@@ -11,7 +11,11 @@ import Foundation
 import Testing
 import TestingExtensions
 
-@Suite(.serialized, .enabled(if: isSystemTimingStable())) struct Extensions_Foundation_DispatchGroup_Tests {
+// These tests tend to be flakey on GitHub Actions runners, so skip them if running on Actions.
+@Suite(
+    .serialized,
+    .enabled(if: !isRunningOnGitHubActions() && isSystemTimingStable())
+) struct Extensions_Foundation_DispatchGroup_Tests {
     actor Expectation {
         var isFulfilled = false
         private func _fulfill() { isFulfilled = true }

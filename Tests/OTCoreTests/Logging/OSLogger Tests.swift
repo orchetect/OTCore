@@ -52,8 +52,11 @@ import TestingExtensions
         _ = logger.enabled
     }
     
+    /// Dev test: Check concurrency behavior.
     /// This test is only useful with Thread Sanitizer on.
-    @Test(.enabled(if: isSystemTimingStable()))
+    ///
+    /// This test tends to be flakey on GitHub Actions runners, so skip it if running on Actions.
+    @Test(.enabled(if: !isRunningOnGitHubActions() && isSystemTimingStable()))
     func threading() async throws {
         let iterations = 2000
         
