@@ -48,7 +48,13 @@ extension URL {
         return FilePath(root: "/", components.map(FilePath.Component.init))
     }
     
-    internal var asGuaranteedFilePath: FilePath {
+    /// **OTCore:**
+    /// Internal. Returns the file URL as a new `FilePath` instance.
+    /// Implements a workaround to prevent throwing or returning an Optional in scenarios where you
+    /// can guarantee the URL is a file URL.
+    internal func asGuaranteedFilePath() -> FilePath {
+        assert(isFileURL)
+        
         if let path = FilePath(self) { return path }
         
         // alternative method:
@@ -406,29 +412,30 @@ extension FilePath {
     // Some fun bedtime reading about the wonkiness of the underlying API:
     // https://wadetregaskis.com/bad-api-example-filemanagers-urlforinappropriateforcreate/
     
+    /// **OTCore:**
     /// The working directory of the current process.
     /// Calling this property will issue a `getcwd` syscall.
     @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
-    public static func currentDirectory() -> FilePath { URL.currentDirectory().asGuaranteedFilePath }
+    public static func currentDirectory() -> FilePath { URL.currentDirectory().asGuaranteedFilePath() }
     
     /// **OTCore:**
     /// The home directory for the current user (~/).
     /// Complexity: O(1)
     @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
-    public static var homeDirectory: FilePath { URL.homeDirectory.asGuaranteedFilePath }
+    public static var homeDirectory: FilePath { URL.homeDirectory.asGuaranteedFilePath() }
     
     /// **OTCore:**
     /// Returns the home directory for the specified user.
     @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
     public static func homeDirectory(forUser user: String) -> FilePath? {
-        URL.homeDirectory(forUser: user)?.asFilePath
+        URL.homeDirectory(forUser: user)?.asGuaranteedFilePath()
     }
     
     /// **OTCore:**
     /// The temporary directory for the current user.
     /// Complexity: O(1)
     @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
-    public static var temporaryDirectory: FilePath { URL.temporaryDirectory.asGuaranteedFilePath }
+    public static var temporaryDirectory: FilePath { URL.temporaryDirectory.asGuaranteedFilePath() }
     
     /// **OTCore:**
     /// Discardable cache files directory for the
@@ -436,14 +443,14 @@ extension FilePath {
     /// Complexity: O(n) where n is the number of significant directories
     /// specified by `FileManager.SearchPathDirectory`
     @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
-    public static var cachesDirectory: FilePath { URL.cachesDirectory.asGuaranteedFilePath }
+    public static var cachesDirectory: FilePath { URL.cachesDirectory.asGuaranteedFilePath() }
     
     /// **OTCore:**
     /// Supported applications (/Applications).
     /// Complexity: O(n) where n is the number of significant directories
     /// specified by `FileManager.SearchPathDirectory`
     @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
-    public static var applicationDirectory: FilePath { URL.applicationDirectory.asGuaranteedFilePath }
+    public static var applicationDirectory: FilePath { URL.applicationDirectory.asGuaranteedFilePath() }
     
     /// **OTCore:**
     /// Various user-visible documentation, support, and configuration
@@ -451,28 +458,28 @@ extension FilePath {
     /// Complexity: O(n) where n is the number of significant directories
     /// specified by `FileManager.SearchPathDirectory`
     @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
-    public static var libraryDirectory: FilePath { URL.libraryDirectory.asGuaranteedFilePath }
+    public static var libraryDirectory: FilePath { URL.libraryDirectory.asGuaranteedFilePath() }
     
     /// **OTCore:**
     /// User home directories (/Users).
     /// Complexity: O(n) where n is the number of significant directories
     /// specified by `FileManager.SearchPathDirectory`
     @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
-    public static var userDirectory: FilePath { URL.userDirectory.asGuaranteedFilePath }
+    public static var userDirectory: FilePath { URL.userDirectory.asGuaranteedFilePath() }
     
     /// **OTCore:**
     /// Documents directory for the current user (~/Documents)
     /// Complexity: O(n) where n is the number of significant directories
     /// specified by `FileManager.SearchPathDirectory`
     @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
-    public static var documentsDirectory: FilePath { URL.documentsDirectory.asGuaranteedFilePath }
+    public static var documentsDirectory: FilePath { URL.documentsDirectory.asGuaranteedFilePath() }
     
     /// **OTCore:**
     /// Desktop directory for the current user (~/Desktop)
     /// Complexity: O(n) where n is the number of significant directories
     /// specified by `FileManager.SearchPathDirectory`
     @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
-    public static var desktopDirectory: FilePath { URL.desktopDirectory.asGuaranteedFilePath }
+    public static var desktopDirectory: FilePath { URL.desktopDirectory.asGuaranteedFilePath() }
     
     /// **OTCore:**
     /// Application support files for the current
@@ -480,42 +487,42 @@ extension FilePath {
     /// Complexity: O(n) where n is the number of significant directories
     /// specified by `FileManager.SearchPathDirectory`
     @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
-    public static var applicationSupportDirectory: FilePath { URL.applicationSupportDirectory.asGuaranteedFilePath }
+    public static var applicationSupportDirectory: FilePath { URL.applicationSupportDirectory.asGuaranteedFilePath() }
     
     /// **OTCore:**
     /// Downloads directory for the current user (~/Downloads)
     /// Complexity: O(n) where n is the number of significant directories
     /// specified by `FileManager.SearchPathDirectory`
     @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
-    public static var downloadsDirectory: FilePath { URL.downloadsDirectory.asGuaranteedFilePath }
+    public static var downloadsDirectory: FilePath { URL.downloadsDirectory.asGuaranteedFilePath() }
     
     /// **OTCore:**
     /// Movies directory for the current user (~/Movies)
     /// Complexity: O(n) where n is the number of significant directories
     /// specified by `FileManager.SearchPathDirectory`
     @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
-    public static var moviesDirectory: FilePath { URL.moviesDirectory.asGuaranteedFilePath }
+    public static var moviesDirectory: FilePath { URL.moviesDirectory.asGuaranteedFilePath() }
     
     /// **OTCore:**
     /// Music directory for the current user (~/Music)
     /// Complexity: O(n) where n is the number of significant directories
     /// specified by `FileManager.SearchPathDirectory`
     @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
-    public static var musicDirectory: FilePath { URL.musicDirectory.asGuaranteedFilePath }
+    public static var musicDirectory: FilePath { URL.musicDirectory.asGuaranteedFilePath() }
     
     /// **OTCore:**
     /// Pictures directory for the current user (~/Pictures)
     /// Complexity: O(n) where n is the number of significant directories
     /// specified by `FileManager.SearchPathDirectory`
     @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
-    public static var picturesDirectory: FilePath { URL.picturesDirectory.asGuaranteedFilePath }
+    public static var picturesDirectory: FilePath { URL.picturesDirectory.asGuaranteedFilePath() }
     
     /// **OTCore:**
     /// The user’s Public sharing directory (~/Public)
     /// Complexity: O(n) where n is the number of significant directories
     /// specified by `FileManager.SearchPathDirectory`
     @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
-    public static var sharedPublicDirectory: FilePath { URL.sharedPublicDirectory.asGuaranteedFilePath }
+    public static var sharedPublicDirectory: FilePath { URL.sharedPublicDirectory.asGuaranteedFilePath() }
     
     /// **OTCore:**
     /// Trash directory for the current user (~/.Trash)
@@ -524,7 +531,7 @@ extension FilePath {
     @available(macOS 13.0, iOS 16.0, *)
     @available(tvOS, unavailable)
     @available(watchOS, unavailable)
-    public static var trashDirectory: FilePath { URL.trashDirectory.asGuaranteedFilePath }
+    public static var trashDirectory: FilePath { URL.trashDirectory.asGuaranteedFilePath() }
 }
 
 #endif
