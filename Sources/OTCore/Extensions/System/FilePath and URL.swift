@@ -32,4 +32,21 @@ extension FilePath {
     }
 }
 
+@available(macOS 12.0, iOS 15.0, watchOS 8.0, tvOS 15.0, *)
+extension URL {
+    /// **OTCore:**
+    /// Returns the file URL as a new `FilePath` instance.
+    /// Returns `nil` if the URL is not a file URL.
+    public var asFilePath: FilePath? {
+        guard isFileURL else { return nil }
+        
+        if let path = FilePath(self) { return path }
+        
+        // alternative method:
+        // FilePath throws an exception if we supply it with components that include the root
+        let components = pathComponents.drop { $0 == "/" }
+        return FilePath(root: "/", components.map(FilePath.Component.init))
+    }
+}
+
 #endif
