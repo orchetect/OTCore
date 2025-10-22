@@ -361,6 +361,28 @@ extension URL {
     ///   - `"-\($0)"` produces "MyFile-2.txt", "MyFile-3.txt", etc.
     ///   - `" (\($0))"` produces "MyFile (2).txt", "MyFile (3).txt", etc.
     @_disfavoredOverload
+    public mutating func uniqueFileURL(
+        suffix: (_ counter: Int) -> String = { " \($0)" }
+    ) {
+        self = uniquedFileURL(suffix: suffix)
+    }
+    
+    /// **OTCore:**
+    /// If the file URL is a file or folder that exists on disk, the file name (last path component
+    /// prior to extension) is uniqued by appending the first number in `2...` that results in a file
+    /// name that does not exist on disk.
+    ///
+    /// If the URL is not a file URL, the URL is returned unmodified.
+    ///
+    /// - Parameter suffix: Formatting of the suffix. The incrementing counter number is passed in
+    ///   and must be used in the body of the closure. The closure must not return a static value.
+    ///
+    ///   For example, given a file named "MyFile.txt" that exists on disk:
+    ///
+    ///   - `" \($0)"` produces "MyFile 2.txt", "MyFile 3.txt", etc.
+    ///   - `"-\($0)"` produces "MyFile-2.txt", "MyFile-3.txt", etc.
+    ///   - `" (\($0))"` produces "MyFile (2).txt", "MyFile (3).txt", etc.
+    @_disfavoredOverload
     public func uniquedFileURL(
         suffix: (_ counter: Int) -> String = { " \($0)" }
     ) -> URL {
