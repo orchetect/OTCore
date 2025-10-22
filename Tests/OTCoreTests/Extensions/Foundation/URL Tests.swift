@@ -491,6 +491,52 @@ import TestingExtensions
         if let trashedURL { try? FileManager.default.removeItem(at: trashedURL) }
     }
     
+    @Test
+    func uniquedFileURL() throws {
+        // boilerplate
+        
+        let temporaryDirectoryURL = FileManager.default.temporaryDirectoryCompat
+        
+        // determine temporary URLs
+        
+        let randomFolderName = "temp-\(UUID().uuidString)"
+        
+        let folder = temporaryDirectoryURL
+            .appendingPathComponent(randomFolderName)
+        
+        // create source folder
+        
+        print("Creating temporary directory...")
+        
+        try FileManager.default.createDirectory(
+            at: folder,
+            withIntermediateDirectories: false,
+            attributes: nil
+        )
+        
+        let file1 = folder.appendingPathComponent("Test.txt")
+        
+        // file does not exist on disk, so no uniquing is needed; path is returned as-is
+        #expect(file1.uniquedFileURL() == file1)
+        
+        // create file on disk
+        try "Test string".write(to: file1, atomically: false, encoding: .utf8)
+        
+        // unique base file
+        let file2 = file1.uniquedFileURL()
+        #expect(file2 == folder.appendingPathComponent("Test 2.txt"))
+        
+        // create file on disk
+        try "Test string".write(to: file2, atomically: false, encoding: .utf8)
+        
+        // unique base file
+        let file3 = file1.uniquedFileURL()
+        #expect(file3 == folder.appendingPathComponent("Test 3.txt"))
+        
+        // cleanup
+        try? FileManager.default.removeItem(at: folder)
+    }
+    
     // MARK: - Finder Aliases
     
     @Test
