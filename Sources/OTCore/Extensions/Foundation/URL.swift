@@ -344,6 +344,72 @@ extension URL {
         
         #endif
     }
+    
+    /// **OTCore:**
+    /// If the file URL is a file or folder that exists on disk, the file name (last path component
+    /// prior to extension) is uniqued by appending the first number in `2...` that results in a file
+    /// name that does not exist on disk.
+    ///
+    /// If the URL is not a file URL, the URL is returned unmodified.
+    ///
+    /// - Parameter suffix: Formatting of the suffix. The incrementing counter number is passed in
+    ///   and must be used in the body of the closure. The closure must not return a static value.
+    ///
+    ///   For example, given a file named "MyFile.txt" that exists on disk:
+    ///
+    ///   - `" \($0)"` produces "MyFile 2.txt", "MyFile 3.txt", etc.
+    ///   - `"-\($0)"` produces "MyFile-2.txt", "MyFile-3.txt", etc.
+    ///   - `" (\($0))"` produces "MyFile (2).txt", "MyFile (3).txt", etc.
+    @_disfavoredOverload
+    public func uniquedFileURL(
+        suffix: (_ counter: Int) -> String = { " \($0)" }
+    ) -> URL {
+        guard isFileURL else {
+            assertionFailure("URL is not a file URL and cannot be uniqued. Returning URL unmodified.")
+            return self
+        }
+        
+        var suffix = suffix
+        
+        // sanity check - ensure the closure produces unique values to prevent an infinite loop
+        if suffix(2) == suffix(3) {
+            assertionFailure("Suffix closure does not produce unique return values. Reverting to default suffix format.")
+            suffix = { " \($0)" }
+        }
+                
+        let ext = pathExtension
+        let baseName = deletingPathExtension().lastPathComponent
+        let basePath = deletingLastPathComponent()
+        
+        var proposedURL = self
+        var counter: Int = 2
+        let maxCount = 1000
+        
+        func generateURL(addingSuffix: String) -> URL {
+            var newURL = basePath
+                .appendingPathComponent(baseName + addingSuffix)
+            if !ext.isEmpty {
+                newURL.appendPathExtension(ext)
+            }
+            return newURL
+        }
+        
+        while proposedURL.fileExists,
+              counter < maxCount // prevent infinite loop
+        {
+            let newURL = generateURL(addingSuffix: suffix(counter))
+            assert(proposedURL != newURL) // catch malformed suffix
+            proposedURL = newURL
+            counter += 1
+        }
+        
+        // failsafe - if we exhaust the counter, use a UUID suffix instead to guarantee a unique file
+        if counter >= maxCount {
+            proposedURL = generateURL(addingSuffix: "-\(UUID().uuidString)")
+        }
+        
+        return proposedURL
+    }
 }
 
 // MARK: - Finder Aliases
