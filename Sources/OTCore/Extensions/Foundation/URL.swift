@@ -185,14 +185,17 @@ extension URL {
     }
     
     /// **OTCore:**
-    /// Returns whether the file URL path is a folder.
+    /// Returns whether the file URL path is a directory by querying the local file system.
     ///
-    /// - Will return `nil` if the URL is not a properly formatted file URL, or there was a problem
-    ///   querying the URL's file system attributes.
+    /// - Returns: `true` if the path exists and is a folder.
+    ///   `false` if the path is not a folder or the path does not exist.
     @_disfavoredOverload
-    public var isFolder: Bool? {
-        try? resourceValues(forKeys: [URLResourceKey.isDirectoryKey])
+    public var isDirectory: Bool {
+        guard let bool = try? resourceValues(forKeys: [URLResourceKey.isDirectoryKey])
             .isDirectory
+        else { return false }
+        
+        return bool
     }
     
     /// **OTCore:**
