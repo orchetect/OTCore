@@ -47,6 +47,405 @@ extension URL {
         let components = pathComponents.drop { $0 == "/" }
         return FilePath(root: "/", components.map(FilePath.Component.init))
     }
+    
+    internal var asGuaranteedFilePath: FilePath {
+        if let path = FilePath(self) { return path }
+        
+        // alternative method:
+        // FilePath throws an exception if we supply it with components that include the root
+        let components = pathComponents.drop { $0 == "/" }
+        return FilePath(root: "/", components.map(FilePath.Component.init))
+    }
+}
+
+// MARK: - Path Manipulation
+
+@available(macOS 11.0, iOS 14.0, watchOS 7.0, tvOS 14.0, *)
+extension FilePath {
+    /// **OTCore:**
+    /// Return a new path by mutating the file name (last path component).
+    @available(macOS 12.0, iOS 15.0, watchOS 8.0, tvOS 15.0, *)
+    @_disfavoredOverload
+    public func mutatingLastPathComponent(
+        _ transform: (_ component: FilePath.Component) -> String
+    ) -> Self {
+        guard let oldFileName = lastComponent else { return self }
+        let newFileName = transform(oldFileName)
+        
+        return removingLastComponent()
+            .appending(newFileName)
+    }
+    
+    /// **OTCore:**
+    /// Return a new path by mutating the file name (last path component) excluding extension.
+    @available(macOS 12.0, iOS 15.0, watchOS 8.0, tvOS 15.0, *)
+    @_disfavoredOverload
+    public func mutatingLastPathComponentExcludingExtension(
+        _ transform: (_ fileName: String) -> String
+    ) -> Self {
+        guard let oldFileName = lastComponent else { return self }
+        var newFileName = transform(oldFileName.stem)
+        if let ext = oldFileName.extension {
+            newFileName += "." + ext
+        }
+        
+        return removingLastComponent()
+            .appending(newFileName)
+    }
+    
+    /// **OTCore:**
+    /// Return a new path by appending a string to the file name (last path component) before the
+    /// extension.
+    ///
+    /// ie:
+    ///
+    /// ```
+    /// let path = FilePath("/Users/user/file.txt")
+    /// let path2 = path.appendingToLastPathComponentBeforeExtension("-2")
+    /// path2.string // "/Users/user/file-2.txt"
+    /// ```
+    @available(macOS 12.0, iOS 15.0, watchOS 8.0, tvOS 15.0, *)
+    @_disfavoredOverload
+    public func appendingToLastPathComponentBeforeExtension(
+        _ string: String
+    ) -> Self {
+        guard let oldFileName = lastComponent else { return self }
+        var newFileName = "\(oldFileName.stem)\(string)"
+        if let ext = oldFileName.extension {
+            newFileName += "." + ext
+        }
+        
+        return removingLastComponent()
+            .appending(newFileName)
+    }
+}
+
+// MARK: - File / Folder Metadata
+
+@available(macOS 11.0, iOS 14.0, watchOS 7.0, tvOS 14.0, *)
+extension FilePath {
+    /// **OTCore:**
+    /// Returns whether the file/folder exists.
+    /// Convenience proxy for Foundation `FileManager` `fileExists` method.
+    ///
+    /// - Will return `false` if used on a symlink and the symlink's original file does not exist.
+    /// - Will still return `true` if used on an alias and the alias' original file does not exist.
+    @available(macOS 12.0, iOS 15.0, watchOS 8.0, tvOS 15.0, *)
+    public var fileExists: Bool {
+        FileManager.default.fileExists(atPath: string)
+    }
+    
+    /// **OTCore:**
+    /// Returns whether the file path is a directory by querying the local file system.
+    ///
+    /// - Returns: `true` if the path exists and is a folder.
+    ///   `false` if the path is not a folder or the path does not exist.
+    @available(macOS 12.0, iOS 15.0, watchOS 8.0, tvOS 15.0, *)
+    public var isDirectory: Bool {
+        var isDirectory: ObjCBool = false
+        let isExists = FileManager.default.fileExists(atPath: string, isDirectory: &isDirectory)
+        guard isExists else { return false }
+        return isDirectory.boolValue
+    }
+    
+    /// **OTCore:**
+    /// Updates the path with its canonical file system path on disk.
+    ///
+    /// If the path does not exist, the path will remain unmodified.
+    ///
+    /// > Note:
+    /// > This method is only available on macOS as the API required is not available on other
+    /// > platforms.
+    ///
+    /// - Throws: Error if there was a problem reading the file system.
+    @available(macOS 12.0, *)
+    @available(iOS, unavailable)
+    @available(tvOS, unavailable)
+    @available(watchOS, unavailable)
+    @available(visionOS, unavailable)
+    public mutating func canonicalize() throws {
+        self = try canonicalized()
+    }
+    
+    /// **OTCore:**
+    /// Returns the path by returning its canonical file system path on disk.
+    ///
+    /// If the path does not exist, the path will be returned unmodified.
+    ///
+    /// > Note:
+    /// > This method is only available on macOS as the API required is not available on other
+    /// > platforms.
+    ///
+    /// - Throws: Error if there was a problem reading the file system.
+    @available(macOS 12.0, *)
+    @available(iOS, unavailable)
+    @available(tvOS, unavailable)
+    @available(watchOS, unavailable)
+    @available(visionOS, unavailable)
+    public func canonicalized() throws -> FilePath {
+        // see https://stackoverflow.com/a/66968423/2805570 for in-depth explainer
+        
+        let url = asURL()
+        guard let newPath = try url.resourceValues(forKeys: [.canonicalPathKey]).canonicalPath else {
+            throw CocoaError(.fileReadUnknown)
+        }
+        return FilePath(newPath)
+    }
+    
+    /// **OTCore:**
+    /// Returns `true` if the path points to the same file system node as another path.
+    /// This is more reliable than comparing simple equality of two `FilePath` instances, as this method
+    /// will account for mismatched case and will resolve the paths as needed in order to perform
+    /// the comparison.
+    ///
+    /// > Note:
+    /// > This method is only available on macOS as the API required is not available on other
+    /// > platforms.
+    ///
+    /// - Throws: Error if there was a problem reading the file system.
+    @available(macOS 12.0, *)
+    @available(iOS, unavailable)
+    @available(tvOS, unavailable)
+    @available(watchOS, unavailable)
+    @available(visionOS, unavailable)
+    @_disfavoredOverload
+    public func isEqualFileNode(as otherFilePath: FilePath) throws -> Bool {
+        try asURL().isEqualFileNode(as: otherFilePath.asURL())
+    }
+}
+
+// MARK: - File Operations
+
+@available(macOS 11.0, iOS 14.0, watchOS 7.0, tvOS 14.0, *)
+extension FilePath {
+    /// **OTCore:**
+    /// Attempts to first move a file to the Trash if possible, otherwise attempts to delete the
+    /// file.
+    ///
+    /// If the file was moved to the trash, the new resulting path is returned.
+    ///
+    /// If the file was deleted, `nil` is returned.
+    ///
+    /// If both operations were unsuccessful, an error is thrown.
+    @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
+    @discardableResult @_disfavoredOverload
+    public func trashOrDelete() throws -> FilePath? {
+        let url = try asURL().trashOrDelete()
+        return url?.asFilePath
+    }
+}
+
+// MARK: - Finder Aliases
+
+@available(macOS 11.0, iOS 14.0, watchOS 7.0, tvOS 14.0, *)
+extension FilePath {
+    /// **OTCore:**
+    /// Convenience method to test if a file path is a Finder alias.
+    @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
+    @_disfavoredOverload
+    public var isFinderAlias: Bool {
+        asURL().isFinderAlias
+    }
+    
+    /// **OTCore:**
+    /// Creates an alias of the base file or folder `at` the supplied target location. Will
+    /// overwrite existing target path if it exists.
+    @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
+    @_disfavoredOverload
+    public func createFinderAlias(at path: FilePath) throws {
+        try asURL().createFinderAlias(at: path.asURL())
+    }
+    
+    /// **OTCore:**
+    /// If the path is a Finder alias, its resolved path is returned regardless whether it exists or not.
+    ///
+    /// `nil` will be returned if any of the following is true for `self`:
+    /// - is not a Finder alias or does not exist, or
+    /// - is a symbolic link or a hard link and not a Finder alias, or
+    /// - does not exist.
+    @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
+    @_disfavoredOverload
+    public var resolvedFinderAlias: URL? {
+        asURL().resolvedFinderAlias
+    }
+}
+
+// MARK: - SymLinks
+
+@available(macOS 11.0, iOS 14.0, watchOS 7.0, tvOS 14.0, *)
+extension FilePath {
+    /// **OTCore:**
+    /// Convenience method to test if a path is a symbolic link pointing to another file/folder,
+    /// and not an actual file/folder itself.
+    ///
+    /// - Throws: Error if there was a problem querying the path's file system attributes.
+    @available(macOS 12.0, iOS 15.0, watchOS 8.0, tvOS 15.0, *)
+    @_disfavoredOverload
+    public var isSymLink: Bool {
+        get throws {
+            let getAttr = try FileManager.default
+                .attributesOfItem(atPath: string)
+            
+            guard let rawFileType = getAttr[.type] as? String
+            else { throw CocoaError(.fileReadUnknown) }
+            
+            let fileType = FileAttributeType(rawValue: rawFileType)
+            return fileType == .typeSymbolicLink // "NSFileTypeSymbolicLink"
+        }
+    }
+    
+    /// **OTCore:**
+    /// Convenience method to test if a file path is a symbolic link pointing to `file`.
+    ///
+    /// - Returns: `true` even if original file does not exist. This is possible because a symbolic link
+    ///   is its own file system node that points to another, regardless if the original exists or not.
+    /// - Throws: `nil` if the path is not a properly formatted or there was a problem querying the file system.
+    @available(macOS 12.0, iOS 15.0, watchOS 8.0, tvOS 15.0, *)
+    @_disfavoredOverload
+    public func isSymLink(of path: FilePath) throws -> Bool {
+        try asURL().isSymLink(of: path.asURL())
+    }
+    
+    /// **OTCore:**
+    /// Creates a symbolic link (symlink) of the base path file or folder `at` the supplied target
+    /// location.
+    ///
+    /// - Returns `true` if new symlink gets created.
+    /// - Returns `false` if destination already exists or if the symlink already exists.
+    @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
+    @_disfavoredOverload
+    public func createSymLink(at path: FilePath) throws {
+        try FileManager.default
+            .createSymbolicLink(at: path.asURL(), withDestinationURL: asURL())
+    }
+}
+
+// MARK: - Static
+
+@available(macOS 11.0, iOS 14.0, watchOS 7.0, tvOS 14.0, *)
+extension FilePath {
+    // Some fun bedtime reading about the wonkiness of the underlying API:
+    // https://wadetregaskis.com/bad-api-example-filemanagers-urlforinappropriateforcreate/
+    
+    /// The working directory of the current process.
+    /// Calling this property will issue a `getcwd` syscall.
+    @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
+    public static func currentDirectory() -> FilePath { URL.currentDirectory().asGuaranteedFilePath }
+    
+    /// **OTCore:**
+    /// The home directory for the current user (~/).
+    /// Complexity: O(1)
+    @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
+    public static var homeDirectory: FilePath { URL.homeDirectory.asGuaranteedFilePath }
+    
+    /// **OTCore:**
+    /// Returns the home directory for the specified user.
+    @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
+    public static func homeDirectory(forUser user: String) -> FilePath? {
+        URL.homeDirectory(forUser: user)?.asFilePath
+    }
+    
+    /// **OTCore:**
+    /// The temporary directory for the current user.
+    /// Complexity: O(1)
+    @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
+    public static var temporaryDirectory: FilePath { URL.temporaryDirectory.asGuaranteedFilePath }
+    
+    /// **OTCore:**
+    /// Discardable cache files directory for the
+    /// current user. (~/Library/Caches).
+    /// Complexity: O(n) where n is the number of significant directories
+    /// specified by `FileManager.SearchPathDirectory`
+    @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
+    public static var cachesDirectory: FilePath { URL.cachesDirectory.asGuaranteedFilePath }
+    
+    /// **OTCore:**
+    /// Supported applications (/Applications).
+    /// Complexity: O(n) where n is the number of significant directories
+    /// specified by `FileManager.SearchPathDirectory`
+    @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
+    public static var applicationDirectory: FilePath { URL.applicationDirectory.asGuaranteedFilePath }
+    
+    /// **OTCore:**
+    /// Various user-visible documentation, support, and configuration
+    /// files for the current user (~/Library).
+    /// Complexity: O(n) where n is the number of significant directories
+    /// specified by `FileManager.SearchPathDirectory`
+    @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
+    public static var libraryDirectory: FilePath { URL.libraryDirectory.asGuaranteedFilePath }
+    
+    /// **OTCore:**
+    /// User home directories (/Users).
+    /// Complexity: O(n) where n is the number of significant directories
+    /// specified by `FileManager.SearchPathDirectory`
+    @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
+    public static var userDirectory: FilePath { URL.userDirectory.asGuaranteedFilePath }
+    
+    /// **OTCore:**
+    /// Documents directory for the current user (~/Documents)
+    /// Complexity: O(n) where n is the number of significant directories
+    /// specified by `FileManager.SearchPathDirectory`
+    @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
+    public static var documentsDirectory: FilePath { URL.documentsDirectory.asGuaranteedFilePath }
+    
+    /// **OTCore:**
+    /// Desktop directory for the current user (~/Desktop)
+    /// Complexity: O(n) where n is the number of significant directories
+    /// specified by `FileManager.SearchPathDirectory`
+    @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
+    public static var desktopDirectory: FilePath { URL.desktopDirectory.asGuaranteedFilePath }
+    
+    /// **OTCore:**
+    /// Application support files for the current
+    /// user (~/Library/Application Support)
+    /// Complexity: O(n) where n is the number of significant directories
+    /// specified by `FileManager.SearchPathDirectory`
+    @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
+    public static var applicationSupportDirectory: FilePath { URL.applicationSupportDirectory.asGuaranteedFilePath }
+    
+    /// **OTCore:**
+    /// Downloads directory for the current user (~/Downloads)
+    /// Complexity: O(n) where n is the number of significant directories
+    /// specified by `FileManager.SearchPathDirectory`
+    @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
+    public static var downloadsDirectory: FilePath { URL.downloadsDirectory.asGuaranteedFilePath }
+    
+    /// **OTCore:**
+    /// Movies directory for the current user (~/Movies)
+    /// Complexity: O(n) where n is the number of significant directories
+    /// specified by `FileManager.SearchPathDirectory`
+    @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
+    public static var moviesDirectory: FilePath { URL.moviesDirectory.asGuaranteedFilePath }
+    
+    /// **OTCore:**
+    /// Music directory for the current user (~/Music)
+    /// Complexity: O(n) where n is the number of significant directories
+    /// specified by `FileManager.SearchPathDirectory`
+    @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
+    public static var musicDirectory: FilePath { URL.musicDirectory.asGuaranteedFilePath }
+    
+    /// **OTCore:**
+    /// Pictures directory for the current user (~/Pictures)
+    /// Complexity: O(n) where n is the number of significant directories
+    /// specified by `FileManager.SearchPathDirectory`
+    @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
+    public static var picturesDirectory: FilePath { URL.picturesDirectory.asGuaranteedFilePath }
+    
+    /// **OTCore:**
+    /// The user’s Public sharing directory (~/Public)
+    /// Complexity: O(n) where n is the number of significant directories
+    /// specified by `FileManager.SearchPathDirectory`
+    @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
+    public static var sharedPublicDirectory: FilePath { URL.sharedPublicDirectory.asGuaranteedFilePath }
+    
+    /// **OTCore:**
+    /// Trash directory for the current user (~/.Trash)
+    /// Complexity: O(n) where n is the number of significant directories
+    /// specified by `FileManager.SearchPathDirectory`
+    @available(macOS 13.0, iOS 16.0, *)
+    @available(tvOS, unavailable)
+    @available(watchOS, unavailable)
+    public static var trashDirectory: FilePath { URL.trashDirectory.asGuaranteedFilePath }
 }
 
 #endif
