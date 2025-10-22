@@ -417,10 +417,11 @@ extension URL {
             let getAttr = try FileManager.default
                 .attributesOfItem(atPath: path)
             
-            guard let getFileType = getAttr[.type]
+            guard let rawFileType = getAttr[.type] as? String
             else { throw CocoaError(.fileReadUnknown) }
             
-            return getFileType as? String == "NSFileTypeSymbolicLink"
+            let fileType = FileAttributeType(rawValue: rawFileType)
+            return fileType == .typeSymbolicLink // "NSFileTypeSymbolicLink"
         }
     }
     
