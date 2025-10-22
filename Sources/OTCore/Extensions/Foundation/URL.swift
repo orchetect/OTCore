@@ -403,54 +403,69 @@ extension URL {
 
 extension URL {
     /// **OTCore:**
-    /// Convenience method to test if a file URL is a symbolic link and not an actual file/folder.
+    /// Convenience method to test if a file URL is a symbolic link pointing to another file/folder,
+    /// and not an actual file/folder itself.
     ///
-    /// - Returns `nil` if the URL is not a properly formatted file URL, or there was a problem
+    /// - Throws: Error if the URL is not a properly formatted file URL, or there was a problem
     ///   querying the URL's file system attributes.
     @_disfavoredOverload
-    public var isSymLink: Bool? {
-        guard isFileURL
-        else { return nil }
-        
-        guard let getAttr = try? FileManager.default
-            .attributesOfItem(atPath: path)
-        else { return nil }
-        
-        guard let getFileType = getAttr[.type]
-        else { return nil }
-        
-        return getFileType as? String == "NSFileTypeSymbolicLink"
+    public var isSymLink: Bool {
+        get throws {
+            guard isFileURL
+            else { throw CocoaError(.fileNoSuchFile) }
+            
+            let getAttr = try FileManager.default
+                .attributesOfItem(atPath: path)
+            
+            guard let getFileType = getAttr[.type]
+            else { throw CocoaError(.fileReadUnknown) }
+            
+            return getFileType as? String == "NSFileTypeSymbolicLink"
+        }
     }
     
     /// **OTCore:**
     /// Convenience method to test if a file URL is a symbolic link pointing to `file`.
     ///
-    /// - Returns `true` even if original file does not exist.
-    /// - Returns `nil` if the URL is not a properly formatted file URL.
+    /// - Returns: `true` even if original file does not exist. This is possible because a symbolic link
+    ///   is its own file system node that points to another, regardless if the original exists or not.
+    /// - Throws: `nil` if the URL is not a properly formatted file URL or there was a problem querying
+    ///   the file system.
     @_disfavoredOverload
-    public func isSymLinkOf(file: URL) -> Bool? {
-        guard file.isFileURL
-        else { return nil }
-        
-        return isSymLinkOf(file: file.path)
+    public func isSymLink(of file: URL) throws -> Bool {
+        try isSymLink(of: file.path)
     }
     
     /// **OTCore:**
     /// Convenience method to test if a file URL is a symbolic link pointing to `file`.
     ///
-    /// - Returns `true` even if original file does not exist.
-    /// - Returns `nil` if the URL is not a properly formatted file URL.
+    /// - Returns: `true` even if original file does not exist. This is possible because a symbolic link
+    ///   is its own file system node that points to another, regardless if the original exists or not.
+    /// - Throws: `nil` if the URL is not a properly formatted file URL or there was a problem querying
+    ///   the file system.
     @_disfavoredOverload
-    public func isSymLinkOf(file: String) -> Bool? {
+    public func isSymLink(of file: String) throws -> Bool {
         guard isFileURL
-        else { return nil }
+        else { throw CocoaError(.fileNoSuchFile) }
         
-        // returns path of original file, even if original file no longer exists
-        guard let dest = try? FileManager.default
-            .destinationOfSymbolicLink(atPath: path)
-        else { return false }
-        
-        return file == dest
+        do {
+            // returns path of original file, even if original file no longer exists
+            let dest = try FileManager.default
+                .destinationOfSymbolicLink(atPath: path)
+            
+            return file == dest
+        } catch let error as CocoaError {
+            switch error.code {
+            case .fileReadUnknown:
+                // one scenario where this error is thrown is when a file/folder exists, but it's not a symlink.
+                // to suppress spurious errors, we'll catch it and just return false.
+                return false
+            default:
+                throw error
+            }
+        } catch {
+            throw error
+        }
     }
     
     /// **OTCore:**
