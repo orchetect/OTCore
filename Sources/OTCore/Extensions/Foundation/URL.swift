@@ -170,12 +170,12 @@ extension URL {
     }
 }
 
-// MARK: - File / folder
+// MARK: - File / Folder Metadata
 
 extension URL {
     /// **OTCore:**
     /// Returns whether the file/folder exists.
-    /// Convenience proxy for Foundation `fileExists` method.
+    /// Convenience proxy for Foundation `FileManager` `fileExists` method.
     ///
     /// - Will return `false` if used on a symlink and the symlink's original file does not exist.
     /// - Will still return `true` if used on an alias and the alias' original file does not exist.
@@ -269,9 +269,9 @@ extension URL {
         
         // see https://stackoverflow.com/a/66968423/2805570 for in-depth explainer
         
-        guard let lhs = try? resourceValues(forKeys: [.fileResourceIdentifierKey])
+        guard let lhs = try resourceValues(forKeys: [.fileResourceIdentifierKey])
             .fileResourceIdentifier,
-            let rhs = try? otherFileURL.resourceValues(forKeys: [.fileResourceIdentifierKey])
+            let rhs = try otherFileURL.resourceValues(forKeys: [.fileResourceIdentifierKey])
                 .fileResourceIdentifier
         else { throw CocoaError(.fileReadUnknown) }
         
@@ -279,7 +279,7 @@ extension URL {
     }
 }
 
-// MARK: - File operations
+// MARK: - File Operations
 
 extension URL {
     /// **OTCore:**
@@ -360,7 +360,7 @@ extension URL {
     
     /// **OTCore:**
     /// Creates an alias of the base URL file or folder `at` the supplied target location. Will
-    /// override existing path if it exists.
+    /// overwrite existing target path if it exists.
     @_disfavoredOverload
     public func createFinderAlias(at url: URL) throws {
         let data = try
@@ -374,7 +374,7 @@ extension URL {
     }
     
     /// **OTCore:**
-    /// If self is a Finder alias, its resolved URL is returned regardless whether it exists or not.
+    /// If the file URL is a Finder alias, its resolved URL is returned regardless whether it exists or not.
     ///
     /// `nil` will be returned if any of the following is true for `self`:
     /// - is not a Finder alias or does not exist, or
