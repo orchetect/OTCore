@@ -12,6 +12,8 @@ import Testing
 import TestingExtensions
 
 @Suite struct Extensions_Foundation_URL_Tests {
+    // MARK: - URL Manipulation
+    
     @Test
     func hasPrefixURL() {
         #expect(
@@ -331,6 +333,8 @@ import TestingExtensions
         )
     }
     
+    // MARK: - File / Folder Metadata
+    
     @Test
     func fileExists() {
         // guaranteed to exist
@@ -340,11 +344,11 @@ import TestingExtensions
     }
     
     @Test
-    func isFolder() {
+    func isDirectory() {
         // guaranteed to exist
         let folder = URL(fileURLWithPath: NSHomeDirectory())
         
-        #expect(folder.isFolder!)
+        #expect(folder.isDirectory)
     }
     
     #if os(macOS)
@@ -354,7 +358,7 @@ import TestingExtensions
         let file = FileManager.default.temporaryDirectory
             .appendingPathComponent("\(UUID().uuidString)-TeSt123AbC.txt")
         try "\(Date())".write(to: file, atomically: true, encoding: .utf8)
-        #expect(file.fileExists)
+        #expect(FileManager.default.fileExists(atPath: file.path))
         
         let lowercased = try #require(URL(string: file.absoluteString.lowercased()))
         #expect(file.absoluteString != lowercased.absoluteString)
@@ -375,6 +379,9 @@ import TestingExtensions
             )
         
         #expect(prefixedOriginalFileString == reformed.absoluteString)
+        
+        // cleanup
+        try? FileManager.default.removeItem(at: file)
     }
     #endif
     
@@ -385,7 +392,7 @@ import TestingExtensions
         let file = URL(fileURLWithPath: NSTemporaryDirectory())
             .appendingPathComponent("\(UUID().uuidString)-TeSt123AbC.txt")
         try "\(Date())".write(to: file, atomically: true, encoding: .utf8)
-        #expect(file.fileExists)
+        #expect(FileManager.default.fileExists(atPath: file.path))
         
         let lowercased = try #require(URL(string: file.absoluteString.lowercased()))
         #expect(file.absoluteString != lowercased.absoluteString)
@@ -405,6 +412,9 @@ import TestingExtensions
             )
         
         #expect(prefixedOriginalFileString == reformed.absoluteString)
+        
+        // cleanup
+        try? FileManager.default.removeItem(at: file)
     }
     #endif
     
@@ -415,14 +425,19 @@ import TestingExtensions
         let file = URL(fileURLWithPath: NSTemporaryDirectory())
             .appendingPathComponent("\(UUID().uuidString)-TeSt123AbC.txt")
         try "\(Date())".write(to: file, atomically: true, encoding: .utf8)
-        #expect(file.fileExists)
+        #expect(FileManager.default.fileExists(atPath: file.path))
         
         let lowercased = try #require(URL(string: file.absoluteString.lowercased()))
         #expect(file.absoluteString != lowercased.absoluteString)
         
         #expect(try file.isEqualFileNode(as: lowercased))
+        
+        // cleanup
+        try? FileManager.default.removeItem(at: file)
     }
     #endif
+    
+    // MARK: - File Operations
     
     @Test
     func trashOrDelete() throws {
@@ -438,7 +453,7 @@ import TestingExtensions
             .appendingPathComponent(randomFolderName)
         
         // ensure path does not exist
-        try #require(!url.fileExists)
+        try #require(!FileManager.default.fileExists(atPath: url.path))
         
         print("Source URL:", url)
         
@@ -454,25 +469,29 @@ import TestingExtensions
         
         // operation
         
-        let result = try url.trashOrDelete()
+        let trashedURL = try url.trashOrDelete()
         
         // result test
         
         #if os(macOS) || targetEnvironment(macCatalyst)
-        #expect(result != nil)
+        #expect(trashedURL != nil)
         #elseif os(iOS)
-        #expect(result == nil)
+        #expect(trashedURL == nil)
         #elseif os(tvOS)
-        #expect(result == nil)
+        #expect(trashedURL == nil)
         #elseif os(watchOS)
-        #expect(result == nil)
+        #expect(trashedURL == nil)
+        #elseif os(visionOS)
+        #expect(trashedURL == nil)
         #endif
         
         // clean up
         
-        // no clean up necessary
-        // test moves any temp files/folders it creates to the trash or deletes them
+        try? FileManager.default.removeItem(at: url)
+        if let trashedURL { try? FileManager.default.removeItem(at: trashedURL) }
     }
+    
+    // MARK: - Finder Aliases
     
     @Test
     func isFinderAlias() throws {
@@ -488,7 +507,7 @@ import TestingExtensions
             .appendingPathComponent(randomFolderName)
         
         // ensure path does not exist
-        try #require(!url1.fileExists)
+        try #require(!FileManager.default.fileExists(atPath: url1.path))
         
         print("Source URL:", url1)
         
@@ -496,7 +515,7 @@ import TestingExtensions
             .appendingPathComponent(randomFolderName + " alias")
         
         // ensure path does not exist
-        try #require(!url2.fileExists)
+        try #require(!FileManager.default.fileExists(atPath: url2.path))
         
         print("Destination URL:", url2)
         
@@ -533,12 +552,11 @@ import TestingExtensions
         
         // .trashItem not available on all platforms
         
-        print("Cleaning up source directory...")
-        #expect(throws: Never.self) { try url1.trashOrDelete() }
-        
-        print("Cleaning up destination alias...")
-        #expect(throws: Never.self) { try url2.trashOrDelete() }
+        try? FileManager.default.removeItem(at: url1)
+        try? FileManager.default.removeItem(at: url2)
     }
+    
+    // MARK: - SymLinks
     
     @Test
     func symlink() throws {
@@ -571,8 +589,8 @@ import TestingExtensions
         
         // neither exist, so this will fail
         
-        #expect(url1.isSymLink == nil)
-        #expect(url2.isSymLink == nil)
+        #expect(throws: (any Error).self) { _ = try url1.isSymLink }
+        #expect(throws: (any Error).self) { _ = try url2.isSymLink }
         
         // create source folder
         
@@ -592,19 +610,18 @@ import TestingExtensions
         
         // test
         
-        try #expect(!#require(url1.isSymLink as Bool?))
-        try #expect(#require(url2.isSymLink as Bool?))
-        try #expect(!#require(url1.isSymLinkOf(file: url2) as Bool?))
-        try #expect(#require(url2.isSymLinkOf(file: url1) as Bool?))
+        #expect(try !url1.isSymLink)
+        #expect(try url2.isSymLink)
+        #expect(try !url1.isSymLink(of: url2))
+        #expect(try url2.isSymLink(of: url1))
         
         // clean up
         
-        print("Cleaning up source directory...")
-        #expect(throws: Never.self) { try url1.trashOrDelete() }
-        
-        print("Cleaning up destination symlink...")
-        #expect(throws: Never.self) { try url2.trashOrDelete() }
+        try? FileManager.default.removeItem(at: url1)
+        try? FileManager.default.removeItem(at: url2)
     }
+    
+    // MARK: - Folders
     
     @Test
     func folders() {
