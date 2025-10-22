@@ -262,6 +262,7 @@ import System
         if let trashedPath { try? FileManager.default.removeItem(at: trashedPath.asURL()) }
     }
     
+    @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
     @Test
     func uniqued() throws {
         // boilerplate
