@@ -262,6 +262,55 @@ import System
         if let trashedPath { try? FileManager.default.removeItem(at: trashedPath.asURL()) }
     }
     
+    @Test
+    func uniqued() throws {
+        // boilerplate
+        
+        let temporaryDirectoryURL = FileManager.default.temporaryDirectoryCompat
+        
+        // determine temporary URLs
+        
+        let randomFolderName = "temp-\(UUID().uuidString)"
+        
+        let folderURL = temporaryDirectoryURL
+            .appendingPathComponent(randomFolderName)
+        let folderPath = try #require(folderURL.asFilePath)
+        
+        // create source folder
+        
+        print("Creating temporary directory...")
+        
+        try FileManager.default.createDirectory(
+            at: folderURL,
+            withIntermediateDirectories: false,
+            attributes: nil
+        )
+        
+        let file1Path = folderPath.appending("Test.txt")
+        let file1URL = file1Path.asURL(directoryHint: .notDirectory)
+        
+        // file does not exist on disk, so no uniquing is needed; path is returned as-is
+        #expect(file1Path.uniqued() == file1Path)
+        
+        // create file on disk
+        try "Test string".write(to: file1URL, atomically: false, encoding: .utf8)
+        
+        // unique base file
+        let file2Path = file1Path.uniqued()
+        let file2URL = file2Path.asURL(directoryHint: .notDirectory)
+        #expect(file2Path == folderPath.appending("Test 2.txt"))
+        
+        // create file on disk
+        try "Test string".write(to: file2URL, atomically: false, encoding: .utf8)
+        
+        // unique base file
+        let file3 = file1Path.uniqued()
+        #expect(file3 == folderPath.appending("Test 3.txt"))
+        
+        // cleanup
+        try? FileManager.default.removeItem(at: folderURL)
+    }
+    
     // MARK: - Finder Aliases
     
     @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
