@@ -12,6 +12,7 @@ import Testing
 import System
 
 @Suite struct Extensions_FilePathAndURL_Tests {
+    @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
     @Test
     func filePath_asURL() async {
         #expect(FilePath("/").asURL().path(percentEncoded: false) == "/")
@@ -22,6 +23,7 @@ import System
         #expect(FilePath("/Users/user/text.txt").asURL().path(percentEncoded: false) == "/Users/user/text.txt")
     }
     
+    @available(macOS 12.0, iOS 15.0, watchOS 8.0, tvOS 15.0, *)
     @Test
     func url_asFilePath() async {
         #expect(URL(fileURLWithPath: "/").asFilePath?.string == "/")
