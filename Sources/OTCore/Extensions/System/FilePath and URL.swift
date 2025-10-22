@@ -36,9 +36,9 @@ extension FilePath {
 extension URL {
     /// **OTCore:**
     /// Returns the file URL as a new `FilePath` instance.
-    /// Returns `nil` if the URL is not a file URL.
-    public var asFilePath: FilePath? {
-        guard isFileURL else { return nil }
+    /// - Throws: Error if the URL is not a file URL.
+    public func asFilePath() throws -> FilePath {
+        guard isFileURL else { throw CocoaError(.fileNoSuchFile) }
         
         if let path = FilePath(self) { return path }
         
@@ -231,7 +231,7 @@ extension FilePath {
     @discardableResult @_disfavoredOverload
     public func trashOrDelete() throws -> FilePath? {
         let url = try asURL().trashOrDelete()
-        return url?.asFilePath
+        return try url?.asFilePath()
     }
     
     /// **OTCore:**
