@@ -233,6 +233,85 @@ extension FilePath {
         let url = try asURL().trashOrDelete()
         return url?.asFilePath
     }
+    
+    /// **OTCore:**
+    /// If the file path is a file or folder that exists on disk, the file name (last path component
+    /// prior to extension) is uniqued by appending the first number in `2...` that results in a file
+    /// name that does not exist on disk.
+    ///
+    /// - Parameter suffix: Formatting of the suffix. The incrementing counter number is passed in
+    ///   and must be used in the body of the closure. The closure must not return a static value.
+    ///
+    ///   For example, given a file named "MyFile.txt" that exists on disk:
+    ///
+    ///   - `" \($0)"` produces "MyFile 2.txt", "MyFile 3.txt", etc.
+    ///   - `"-\($0)"` produces "MyFile-2.txt", "MyFile-3.txt", etc.
+    ///   - `" (\($0))"` produces "MyFile (2).txt", "MyFile (3).txt", etc.
+    @available(macOS 12.0, iOS 15.0, watchOS 8.0, tvOS 15.0, *)
+    @_disfavoredOverload
+    public mutating func unique(
+        suffix: (_ counter: Int) -> String = { " \($0)" }
+    ) {
+        self = uniqued(suffix: suffix)
+    }
+    
+    /// **OTCore:**
+    /// If the file path is a file or folder that exists on disk, the file name (last path component
+    /// prior to extension) is uniqued by appending the first number in `2...` that results in a file
+    /// name that does not exist on disk.
+    ///
+    /// - Parameter suffix: Formatting of the suffix. The incrementing counter number is passed in
+    ///   and must be used in the body of the closure. The closure must not return a static value.
+    ///
+    ///   For example, given a file named "MyFile.txt" that exists on disk:
+    ///
+    ///   - `" \($0)"` produces "MyFile 2.txt", "MyFile 3.txt", etc.
+    ///   - `"-\($0)"` produces "MyFile-2.txt", "MyFile-3.txt", etc.
+    ///   - `" (\($0))"` produces "MyFile (2).txt", "MyFile (3).txt", etc.
+    @available(macOS 12.0, iOS 15.0, watchOS 8.0, tvOS 15.0, *)
+    @_disfavoredOverload
+    public func uniqued(
+        suffix: (_ counter: Int) -> String = { " \($0)" }
+    ) -> FilePath {
+        var suffix = suffix
+        
+        // sanity check - ensure the closure produces unique values to prevent an infinite loop
+        if suffix(2) == suffix(3) {
+            assertionFailure("Suffix closure does not produce unique return values. Reverting to default suffix format.")
+            suffix = { " \($0)" }
+        }
+        
+        let ext = lastComponent?.extension
+        let baseName = lastComponent?.stem ?? ""
+        let basePath = removingLastComponent()
+        
+        var proposedPath = self
+        var counter: Int = 2
+        let maxCount = 1000
+        
+        func generatePath(addingSuffix: String) -> FilePath {
+            var newFilename = baseName + addingSuffix
+            if let ext { newFilename.append("." + ext) }
+            let newPath = basePath.appending(newFilename)
+            return newPath
+        }
+        
+        while proposedPath.fileExists,
+              counter < maxCount // prevent infinite loop
+        {
+            let newPath = generatePath(addingSuffix: suffix(counter))
+            assert(proposedPath != newPath) // catch malformed suffix
+            proposedPath = newPath
+            counter += 1
+        }
+        
+        // failsafe - if we exhaust the counter, use a UUID suffix instead to guarantee a unique file
+        if counter >= maxCount {
+            proposedPath = generatePath(addingSuffix: "-\(UUID().uuidString)")
+        }
+        
+        return proposedPath
+    }
 }
 
 // MARK: - Finder Aliases
