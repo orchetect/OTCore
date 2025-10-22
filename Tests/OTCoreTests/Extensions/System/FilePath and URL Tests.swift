@@ -21,6 +21,26 @@ import System
         
         #expect(FilePath("/Users/user/text.txt").asURL().path(percentEncoded: false) == "/Users/user/text.txt")
     }
+    
+    @Test
+    func url_asFilePath() async {
+        #expect(URL(fileURLWithPath: "/").asFilePath?.string == "/")
+        
+        #expect(URL(fileURLWithPath: "/Users").asFilePath?.string == "/Users")
+        #expect(URL(fileURLWithPath: "/Users/").asFilePath?.string == "/Users")
+        
+        #expect(URL(fileURLWithPath: "/Users/user/text.txt").asFilePath?.string == "/Users/user/text.txt")
+        
+        #expect(URL(string: "file:///")?.asFilePath?.string == "/")
+        #expect(URL(string: "file:///Users/user/text.txt")?.asFilePath?.string == "/Users/user/text.txt")
+        
+        // edge cases - non-file URLs
+        #expect(URL(string: "https://www.domain.com")?.asFilePath == nil)
+        #expect(URL(string: "https://www.domain.com/")?.asFilePath == nil)
+        #expect(URL(string: "https://www.domain.com/Users")?.asFilePath == nil)
+        #expect(URL(string: "https://www.domain.com/Users/")?.asFilePath == nil)
+        #expect(URL(string: "https://www.domain.com/Users/user/text.txt")?.asFilePath == nil)
+    }
 }
 
 #endif
