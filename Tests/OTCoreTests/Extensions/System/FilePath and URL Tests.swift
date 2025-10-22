@@ -16,7 +16,7 @@ import System
     
     @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
     @Test
-    func filePath_asURL() async {
+    func filePath_asURL() async throws {
         #expect(FilePath("/").asURL().path(percentEncoded: false) == "/")
         
         #expect(FilePath("/Users").asURL().path(percentEncoded: false) == "/Users")
@@ -27,30 +27,30 @@ import System
     
     @available(macOS 12.0, iOS 15.0, watchOS 8.0, tvOS 15.0, *)
     @Test
-    func url_asFilePath() async {
-        #expect(URL(fileURLWithPath: "/").asFilePath?.string == "/")
+    func url_asFilePath() async throws {
+        #expect(try URL(fileURLWithPath: "/").asFilePath().string == "/")
         
-        #expect(URL(fileURLWithPath: "/Users").asFilePath?.string == "/Users")
-        #expect(URL(fileURLWithPath: "/Users/").asFilePath?.string == "/Users")
+        #expect(try URL(fileURLWithPath: "/Users").asFilePath().string == "/Users")
+        #expect(try URL(fileURLWithPath: "/Users/").asFilePath().string == "/Users")
         
-        #expect(URL(fileURLWithPath: "/Users/user/text.txt").asFilePath?.string == "/Users/user/text.txt")
+        #expect(try URL(fileURLWithPath: "/Users/user/text.txt").asFilePath().string == "/Users/user/text.txt")
         
-        #expect(URL(string: "file:///")?.asFilePath?.string == "/")
-        #expect(URL(string: "file:///Users/user/text.txt")?.asFilePath?.string == "/Users/user/text.txt")
+        #expect(try URL(string: "file:///")?.asFilePath().string == "/")
+        #expect(try URL(string: "file:///Users/user/text.txt")?.asFilePath().string == "/Users/user/text.txt")
         
         // edge cases - non-file URLs
-        #expect(URL(string: "https://www.domain.com")?.asFilePath == nil)
-        #expect(URL(string: "https://www.domain.com/")?.asFilePath == nil)
-        #expect(URL(string: "https://www.domain.com/Users")?.asFilePath == nil)
-        #expect(URL(string: "https://www.domain.com/Users/")?.asFilePath == nil)
-        #expect(URL(string: "https://www.domain.com/Users/user/text.txt")?.asFilePath == nil)
+        #expect(throws: (any Error).self) { _ = try URL(string: "https://www.domain.com")?.asFilePath() }
+        #expect(throws: (any Error).self) { _ = try URL(string: "https://www.domain.com/")?.asFilePath() }
+        #expect(throws: (any Error).self) { _ = try URL(string: "https://www.domain.com/Users")?.asFilePath() }
+        #expect(throws: (any Error).self) { _ = try URL(string: "https://www.domain.com/Users/")?.asFilePath() }
+        #expect(throws: (any Error).self) { _ = try URL(string: "https://www.domain.com/Users/user/text.txt")?.asFilePath() }
     }
     
     // MARK: - URL Manipulation
     
     @available(macOS 12.0, iOS 15.0, watchOS 8.0, tvOS 15.0, *)
     @Test
-    func mutatingLastPathComponent() {
+    func mutatingLastPathComponent() async {
         #expect(
             FilePath("/temp1/temp2/some file.txt")
                 .mutatingLastPathComponent { "a" + $0.string + ".pdf" }
@@ -68,7 +68,7 @@ import System
     
     @available(macOS 12.0, iOS 15.0, watchOS 8.0, tvOS 15.0, *)
     @Test
-    func mutatingLastPathComponentExcludingExtension() {
+    func mutatingLastPathComponentExcludingExtension() async {
         #expect(
             FilePath("/temp1/temp2/some file.txt")
                 .mutatingLastPathComponentExcludingExtension { "a" + $0 + "b" }
@@ -86,7 +86,7 @@ import System
     
     @available(macOS 12.0, iOS 15.0, watchOS 8.0, tvOS 15.0, *)
     @Test
-    func appendingToLastPathComponentBeforeExtension() {
+    func appendingToLastPathComponentBeforeExtension() async {
         #expect(
             FilePath("/temp1/temp2/some file.txt")
                 .appendingToLastPathComponentBeforeExtension("-2")
@@ -99,7 +99,7 @@ import System
     
     @available(macOS 12.0, iOS 15.0, watchOS 8.0, tvOS 15.0, *)
     @Test
-    func fileExists() {
+    func fileExists() async {
         // guaranteed to exist
         let folder = FilePath(NSHomeDirectory())
         
@@ -108,7 +108,7 @@ import System
     
     @available(macOS 12.0, iOS 15.0, watchOS 8.0, tvOS 15.0, *)
     @Test
-    func isDirectory() {
+    func isDirectory() async {
         // guaranteed to exist
         let folder = FilePath(NSHomeDirectory())
         
@@ -118,7 +118,7 @@ import System
     #if os(macOS)
     @available(macOS 12.0, *)
     @Test
-    func canonicalize() throws {
+    func canonicalize() async throws {
         // write temp file including a mix of uppercase and lowercase letters
         let fileURL = FileManager.default.temporaryDirectory
             .appendingPathComponent("\(UUID().uuidString)-TeSt123AbC.txt")
@@ -154,7 +154,7 @@ import System
     #if os(macOS)
     @available(macOS 12.0, *)
     @Test
-    func canonicalized() throws {
+    func canonicalized() async throws {
         // write temp file including a mix of uppercase and lowercase letters
         let fileURL = FileManager.default.temporaryDirectory
             .appendingPathComponent("\(UUID().uuidString)-TeSt123AbC.txt")
@@ -188,7 +188,7 @@ import System
     
     #if os(macOS)
     @Test
-    func isEqualFileNode() throws {
+    func isEqualFileNode() async throws {
         // write temp file including a mix of uppercase and lowercase letters
         let fileURL = URL(fileURLWithPath: NSTemporaryDirectory())
             .appendingPathComponent("\(UUID().uuidString)-TeSt123AbC.txt")
@@ -210,7 +210,7 @@ import System
     
     @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
     @Test
-    func trashOrDelete() throws {
+    func trashOrDelete() async throws {
         // boilerplate
         
         let temporaryDirectoryURL = FileManager.default.temporaryDirectoryCompat
@@ -264,7 +264,7 @@ import System
     
     @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
     @Test
-    func uniqued() throws {
+    func uniqued() async throws {
         // boilerplate
         
         let temporaryDirectoryURL = FileManager.default.temporaryDirectoryCompat
@@ -275,7 +275,7 @@ import System
         
         let folderURL = temporaryDirectoryURL
             .appendingPathComponent(randomFolderName)
-        let folderPath = try #require(folderURL.asFilePath)
+        let folderPath = try folderURL.asFilePath()
         
         // create source folder
         
@@ -316,7 +316,7 @@ import System
     
     @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
     @Test
-    func isFinderAlias() throws {
+    func isFinderAlias() async throws {
         // boilerplate
         
         let temporaryDirectoryURL = FileManager.default.temporaryDirectoryCompat
@@ -382,7 +382,7 @@ import System
     
     @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
     @Test
-    func symlink() throws {
+    func symlink() async throws {
         // boilerplate
         
         let temporaryDirectoryURL = FileManager.default.temporaryDirectoryCompat
@@ -450,13 +450,13 @@ import System
     
     @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
     @Test
-    func currentDirectory() throws {
+    func currentDirectory() async throws {
         #expect(FilePath.currentDirectory().string == URL.currentDirectory().path)
     }
     
     @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
     @Test
-    func homeDirectory() throws {
+    func homeDirectory() async throws {
         #expect(FilePath.homeDirectory.string == URL.homeDirectory.path)
     }
     
@@ -466,23 +466,23 @@ import System
     @available(tvOS, unavailable) // username lookup not available
     @available(watchOS, unavailable) // username lookup not available
     @Test
-    func homeDirectory_forUser() throws {
+    func homeDirectory_forUser() async throws {
         let username = Globals.System.userName
         #expect(FilePath.homeDirectory(forUser: username)?.string == URL.homeDirectory(forUser: username)?.path)
     }
     
     @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
-    @Test func temporaryDirectory() throws {
+    @Test func temporaryDirectory() async throws {
         #expect(FilePath.temporaryDirectory.string == URL.temporaryDirectory.path)
     }
     
     @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
-    @Test func cachesDirectory() throws {
+    @Test func cachesDirectory() async throws {
         #expect(FilePath.cachesDirectory.string == URL.cachesDirectory.path)
     }
     
     @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
-    @Test func applicationDirectory() throws {
+    @Test func applicationDirectory() async throws {
         #expect(FilePath.applicationDirectory.string == URL.applicationDirectory.path)
     }
     
@@ -492,47 +492,47 @@ import System
     }
     
     @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
-    @Test func userDirectory() throws {
+    @Test func userDirectory() async throws {
         #expect(FilePath.userDirectory.string == URL.userDirectory.path)
     }
     
     @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
-    @Test func documentsDirectory() throws {
+    @Test func documentsDirectory() async throws {
         #expect(FilePath.documentsDirectory.string == URL.documentsDirectory.path)
     }
     
     @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
-    @Test func desktopDirectory() throws {
+    @Test func desktopDirectory() async throws {
         #expect(FilePath.desktopDirectory.string == URL.desktopDirectory.path)
     }
     
     @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
-    @Test func applicationSupportDirectory() throws {
+    @Test func applicationSupportDirectory() async throws {
         #expect(FilePath.applicationSupportDirectory.string == URL.applicationSupportDirectory.path)
     }
     
     @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
-    @Test func downloadsDirectory() throws {
+    @Test func downloadsDirectory() async throws {
         #expect(FilePath.downloadsDirectory.string == URL.downloadsDirectory.path)
     }
     
     @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
-    @Test func moviesDirectory() throws {
+    @Test func moviesDirectory() async throws {
         #expect(FilePath.moviesDirectory.string == URL.moviesDirectory.path)
     }
     
     @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
-    @Test func musicDirectory() throws {
+    @Test func musicDirectory() async throws {
         #expect(FilePath.musicDirectory.string == URL.musicDirectory.path)
     }
     
     @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
-    @Test func picturesDirectory() throws {
+    @Test func picturesDirectory() async throws {
         #expect(FilePath.picturesDirectory.string == URL.picturesDirectory.path)
     }
     
     @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
-    @Test func sharedPublicDirectory() throws {
+    @Test func sharedPublicDirectory() async throws {
         #expect(FilePath.sharedPublicDirectory.string == URL.sharedPublicDirectory.path)
     }
     
@@ -544,7 +544,7 @@ import System
             (try? FileManager.default.url(for: .trashDirectory, in: .userDomainMask, appropriateFor: nil, create: false)) != nil
         }
     )
-    func trashDirectory() throws {
+    func trashDirectory() async throws {
         #expect(FilePath.trashDirectory.string == URL.trashDirectory.path)
     }
 }
