@@ -163,14 +163,20 @@ extension FilePath {
     /// > This method is only available on macOS as the API required is not available on other
     /// > platforms.
     ///
+    /// - Parameters:
+    ///   - partial: When `true`, partial path canonicalization occurs by iterating each
+    ///     path component one at a time. This allows for file paths that have a base path that exists
+    ///     on disk but with one or more trailing path components that do not.
+    ///     When `false`, the entire path is canonicalized in a single operation.
+    ///
     /// - Throws: Error if there was a problem reading the file system.
     @available(macOS 12.0, *)
     @available(iOS, unavailable)
     @available(tvOS, unavailable)
     @available(watchOS, unavailable)
     @available(visionOS, unavailable)
-    public mutating func canonicalize() throws {
-        self = try canonicalized()
+    public mutating func canonicalize(partial: Bool = false) throws {
+        self = try canonicalized(partial: partial)
     }
     
     /// **OTCore:**
@@ -182,20 +188,21 @@ extension FilePath {
     /// > This method is only available on macOS as the API required is not available on other
     /// > platforms.
     ///
+    /// - Parameters:
+    ///   - partial: When `true`, partial path canonicalization occurs by iterating each
+    ///     path component one at a time. This allows for file paths that have a base path that exists
+    ///     on disk but with one or more trailing path components that do not.
+    ///     When `false`, the entire path is canonicalized in a single operation.
+    ///
     /// - Throws: Error if there was a problem reading the file system.
     @available(macOS 12.0, *)
     @available(iOS, unavailable)
     @available(tvOS, unavailable)
     @available(watchOS, unavailable)
     @available(visionOS, unavailable)
-    public func canonicalized() throws -> FilePath {
-        // see https://stackoverflow.com/a/66968423/2805570 for in-depth explainer
-        
-        let url = asURL()
-        guard let newPath = try url.resourceValues(forKeys: [.canonicalPathKey]).canonicalPath else {
-            throw CocoaError(.fileReadUnknown)
-        }
-        return FilePath(newPath)
+    public func canonicalized(partial: Bool = false) throws -> FilePath {
+        let url = try asURL().canonicalizingFileURL(partial: partial)
+        return FilePath(url.path)
     }
     
     /// **OTCore:**
