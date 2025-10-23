@@ -24,7 +24,7 @@ In your Package.swift file:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/orchetect/OTCore", from: "1.7.9")
+    .package(url: "https://github.com/orchetect/OTCore", from: "1.7.12")
 ]
 ```
 
