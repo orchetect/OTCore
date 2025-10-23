@@ -157,8 +157,6 @@ extension FilePath {
     /// **OTCore:**
     /// Updates the path with its canonical file system path on disk.
     ///
-    /// If the path does not exist, the path will remain unmodified.
-    ///
     /// > Note:
     /// > This method is only available on macOS as the API required is not available on other
     /// > platforms.
@@ -182,8 +180,6 @@ extension FilePath {
     /// **OTCore:**
     /// Returns the path by returning its canonical file system path on disk.
     ///
-    /// If the path does not exist, the path will be returned unmodified.
-    ///
     /// > Note:
     /// > This method is only available on macOS as the API required is not available on other
     /// > platforms.
@@ -203,6 +199,56 @@ extension FilePath {
     public func canonicalized(partial: Bool = false) throws -> FilePath {
         let url = try asURL().canonicalizingFileURL(partial: partial)
         return FilePath(url.path)
+    }
+    
+    /// **OTCore:**
+    /// Updates the path with its canonical file system path on disk.
+    ///
+    /// If the path does not exist, the path will remain unmodified.
+    ///
+    /// > Note:
+    /// > This method is only available on macOS as the API required is not available on other
+    /// > platforms.
+    ///
+    /// - Parameters:
+    ///   - partial: When `true`, partial path canonicalization occurs by iterating each
+    ///     path component one at a time. This allows for file paths that have a base path that exists
+    ///     on disk but with one or more trailing path components that do not.
+    ///     When `false`, the entire path is canonicalized in a single operation.
+    ///
+    /// - Throws: Error if there was a problem reading the file system.
+    @available(macOS 12.0, *)
+    @available(iOS, unavailable)
+    @available(tvOS, unavailable)
+    @available(watchOS, unavailable)
+    @available(visionOS, unavailable)
+    public mutating func canonicalizeIfPossible(partial: Bool = false) {
+        self = canonicalizedIfPossible(partial: partial)
+    }
+    
+    /// **OTCore:**
+    /// Returns the path by returning its canonical file system path on disk.
+    ///
+    /// If the path does not exist, the path will be returned unmodified.
+    ///
+    /// > Note:
+    /// > This method is only available on macOS as the API required is not available on other
+    /// > platforms.
+    ///
+    /// - Parameters:
+    ///   - partial: When `true`, partial path canonicalization occurs by iterating each
+    ///     path component one at a time. This allows for file paths that have a base path that exists
+    ///     on disk but with one or more trailing path components that do not.
+    ///     When `false`, the entire path is canonicalized in a single operation.
+    ///
+    /// - Throws: Error if there was a problem reading the file system.
+    @available(macOS 12.0, *)
+    @available(iOS, unavailable)
+    @available(tvOS, unavailable)
+    @available(watchOS, unavailable)
+    @available(visionOS, unavailable)
+    public func canonicalizedIfPossible(partial: Bool = false) -> FilePath {
+        (try? canonicalized(partial: partial)) ?? self
     }
     
     /// **OTCore:**
