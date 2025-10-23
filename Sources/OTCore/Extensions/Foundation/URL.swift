@@ -201,8 +201,6 @@ extension URL {
     /// **OTCore:**
     /// Updates the URL with its canonical file system path on disk.
     ///
-    /// If the file does not exist or the URL is not a file URL, the URL will remain unmodified.
-    ///
     /// > Note:
     /// > This method is only available on macOS as the API required is not available on other
     /// > platforms.
@@ -226,9 +224,6 @@ extension URL {
     
     /// **OTCore:**
     /// Returns the URL by returning its canonical file system path on disk.
-    ///
-    /// If the file does not exist or the URL is not a file URL, the URL will be returned
-    /// unmodified.
     ///
     /// > Note:
     /// > This method is only available on macOS as the API required is not available on other
@@ -267,6 +262,58 @@ extension URL {
             let newURL = URL(fileURLWithPath: newPath)
             return newURL
         }
+    }
+    
+    /// **OTCore:**
+    /// Updates the URL with its canonical file system path on disk.
+    ///
+    /// If the path does not exist, the path will remain unmodified.
+    ///
+    /// > Note:
+    /// > This method is only available on macOS as the API required is not available on other
+    /// > platforms.
+    ///
+    /// - Parameters:
+    ///   - partial: When `true`, partial path canonicalization occurs by iterating each
+    ///     path component one at a time. This allows for file paths that have a base path that exists
+    ///     on disk but with one or more trailing path components that do not.
+    ///     When `false`, the entire path is canonicalized in a single operation.
+    ///
+    /// - Throws: Error if the URL is not a file URL, or there was a problem reading the file
+    ///   system.
+    @available(iOS, unavailable)
+    @available(tvOS, unavailable)
+    @available(watchOS, unavailable)
+    @available(visionOS, unavailable)
+    @_disfavoredOverload
+    public mutating func canonicalizeFileURLIfPossible(partial: Bool = false) {
+        self = canonicalizingFileURLIfPossible(partial: partial)
+    }
+    
+    /// **OTCore:**
+    /// Returns the URL by returning its canonical file system path on disk.
+    ///
+    /// If the path does not exist, the path will be returned unmodified.
+    ///
+    /// > Note:
+    /// > This method is only available on macOS as the API required is not available on other
+    /// > platforms.
+    ///
+    /// - Parameters:
+    ///   - partial: When `true`, partial path canonicalization occurs by iterating each
+    ///     path component one at a time. This allows for file paths that have a base path that exists
+    ///     on disk but with one or more trailing path components that do not.
+    ///     When `false`, the entire path is canonicalized in a single operation.
+    ///
+    /// - Throws: Error if the URL is not a file URL, or there was a problem reading the file
+    ///   system.
+    @available(iOS, unavailable)
+    @available(tvOS, unavailable)
+    @available(watchOS, unavailable)
+    @available(visionOS, unavailable)
+    @_disfavoredOverload
+    public func canonicalizingFileURLIfPossible(partial: Bool = false) -> URL {
+        (try? canonicalizingFileURL(partial: partial)) ?? self
     }
     
     /// **OTCore:**
