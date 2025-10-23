@@ -169,6 +169,24 @@ import System
     #endif
     
     #if os(macOS)
+    @Test
+    func canonicalizeIfPossible_partial() throws {
+        let uniqueName = "\(UUID().uuidString)"
+        
+        // `/Users` exists on disk, but the child path component does not.
+        // Non-partial canonicalization will fail and return path as-is.
+        var path1 = FilePath("/users/\(uniqueName)")
+        path1.canonicalizeIfPossible(partial: false)
+        #expect(path1.string == "/users/\(uniqueName)")
+        
+        // Partial canonicalization will canonicalize as many path components as possible to match what exists on disk.
+        var path2 = FilePath("/users/\(uniqueName)")
+        path2.canonicalizeIfPossible(partial: true)
+        #expect(path2.string == "/Users/\(uniqueName)")
+    }
+    #endif
+    
+    #if os(macOS)
     @available(macOS 12.0, *)
     @Test
     func canonicalized_notPartial() async throws {
@@ -205,7 +223,7 @@ import System
     
     #if os(macOS)
     @Test
-    func canonicalizingFileURL_partial() throws {
+    func canonicalized_partial() throws {
         let uniqueName = "\(UUID().uuidString)"
         
         // `/Users` exists on disk, but the child path component does not.
@@ -216,6 +234,20 @@ import System
         
         // Partial canonicalization will canonicalize as many path components as possible to match what exists on disk.
         #expect(try FilePath("/users/\(uniqueName)").canonicalized(partial: true).string == "/Users/\(uniqueName)")
+    }
+    #endif
+    
+    #if os(macOS)
+    @Test
+    func canonicalizedIfPossible_partial() throws {
+        let uniqueName = "\(UUID().uuidString)"
+        
+        // `/Users` exists on disk, but the child path component does not.
+        // Non-partial canonicalization will fail and return path as-is.
+        #expect(FilePath("/users/\(uniqueName)").canonicalizedIfPossible(partial: false).string == "/users/\(uniqueName)")
+        
+        // Partial canonicalization will canonicalize as many path components as possible to match what exists on disk.
+        #expect(FilePath("/users/\(uniqueName)").canonicalizedIfPossible(partial: true).string == "/Users/\(uniqueName)")
     }
     #endif
     

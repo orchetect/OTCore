@@ -404,6 +404,24 @@ import TestingExtensions
     
     #if os(macOS)
     @Test
+    func canonicalizeFileURLIfPossible_partial() throws {
+        let uniqueName = "\(UUID().uuidString)"
+        
+        // `/Users` exists on disk, but the child path component does not.
+        // Non-partial canonicalization will fail and return path as-is.
+        var path1 = URL(fileURLWithPath: "/users/\(uniqueName)")
+        path1.canonicalizeFileURLIfPossible(partial: false)
+        #expect(path1.path == "/users/\(uniqueName)")
+        
+        // Partial canonicalization will canonicalize as many path components as possible to match what exists on disk.
+        var path2 = URL(fileURLWithPath: "/users/\(uniqueName)")
+        path2.canonicalizeFileURLIfPossible(partial: true)
+        #expect(path2.path == "/Users/\(uniqueName)")
+    }
+    #endif
+    
+    #if os(macOS)
+    @Test
     func canonicalizingFileURL_notPartial() throws {
         // write temp file including a mix of uppercase and lowercase letters
         let file = URL(fileURLWithPath: NSTemporaryDirectory())
@@ -448,6 +466,20 @@ import TestingExtensions
         
         // Partial canonicalization will canonicalize as many path components as possible to match what exists on disk.
         #expect(try URL(fileURLWithPath: "/users/\(uniqueName)").canonicalizingFileURL(partial: true).path == "/Users/\(uniqueName)")
+    }
+    #endif
+    
+    #if os(macOS)
+    @Test
+    func canonicalizingFileURLIfPossible_partial() throws {
+        let uniqueName = "\(UUID().uuidString)"
+        
+        // `/Users` exists on disk, but the child path component does not.
+        // Non-partial canonicalization will fail and return path as-is.
+        #expect(URL(fileURLWithPath: "/users/\(uniqueName)").canonicalizingFileURLIfPossible(partial: false).path == "/users/\(uniqueName)")
+        
+        // Partial canonicalization will canonicalize as many path components as possible to match what exists on disk.
+        #expect(URL(fileURLWithPath: "/users/\(uniqueName)").canonicalizingFileURLIfPossible(partial: true).path == "/Users/\(uniqueName)")
     }
     #endif
     
