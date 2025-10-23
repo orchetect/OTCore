@@ -207,6 +207,12 @@ extension URL {
     /// > This method is only available on macOS as the API required is not available on other
     /// > platforms.
     ///
+    /// - Parameters:
+    ///   - partial: When `true`, partial path canonicalization occurs by iterating each
+    ///     path component one at a time. This allows for file paths that have a base path that exists
+    ///     on disk but with one or more trailing path components that do not.
+    ///     When `false`, the entire path is canonicalized in a single operation.
+    ///
     /// - Throws: Error if the URL is not a file URL, or there was a problem reading the file
     ///   system.
     @available(iOS, unavailable)
@@ -214,8 +220,8 @@ extension URL {
     @available(watchOS, unavailable)
     @available(visionOS, unavailable)
     @_disfavoredOverload
-    public mutating func canonicalizeFileURL() throws {
-        self = try canonicalizingFileURL()
+    public mutating func canonicalizeFileURL(partial: Bool = false) throws {
+        self = try canonicalizingFileURL(partial: partial)
     }
     
     /// **OTCore:**
@@ -228,6 +234,12 @@ extension URL {
     /// > This method is only available on macOS as the API required is not available on other
     /// > platforms.
     ///
+    /// - Parameters:
+    ///   - partial: When `true`, partial path canonicalization occurs by iterating each
+    ///     path component one at a time. This allows for file paths that have a base path that exists
+    ///     on disk but with one or more trailing path components that do not.
+    ///     When `false`, the entire path is canonicalized in a single operation.
+    ///
     /// - Throws: Error if the URL is not a file URL, or there was a problem reading the file
     ///   system.
     @available(iOS, unavailable)
@@ -235,16 +247,30 @@ extension URL {
     @available(watchOS, unavailable)
     @available(visionOS, unavailable)
     @_disfavoredOverload
-    public func canonicalizingFileURL() throws -> URL {
-        guard isFileURL else { throw CocoaError(.fileNoSuchFile) }
-        
+    public func canonicalizingFileURL(partial: Bool = false) throws -> URL {
         // see https://stackoverflow.com/a/66968423/2805570 for in-depth explainer
         
-        guard let newPath = try resourceValues(forKeys: [.canonicalPathKey]).canonicalPath else {
-            throw CocoaError(.fileReadUnknown)
+        guard isFileURL else { throw CocoaError(.fileNoSuchFile) }
+        
+        if partial {
+            // iterate through each path component, canonicalizing each time
+            var newURL = URL(fileURLWithPath: "")
+            for component in pathComponents {
+                newURL.appendPathComponent(component)
+                try? newURL.canonicalizeFileURL(partial: false)
+            }
+            return newURL
+        } else {
+            guard fileExists else {
+                return self
+            }
+            
+            guard let newPath = try resourceValues(forKeys: [.canonicalPathKey]).canonicalPath else {
+                throw CocoaError(.fileReadUnknown)
+            }
+            let newURL = URL(fileURLWithPath: newPath)
+            return newURL
         }
-        let newURL = URL(fileURLWithPath: newPath)
-        return newURL
     }
     
     /// **OTCore:**
@@ -265,9 +291,9 @@ extension URL {
     @available(visionOS, unavailable)
     @_disfavoredOverload
     public func isEqualFileNode(as otherFileURL: URL) throws -> Bool {
-        guard isFileURL, otherFileURL.isFileURL else { throw CocoaError(.fileNoSuchFile) }
-        
         // see https://stackoverflow.com/a/66968423/2805570 for in-depth explainer
+        
+        guard isFileURL, otherFileURL.isFileURL else { throw CocoaError(.fileNoSuchFile) }
         
         guard let lhs = try resourceValues(forKeys: [.fileResourceIdentifierKey])
             .fileResourceIdentifier,
