@@ -4,12 +4,15 @@
 //  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
+#if os(macOS)
+
 import Foundation
 import Testing
 import System
 
 /// Some basic tests for System framework's `FilePath` type and its interop with `URL`.
 @Suite struct FilePath_Tests {
+    @available(macOS 11.0, iOS 14.0, watchOS 7.0, tvOS 14.0, *)
     @Test
     func filePath_Equatable_Tests() async throws {
         #expect(FilePath("/") == FilePath("/"))
@@ -24,6 +27,7 @@ import System
         #expect(FilePath("/Users/user/") != FilePath("/Users/User/"))
     }
     
+    @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
     @Test
     func filePathAndURL_Equatable_Tests() async throws {
         #expect(URL(filePath: FilePath("/")) == URL(filePath: "/"))
@@ -38,6 +42,7 @@ import System
         #expect(FilePath("/Users/user") == FilePath(URL(filePath: "/Users/user/")))
     }
     
+    @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
     @Test
     func url_Equatable_Tests() async throws {
         // case-sensitive
@@ -54,3 +59,5 @@ import System
         #expect(URL(filePath: "/Users/user", directoryHint: .isDirectory) == URL(filePath: "/Users/user/"))
     }
 }
+
+#endif
