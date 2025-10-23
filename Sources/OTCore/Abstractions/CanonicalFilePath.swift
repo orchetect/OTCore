@@ -152,16 +152,50 @@ extension CanonicalFilePath {
 @available(visionOS, unavailable)
 extension CanonicalFilePath: Equatable {
     public static func == (lhs: Self, rhs: Self) -> Bool {
+        switch lhs.isEqual(to: rhs) {
+        case .equal, .equalAfterRecanonicalization(partial: _): return true
+        case .notEqual: return false
+        }
+    }
+    
+    public enum ComparisonResult: Equatable, Hashable, Sendable {
+        /// Both instances evaluated as equal as-is.
+        case equal
+        
+        /// Both instances did not evaluate as equal as-is, but evaluated as equal after re-canonicalizing one or both instances.
+        ///
+        /// - Parameters:
+        ///   - partial: If `true`, partial recanonicalization was required to achieve an equal evaluation.
+        case equalAfterRecanonicalization(partial: Bool)
+        
+        /// The instances are not equal, and remain not equal even after re-canonicalization.
+        case notEqual
+    }
+    
+    /// Returns a comparison result after evaluating both instances, re-canonicalizing if initial comparison evaluates as not equal.
+    public func isEqual(to other: Self) -> ComparisonResult {
         // if both were successfully canonicalized, compare directly
-        if lhs.isCanonical, rhs.isCanonical {
-            return lhs.wrapped == rhs.wrapped
+        if self.isCanonical, other.isCanonical {
+            return (wrapped == other.wrapped) ? .equal : .notEqual
         }
         
-        // otherwise attempt to canonicalize any that were not successfully canonicalized
-        let refreshedLHS = lhs.isCanonical ? lhs : CanonicalFilePath(canonicalizingIfPossible: lhs.wrapped)
-        let refreshedRHS = rhs.isCanonical ? rhs : CanonicalFilePath(canonicalizingIfPossible: rhs.wrapped)
+        // otherwise attempt to canonicalize (non-partial) any that were not successfully canonicalized
+        let refreshedSelf = self.isCanonical ? self : CanonicalFilePath(canonicalizingIfPossible: self.wrapped, partial: false)
+        let refreshedOther = other.isCanonical ? other : CanonicalFilePath(canonicalizingIfPossible: other.wrapped, partial: false)
+        if refreshedSelf.wrapped == refreshedOther.wrapped {
+            let isChanged = (self.isCanonical != refreshedSelf.isCanonical) || (other.isCanonical != refreshedOther.isCanonical)
+            return isChanged ? .equalAfterRecanonicalization(partial: false) : .equal
+        }
         
-        return refreshedLHS.wrapped == refreshedRHS.wrapped
+        // otherwise attempt to canonicalize (partial) any that were not successfully canonicalized
+        let refreshedSelf2 = self.isCanonical ? self : CanonicalFilePath(canonicalizingIfPossible: self.wrapped, partial: true)
+        let refreshedOther2 = other.isCanonical ? other : CanonicalFilePath(canonicalizingIfPossible: other.wrapped, partial: true)
+        if refreshedSelf2.wrapped == refreshedOther2.wrapped {
+            let isChanged = (self.isCanonical != refreshedSelf2.isCanonical) || (other.isCanonical != refreshedOther2.isCanonical)
+            return isChanged ? .equalAfterRecanonicalization(partial: true) : .equal
+        }
+        
+        return .notEqual
     }
 }
 
