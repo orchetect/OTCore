@@ -14,6 +14,7 @@ import System
 @Suite struct Abstractions_CanonicalFilePath_Tests {
     // MARK: - Inits: String
     
+    @available(macOS 12.0, *)
     @Test
     func init_canonicalizing_string_knownPathA() async throws {
         let cpath = try CanonicalFilePath(canonicalizing: "/users")
@@ -21,6 +22,7 @@ import System
         #expect(cpath.string == "/Users")
     }
     
+    @available(macOS 12.0, *)
     @Test
     func init_canonicalizing_string_knownPathB() async throws {
         let tempDir = URL.temporaryDirectory.path
@@ -32,12 +34,14 @@ import System
         #expect(cpath.string.starts(with: "/private/var/"))
     }
     
+    @available(macOS 12.0, *)
     @Test
     func init_canonicalizing_string_unknownPath() async throws {
         let pathString = "/This/path/Does/not/Exist/\(UUID().uuidString)"
         #expect(throws: (any Error).self) { try CanonicalFilePath(canonicalizing: pathString) }
     }
     
+    @available(macOS 12.0, *)
     @Test
     func init_canonicalizingIfPossible_string_knownPath() async throws {
         let cpath = CanonicalFilePath(canonicalizingIfPossible: "/users")
@@ -45,6 +49,7 @@ import System
         #expect(cpath.string == "/Users")
     }
     
+    @available(macOS 12.0, *)
     @Test
     func init_canonicalizingIfPossible_string_unknownPath() async throws {
         let pathString = "/This/path/Does/not/Exist/\(UUID().uuidString)"
@@ -55,6 +60,7 @@ import System
     
     // MARK: - Inits: URL
     
+    @available(macOS 12.0, *)
     @Test
     func init_canonicalizing_url_knownPathA() async throws {
         let cpath = try CanonicalFilePath(canonicalizing: URL(fileURLWithPath: "/users"))
@@ -62,6 +68,7 @@ import System
         #expect(cpath.string == "/Users")
     }
     
+    @available(macOS 12.0, *)
     @Test
     func init_canonicalizing_url_knownPathB() async throws {
         let tempDir = URL.temporaryDirectory
@@ -73,12 +80,14 @@ import System
         #expect(cpath.string.starts(with: "/private/var"))
     }
     
+    @available(macOS 12.0, *)
     @Test
     func init_canonicalizing_url_unknownPath() async throws {
         let pathURL = URL(fileURLWithPath: "/This/path/Does/not/Exist/\(UUID().uuidString)")
         #expect(throws: (any Error).self) { try CanonicalFilePath(canonicalizing: pathURL) }
     }
     
+    @available(macOS 12.0, *)
     @Test
     func init_canonicalizingIfPossible_url_knownPath() async throws {
         let cpath = CanonicalFilePath(canonicalizingIfPossible: URL(fileURLWithPath: "/users"))
@@ -86,6 +95,7 @@ import System
         #expect(cpath.string == "/Users")
     }
     
+    @available(macOS 12.0, *)
     @Test
     func init_canonicalizingIfPossible_url_unknownPath() async throws {
         let pathString = "/This/path/Does/not/Exist/\(UUID().uuidString)"
@@ -97,6 +107,7 @@ import System
     
     // MARK: - Inits: FilePath
     
+    @available(macOS 12.0, *)
     @Test
     func init_canonicalizing_filePath_knownPathA() async throws {
         let cpath = try CanonicalFilePath(canonicalizing: FilePath("/users"))
@@ -104,6 +115,7 @@ import System
         #expect(cpath.string == "/Users")
     }
     
+    @available(macOS 12.0, *)
     @Test
     func init_canonicalizing_filePath_knownPathB() async throws {
         let tempDir = FilePath.temporaryDirectory
@@ -115,12 +127,14 @@ import System
         #expect(cpath.string.starts(with: "/private/var"))
     }
     
+    @available(macOS 12.0, *)
     @Test
     func init_canonicalizing_filePath_unknownPath() async throws {
         let path = FilePath("/This/path/Does/not/Exist/\(UUID().uuidString)")
         #expect(throws: (any Error).self) { try CanonicalFilePath(canonicalizing: path) }
     }
     
+    @available(macOS 12.0, *)
     @Test
     func init_canonicalizingIfPossible_filePath_knownPath() async throws {
         let cpath = CanonicalFilePath(canonicalizingIfPossible: FilePath("/users"))
@@ -128,6 +142,7 @@ import System
         #expect(cpath.string == "/Users")
     }
     
+    @available(macOS 12.0, *)
     @Test
     func init_canonicalizingIfPossible_filePath_unknownPath() async throws {
         let pathString = "/This/path/Does/not/Exist/\(UUID().uuidString)"
@@ -139,6 +154,7 @@ import System
     
     // MARK: - Equatable
     
+    @available(macOS 12.0, *)
     @Test
     func equatable() async throws {
         #expect(
@@ -160,6 +176,7 @@ import System
         )
     }
     
+    @available(macOS 12.0, *)
     @Test
     func isEqual() async throws {
         #expect(
@@ -192,6 +209,7 @@ import System
     
     // MARK: - Codable
     
+    @available(macOS 12.0, *)
     @Test
     func filePath_encode_decode() async throws {
         let encoder = JSONEncoder()
@@ -205,6 +223,7 @@ import System
         #expect(decodedCPath.wrapped == FilePath("/Users")) // auto-canonicalizes upon decode
     }
     
+    @available(macOS 12.0, *)
     @Test
     func canonicalFilePath_encode_decode() async throws {
         let encoder = JSONEncoder()
@@ -223,6 +242,59 @@ import System
     // since methods under this mark are just proxy methods to access the wrapper, we won't bother testing all of them
     // since all of them are already tested in the corresponding `FilePath` tests.
     
+    @available(macOS 12.0, *)
+    @Test
+    func mutatingLastPathComponent() async throws {
+        #expect(
+            CanonicalFilePath(canonicalizingIfPossible: "/users/shared/some file.txt", partial: false)
+                .mutatingLastPathComponent { "a" + $0.string + ".pdf" } // re-canonicalizes if necessary
+                .string
+            == "/Users/Shared/asome file.txt.pdf"
+        )
+        
+        #expect(
+            CanonicalFilePath(canonicalizingIfPossible: "/users/shared/some file.txt", partial: false)
+                .mutatingLastPathComponent { _ in "new file name" } // re-canonicalizes if necessary
+                .string
+            == "/Users/Shared/new file name"
+        )
+    }
+    
+    @available(macOS 12.0, *)
+    @Test
+    func mutatingLastPathComponentExcludingExtension() async throws {
+        #expect(
+            CanonicalFilePath(canonicalizingIfPossible: "/users/shared/some file.txt", partial: false)
+                .mutatingLastPathComponentExcludingExtension { "a" + $0 + "b" } // re-canonicalizes if necessary
+                .string
+            == "/Users/Shared/asome fileb.txt"
+        )
+        
+        #expect(
+            CanonicalFilePath(canonicalizingIfPossible: "/users/shared/some file.txt", partial: false)
+                .mutatingLastPathComponentExcludingExtension { _ in "new file name" } // re-canonicalizes if necessary
+                .string
+            == "/Users/Shared/new file name.txt"
+        )
+    }
+    
+    @available(macOS 12.0, *)
+    @Test
+    func appendingToLastPathComponentBeforeExtension() async throws {
+        #expect(
+            CanonicalFilePath(canonicalizingIfPossible: "/users/shared/some file.txt", partial: false)
+                .appendingToLastPathComponentBeforeExtension("-2") // re-canonicalizes if necessary
+                .string
+            == "/Users/Shared/some file-2.txt"
+        )
+    }
+    
+    // MARK: - FilePath OTCore-Defined Forwarded Methods & Properties
+    
+    // since methods under this mark are just proxy methods to access the wrapper, we won't bother testing all of them
+    // since all of them are already tested in the corresponding `FilePath` tests.
+    
+    @available(macOS 12.0, *)
     @Test
     func append_components() async throws {
         var path = CanonicalFilePath(canonicalizingIfPossible: "/users")
@@ -239,6 +311,7 @@ import System
         #expect(path.string == "/Users/Shared/\(uniqueName)")
     }
     
+    @available(macOS 12.0, *)
     @Test
     func appending_components() async throws {
         var path = CanonicalFilePath(canonicalizingIfPossible: "/users")
@@ -255,6 +328,7 @@ import System
         #expect(path.string == "/Users/Shared/\(uniqueName)")
     }
     
+    @available(macOS 12.0, *)
     @Test
     func append_string() async throws {
         var path = CanonicalFilePath(canonicalizingIfPossible: "/users")
@@ -271,6 +345,7 @@ import System
         #expect(path.string == "/Users/Shared/\(uniqueName)")
     }
     
+    @available(macOS 12.0, *)
     @Test
     func appending_string() async throws {
         var path = CanonicalFilePath(canonicalizingIfPossible: "/users")
@@ -287,6 +362,7 @@ import System
         #expect(path.string == "/Users/Shared/\(uniqueName)")
     }
     
+    @available(macOS 12.0, *)
     @Test
     func append_component() async throws {
         var path = CanonicalFilePath(canonicalizingIfPossible: "/users")
@@ -303,6 +379,7 @@ import System
         #expect(path.string == "/Users/Shared/\(uniqueName)")
     }
     
+    @available(macOS 12.0, *)
     @Test
     func appending_component() async throws {
         var path = CanonicalFilePath(canonicalizingIfPossible: "/users")
@@ -319,6 +396,7 @@ import System
         #expect(path.string == "/Users/Shared/\(uniqueName)")
     }
     
+    @available(macOS 12.0, *)
     @Test
     func removingLastComponent() async throws {
         let uniqueName = "\(UUID().uuidString)"
@@ -340,6 +418,7 @@ import System
         #expect(path.string == "/") // no change; root is preserved
     }
     
+    @available(macOS 12.0, *)
     @Test
     func removeLastComponent() async throws {
         let uniqueName = "\(UUID().uuidString)"
@@ -361,12 +440,8 @@ import System
         #expect(path.string == "/") // no change; root is preserved
     }
     
-    // MARK: - FilePath OTCore-Defined Forwarded Methods & Properties
-    
-    // since methods under this mark are just proxy methods to access the wrapper, we won't bother testing all of them
-    // since all of them are already tested in the corresponding `FilePath` tests.
-    
     /// Spot-check one of the static properties.
+    @available(macOS 13.0, *)
     @Test
     func temporaryDirectory() async throws {
         let tempPath = try URL.temporaryDirectory.canonicalizingFileURL().path
@@ -375,6 +450,7 @@ import System
     
     // MARK: - FilePath Extension Methods
     
+    @available(macOS 12.0, *)
     @Test
     func filePath_asCanonicalFilePath() async throws {
         #expect(
@@ -390,6 +466,7 @@ import System
         )
     }
     
+    @available(macOS 12.0, *)
     @Test
     func filePath_asCanonicalFilePathIfPossible() async throws {
         #expect(
@@ -407,6 +484,7 @@ import System
     
     // MARK: - URL Extension Methods
     
+    @available(macOS 12.0, *)
     @Test
     func url_asCanonicalFilePath() async throws {
         #expect(
@@ -422,6 +500,7 @@ import System
         )
     }
     
+    @available(macOS 12.0, *)
     @Test
     func url_asCanonicalFilePathIfPossible() async throws {
         #expect(
