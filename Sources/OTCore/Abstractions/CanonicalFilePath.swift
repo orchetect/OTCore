@@ -386,21 +386,7 @@ extension CanonicalFilePath {
         return CanonicalFilePath(canonicalizingIfPossible: newPath, partial: true)
     }
     
-    /// Creates a new path with everything up to but not including `lastComponent`.
-    public func removingLastComponent() -> CanonicalFilePath {
-        let newPath = wrapped.removingLastComponent()
-        
-        if isCanonical {
-            // since we are only removing the last path component and not adding or mutating,
-            // we can skip re-canonicalizing the new path
-            return CanonicalFilePath(verbatim: newPath, isCanonical: isCanonical)
-        } else {
-            // it's possible that by re-canonicalizing it may successfully become canonical
-            return CanonicalFilePath(canonicalizingIfPossible: newPath, partial: true)
-        }
-    }
-    
-    /// In-place mutating variant of `removingLastComponent`.
+    /// In-place mutating variant of ``removingLastComponent()``.
     @discardableResult
     public mutating func removeLastComponent() -> Bool {
         var newPath = wrapped
@@ -415,6 +401,20 @@ extension CanonicalFilePath {
             self = CanonicalFilePath(canonicalizingIfPossible: newPath, partial: true)
         }
         return result
+    }
+    
+    /// Creates a new path with everything up to but not including `lastComponent`.
+    public func removingLastComponent() -> CanonicalFilePath {
+        let newPath = wrapped.removingLastComponent()
+        
+        if isCanonical {
+            // since we are only removing the last path component and not adding or mutating,
+            // we can skip re-canonicalizing the new path
+            return CanonicalFilePath(verbatim: newPath, isCanonical: isCanonical)
+        } else {
+            // it's possible that by re-canonicalizing it may successfully become canonical
+            return CanonicalFilePath(canonicalizingIfPossible: newPath, partial: true)
+        }
     }
 }
 
