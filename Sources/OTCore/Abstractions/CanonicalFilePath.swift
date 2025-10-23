@@ -350,6 +350,42 @@ extension CanonicalFilePath {
         wrapped.starts(with: other.wrapped)
     }
     
+    /// Append the contents of `other`, ignoring any spurious leading separators.
+    public mutating func append(_ other: String) {
+        let newPath = wrapped.appending(other)
+        self = CanonicalFilePath(canonicalizingIfPossible: newPath, partial: true)
+    }
+    
+    /// Non-mutating version of ``append(_:)-(String))``.
+    public func appending(_ other: String) -> CanonicalFilePath {
+        let newPath = wrapped.appending(other)
+        return CanonicalFilePath(canonicalizingIfPossible: newPath, partial: true)
+    }
+    
+    /// Append a component on to the end of this path.
+    public mutating func append(_ component: FilePath.Component) {
+        let newPath = wrapped.appending(component)
+        self = CanonicalFilePath(canonicalizingIfPossible: newPath, partial: true)
+    }
+    
+    /// Non-mutating version of ``append(_:)-(FilePath.Component)``.
+    public func appending(_ component: FilePath.Component) -> CanonicalFilePath {
+        let newPath = wrapped.appending(component)
+        return CanonicalFilePath(canonicalizingIfPossible: newPath, partial: true)
+    }
+    
+    /// Append components on to the end of this path.
+    public mutating func append<C>(_ components: C) where C : Collection, C.Element == FilePath.Component {
+        let newPath = wrapped.appending(components)
+        self = CanonicalFilePath(canonicalizingIfPossible: newPath, partial: true)
+    }
+    
+    /// Non-mutating version of ``append(_:)-(C)``.
+    public func appending<C>(_ components: C) -> CanonicalFilePath where C : Collection, C.Element == FilePath.Component {
+        let newPath = wrapped.appending(components)
+        return CanonicalFilePath(canonicalizingIfPossible: newPath, partial: true)
+    }
+    
     /// Creates a new path with everything up to but not including `lastComponent`.
     public func removingLastComponent() -> CanonicalFilePath {
         let newPath = wrapped.removingLastComponent()
