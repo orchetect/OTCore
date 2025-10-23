@@ -353,7 +353,7 @@ import TestingExtensions
     
     #if os(macOS)
     @Test
-    func canonicalizeFileURL() throws {
+    func canonicalizeFileURL_notPartial() throws {
         // write temp file including a mix of uppercase and lowercase letters
         let file = FileManager.default.temporaryDirectory
             .appendingPathComponent("\(UUID().uuidString)-TeSt123AbC.txt")
@@ -363,10 +363,10 @@ import TestingExtensions
         let lowercased = try #require(URL(string: file.absoluteString.lowercased()))
         #expect(file.absoluteString != lowercased.absoluteString)
         var reformed = lowercased
-        try reformed.canonicalizeFileURL()
+        try reformed.canonicalizeFileURL(partial: false)
         
-        // adjust original URL for comparison. path canonicalization adds `/private` to temporary
-        // directory path.
+        // adjust original URL for comparison.
+        // path canonicalization adds `/private` to start of temporary directory path.
         let prefixString = "file:///var/"
         let originalFileString = file.absoluteString
         let originalFileStringRange = originalFileString.startIndex
@@ -387,7 +387,24 @@ import TestingExtensions
     
     #if os(macOS)
     @Test
-    func canonicalizingFileURL() throws {
+    func canonicalizeFileURL_partial() throws {
+        let uniqueName = "\(UUID().uuidString)"
+        
+        // `/Users` exists on disk, but the child path component does not.
+        // Non-partial canonicalization will fail.
+        var url1 = URL(fileURLWithPath: "/users/\(uniqueName)")
+        #expect(throws: (any Error).self) { try url1.canonicalizeFileURL(partial: false) }
+        
+        // Partial canonicalization will canonicalize as many path components as possible to match what exists on disk.
+        var url2 = URL(fileURLWithPath: "/users/\(uniqueName)")
+        try url2.canonicalizeFileURL(partial: true)
+        #expect(url2.path == "/Users/\(uniqueName)")
+    }
+    #endif
+    
+    #if os(macOS)
+    @Test
+    func canonicalizingFileURL_notPartial() throws {
         // write temp file including a mix of uppercase and lowercase letters
         let file = URL(fileURLWithPath: NSTemporaryDirectory())
             .appendingPathComponent("\(UUID().uuidString)-TeSt123AbC.txt")
@@ -396,10 +413,10 @@ import TestingExtensions
         
         let lowercased = try #require(URL(string: file.absoluteString.lowercased()))
         #expect(file.absoluteString != lowercased.absoluteString)
-        let reformed = try lowercased.canonicalizingFileURL()
+        let reformed = try lowercased.canonicalizingFileURL(partial: false)
         
-        // adjust original URL for comparison. path canonicalization adds `/private` to temporary
-        // directory path.
+        // adjust original URL for comparison.
+        // path canonicalization adds `/private` to start of temporary directory path.
         let prefixString = "file:///var/"
         let originalFileString = file.absoluteString
         let originalFileStringRange = originalFileString.startIndex
@@ -415,6 +432,22 @@ import TestingExtensions
         
         // cleanup
         try? FileManager.default.removeItem(at: file)
+    }
+    #endif
+    
+    #if os(macOS)
+    @Test
+    func canonicalizingFileURL_partial() throws {
+        let uniqueName = "\(UUID().uuidString)"
+        
+        // `/Users` exists on disk, but the child path component does not.
+        // Non-partial canonicalization will fail.
+        #expect(throws: (any Error).self) {
+            _ = try URL(fileURLWithPath: "/users/\(uniqueName)").canonicalizingFileURL(partial: false)
+        }
+        
+        // Partial canonicalization will canonicalize as many path components as possible to match what exists on disk.
+        #expect(try URL(fileURLWithPath: "/users/\(uniqueName)").canonicalizingFileURL(partial: true).path == "/Users/\(uniqueName)")
     }
     #endif
     

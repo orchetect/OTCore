@@ -118,7 +118,7 @@ import System
     #if os(macOS)
     @available(macOS 12.0, *)
     @Test
-    func canonicalize() async throws {
+    func canonicalize_notPartial() async throws {
         // write temp file including a mix of uppercase and lowercase letters
         let fileURL = FileManager.default.temporaryDirectory
             .appendingPathComponent("\(UUID().uuidString)-TeSt123AbC.txt")
@@ -129,7 +129,7 @@ import System
         let lowercased = FilePath(originalcase.string.lowercased())
         #expect(originalcase != lowercased) // sanity check
         var reformed = lowercased
-        try reformed.canonicalize()
+        try reformed.canonicalize(partial: false)
         
         // adjust original path for comparison. path canonicalization adds `/private` to temporary
         // directory path.
@@ -152,9 +152,26 @@ import System
     #endif
     
     #if os(macOS)
+    @Test
+    func canonicalize_partial() throws {
+        let uniqueName = "\(UUID().uuidString)"
+        
+        // `/Users` exists on disk, but the child path component does not.
+        // Non-partial canonicalization will fail.
+        var path1 = FilePath("/users/\(uniqueName)")
+        #expect(throws: (any Error).self) { try path1.canonicalize(partial: false) }
+        
+        // Partial canonicalization will canonicalize as many path components as possible to match what exists on disk.
+        var path2 = FilePath("/users/\(uniqueName)")
+        try path2.canonicalize(partial: true)
+        #expect(path2.string == "/Users/\(uniqueName)")
+    }
+    #endif
+    
+    #if os(macOS)
     @available(macOS 12.0, *)
     @Test
-    func canonicalized() async throws {
+    func canonicalized_notPartial() async throws {
         // write temp file including a mix of uppercase and lowercase letters
         let fileURL = FileManager.default.temporaryDirectory
             .appendingPathComponent("\(UUID().uuidString)-TeSt123AbC.txt")
@@ -164,7 +181,7 @@ import System
         let originalcase = try #require(FilePath(fileURL))
         let lowercased = FilePath(originalcase.string.lowercased())
         #expect(originalcase != lowercased) // sanity check
-        let reformed = try lowercased.canonicalized()
+        let reformed = try lowercased.canonicalized(partial: false)
         
         // adjust original path for comparison. path canonicalization adds `/private` to temporary
         // directory path.
@@ -183,6 +200,22 @@ import System
         
         // cleanup
         try? FileManager.default.removeItem(at: fileURL)
+    }
+    #endif
+    
+    #if os(macOS)
+    @Test
+    func canonicalizingFileURL_partial() throws {
+        let uniqueName = "\(UUID().uuidString)"
+        
+        // `/Users` exists on disk, but the child path component does not.
+        // Non-partial canonicalization will fail.
+        #expect(throws: (any Error).self) {
+            _ = try FilePath("/users/\(uniqueName)").canonicalized(partial: false)
+        }
+        
+        // Partial canonicalization will canonicalize as many path components as possible to match what exists on disk.
+        #expect(try FilePath("/users/\(uniqueName)").canonicalized(partial: true).string == "/Users/\(uniqueName)")
     }
     #endif
     
