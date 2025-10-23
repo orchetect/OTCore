@@ -224,6 +224,102 @@ import System
     // since all of them are already tested in the corresponding `FilePath` tests.
     
     @Test
+    func append_components() async throws {
+        var path = CanonicalFilePath(canonicalizingIfPossible: "/users")
+        #expect(path.isCanonical)
+        #expect(path.string == "/Users")
+        
+        path.append([FilePath.Component("shared")])
+        #expect(path.isCanonical)
+        #expect(path.string == "/Users/Shared")
+        
+        let uniqueName = "\(UUID().uuidString)"
+        path.append([try #require(FilePath.Component(uniqueName))])
+        #expect(path.isCanonical)
+        #expect(path.string == "/Users/Shared/\(uniqueName)")
+    }
+    
+    @Test
+    func appending_components() async throws {
+        var path = CanonicalFilePath(canonicalizingIfPossible: "/users")
+        #expect(path.isCanonical)
+        #expect(path.string == "/Users")
+        
+        path = path.appending([FilePath.Component("shared")])
+        #expect(path.isCanonical)
+        #expect(path.string == "/Users/Shared")
+        
+        let uniqueName = "\(UUID().uuidString)"
+        path = path.appending([try #require(FilePath.Component(uniqueName))])
+        #expect(path.isCanonical)
+        #expect(path.string == "/Users/Shared/\(uniqueName)")
+    }
+    
+    @Test
+    func append_string() async throws {
+        var path = CanonicalFilePath(canonicalizingIfPossible: "/users")
+        #expect(path.isCanonical)
+        #expect(path.string == "/Users")
+        
+        path.append("shared")
+        #expect(path.isCanonical)
+        #expect(path.string == "/Users/Shared")
+        
+        let uniqueName = "\(UUID().uuidString)"
+        path.append(uniqueName)
+        #expect(path.isCanonical)
+        #expect(path.string == "/Users/Shared/\(uniqueName)")
+    }
+    
+    @Test
+    func appending_string() async throws {
+        var path = CanonicalFilePath(canonicalizingIfPossible: "/users")
+        #expect(path.isCanonical)
+        #expect(path.string == "/Users")
+        
+        path = path.appending("shared")
+        #expect(path.isCanonical)
+        #expect(path.string == "/Users/Shared")
+        
+        let uniqueName = "\(UUID().uuidString)"
+        path = path.appending(uniqueName)
+        #expect(path.isCanonical)
+        #expect(path.string == "/Users/Shared/\(uniqueName)")
+    }
+    
+    @Test
+    func append_component() async throws {
+        var path = CanonicalFilePath(canonicalizingIfPossible: "/users")
+        #expect(path.isCanonical)
+        #expect(path.string == "/Users")
+        
+        path.append(FilePath.Component("shared"))
+        #expect(path.isCanonical)
+        #expect(path.string == "/Users/Shared")
+        
+        let uniqueName = "\(UUID().uuidString)"
+        path.append(try #require(FilePath.Component(uniqueName)))
+        #expect(path.isCanonical)
+        #expect(path.string == "/Users/Shared/\(uniqueName)")
+    }
+    
+    @Test
+    func appending_component() async throws {
+        var path = CanonicalFilePath(canonicalizingIfPossible: "/users")
+        #expect(path.isCanonical)
+        #expect(path.string == "/Users")
+        
+        path = path.appending(FilePath.Component("shared"))
+        #expect(path.isCanonical)
+        #expect(path.string == "/Users/Shared")
+        
+        let uniqueName = "\(UUID().uuidString)"
+        path = path.appending(try #require(FilePath.Component(uniqueName)))
+        #expect(path.isCanonical)
+        #expect(path.string == "/Users/Shared/\(uniqueName)")
+    }
+    
+    @Test
     func removingLastComponent() async throws {
         let uniqueName = "\(UUID().uuidString)"
         
