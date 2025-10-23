@@ -730,6 +730,19 @@ extension URL {
     }
     
     /// **OTCore:**
+    /// Returns the file URL canonicalized as a new ``CanonicalFilePath`` instance if possible.
+    /// If canonicalization fails, the file path will be used as-is (unmodified) and the ``isCanonical`` property will be set to `false`.
+    ///
+    /// - Parameters:
+    ///   - partial: When `true`, partial path canonicalization occurs by iterating each
+    ///     path component one at a time. This allows for file paths that have a base path that exists
+    ///     on disk but with one or more trailing path components that do not.
+    ///     When `false`, the entire path is canonicalized in a single operation.
+    public func asCanonicalFilePathIfPossible(partial: Bool = false) -> CanonicalFilePath {
+        CanonicalFilePath(canonicalizingIfPossible: self, partial: partial)
+    }
+    
+    /// **OTCore:**
     /// Internal. Returns the file URL as a new `CanonicalFilePath` instance.
     /// Implements a workaround to prevent throwing or returning an Optional in scenarios where you
     /// can guarantee the URL is a file URL.
