@@ -254,7 +254,7 @@ extension URL {
         
         if partial {
             // iterate through each path component, canonicalizing each time
-            var newURL = URL(fileURLWithPath: "")
+            var newURL = URL(fileURLWithPath: "/").deletingLastPathComponent()
             for component in pathComponents {
                 newURL.appendPathComponent(component)
                 try? newURL.canonicalizeFileURL(partial: false)
