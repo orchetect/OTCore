@@ -264,7 +264,7 @@ extension CanonicalFilePath: CustomDebugStringConvertible {
 
 // MARK: - FilePath Native Forwarded Methods & Properties
 
-// Note that these methods are INTENTIONALLY READ-ONLY even though `FilePath` supports setters for some of them.
+// Note that some of these methods are INTENTIONALLY READ-ONLY even though `FilePath` supports setters for some of them.
 // See the `CanonicalFilePath` inline documentation for the reason for offering these forwarding methods as read-only.
 
 @available(macOS 12.0, *)
@@ -348,6 +348,37 @@ extension CanonicalFilePath {
     /// Returns whether other is a prefix of `self`, only considering whole path components.
     public func starts(with other: CanonicalFilePath) -> Bool {
         wrapped.starts(with: other.wrapped)
+    }
+    
+    /// Creates a new path with everything up to but not including `lastComponent`.
+    public func removingLastComponent() -> CanonicalFilePath {
+        let newPath = wrapped.removingLastComponent()
+        
+        if isCanonical {
+            // since we are only removing the last path component and not adding or mutating,
+            // we can skip re-canonicalizing the new path
+            return CanonicalFilePath(verbatim: newPath, isCanonical: isCanonical)
+        } else {
+            // it's possible that by re-canonicalizing it may successfully become canonical
+            return CanonicalFilePath(canonicalizingIfPossible: newPath, partial: true)
+        }
+    }
+    
+    /// In-place mutating variant of `removingLastComponent`.
+    @discardableResult
+    public mutating func removeLastComponent() -> Bool {
+        var newPath = wrapped
+        let result = newPath.removeLastComponent()
+        
+        if isCanonical {
+            // since we are only removing the last path component and not adding or mutating,
+            // we can skip re-canonicalizing the new path
+            self = CanonicalFilePath(verbatim: newPath, isCanonical: isCanonical)
+        } else {
+            // it's possible that by re-canonicalizing it may successfully become canonical
+            self = CanonicalFilePath(canonicalizingIfPossible: newPath, partial: true)
+        }
+        return result
     }
 }
 
