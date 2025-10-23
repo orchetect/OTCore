@@ -223,6 +223,53 @@ import System
     // since methods under this mark are just proxy methods to access the wrapper, we won't bother testing all of them
     // since all of them are already tested in the corresponding `FilePath` tests.
     
+    @Test
+    func removingLastComponent() async throws {
+        let uniqueName = "\(UUID().uuidString)"
+        
+        var path = CanonicalFilePath(canonicalizingIfPossible: "/users/\(uniqueName)", partial: false)
+        #expect(!path.isCanonical)
+        #expect(path.string == "/users/\(uniqueName)")
+        
+        path = path.removingLastComponent() // re-canonicalizes if necessary
+        #expect(path.isCanonical)
+        #expect(path.string == "/Users")
+        
+        path = path.removingLastComponent()
+        #expect(path.isCanonical)
+        #expect(path.string == "/")
+        
+        path = path.removingLastComponent()
+        #expect(path.isCanonical)
+        #expect(path.string == "/") // no change; root is preserved
+    }
+    
+    @Test
+    func removeLastComponent() async throws {
+        let uniqueName = "\(UUID().uuidString)"
+        
+        var path = CanonicalFilePath(canonicalizingIfPossible: "/users/\(uniqueName)", partial: false)
+        #expect(!path.isCanonical)
+        #expect(path.string == "/users/\(uniqueName)")
+        
+        #expect(path.removeLastComponent() == true) // re-canonicalizes if necessary
+        #expect(path.isCanonical)
+        #expect(path.string == "/Users")
+        
+        #expect(path.removeLastComponent() == true)
+        #expect(path.isCanonical)
+        #expect(path.string == "/")
+        
+        #expect(path.removeLastComponent() == false)
+        #expect(path.isCanonical)
+        #expect(path.string == "/") // no change; root is preserved
+    }
+    
+    // MARK: - FilePath OTCore-Defined Forwarded Methods & Properties
+    
+    // since methods under this mark are just proxy methods to access the wrapper, we won't bother testing all of them
+    // since all of them are already tested in the corresponding `FilePath` tests.
+    
     /// Spot-check one of the static properties.
     @Test
     func temporaryDirectory() async throws {
