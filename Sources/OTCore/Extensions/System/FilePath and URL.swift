@@ -70,33 +70,37 @@ extension URL {
 extension FilePath {
     /// **OTCore:**
     /// Return a new path by mutating the file name (last path component).
+    ///
+    /// If path components are empty, this has no effect.
     @available(macOS 12.0, iOS 15.0, watchOS 8.0, tvOS 15.0, *)
     @_disfavoredOverload
     public func mutatingLastPathComponent(
         _ transform: (_ component: FilePath.Component) -> String
     ) -> Self {
         guard let oldFileName = lastComponent else { return self }
-        let newFileName = transform(oldFileName)
+        let newLastComponent = transform(oldFileName)
         
         return removingLastComponent()
-            .appending(newFileName)
+            .appending(newLastComponent)
     }
     
     /// **OTCore:**
     /// Return a new path by mutating the file name (last path component) excluding extension.
+    ///
+    /// If path components are empty, this has no effect.
     @available(macOS 12.0, iOS 15.0, watchOS 8.0, tvOS 15.0, *)
     @_disfavoredOverload
     public func mutatingLastPathComponentExcludingExtension(
-        _ transform: (_ fileName: String) -> String
+        _ transform: (_ baseFilename: String) -> String
     ) -> Self {
         guard let oldFileName = lastComponent else { return self }
-        var newFileName = transform(oldFileName.stem)
+        var newLastComponent = transform(oldFileName.stem)
         if let ext = oldFileName.extension {
-            newFileName += "." + ext
+            newLastComponent += "." + ext
         }
         
         return removingLastComponent()
-            .appending(newFileName)
+            .appending(newLastComponent)
     }
     
     /// **OTCore:**
@@ -105,24 +109,26 @@ extension FilePath {
     ///
     /// ie:
     ///
-    /// ```
+    /// ```swift
     /// let path = FilePath("/Users/user/file.txt")
     /// let path2 = path.appendingToLastPathComponentBeforeExtension("-2")
     /// path2.string // "/Users/user/file-2.txt"
     /// ```
+    ///
+    /// If path components are empty, this has no effect.
     @available(macOS 12.0, iOS 15.0, watchOS 8.0, tvOS 15.0, *)
     @_disfavoredOverload
     public func appendingToLastPathComponentBeforeExtension(
         _ string: String
     ) -> Self {
         guard let oldFileName = lastComponent else { return self }
-        var newFileName = "\(oldFileName.stem)\(string)"
+        var newLastComponent = "\(oldFileName.stem)\(string)"
         if let ext = oldFileName.extension {
-            newFileName += "." + ext
+            newLastComponent += "." + ext
         }
         
         return removingLastComponent()
-            .appending(newFileName)
+            .appending(newLastComponent)
     }
 }
 
