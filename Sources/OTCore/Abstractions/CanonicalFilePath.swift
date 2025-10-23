@@ -441,6 +441,56 @@ extension CanonicalFilePath {
         wrapped.asURL(directoryHint: directoryHint)
     }
     
+    // MARK: - Path Manipulation
+    
+    /// Return a new path by mutating the file name (last path component).
+    ///
+    /// If path components are empty, this has no effect.
+    @available(macOS 12.0, *)
+    @_disfavoredOverload
+    public func mutatingLastPathComponent(
+        _ transform: (_ component: FilePath.Component) -> String
+    ) -> Self {
+        guard lastComponent != nil else { return self }
+        let newPath = wrapped.mutatingLastPathComponent(transform)
+        return CanonicalFilePath(canonicalizingIfPossible: newPath, partial: true)
+    }
+    
+    /// Return a new path by mutating the file name (last path component) excluding extension.
+    ///
+    /// If path components are empty, this has no effect.
+    @available(macOS 12.0, *)
+    @_disfavoredOverload
+    public func mutatingLastPathComponentExcludingExtension(
+        _ transform: (_ baseFilename: String) -> String
+    ) -> Self {
+        guard lastComponent != nil else { return self }
+        let newPath = wrapped.mutatingLastPathComponentExcludingExtension(transform)
+        return CanonicalFilePath(canonicalizingIfPossible: newPath, partial: true)
+    }
+    
+    /// **OTCore:**
+    /// Return a new path by appending a string to the file name (last path component) before the
+    /// extension.
+    ///
+    /// ie:
+    ///
+    /// ```swift
+    /// let path = CanonicalFilePath("/Users/user/file.txt")
+    /// let path2 = path.appendingToLastPathComponentBeforeExtension("-2")
+    /// path2.string // "/Users/user/file-2.txt"
+    /// ```
+    ///
+    /// If path components are empty, this has no effect.
+    @available(macOS 12.0, *)
+    public func appendingToLastPathComponentBeforeExtension(
+        _ string: String
+    ) -> Self {
+        guard lastComponent != nil else { return self }
+        let newPath = wrapped.appendingToLastPathComponentBeforeExtension(string)
+        return CanonicalFilePath(canonicalizingIfPossible: newPath, partial: true)
+    }
+    
     // MARK: - File / Folder Metadata
     
     /// Returns whether the file/folder exists.
