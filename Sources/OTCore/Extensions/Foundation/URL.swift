@@ -261,10 +261,6 @@ extension URL {
             }
             return newURL
         } else {
-            guard fileExists else {
-                return self
-            }
-            
             guard let newPath = try resourceValues(forKeys: [.canonicalPathKey]).canonicalPath else {
                 throw CocoaError(.fileReadUnknown)
             }
