@@ -626,8 +626,8 @@ extension CanonicalFilePath {
     /// - is a symbolic link or a hard link and not a Finder alias, or
     /// - does not exist.
     @available(macOS 13.0, *)
-    public var resolvedFinderAlias: URL? {
-        wrapped.resolvedFinderAlias
+    public var resolvedFinderAlias: CanonicalFilePath? {
+        wrapped.resolvedFinderAlias?.asCanonicalFilePathIfPossible()
     }
     
     // MARK: - SymLinks

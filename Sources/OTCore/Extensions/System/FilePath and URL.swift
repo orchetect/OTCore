@@ -409,8 +409,8 @@ extension FilePath {
     /// - does not exist.
     @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
     @_disfavoredOverload
-    public var resolvedFinderAlias: URL? {
-        asURL().resolvedFinderAlias
+    public var resolvedFinderAlias: FilePath? {
+        asURL().resolvedFinderAlias?.asGuaranteedFilePath()
     }
 }
 
