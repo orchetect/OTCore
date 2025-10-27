@@ -552,8 +552,8 @@ extension CanonicalFilePath {
     /// If both operations were unsuccessful, an error is thrown.
     @available(macOS 13.0, *)
     @discardableResult
-    public func trashOrDelete() throws -> FilePath? {
-        try wrapped.trashOrDelete()
+    public func trashOrDelete() throws -> CanonicalFilePath? {
+        try wrapped.trashOrDelete()?.asCanonicalFilePathIfPossible()
     }
     
     /// If the file path is a file or folder that exists on disk, the file name (last path component
