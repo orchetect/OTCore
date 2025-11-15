@@ -35,6 +35,24 @@ import Testing
         #expect(Int64(1).string(paddedTo: 1) == "1")
         #expect(UInt64(1).string(paddedTo: 1) == "1")
     }
+    
+    #if compiler(>=6.0) && !(arch(arm) || arch(arm64_32) || arch(i386))
+    @available(macOS 13.0, iOS 16.0, watchOS 9.0, tvOS 16.0, *)
+    @Test
+    func durationTimeInterval() {
+        #expect(Duration.zero.timeInterval == 0.0)
+        #expect(Duration.milliseconds(-0).timeInterval == 0.0)
+        
+        #expect(Duration.milliseconds(20).timeInterval == 0.02)
+        #expect(Duration.milliseconds(-20).timeInterval == -0.02)
+        
+        #expect(Duration.milliseconds(1000).timeInterval == 1.0)
+        #expect(Duration.milliseconds(-1000).timeInterval == -1.0)
+        
+        #expect(Duration.milliseconds(1020).timeInterval == 1.02)
+        #expect(Duration.milliseconds(-1020).timeInterval == -1.02)
+    }
+    #endif
 }
 
 #endif
