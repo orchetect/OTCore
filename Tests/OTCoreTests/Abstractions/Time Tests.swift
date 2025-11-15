@@ -200,7 +200,7 @@ import Testing
         #expect(t.sign == .minus)
     }
     
-    #if compiler(>=6.0)
+    #if compiler(>=6.0) && !(arch(arm) || arch(arm64_32) || arch(i386))
     
     @available(macOS 13.0, iOS 16.0, watchOS 9.0, tvOS 16.0, *)
     @Test
@@ -531,7 +531,7 @@ import Testing
         )
     }
     
-    #if compiler(>=6.0)
+    #if compiler(>=6.0) && !(arch(arm) || arch(arm64_32) || arch(i386))
     @available(macOS 13.0, iOS 16.0, watchOS 9.0, tvOS 16.0, *)
     @Test
     func durationIntervalGet() {
@@ -661,7 +661,7 @@ import Testing
         #expect(t.sign == .minus)
     }
     
-    #if compiler(>=6.0)
+    #if compiler(>=6.0) && !(arch(arm) || arch(arm64_32) || arch(i386))
     @available(macOS 13.0, iOS 16.0, watchOS 9.0, tvOS 16.0, *)
     @Test
     func durationIntervalSetA() {
