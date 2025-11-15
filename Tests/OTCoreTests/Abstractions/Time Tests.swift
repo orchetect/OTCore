@@ -200,6 +200,79 @@ import Testing
         #expect(t.sign == .minus)
     }
     
+    #if compiler(>=6.0)
+    
+    @available(macOS 13.0, iOS 16.0, watchOS 9.0, tvOS 16.0, *)
+    @Test
+    func time_DurationA() {
+        let duration: Duration = .milliseconds(20)
+        let t = Time(duration: duration)
+        
+        #expect(t.hours == 0)
+        #expect(t.minutes == 0)
+        #expect(t.seconds == 0)
+        #expect(t.milliseconds == 20)
+        #expect(t.sign == .plus)
+    }
+    
+    @available(macOS 13.0, iOS 16.0, watchOS 9.0, tvOS 16.0, *)
+    @Test
+    func time_DurationB() {
+        let ms = (((1 * 60) + 30) * 1000) + 200
+        let duration: Duration = .milliseconds(ms)
+        let t = Time(duration: duration)
+        
+        #expect(t.hours == 0)
+        #expect(t.minutes == 1)
+        #expect(t.seconds == 30)
+        #expect(t.milliseconds == 200)
+        #expect(t.sign == .plus)
+    }
+    
+    @available(macOS 13.0, iOS 16.0, watchOS 9.0, tvOS 16.0, *)
+    @Test
+    func time_DurationC() {
+        let ms = (((1 * 60 * 60) + (1 * 60) + 30) * 1000) + 200
+        let duration: Duration = .milliseconds(ms)
+        let t = Time(duration: duration)
+        
+        #expect(t.hours == 1)
+        #expect(t.minutes == 1)
+        #expect(t.seconds == 30)
+        #expect(t.milliseconds == 200)
+        #expect(t.sign == .plus)
+    }
+    
+    @available(macOS 13.0, iOS 16.0, watchOS 9.0, tvOS 16.0, *)
+    @Test
+    func time_DurationD() {
+        let ms: Double = (((1 * 60 * 60) + (1 * 60) + 30) * 1000) + 200.7
+        let duration: Duration = .milliseconds(ms)
+        let t = Time(duration: duration)
+        
+        #expect(t.hours == 1)
+        #expect(t.minutes == 1)
+        #expect(t.seconds == 30)
+        #expect(t.milliseconds == 200)
+        #expect(t.sign == .plus)
+    }
+    
+    @available(macOS 13.0, iOS 16.0, watchOS 9.0, tvOS 16.0, *)
+    @Test
+    func time_DurationE() {
+        let ms = (((1 * 60 * 60) + (1 * 60) + 30) * 1000) + 200
+        let duration: Duration = .milliseconds(-ms)
+        let t = Time(duration: duration)
+        
+        #expect(t.hours == 1)
+        #expect(t.minutes == 1)
+        #expect(t.seconds == 30)
+        #expect(t.milliseconds == 200)
+        #expect(t.sign == .minus)
+    }
+    
+    #endif
+    
     /// default CustomStringConvertible
     @Test
     func timeStringValue_Default() {
@@ -458,6 +531,32 @@ import Testing
         )
     }
     
+    #if compiler(>=6.0)
+    @available(macOS 13.0, iOS 16.0, watchOS 9.0, tvOS 16.0, *)
+    @Test
+    func durationIntervalGet() {
+        #expect(
+            Time(hours: 0, minutes: 0, seconds: 0).durationInterval
+                == .milliseconds(0)
+        )
+        
+        #expect(
+            Time(hours: 5, minutes: 6, seconds: 20).durationInterval
+                == .milliseconds(18380000)
+        )
+        
+        #expect(
+            Time(hours: 5, minutes: 6, seconds: 20, milliseconds: 5).durationInterval
+                == .milliseconds(18380005)
+        )
+        
+        #expect(
+            Time(hours: 5, minutes: 6, seconds: 20, milliseconds: 5, sign: .minus).durationInterval
+                == .milliseconds(-18380005)
+        )
+    }
+    #endif
+    
     @Test
     func intervalSetA() {
         var t = Time(hours: 1, minutes: 2, seconds: 3, milliseconds: 4)
@@ -561,6 +660,64 @@ import Testing
         #expect(t.milliseconds == 0)
         #expect(t.sign == .minus)
     }
+    
+    #if compiler(>=6.0)
+    @available(macOS 13.0, iOS 16.0, watchOS 9.0, tvOS 16.0, *)
+    @Test
+    func durationIntervalSetA() {
+        var t = Time(hours: 1, minutes: 2, seconds: 3, milliseconds: 4)
+        
+        t.durationInterval = .milliseconds(50_000)
+        
+        #expect(t.hours == 0)
+        #expect(t.minutes == 0)
+        #expect(t.seconds == 50)
+        #expect(t.milliseconds == 0)
+        #expect(t.sign == .plus)
+    }
+    
+    @available(macOS 13.0, iOS 16.0, watchOS 9.0, tvOS 16.0, *)
+    @Test
+    func durationIntervalSetB() {
+        var t = Time(hours: 1, minutes: 2, seconds: 3, milliseconds: 4)
+        
+        t.durationInterval = .milliseconds(18_380_005)
+        
+        #expect(t.hours == 5)
+        #expect(t.minutes == 6)
+        #expect(t.seconds == 20)
+        #expect(t.milliseconds == 5)
+        #expect(t.sign == .plus)
+    }
+    
+    @available(macOS 13.0, iOS 16.0, watchOS 9.0, tvOS 16.0, *)
+    @Test
+    func durationIntervalSetC() {
+        var t = Time(hours: 1, minutes: 2, seconds: 3, milliseconds: 4)
+        
+        t.durationInterval = .milliseconds(0)
+        
+        #expect(t.hours == 0)
+        #expect(t.minutes == 0)
+        #expect(t.seconds == 0)
+        #expect(t.milliseconds == 0)
+        #expect(t.sign == .plus)
+    }
+    
+    @available(macOS 13.0, iOS 16.0, watchOS 9.0, tvOS 16.0, *)
+    @Test
+    func durationIntervalSetD() {
+        var t = Time(hours: 1, minutes: 2, seconds: 3, milliseconds: 4)
+        
+        t.durationInterval = .milliseconds(-40_000)
+        
+        #expect(t.hours == 0)
+        #expect(t.minutes == 0)
+        #expect(t.seconds == 40)
+        #expect(t.milliseconds == 0)
+        #expect(t.sign == .minus)
+    }
+    #endif
     
     @Test
     func valueOfComponent() {
