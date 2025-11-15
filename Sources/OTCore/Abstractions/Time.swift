@@ -303,6 +303,26 @@ extension Time {
             self = Time(milliseconds: newValue)
         }
     }
+    
+    #if compiler(>=6.0)
+    /// **OTCore:**
+    /// Get or set the time interval using [`Duration`](https://developer.apple.com/documentation/swift/duration).
+    /// Note that setting this property reduces precision to 1 millisecond when stored in a `Time` instance.
+    @available(macOS 13.0, iOS 16.0, watchOS 9.0, tvOS 16.0, *)
+    public var durationInterval: Duration {
+        get {
+            let seconds = Int64(totalSeconds)
+            let atto = Int64(milliseconds * 1_000_000_000_000_000)
+            let duration = sign == .plus
+                ? Duration(secondsComponent: seconds, attosecondsComponent: atto)
+                : Duration(secondsComponent: -seconds, attosecondsComponent: -atto)
+            return duration
+        }
+        set {
+            self = Time(duration: newValue)
+        }
+    }
+    #endif
 }
 
 extension Time {
