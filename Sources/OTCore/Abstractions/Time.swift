@@ -108,7 +108,7 @@ public struct Time {
         self.init(milliseconds: Int(milliseconds))
     }
     
-    #if compiler(>=6.0) && !(arch(arm) || arch(arm64_32) || arch(i386))
+    #if !(arch(arm) || arch(arm64_32) || arch(i386))
     /// **OTCore:**
     /// Initialize from a time interval using [`Duration`](https://developer.apple.com/documentation/swift/duration).
     /// Note that this conversion reduces precision to 1 millisecond when stored in a `Time` instance.
@@ -304,7 +304,7 @@ extension Time {
         }
     }
     
-    #if compiler(>=6.0) && !(arch(arm) || arch(arm64_32) || arch(i386))
+    #if !(arch(arm) || arch(arm64_32) || arch(i386))
     /// **OTCore:**
     /// Get or set the time interval using [`Duration`](https://developer.apple.com/documentation/swift/duration).
     /// Note that setting this property reduces precision to 1 millisecond when stored in a `Time` instance.

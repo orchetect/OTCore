@@ -30,7 +30,7 @@ extension BinaryInteger {
 
 // MARK: - Duration
 
-#if compiler(>=6.0) && !(arch(arm) || arch(arm64_32) || arch(i386))
+#if !(arch(arm) || arch(arm64_32) || arch(i386))
 
 @available(macOS 13.0, iOS 16.0, watchOS 9.0, tvOS 16.0, *)
 extension Duration {
