@@ -107,6 +107,18 @@ public struct Time {
     public init(milliseconds: Double) {
         self.init(milliseconds: Int(milliseconds))
     }
+    
+    #if compiler(>=6.0)
+    /// **OTCore:**
+    /// Initialize from a time interval using [`Duration`](https://developer.apple.com/documentation/swift/duration).
+    /// Note that this conversion reduces precision to 1 millisecond when stored in a `Time` instance.
+    @available(macOS 13.0, iOS 16.0, watchOS 9.0, tvOS 16.0, *)
+    public init(duration: Duration, rounding rule: FloatingPointRoundingRule = .towardZero) {
+        let (seconds, attoseconds) = duration.components
+        let ms = Int(seconds * 1000) + Int((Double(attoseconds) / 1_000_000_000_000_000.0).rounded(rule))
+        self.init(milliseconds: ms)
+    }
+    #endif
 }
 
 extension Time: Equatable {
