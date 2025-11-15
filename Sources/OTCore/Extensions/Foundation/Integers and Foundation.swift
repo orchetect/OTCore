@@ -28,4 +28,23 @@ extension BinaryInteger {
     }
 }
 
+// MARK: - Duration
+
+#if compiler(>=6.0) && !(arch(arm) || arch(arm64_32) || arch(i386))
+
+@available(macOS 13.0, iOS 16.0, watchOS 9.0, tvOS 16.0, *)
+extension Duration {
+    /// **OTCore:**
+    /// Returns the duration as a floating-point time interval in seconds.
+    /// Note that this may be lossy and result in the loss of some precision.
+    @_disfavoredOverload
+    public var timeInterval: TimeInterval {
+        let (seconds, attoseconds) = components
+        let interval = Double(seconds) + ((Double(attoseconds) / 1_000_000_000_000_000_000.0))
+        return interval
+    }
+}
+
+#endif
+
 #endif
