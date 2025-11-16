@@ -208,7 +208,7 @@ extension Time {
     }
     
     /// **OTCore:**
-    /// Returns the time as a formatted string.
+    /// Returns the time formatted as an ISO 8601 extended string with the given format specifiers.
     public func stringValue(format: Format = .shortest) -> String {
         let absStr = absStringValue(format: format)
         
@@ -219,11 +219,11 @@ extension Time {
     }
     
     /// **OTCore:**
-    /// Returns the absolute time (without sign) as a formatted string.
+    /// Returns the absolute time (without sign) formatted as an ISO 8601 extended string with the given format specifiers.
     private func absStringValue(format: Format = .shortest) -> String {
         switch format {
         case .shortest:
-            return hours > 0
+            return hours != 0
                 ? absStringValue(format: .h_mm_ss)
                 : absStringValue(format: .m_ss)
             
@@ -264,6 +264,59 @@ extension Time {
             return "\(totalSeconds).\(msPadded)"
         }
     }
+    
+    #if !(arch(arm) || arch(arm64_32) || arch(i386))
+    /// **OTCore:**
+    /// Returns the time as a localized formatted string.
+    @available(macOS 13.0, iOS 16.0, watchOS 9.0, tvOS 16.0, *)
+    public func localizedStringValue(format: Format = .shortest, locale: Locale? = nil) -> String {
+        func duration(_ style: Duration.TimeFormatStyle) -> String {
+            let style = if let locale { style.locale(locale) } else { style }
+            return durationInterval.formatted(style)
+        }
+        func timeInterval<R1, R2>(integer: R1, fraction: R2) -> String where R1: RangeExpression<Int>, R2: RangeExpression<Int> {
+            var style: FloatingPointFormatStyle<Double> = .number
+                .precision(.integerAndFractionLength(integerLimits: integer, fractionLimits: fraction))
+                .grouping(.never)
+                .sign(strategy: .automatic)
+                .locale(.autoupdatingCurrent)
+            if let locale { style = style.locale(locale) }
+            return interval.formatted(style)
+        }
+        
+        return switch format {
+        case .shortest:
+            hours != 0
+                ? duration(.time(pattern: .hourMinuteSecond(padHourToLength: 1, fractionalSecondsLength: 0, roundFractionalSeconds: .towardZero)))
+                : duration(.time(pattern: .minuteSecond(padMinuteToLength: 1, fractionalSecondsLength: 0, roundFractionalSeconds: .towardZero)))
+        case .hh_mm_ss:
+            duration(.time(pattern: .hourMinuteSecond(padHourToLength: 2, fractionalSecondsLength: 0, roundFractionalSeconds: .towardZero)))
+        case .h_mm_ss:
+            duration(.time(pattern: .hourMinuteSecond(padHourToLength: 1, fractionalSecondsLength: 0, roundFractionalSeconds: .towardZero)))
+        case .mm_ss:
+            duration(.time(pattern: .minuteSecond(padMinuteToLength: 2, fractionalSecondsLength: 0, roundFractionalSeconds: .towardZero)))
+        case .m_ss:
+            duration(.time(pattern: .minuteSecond(padMinuteToLength: 1, fractionalSecondsLength: 0, roundFractionalSeconds: .towardZero)))
+        case .ss:
+            timeInterval(integer: 2..., fraction: 0 ... 0)
+        case .s:
+            timeInterval(integer: 1..., fraction: 0 ... 0)
+        case .hh_mm_ss_sss:
+            duration(.time(pattern: .hourMinuteSecond(padHourToLength: 2, fractionalSecondsLength: 3, roundFractionalSeconds: .towardZero)))
+        case .h_mm_ss_sss:
+            duration(.time(pattern: .hourMinuteSecond(padHourToLength: 1, fractionalSecondsLength: 3, roundFractionalSeconds: .towardZero)))
+        case .mm_ss_sss:
+            duration(.time(pattern: .minuteSecond(padMinuteToLength: 2, fractionalSecondsLength: 3, roundFractionalSeconds: .towardZero)))
+        case .m_ss_sss:
+            duration(.time(pattern: .minuteSecond(padMinuteToLength: 1, fractionalSecondsLength: 3, roundFractionalSeconds: .towardZero)))
+        case .ss_sss:
+            timeInterval(integer: 2..., fraction: 3 ... 3)
+        case .s_sss:
+            // String(format: "%.3llf", locale: .autoupdatingCurrent, interval)
+            timeInterval(integer: 1..., fraction: 3 ... 3)
+        }
+    }
+    #endif
     
     private var totalSeconds: Int { (totalMinutes * 60) + seconds }
     private var totalSecondsPadded: String { totalSeconds.string(paddedTo: 2) }
@@ -413,9 +466,9 @@ extension Time.Component: Sendable { }
 
 extension Time {
     /// **OTCore:**
-    /// Enum describing a time string format.
+    /// Format specifier sequence templates for use in formatting time strings.
     public enum Format: CaseIterable {
-        /// Uses the shortest format that will fit the time, omitting hours if hours == 0.
+        /// Uses the shortest format that will fit the time, omitting hours if `hours == 0`.
         case shortest
         
         /// HH:MM:SS
