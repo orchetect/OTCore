@@ -8,6 +8,7 @@ import Foundation
 import Numerics
 /* @testable */ import OTCore
 import Testing
+import TestingExtensions
 
 @Suite struct Abstractions_Time_Tests {
     @Test
@@ -484,6 +485,143 @@ import Testing
         let w = Time(hours: 0, minutes: 0, seconds: 00)
         #expect(w.stringValue(format: .shortest) == "0:00")
     }
+    
+    #if !(arch(arm) || arch(arm64_32) || arch(i386))
+    
+    @Test(.enabled(ifLocaleLanguageCode: .english))
+    func timeLocalizedStringValueA() {
+        let t = Time(hours: 15, minutes: 46, seconds: 20, milliseconds: 49)
+        
+        for fmt in Time.Format.allCases {
+            let str: String = switch fmt {
+            case .shortest:     "15:46:20"
+            case .hh_mm_ss:     "15:46:20"
+            case .h_mm_ss:      "15:46:20"
+            case .mm_ss:        "946:20"
+            case .m_ss:         "946:20"
+            case .ss:           "56780"
+            case .s:            "56780"
+            case .hh_mm_ss_sss: "15:46:20.049"
+            case .h_mm_ss_sss:  "15:46:20.049"
+            case .mm_ss_sss:    "946:20.049"
+            case .m_ss_sss:     "946:20.049"
+            case .ss_sss:       "56780.049"
+            case .s_sss:        "56780.049"
+            }
+            
+            #expect(t.localizedStringValue(format: fmt) == str, "\(fmt)")
+        }
+    }
+    
+    @Test(.enabled(ifLocaleLanguageCode: .english))
+    func timeLocalizedStringValueB() {
+        let t = Time(hours: 5, minutes: 6, seconds: 20)
+        
+        for fmt in Time.Format.allCases {
+            let str: String = switch fmt {
+            case .shortest:     "5:06:20"
+            case .hh_mm_ss:     "05:06:20"
+            case .h_mm_ss:      "5:06:20"
+            case .mm_ss:        "306:20"
+            case .m_ss:         "306:20"
+            case .ss:           "18380"
+            case .s:            "18380"
+            case .hh_mm_ss_sss: "05:06:20.000"
+            case .h_mm_ss_sss:  "5:06:20.000"
+            case .mm_ss_sss:    "306:20.000"
+            case .m_ss_sss:     "306:20.000"
+            case .ss_sss:       "18380.000"
+            case .s_sss:        "18380.000"
+            }
+            
+            #expect(t.localizedStringValue(format: fmt) == str, "\(fmt)")
+        }
+    }
+    
+    @Test(.enabled(ifLocaleLanguageCode: .english))
+    func timeLocalizedStringValue_Zero() {
+        let t = Time(hours: 0, minutes: 0, seconds: 0)
+        
+        for fmt in Time.Format.allCases {
+            let str: String = switch fmt {
+            case .shortest:     "0:00"
+            case .hh_mm_ss:     "00:00:00"
+            case .h_mm_ss:      "0:00:00"
+            case .mm_ss:        "00:00"
+            case .m_ss:         "0:00"
+            case .ss:           "00"
+            case .s:            "0"
+            case .hh_mm_ss_sss: "00:00:00.000"
+            case .h_mm_ss_sss:  "0:00:00.000"
+            case .mm_ss_sss:    "00:00.000"
+            case .m_ss_sss:     "0:00.000"
+            case .ss_sss:       "00.000"
+            case .s_sss:        "0.000"
+            }
+            
+            #expect(t.localizedStringValue(format: fmt) == str, "\(fmt)")
+        }
+    }
+    
+    @Test(.enabled(ifLocaleLanguageCode: .english))
+    func timeLocalizedStringValue_Negative() {
+        let t = Time(hours: 0, minutes: 0, seconds: 20, sign: .minus)
+        
+        for fmt in Time.Format.allCases {
+            let str: String = switch fmt {
+            case .shortest:     "-0:20"
+            case .hh_mm_ss:     "-00:00:20"
+            case .h_mm_ss:      "-0:00:20"
+            case .mm_ss:        "-00:20"
+            case .m_ss:         "-0:20"
+            case .ss:           "-20"
+            case .s:            "-20"
+            case .hh_mm_ss_sss: "-00:00:20.000"
+            case .h_mm_ss_sss:  "-0:00:20.000"
+            case .mm_ss_sss:    "-00:20.000"
+            case .m_ss_sss:     "-0:20.000"
+            case .ss_sss:       "-20.000"
+            case .s_sss:        "-20.000"
+            }
+            
+            #expect(t.localizedStringValue(format: fmt) == str, "\(fmt)")
+        }
+    }
+    
+    @Test(.enabled(ifLocaleLanguageCode: .english))
+    func timeLocalizedStringValue_Shortest() {
+        // shortest
+        
+        let t = Time(hours: 5, minutes: 6, seconds: 20)
+        #expect(t.stringValue(format: .shortest) == "5:06:20")
+        
+        let u = Time(hours: 0, minutes: 6, seconds: 20)
+        #expect(u.stringValue(format: .shortest) == "6:20")
+        
+        let v = Time(hours: 0, minutes: 0, seconds: 20)
+        #expect(v.stringValue(format: .shortest) == "0:20")
+        
+        let w = Time(hours: 0, minutes: 0, seconds: 00)
+        #expect(w.stringValue(format: .shortest) == "0:00")
+    }
+    
+    /// Spot-check a handful of locales and formats to ensure formats are localized.
+    @Test
+    func timeLocalizedStringValue_VariousLocales() {
+        // German / Germany
+        #expect(Time(hours: 1, minutes: 2, seconds: 3).localizedStringValue(format: .s, locale: .init(identifier: "de_DE")) == "3723")
+        #expect(Time(hours: 1, minutes: 2, seconds: 3).localizedStringValue(format: .s_sss, locale: .init(identifier: "de_DE")) == "3723,000")
+        #expect(Time(hours: 1, minutes: 2, seconds: 3).localizedStringValue(format: .h_mm_ss, locale: .init(identifier: "de_DE")) == "1:02:03")
+        #expect(Time(hours: 1, minutes: 2, seconds: 3).localizedStringValue(format: .h_mm_ss_sss, locale: .init(identifier: "de_DE")) == "1:02:03,000")
+        
+        // Finnish / Finland
+        #expect(Time(hours: 1, minutes: 2, seconds: 3).localizedStringValue(format: .s, locale: .init(identifier: "fi_FI")) == "3723")
+        #expect(Time(hours: 1, minutes: 2, seconds: 3).localizedStringValue(format: .s_sss, locale: .init(identifier: "fi_FI")) == "3723,000")
+        #expect(Time(hours: 1, minutes: 2, seconds: 3).localizedStringValue(format: .h_mm_ss, locale: .init(identifier: "fi_FI")) == "1.02.03")
+        #expect(Time(hours: 1, minutes: 2, seconds: 3).localizedStringValue(format: .h_mm_ss_sss, locale: .init(identifier: "fi_FI")) == "1.02.03,000")
+    }
+    
+    #endif
     
     @Test
     func intervalGet() {
