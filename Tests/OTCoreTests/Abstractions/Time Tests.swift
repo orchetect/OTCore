@@ -488,6 +488,7 @@ import TestingExtensions
     
     #if !(arch(arm) || arch(arm64_32) || arch(i386))
     
+    @available(macOS 13.0, iOS 16.0, watchOS 9.0, tvOS 16.0, *)
     @Test(.enabled(ifLocaleLanguageCode: .english))
     func timeLocalizedStringValueA() {
         let t = Time(hours: 15, minutes: 46, seconds: 20, milliseconds: 49)
@@ -513,6 +514,7 @@ import TestingExtensions
         }
     }
     
+    @available(macOS 13.0, iOS 16.0, watchOS 9.0, tvOS 16.0, *)
     @Test(.enabled(ifLocaleLanguageCode: .english))
     func timeLocalizedStringValueB() {
         let t = Time(hours: 5, minutes: 6, seconds: 20)
@@ -538,6 +540,7 @@ import TestingExtensions
         }
     }
     
+    @available(macOS 13.0, iOS 16.0, watchOS 9.0, tvOS 16.0, *)
     @Test(.enabled(ifLocaleLanguageCode: .english))
     func timeLocalizedStringValue_Zero() {
         let t = Time(hours: 0, minutes: 0, seconds: 0)
@@ -563,6 +566,7 @@ import TestingExtensions
         }
     }
     
+    @available(macOS 13.0, iOS 16.0, watchOS 9.0, tvOS 16.0, *)
     @Test(.enabled(ifLocaleLanguageCode: .english))
     func timeLocalizedStringValue_Negative() {
         let t = Time(hours: 0, minutes: 0, seconds: 20, sign: .minus)
@@ -588,6 +592,7 @@ import TestingExtensions
         }
     }
     
+    @available(macOS 13.0, iOS 16.0, watchOS 9.0, tvOS 16.0, *)
     @Test(.enabled(ifLocaleLanguageCode: .english))
     func timeLocalizedStringValue_Shortest() {
         // shortest
@@ -606,6 +611,7 @@ import TestingExtensions
     }
     
     /// Spot-check a handful of locales and formats to ensure formats are localized.
+    @available(macOS 13.0, iOS 16.0, watchOS 9.0, tvOS 16.0, *)
     @Test
     func timeLocalizedStringValue_VariousLocales() {
         // German / Germany
